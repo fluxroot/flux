@@ -1,0 +1,100 @@
+/*
+** Copyright 2007-2012 Phokham Nonava
+**
+** This file is part of Flux Chess.
+**
+** Flux Chess is free software: you can redistribute it and/or modify
+** it under the terms of the GNU General Public License as published by
+** the Free Software Foundation, either version 3 of the License, or
+** (at your option) any later version.
+**
+** Flux Chess is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+** GNU General Public License for more details.
+**
+** You should have received a copy of the GNU General Public License
+** along with Flux Chess.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+apply plugin: 'java'
+
+description = 'Flux Chess'
+
+group = 'com.fluxchess'
+
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
+
+repositories {
+	mavenCentral()
+}
+
+def jcpisrc = 'http://cloud.github.com/downloads/fluxroot/jcpi/jcpi-0.2.1.zip'
+File jcpizip = file('lib/jcpi-0.2.1.zip')
+File jcpijar = file('lib/jcpi-0.2.1/jcpi-0.2.1.jar')
+
+dependencies {
+	compile files(jcpijar) {
+		builtBy 'download'
+	}
+	testCompile group: 'junit', name: 'junit', version: '4.+'
+}
+
+jar {
+	from {
+		configurations.compile.collect {it.isDirectory() ? it : zipTree(it)}
+	}
+	from sourceSets.main.allJava
+    manifest {
+        attributes 'Implementation-Title': group, 'Implementation-Version': version, 'Main-Class': 'com.fluxchess.Flux'
+    }
+}
+
+task jcpi {
+	inputs.file jcpizip
+	outputs.file jcpijar
+	doLast {
+		jcpizip.getParentFile().mkdirs()
+		downloadFile(jcpisrc, jcpizip)
+		copy {
+			from zipTree(jcpizip)
+			into 'lib'
+		}
+	}
+}
+
+task download(dependsOn: 'jcpi') << {
+}
+
+task tar(type: Tar) {
+	def baseDir = "${project.name}-${project.version}"
+	compression = Compression.GZIP
+	
+	into ("$baseDir") {
+		from 'README.md'
+		from 'COPYING'
+		from 'Flux.ini'
+		from 'polyglot.ini-Windows'
+		from 'polyglot.ini-Linux'
+		from 'Flux.bat'
+		from ('Flux') {
+			fileMode = 0755
+		}
+		from jar
+	}
+}
+
+artifacts {
+	archives tar
+}
+
+task wrapper(type: Wrapper) {
+	gradleVersion = '1.0-rc-3'
+}
+
+def downloadFile(srcUrl, destUrl) {
+	def dest = new BufferedOutputStream(new FileOutputStream(destUrl))
+	dest << new URL(srcUrl).openStream()
+	dest.close()
+}

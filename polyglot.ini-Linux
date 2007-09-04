@@ -1,0 +1,9 @@
+[PolyGlot]
+
+EngineCommand = Flux
+
+[Engine]
+
+Hash = 64
+Evaluation Table = 16
+Pawn Table = 4
