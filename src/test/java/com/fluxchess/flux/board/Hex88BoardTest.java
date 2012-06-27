@@ -190,7 +190,7 @@ public class Hex88BoardTest {
 		// Move white bishop
 		int move = IntMove.createMove(IntMove.NORMAL, IntPosition.d2, IntPosition.e3, IntChessman.createPiece(IntChessman.BISHOP, IntColor.WHITE), IntChessman.NOPIECE, IntChessman.NOPIECE);
 		testBoard.makeMove(move);
-		// EnumCastling black KINGSIDE
+		// Castling black KINGSIDE
 		move = IntMove.createMove(IntMove.CASTLING, IntPosition.e8, IntPosition.g8, IntChessman.createPiece(IntChessman.KING, IntColor.BLACK), IntChessman.NOPIECE, IntChessman.NOPIECE);
 		testBoard.makeMove(move);
 		// Move white pawn
@@ -215,7 +215,7 @@ public class Hex88BoardTest {
 		// Move white bishop
 		move = IntMove.createMove(IntMove.NORMAL, IntPosition.d2, IntPosition.e3, IntChessman.createPiece(IntChessman.BISHOP, IntColor.WHITE), IntChessman.NOPIECE, IntChessman.NOPIECE);
 		testBoard.makeMove(move);
-		// EnumCastling black KINGSIDE
+		// Castling black KINGSIDE
 		move = IntMove.createMove(IntMove.CASTLING, IntPosition.e8, IntPosition.g8, IntChessman.createPiece(IntChessman.KING, IntColor.BLACK), IntChessman.NOPIECE, IntChessman.NOPIECE);
 		testBoard.makeMove(move);
 		// Move white pawn
