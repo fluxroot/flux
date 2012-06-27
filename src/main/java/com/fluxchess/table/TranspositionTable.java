@@ -173,7 +173,7 @@ public final class TranspositionTable {
 				|| currentEntry.move == IntMove.NOMOVE) {
 			return moveList;
 		} else {
-			moveList.add(IntMove.toCommandMove(currentEntry.move));
+			moveList.add(IntMove.toGenericMove(currentEntry.move));
 
 			board.makeMove(currentEntry.move);
 			List<GenericMove> newMoveList = getMoveList(board, depth - 1, moveList);

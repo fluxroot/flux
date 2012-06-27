@@ -140,13 +140,13 @@ public class MoveGeneratorTest {
 			int captureSquare = board.captureSquare;
 			board.makeMove(move);
 			boolean isCheckingMoveReal = board.getAttack(board.activeColor).isCheck();
-			assertEquals(oldBoard.toString() + ", " + IntMove.toCommandMove(move).toString(), isCheckingMoveReal, isCheckingMove);
+			assertEquals(oldBoard.toString() + ", " + IntMove.toGenericMove(move).toString(), isCheckingMoveReal, isCheckingMove);
 			nodes = miniMax(board, generator, depth - 1, maxDepth);
 			board.undoMove(move);
 			assert captureSquare == board.captureSquare;
 			
 //			if (depth == maxDepth) {
-//				System.out.println(IntMove.toCommandMove(move).toLongAlgebraicNotation() + ": " + nodes);
+//				System.out.println(IntMove.toGenericMove(move).toLongAlgebraicNotation() + ": " + nodes);
 //			}
 			totalNodes += nodes;
 			move = MoveGenerator.getNextMove();
@@ -268,13 +268,13 @@ public class MoveGeneratorTest {
 
 		result += "     Main:";
 		for (int i = 0; i < main.tail; i++) {
-			result += " " + IntMove.toCommandMove(main.move[i]).toString();
+			result += " " + IntMove.toGenericMove(main.move[i]).toString();
 		}
 		result += "\n";
 		
 		result += "Quiescent:";
 		for (int i = 0; i < quiescent.tail; i++) {
-			result += " " + IntMove.toCommandMove(quiescent.move[i]).toString();
+			result += " " + IntMove.toGenericMove(quiescent.move[i]).toString();
 		}
 		result += "\n";
 		

@@ -214,9 +214,9 @@ public final class Search implements Runnable {
 		// Send the result
 		if (moveResult.bestMove != IntMove.NOMOVE) {
 			if (moveResult.ponderMove != IntMove.NOMOVE) {
-				this.info.sendBestMove(IntMove.toCommandMove(moveResult.bestMove), IntMove.toCommandMove(moveResult.ponderMove));
+				this.info.sendBestMove(IntMove.toGenericMove(moveResult.bestMove), IntMove.toGenericMove(moveResult.ponderMove));
 			} else {
-				this.info.sendBestMove(IntMove.toCommandMove(moveResult.bestMove), null);
+				this.info.sendBestMove(IntMove.toGenericMove(moveResult.bestMove), null);
 			}
 		} else {
 			this.info.sendBestMove(null, null);
@@ -756,7 +756,7 @@ public final class Search implements Runnable {
 
 			// Update the information if we evaluate a new move.
 			currentMoveNumber++;
-			this.info.sendInformationMove(IntMove.toCommandMove(move), currentMoveNumber);
+			this.info.sendInformationMove(IntMove.toGenericMove(move), currentMoveNumber);
 
 			// Extension
 			int newDepth = getNewDepth(depth, move, isSingleReply, false);
@@ -805,17 +805,17 @@ public final class Search implements Runnable {
 			}
 
 			// Add pv to list
-			List<GenericMove> commandMoveList = new ArrayList<GenericMove>();
-			commandMoveList.add(IntMove.toCommandMove(move));
+			List<GenericMove> genericMoveList = new ArrayList<GenericMove>();
+			genericMoveList.add(IntMove.toGenericMove(move));
 			for (int i = pvList[height + 1].head; i < pvList[height + 1].tail; i++) {
-				commandMoveList.add(IntMove.toCommandMove(pvList[height + 1].move[i]));
+				genericMoveList.add(IntMove.toGenericMove(pvList[height + 1].move[i]));
 			}
 			PrincipalVariation pv = new PrincipalVariation(
 					currentMoveNumber,
 					value,
 					moveType,
 					sortValue,
-					commandMoveList,
+					genericMoveList,
 					this.info.currentDepth,
 					this.info.currentMaxDepth,
 					this.transpositionTable.getPermillUsed(),
@@ -831,7 +831,7 @@ public final class Search implements Runnable {
 
 			// Show refutations
 			if (Configuration.showRefutations) {
-				this.info.sendInformationRefutations(commandMoveList);
+				this.info.sendInformationRefutations(genericMoveList);
 			}
 
 			// Show multi pv
