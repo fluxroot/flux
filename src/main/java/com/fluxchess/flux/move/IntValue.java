@@ -52,9 +52,9 @@ public class IntValue {
 	}
 
 	/**
-	 * Returns the IntValue value of the EnumValue.
+	 * Returns the IntValue value of the GenericScore.
 	 * 
-	 * @param value the EnumValue.
+	 * @param value the GenericScore.
 	 * @return the IntValue value.
 	 */
 	public static int valueOfValue(GenericScore value) {
@@ -76,10 +76,10 @@ public class IntValue {
 	}
 
 	/**
-	 * Returns the EnumValue of the IntValue value.
+	 * Returns the GenericScore of the IntValue value.
 	 * 
 	 * @param value the IntValue value.
-	 * @return the EnumValue.
+	 * @return the GenericScore.
 	 */
 	public static GenericScore valueOfIntValue(int value) {
 		assert value != NOVALUE;
