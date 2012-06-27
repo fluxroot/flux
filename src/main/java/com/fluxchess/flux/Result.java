@@ -19,7 +19,7 @@
 package com.fluxchess.flux;
 
 import com.fluxchess.flux.move.IntMove;
-import com.fluxchess.flux.move.IntValue;
+import com.fluxchess.flux.move.IntScore;
 
 /**
  * Result
@@ -30,7 +30,7 @@ public final class Result {
 
 	public int bestMove = IntMove.NOMOVE;
 	public int ponderMove = IntMove.NOMOVE;
-	public int value = IntValue.NOVALUE;
+	public int value = IntScore.NOSCORE;
 	public int resultValue = -Search.INFINITY;
 	public long time = -1;
 	public int moveNumber = 0;

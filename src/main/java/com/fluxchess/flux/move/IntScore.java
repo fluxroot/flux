@@ -22,40 +22,40 @@ import com.fluxchess.jcpi.models.GenericScore;
 
 
 /**
- * IntValue
+ * IntScore
  *
  * @author Phokham Nonava
  */
-public class IntValue {
+public class IntScore {
 
 	/**
-	 * Represents no value
+	 * Represents no score
 	 */
-	public static final int NOVALUE = -9;
+	public static final int NOSCORE = -9;
 
 	/**
-	 * IntValue values
+	 * IntScore values
 	 */
 	public static final int EXACT = 0;
 	public static final int ALPHA = 1;
 	public static final int BETA = 2;
 
 	/**
-	 * IntValue mask
+	 * IntScore mask
 	 */
 	public static final int MASK = 0x3;
 
 	/**
-	 * IntValue cannot be instantiated.
+	 * IntScore cannot be instantiated.
 	 */
-	private IntValue() {
+	private IntScore() {
 	}
 
 	/**
-	 * Returns the IntValue value of the GenericScore.
+	 * Returns the IntScore value of the GenericScore.
 	 * 
 	 * @param value the GenericScore.
-	 * @return the IntValue value.
+	 * @return the IntScore value.
 	 */
 	public static int valueOfValue(GenericScore value) {
 		assert value != null;
@@ -76,13 +76,13 @@ public class IntValue {
 	}
 
 	/**
-	 * Returns the GenericScore of the IntValue value.
+	 * Returns the GenericScore of the IntScore value.
 	 * 
-	 * @param value the IntValue value.
+	 * @param value the IntScore value.
 	 * @return the GenericScore.
 	 */
-	public static GenericScore valueOfIntValue(int value) {
-		assert value != NOVALUE;
+	public static GenericScore valueOfIntScore(int value) {
+		assert value != NOSCORE;
 
 		switch (value) {
 		case EXACT:

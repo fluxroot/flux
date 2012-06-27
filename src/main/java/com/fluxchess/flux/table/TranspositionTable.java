@@ -24,7 +24,7 @@ import com.fluxchess.jcpi.models.GenericMove;
 
 import com.fluxchess.flux.board.Hex88Board;
 import com.fluxchess.flux.move.IntMove;
-import com.fluxchess.flux.move.IntValue;
+import com.fluxchess.flux.move.IntScore;
 
 /**
  * TranspositionTable
@@ -98,7 +98,7 @@ public final class TranspositionTable {
 	 */
 	public void put(long zobristCode, int depth, int value, int type, int move, boolean mateThreat, int height) {
 		assert depth >= 0;
-		assert type != IntValue.NOVALUE;
+		assert type != IntScore.NOSCORE;
 		assert height >= 0;
 		
 		int position = (int) (zobristCode % this.size);
