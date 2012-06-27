@@ -583,6 +583,7 @@ public final class MoveGenerator {
 		assert moveList != null;
 
 		int activeColor = board.activeColor;
+		int oppositeColor = IntColor.switchColor(activeColor);
 
 		PositionList tempChessmanList = Hex88Board.pawnList[activeColor];
 		for (int i = 0; i < tempChessmanList.size; i++) {
@@ -592,26 +593,26 @@ public final class MoveGenerator {
 		tempChessmanList = Hex88Board.knightList[activeColor];
 		for (int i = 0; i < tempChessmanList.size; i++) {
 			int position = tempChessmanList.position[i];
-			addDefaultCaptureMovesTo(Hex88Board.board[position], position, moveDeltaKnight, IntPosition.NOPOSITION);
+			addDefaultCaptureMovesTo(Hex88Board.board[position], position, false, moveDeltaKnight, IntPosition.NOPOSITION, oppositeColor);
 		}
 		tempChessmanList = Hex88Board.bishopList[activeColor];
 		for (int i = 0; i < tempChessmanList.size; i++) {
 			int position = tempChessmanList.position[i];
-			addDefaultCaptureMovesTo(Hex88Board.board[position], position, moveDeltaBishop, IntPosition.NOPOSITION);
+			addDefaultCaptureMovesTo(Hex88Board.board[position], position, true, moveDeltaBishop, IntPosition.NOPOSITION, oppositeColor);
 		}
 		tempChessmanList = Hex88Board.rookList[activeColor];
 		for (int i = 0; i < tempChessmanList.size; i++) {
 			int position = tempChessmanList.position[i];
-			addDefaultCaptureMovesTo(Hex88Board.board[position], position, moveDeltaRook, IntPosition.NOPOSITION);
+			addDefaultCaptureMovesTo(Hex88Board.board[position], position, true, moveDeltaRook, IntPosition.NOPOSITION, oppositeColor);
 		}
 		tempChessmanList = Hex88Board.queenList[activeColor];
 		for (int i = 0; i < tempChessmanList.size; i++) {
 			int position = tempChessmanList.position[i];
-			addDefaultCaptureMovesTo(Hex88Board.board[position], position, moveDeltaQueen, IntPosition.NOPOSITION);
+			addDefaultCaptureMovesTo(Hex88Board.board[position], position, true, moveDeltaQueen, IntPosition.NOPOSITION, oppositeColor);
 		}
 		assert Hex88Board.kingList[activeColor].size == 1;
 		int position = Hex88Board.kingList[activeColor].position[0];
-		addDefaultCaptureMovesTo(Hex88Board.board[position], position, moveDeltaKing, IntPosition.NOPOSITION);
+		addDefaultCaptureMovesTo(Hex88Board.board[position], position, false, moveDeltaKing, IntPosition.NOPOSITION, oppositeColor);
 	}
 	
 	private static void generateEvasion(Attack attack) {
@@ -671,28 +672,28 @@ public final class MoveGenerator {
 		for (int i = 0; i < tempChessmanList.size; i++) {
 			int position = tempChessmanList.position[i];
 			if (!board.isPinned(position, activeColor)) {
-				addDefaultCaptureMovesTo(Hex88Board.board[position], position, moveDeltaKnight, attackerPosition);
+				addDefaultCaptureMovesTo(Hex88Board.board[position], position, false, moveDeltaKnight, attackerPosition, oppositeColor);
 			}
 		}
 		tempChessmanList = Hex88Board.bishopList[activeColor];
 		for (int i = 0; i < tempChessmanList.size; i++) {
 			int position = tempChessmanList.position[i];
 			if (!board.isPinned(position, activeColor)) {
-				addDefaultCaptureMovesTo(Hex88Board.board[position], position, moveDeltaBishop, attackerPosition);
+				addDefaultCaptureMovesTo(Hex88Board.board[position], position, true, moveDeltaBishop, attackerPosition, oppositeColor);
 			}
 		}
 		tempChessmanList = Hex88Board.rookList[activeColor];
 		for (int i = 0; i < tempChessmanList.size; i++) {
 			int position = tempChessmanList.position[i];
 			if (!board.isPinned(position, activeColor)) {
-				addDefaultCaptureMovesTo(Hex88Board.board[position], position, moveDeltaRook, attackerPosition);
+				addDefaultCaptureMovesTo(Hex88Board.board[position], position, true, moveDeltaRook, attackerPosition, oppositeColor);
 			}
 		}
 		tempChessmanList = Hex88Board.queenList[activeColor];
 		for (int i = 0; i < tempChessmanList.size; i++) {
 			int position = tempChessmanList.position[i];
 			if (!board.isPinned(position, activeColor)) {
-				addDefaultCaptureMovesTo(Hex88Board.board[position], position, moveDeltaQueen, attackerPosition);
+				addDefaultCaptureMovesTo(Hex88Board.board[position], position, true, moveDeltaQueen, attackerPosition, oppositeColor);
 			}
 		}
 		
@@ -869,14 +870,14 @@ public final class MoveGenerator {
 	 * @param moveDelta the move delta list.
 	 * @param targetPosition the target position.
 	 */
-	private static void addDefaultCaptureMovesTo(int piece, int position, int[] moveDelta, int targetPosition) {
+	private static void addDefaultCaptureMovesTo(int piece, int position, boolean sliding, int[] moveDelta, int targetPosition, int oppositeColor) {
 		assert piece != IntChessman.NOPIECE;
 		assert moveDelta != null;
 		assert board != null;
 		assert moveList != null;
 
-		boolean sliding = IntChessman.isSliding(piece);
-		int oppositeColor = IntChessman.getColorOpposite(piece);
+		assert IntChessman.isSliding(piece) == sliding;
+		assert oppositeColor == IntChessman.getColorOpposite(piece);
 		int moveTemplate = IntMove.createMove(IntMove.NORMAL, position, position, piece, IntChessman.NOPIECE, IntChessman.NOPIECE);
 		
 		for (int delta : moveDelta) {
