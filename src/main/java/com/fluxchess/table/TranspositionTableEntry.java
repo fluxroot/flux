@@ -20,7 +20,7 @@ package com.fluxchess.table;
 
 import com.fluxchess.Search;
 import com.fluxchess.move.IntMove;
-import com.fluxchess.move.IntValue;
+import com.fluxchess.move.IntScore;
 
 /**
  * TranspositionTableEntry
@@ -33,7 +33,7 @@ public final class TranspositionTableEntry {
 	public int age = -1;
 	public int depth = -1;
 	private int value = -Search.INFINITY;
-	public int type = IntValue.NOVALUE;
+	public int type = IntScore.NOSCORE;
 	public int move = IntMove.NOMOVE;
 	public boolean mateThreat = false;
 
@@ -45,7 +45,7 @@ public final class TranspositionTableEntry {
 		this.age = -1;
 		this.depth = -1;
 		this.value = -Search.INFINITY;
-		this.type = IntValue.NOVALUE;
+		this.type = IntScore.NOSCORE;
 		this.move = IntMove.NOMOVE;
 		this.mateThreat = false;
 	}
