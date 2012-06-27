@@ -18,7 +18,7 @@
 */
 package com.fluxchess.move;
 
-import com.fluxchess.ISearch;
+import com.fluxchess.Search;
 
 /**
  * MoveList
@@ -28,7 +28,7 @@ import com.fluxchess.ISearch;
 public final class MoveList {
 
 	private static final int MAXSIZE = 4096;
-	private static final int HISTORYSIZE = ISearch.MAX_HEIGHT + 1;
+	private static final int HISTORYSIZE = Search.MAX_HEIGHT + 1;
 
 	public final int[] move = new int[MAXSIZE];
 	public final int[] value = new int[MAXSIZE];

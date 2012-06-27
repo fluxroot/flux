@@ -61,8 +61,8 @@ public final class Flux extends AbstractEngine {
 	private TranspositionTable transpositionTable;
 	private EvaluationTable evaluationTable;
 	private PawnTable pawnTable;
-	private final int[] timeTable = new int[ISearch.MAX_HEIGHT + 1];
-	private ISearch search;
+	private final int[] timeTable = new int[Search.MAX_HEIGHT + 1];
+	private Search search;
 
 	/**
 	 * Creates a new Flux.

@@ -38,7 +38,7 @@ public final class InformationTimer {
 
 	private final AbstractCommunication protocol;
 	private final TranspositionTable transpositionTable;
-	private ISearch search = null;
+	private Search search = null;
 	
 	// InfoCommand values
 	public int currentDepth = 0;
@@ -71,7 +71,7 @@ public final class InformationTimer {
 	 * 
 	 * @param search the search.
 	 */
-	public void setSearch(ISearch search) {
+	public void setSearch(Search search) {
 		this.search = search;
 	}
 

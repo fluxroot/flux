@@ -18,7 +18,7 @@
 */
 package com.fluxchess.table;
 
-import com.fluxchess.ISearch;
+import com.fluxchess.Search;
 import com.fluxchess.move.IntMove;
 
 /**
@@ -29,7 +29,7 @@ import com.fluxchess.move.IntMove;
  */
 public final class KillerTable {
 
-	private static final int MAXSIZE = ISearch.MAX_HEIGHT + 1;
+	private static final int MAXSIZE = Search.MAX_HEIGHT + 1;
 
 	private static final int[] primaryKiller = new int[MAXSIZE];
 	private static final int[] secondaryKiller = new int[MAXSIZE];

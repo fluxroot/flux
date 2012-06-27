@@ -19,7 +19,7 @@
 package com.fluxchess.move;
 
 import com.fluxchess.Configuration;
-import com.fluxchess.ISearch;
+import com.fluxchess.Search;
 import com.fluxchess.board.Attack;
 import com.fluxchess.board.AttackVector;
 import com.fluxchess.board.Hex88Board;
@@ -48,7 +48,7 @@ public final class MoveGenerator {
 	public static final int[] moveDeltaQueen = { +16, +17, +1, -15, -16, -17, -1, +15 };
 	public static final int[] moveDeltaKing = { +16, +17, +1, -15, -16, -17, -1, +15 };
 
-	private static final int HISTORYSIZE = ISearch.MAX_HEIGHT + 1;
+	private static final int HISTORYSIZE = Search.MAX_HEIGHT + 1;
 	private static final int STATELISTSIZE = 256;
 
 	// States

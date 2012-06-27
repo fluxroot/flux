@@ -28,7 +28,7 @@ import jcpi.data.GenericFile;
 import jcpi.data.GenericPiece;
 import jcpi.data.GenericPosition;
 
-import com.fluxchess.ISearch;
+import com.fluxchess.Search;
 import com.fluxchess.evaluation.PositionValues;
 import com.fluxchess.move.IntCastling;
 import com.fluxchess.move.IntMove;
@@ -47,7 +47,7 @@ public final class Hex88Board {
 	public static final int BOARDSIZE = 128;
 	
 	// The size of the history stack
-	private static final int STACKSIZE = ISearch.MAX_MOVES;
+	private static final int STACKSIZE = Search.MAX_MOVES;
 
 	// Game phase thresholds
 	public static final int GAMEPHASE_OPENING_VALUE =
