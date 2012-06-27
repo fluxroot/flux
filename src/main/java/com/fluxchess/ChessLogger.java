@@ -46,6 +46,10 @@ public class ChessLogger {
 		protocol = newProtocol;
 	}
 	
+	public static boolean getDebug() {
+		return debug;
+	}
+
 	public static void setDebug(boolean mode) {
 		debug = mode;
 	}
