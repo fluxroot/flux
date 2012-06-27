@@ -108,7 +108,7 @@ public final class Flux extends AbstractEngine {
 	}
 
 	public void visit(EngineInitializeRequestCommand command) {
-		if (command == null) throw new IllegalArgumentException();
+		assert command != null;
 		
 		ChessLogger.getLogger().debug("Received Protocol command.");
 		
@@ -166,7 +166,7 @@ public final class Flux extends AbstractEngine {
 	}
 
 	public void visit(EngineReadyRequestCommand command) {
-		if (command == null) throw new IllegalArgumentException();
+		assert command != null;
 		
 		ChessLogger.getLogger().debug("Received ReadyRequest command.");
 
@@ -175,7 +175,7 @@ public final class Flux extends AbstractEngine {
 	}
 
 	public void visit(EngineDebugCommand command) {
-		if (command == null) throw new IllegalArgumentException();
+		assert command != null;
 		
 		ChessLogger.getLogger().debug("Received Debug command.");
 
@@ -190,7 +190,7 @@ public final class Flux extends AbstractEngine {
 	}
 
 	public void visit(EngineNewGameCommand command) {
-		if (command == null) throw new IllegalArgumentException();
+		assert command != null;
 		
 		ChessLogger.getLogger().debug("Received New command.");
 
@@ -205,7 +205,7 @@ public final class Flux extends AbstractEngine {
 	}
 
 	public void visit(EngineAnalyzeCommand command) {
-		if (command == null) throw new IllegalArgumentException();
+		assert command != null;
 		
 		ChessLogger.getLogger().debug("Received Analyze command.");
 
@@ -225,7 +225,7 @@ public final class Flux extends AbstractEngine {
 	}
 
 	public void visit(EnginePonderHitCommand command) {
-		if (command == null) throw new IllegalArgumentException();
+		assert command != null;
 		
 		ChessLogger.getLogger().debug("Received PonderHit command.");
 
@@ -237,7 +237,7 @@ public final class Flux extends AbstractEngine {
 	}
 
 	public void visit(EngineStartCalculatingCommand command) {
-		if (command == null) throw new IllegalArgumentException();
+		assert command != null;
 		
 		ChessLogger.getLogger().debug("Received StartCalculating command.");
 
@@ -289,7 +289,7 @@ public final class Flux extends AbstractEngine {
 	}
 
 	public void visit(EngineStopCalculatingCommand command) {
-		if (command == null) throw new IllegalArgumentException();
+		assert command != null;
 		
 		ChessLogger.getLogger().debug("Received StopCalculating command.");
 
@@ -302,6 +302,8 @@ public final class Flux extends AbstractEngine {
 	}
 
 	public void visit(EngineSetOptionCommand command) {
+		assert command != null;
+
 		Configuration.setOption(command.name, command.value);
 
 		ChessLogger.getLogger().debug("Received SetOption command.");
