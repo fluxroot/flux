@@ -70,8 +70,8 @@ public class IntMoveTest {
 		int move2 = IntMove.createMove(IntMove.NORMAL, 0, 16, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.QUEEN);
 		assertEquals(move, move2);
 
-		GenericMove commandMove = new GenericMove(GenericPosition.valueOf(GenericFile.Fa, GenericRank.R2), GenericPosition.valueOf(GenericFile.Fa, GenericRank.R4));
-		move = IntMove.convertMove(commandMove, new Hex88Board(new GenericBoard(GenericBoard.STANDARDSETUP)));
+		GenericMove genericMove = new GenericMove(GenericPosition.valueOf(GenericFile.Fa, GenericRank.R2), GenericPosition.valueOf(GenericFile.Fa, GenericRank.R4));
+		move = IntMove.convertMove(genericMove, new Hex88Board(new GenericBoard(GenericBoard.STANDARDSETUP)));
 		assertEquals(IntMove.PAWNDOUBLE, IntMove.getType(move));
 		assertEquals(16, IntMove.getStart(move));
 		assertEquals(48, IntMove.getEnd(move));

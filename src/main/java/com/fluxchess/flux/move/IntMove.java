@@ -439,9 +439,9 @@ public final class IntMove {
 	}
 
 	/**
-	 * Returns the IntMove from the CommandMove.
+	 * Returns the IntMove from the GenericMove.
 	 * 
-	 * @param move the CommandMove.
+	 * @param move the GenericMove.
 	 * @param board the Hex88Board.
 	 * @return the IntMove.
 	 */
@@ -470,11 +470,11 @@ public final class IntMove {
 	}
 
 	/**
-	 * Returns whether the CommandMove is a pawn promotion move.
+	 * Returns whether the GenericMove is a pawn promotion move.
 	 * 
-	 * @param move the CommandMove.
+	 * @param move the GenericMove.
 	 * @param board the Hex88Board.
-	 * @return true if the CommandMove is a pawn promotion, false otherwise.
+	 * @return true if the GenericMove is a pawn promotion, false otherwise.
 	 */
 	private static boolean isPawnPromotion(GenericMove move, Hex88Board board) {
 		assert move != null;
@@ -494,11 +494,11 @@ public final class IntMove {
 	}
 
 	/**
-	 * Returns whether the CommandMove is a pawn double advance move.
+	 * Returns whether the GenericMove is a pawn double advance move.
 	 * 
-	 * @param move the CommandMove.
+	 * @param move the GenericMove.
 	 * @param board the Hex88Board.
-	 * @return true if the CommandMove is a pawn double advance, false otherwise.
+	 * @return true if the GenericMove is a pawn double advance, false otherwise.
 	 */
 	private static boolean isPawnDouble(GenericMove move, Hex88Board board) {
 		assert move != null;
@@ -518,11 +518,11 @@ public final class IntMove {
 	}
 
 	/**
-	 * Returns whether the CommandMove is a en passant move.
+	 * Returns whether the GenericMove is a en passant move.
 	 * 
-	 * @param move the CommandMove.
+	 * @param move the GenericMove.
 	 * @param board the Hex88Board.
-	 * @return true if the CommandMove is a en passant move, false otherwise.
+	 * @return true if the GenericMove is a en passant move, false otherwise.
 	 */
 	private static boolean isEnPassant(GenericMove move, Hex88Board board) {
 		assert move != null;
@@ -548,11 +548,11 @@ public final class IntMove {
 	}
 
 	/**
-	 * Returns whether the CommandMove is a castling move.
+	 * Returns whether the GenericMove is a castling move.
 	 * 
-	 * @param move the CommandMove.
+	 * @param move the GenericMove.
 	 * @param board the Hex88Board.
-	 * @return true if the CommandMove is a castling move, false otherwise.
+	 * @return true if the GenericMove is a castling move, false otherwise.
 	 */
 	private static boolean isCastling(GenericMove move, Hex88Board board) {
 		assert move != null;
@@ -595,12 +595,12 @@ public final class IntMove {
 	}
 	
 	/**
-	 * Returns the CommandMove from the move.
+	 * Returns the GenericMove from the move.
 	 * 
 	 * @param move the move.
-	 * @return the CommandMove.
+	 * @return the GenericMove.
 	 */
-	public static GenericMove toCommandMove(int move) {
+	public static GenericMove toGenericMove(int move) {
 		assert move != NOMOVE;
 		
 		int type = getType(move);
@@ -659,7 +659,7 @@ public final class IntMove {
 		}
 
 		string += ", ";
-		string += toCommandMove(move).toString();
+		string += toGenericMove(move).toString();
 
 		if (getTarget(move) != IntChessman.NOPIECE) {
 			string += ", (";
