@@ -1388,10 +1388,10 @@ public final class Evaluation implements IEvaluation {
 							}
 							
 							// King protected passer
-							else if (((promotionDistance <= 2 && (myAttackTable[pawnPosition] & BIT_KING) != 0)
-									|| (promotionDistance <= 3 && (myAttackTable[pawnPosition + 16] & BIT_KING) != 0 && board.activeColor == myColor))
-									&& (myKingFile != pawnFile
-											|| (pawnFile != IntPosition.fileA && pawnFile != IntPosition.fileH))) {
+							else if (IntPosition.getRelativeRank(myKingPosition, myColor) == IntPosition.rank7
+									&& ((promotionDistance <= 2 && (myAttackTable[pawnPosition] & BIT_KING) != 0)
+											|| (promotionDistance <= 3 && (myAttackTable[pawnPosition + 16] & BIT_KING) != 0 && board.activeColor == myColor))
+											&& (myKingFile != pawnFile || (pawnFile != IntPosition.fileA && pawnFile != IntPosition.fileH))) {
 								endgameMax += EVAL_PAWN_PASSER_UNSTOPPABLE;
 							}
 						}
@@ -1427,10 +1427,10 @@ public final class Evaluation implements IEvaluation {
 							}
 
 							// King protected passer
-							else if (((promotionDistance <= 2 && (myAttackTable[pawnPosition] & BIT_KING) != 0)
-									|| (promotionDistance <= 3 && (myAttackTable[pawnPosition - 16] & BIT_KING) != 0 && board.activeColor == myColor))
-									&& (myKingFile != pawnFile
-											|| (pawnFile != IntPosition.fileA && pawnFile != IntPosition.fileH))) {
+							else if (IntPosition.getRelativeRank(myKingPosition, myColor) == IntPosition.rank7
+									&& ((promotionDistance <= 2 && (myAttackTable[pawnPosition] & BIT_KING) != 0)
+											|| (promotionDistance <= 3 && (myAttackTable[pawnPosition - 16] & BIT_KING) != 0 && board.activeColor == myColor))
+											&& (myKingFile != pawnFile || (pawnFile != IntPosition.fileA && pawnFile != IntPosition.fileH))) {
 								endgameMax += EVAL_PAWN_PASSER_UNSTOPPABLE;
 							}
 						}
