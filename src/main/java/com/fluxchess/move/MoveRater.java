@@ -92,6 +92,23 @@ public final class MoveRater {
 		}
 	}
 
+	/**
+	 * Rates the move according to the MVPD.
+	 * 
+	 * @param moveList the move list.
+	 */
+	public void rateFromMVPD(MoveList moveList) {
+		for (int i = moveList.head; i < moveList.tail; i++) {
+			moveList.value[i] = getMVPDRating(moveList.move[i]);
+		}
+	}
+
+	/**
+	 * Rates the move according to the MVV/LVA.
+	 * 
+	 * @param move the move.
+	 * @return the MVV/LVA value.
+	 */
 	private int getMVVLVARating(int move) {
 		int value = 0;
 
@@ -105,6 +122,29 @@ public final class MoveRater {
 		
 		assert value >= (IntChessman.VALUE_KING / IntChessman.VALUE_KING) && value <= (IntChessman.VALUE_KING / IntChessman.VALUE_PAWN) + 10 * IntChessman.VALUE_QUEEN;
 		
+		return value;
+	}
+
+	/**
+	 * Rates the move according to the MVD (Most valuable piece difference).
+	 * 
+	 * @param move the move.
+	 * @return the MVPD value.
+	 */
+	private int getMVPDRating(int move) {
+		int value = 0;
+
+		int chessman = IntMove.getChessman(move);
+		int target = IntMove.getTarget(move);
+
+		if (target != IntChessman.NOPIECE) {
+			value += IntChessman.VALUE_KING * (IntChessman.getValueFromChessman(target) - IntChessman.getValueFromChessman(chessman));
+			value += IntChessman.getValueFromChessman(target);
+		}
+		else {
+			value -= IntChessman.getValueFromChessman(chessman);
+		}
+
 		return value;
 	}
 
