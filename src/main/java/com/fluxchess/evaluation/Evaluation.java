@@ -434,7 +434,6 @@ public final class Evaluation implements IEvaluation {
 	private static void evaluateDraw(Hex88Board board) {
 		for (int myColor : IntColor.values) {
 			int enemyColor = IntColor.switchColor(myColor);
-			byte[] enemyAttackTable = attackTable[enemyColor];
 			
 			assert Hex88Board.kingList[myColor].size != 0;
 			assert Hex88Board.kingList[enemyColor].size != 0;
@@ -454,27 +453,18 @@ public final class Evaluation implements IEvaluation {
 								if (Hex88Board.queenList[enemyColor].size == 0) {
 									if (Hex88Board.rookList[enemyColor].size == 0) {
 										if (Hex88Board.bishopList[enemyColor].size == 0) {
-											if (Hex88Board.knightList[enemyColor].size == 1) {
+											if (Hex88Board.knightList[enemyColor].size == 0) {
+												if (Hex88Board.pawnList[enemyColor].size == 0) {
+													// KPK
+
+													evaluateDrawKPK(myColor, enemyColor, board);
+												}
+											}
+											else if (Hex88Board.knightList[enemyColor].size == 1) {
 												if (Hex88Board.pawnList[enemyColor].size == 0) {
 													// KPKN
 
-													// Check the promotion path
-													int delta = 16;
-													if (myColor == IntColor.BLACK) {
-														delta = -16;
-													} else {
-														assert myColor == IntColor.WHITE;
-													}
-													int end = Hex88Board.pawnList[myColor].position[0] + delta;
-													while ((end & 0x88) == 0) {
-														int chessman = Hex88Board.board[end];
-														if ((chessman != IntChessman.NOPIECE && IntChessman.getColor(chessman) == enemyColor) || (enemyAttackTable[end] & BIT_MINOR) != 0) {
-															drawFactor[myColor] = 1;
-															break;
-														} else {
-															end += delta;
-														}
-													}
+													evaluateDrawKPKN(myColor, enemyColor, board);
 												}
 											}
 										} else if (Hex88Board.bishopList[enemyColor].size == 1) {
@@ -482,23 +472,7 @@ public final class Evaluation implements IEvaluation {
 												if (Hex88Board.pawnList[enemyColor].size == 0) {
 													// KPKB
 
-													// Check the promotion path
-													int delta = 16;
-													if (myColor == IntColor.BLACK) {
-														delta = -16;
-													} else {
-														assert myColor == IntColor.WHITE;
-													}
-													int end = Hex88Board.pawnList[myColor].position[0] + delta;
-													while ((end & 0x88) == 0) {
-														int chessman = Hex88Board.board[end];
-														if ((chessman != IntChessman.NOPIECE && IntChessman.getColor(chessman) == enemyColor) || (enemyAttackTable[end] & BIT_MINOR) != 0) {
-															drawFactor[myColor] = 1;
-															break;
-														} else {
-															end += delta;
-														}
-													}
+													evaluateDrawKPKB(myColor, enemyColor, board);
 												}
 											}
 										}
@@ -658,6 +632,156 @@ public final class Evaluation implements IEvaluation {
 				}
 			}
 		} // for
+	}
+
+	private static void evaluateDrawKPK(int myColor, int enemyColor, Hex88Board board) {
+		// Initialize
+		byte[] myAttackTable = attackTable[myColor];
+
+		assert Hex88Board.pawnList[myColor].size == 1;
+		int pawnPosition = Hex88Board.pawnList[myColor].position[0];
+		int pawnFile = IntPosition.getFile(pawnPosition);
+		int pawnRank = IntPosition.getRank(pawnPosition);
+		assert Hex88Board.kingList[enemyColor].size == 1;
+		int enemyKingPosition = Hex88Board.kingList[enemyColor].position[0];
+		int enemyKingFile = IntPosition.getFile(enemyKingPosition);
+		int enemyKingRank = IntPosition.getRank(enemyKingPosition);
+		assert Hex88Board.kingList[myColor].size == 1;
+		int myKingPosition = Hex88Board.kingList[myColor].position[0];
+		int myKingFile = IntPosition.getFile(myKingPosition);
+		int myKingRank = IntPosition.getRank(myKingPosition);
+
+		int myKingPromotionDistance;
+		int enemyKingPromotionDistance;
+		if (myColor == IntColor.WHITE) {
+			myKingPromotionDistance = Math.max(Math.abs(pawnFile - myKingFile), IntPosition.rank8 - myKingRank);
+			enemyKingPromotionDistance = Math.max(Math.abs(pawnFile - enemyKingFile), IntPosition.rank8 - enemyKingRank);
+		}
+		else {
+			assert myColor == IntColor.BLACK;
+
+			myKingPromotionDistance = Math.max(Math.abs(pawnFile - myKingFile), myKingRank);
+			enemyKingPromotionDistance = Math.max(Math.abs(pawnFile - enemyKingFile), enemyKingRank);
+		}
+		// Unstoppable passer
+		boolean unstoppablePasser = false;
+		if (myKingFile != pawnFile) {
+			int delta;
+			int promotionDistance;
+			int difference;
+
+			if (myColor == IntColor.WHITE) {
+				delta = 16;
+
+				promotionDistance = IntPosition.rank8 - pawnRank;
+				if (pawnRank == IntPosition.rank2) {
+					// We can do a pawn double move
+					promotionDistance--;
+				}
+			} else {
+				assert myColor == IntColor.BLACK;
+
+				delta = -16;
+
+				promotionDistance = pawnRank;
+				if (pawnRank == IntPosition.rank7) {
+					// We can do a pawn double move
+					promotionDistance--;
+				}
+			}
+
+			difference = enemyKingPromotionDistance - promotionDistance;
+
+			if (board.activeColor == enemyColor) {
+				difference--;
+			}
+
+			if (difference >= 1) {
+				unstoppablePasser = true;
+			}
+
+			// King protected passer
+			else if (IntPosition.getRelativeRank(myKingPosition, myColor) == IntPosition.rank7
+					&& ((promotionDistance <= 2 && (myAttackTable[pawnPosition] & BIT_KING) != 0)
+							|| (promotionDistance <= 3 && (myAttackTable[pawnPosition + delta] & BIT_KING) != 0 && board.activeColor == myColor))
+							&& (myKingFile != pawnFile || (pawnFile != IntPosition.fileA && pawnFile != IntPosition.fileH))) {
+				unstoppablePasser = true;
+			}
+		}
+
+		if (!unstoppablePasser) {
+			if (pawnFile == IntPosition.fileA || pawnFile == IntPosition.fileH) {
+				int difference = enemyKingPromotionDistance - myKingPromotionDistance;
+				if (board.activeColor == enemyColor) {
+					difference--;
+				}
+				
+				if (difference < 1) {
+					// The enemy king can reach the corner.
+					drawFactor[myColor] = 0;
+				}
+			}
+			else {
+				boolean enemyKingInFrontPawn = false;
+				if (myColor == IntColor.WHITE) {
+					enemyKingInFrontPawn = pawnRank < enemyKingRank;
+				}
+				else {
+					assert myColor == IntColor.BLACK;
+
+					enemyKingInFrontPawn = pawnRank > enemyKingRank;
+				}
+				if (enemyKingInFrontPawn
+						&& Math.abs(myKingRank - enemyKingRank) >= 2
+						&& !(Math.abs(myKingRank - enemyKingRank) == 2 && myKingFile == enemyKingFile && board.activeColor == enemyColor)) {
+					drawFactor[myColor] = 0;
+				}
+			}
+		}
+	}
+
+	private static void evaluateDrawKPKN(int myColor, int enemyColor, Hex88Board board) {
+		byte[] enemyAttackTable = attackTable[enemyColor];
+
+		// Check the promotion path
+		int delta = 16;
+		if (myColor == IntColor.BLACK) {
+			delta = -16;
+		} else {
+			assert myColor == IntColor.WHITE;
+		}
+		int end = Hex88Board.pawnList[myColor].position[0] + delta;
+		while ((end & 0x88) == 0) {
+			int chessman = Hex88Board.board[end];
+			if ((chessman != IntChessman.NOPIECE && IntChessman.getColor(chessman) == enemyColor) || (enemyAttackTable[end] & BIT_MINOR) != 0) {
+				drawFactor[myColor] = 1;
+				break;
+			} else {
+				end += delta;
+			}
+		}
+	}
+
+	private static void evaluateDrawKPKB(int myColor, int enemyColor, Hex88Board board) {
+		byte[] enemyAttackTable = attackTable[enemyColor];
+
+		// Check the promotion path
+		int delta = 16;
+		if (myColor == IntColor.BLACK) {
+			delta = -16;
+		} else {
+			assert myColor == IntColor.WHITE;
+		}
+		int end = Hex88Board.pawnList[myColor].position[0] + delta;
+		while ((end & 0x88) == 0) {
+			int chessman = Hex88Board.board[end];
+			if ((chessman != IntChessman.NOPIECE && IntChessman.getColor(chessman) == enemyColor) || (enemyAttackTable[end] & BIT_MINOR) != 0) {
+				drawFactor[myColor] = 1;
+				break;
+			} else {
+				end += delta;
+			}
+		}
 	}
 
 	private static void evaluatePawn(int myColor) {
