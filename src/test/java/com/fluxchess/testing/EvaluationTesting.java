@@ -27,7 +27,6 @@ import jcpi.data.IllegalNotationException;
 
 import com.fluxchess.board.Hex88Board;
 import com.fluxchess.evaluation.Evaluation;
-import com.fluxchess.evaluation.IEvaluation;
 import com.fluxchess.move.MoveSee;
 import com.fluxchess.table.EvaluationTable;
 import com.fluxchess.table.PawnTable;
@@ -44,7 +43,7 @@ public class EvaluationTesting {
 		try {
 			String token = reader.readLine();
 			while (!token.equalsIgnoreCase("quit")) {
-				IEvaluation evaluation = new Evaluation(new EvaluationTable(1024), new PawnTable(1024));
+				Evaluation evaluation = new Evaluation(new EvaluationTable(1024), new PawnTable(1024));
 				try {
 					Hex88Board board = new Hex88Board(new GenericBoard(token));
 					new MoveSee(board);

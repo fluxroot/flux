@@ -34,7 +34,7 @@ import com.fluxchess.board.IntChessman;
 import com.fluxchess.board.IntColor;
 import com.fluxchess.board.IntGamePhase;
 import com.fluxchess.board.IntPosition;
-import com.fluxchess.evaluation.IEvaluation;
+import com.fluxchess.evaluation.Evaluation;
 import com.fluxchess.move.IntMove;
 import com.fluxchess.move.IntScore;
 import com.fluxchess.move.MoveGenerator;
@@ -122,7 +122,7 @@ public final class Search implements Runnable {
 	private int showPvNumber = 1;
 	
 	// Search logic
-	private IEvaluation evaluation;
+	private Evaluation evaluation;
 	private static Hex88Board board;
 	private final int myColor;
 	
@@ -155,7 +155,7 @@ public final class Search implements Runnable {
 		}
 	}
 
-	public Search(IEvaluation newEvaluation, Hex88Board newBoard, TranspositionTable newTranspositionTable, InformationTimer newInfo, int[] timeTable) {
+	public Search(Evaluation newEvaluation, Hex88Board newBoard, TranspositionTable newTranspositionTable, InformationTimer newInfo, int[] timeTable) {
 		assert newEvaluation != null;
 		assert newBoard != null;
 		assert newTranspositionTable != null;

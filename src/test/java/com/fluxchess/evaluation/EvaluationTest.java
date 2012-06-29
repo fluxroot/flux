@@ -25,8 +25,6 @@ import jcpi.data.IllegalNotationException;
 import org.junit.Test;
 
 import com.fluxchess.board.Hex88Board;
-import com.fluxchess.evaluation.Evaluation;
-import com.fluxchess.evaluation.IEvaluation;
 import com.fluxchess.move.MoveSee;
 import com.fluxchess.table.EvaluationTable;
 import com.fluxchess.table.PawnTable;
@@ -40,7 +38,7 @@ public class EvaluationTest {
 
 	@Test
 	public void testEvaluate() {
-		IEvaluation evaluation = new Evaluation(new EvaluationTable(1024), new PawnTable(1024));
+		Evaluation evaluation = new Evaluation(new EvaluationTable(1024), new PawnTable(1024));
 		Hex88Board board = null;
 
 		try {

@@ -40,7 +40,7 @@ import com.fluxchess.table.PawnTable;
  * 
  * @author Phokham Nonava
  */
-public final class Evaluation implements IEvaluation {
+public final class Evaluation {
 
 	// Our evaluation constants
 	private static final int EVAL_PAWN_DOUBLED_OPENING = 10;
