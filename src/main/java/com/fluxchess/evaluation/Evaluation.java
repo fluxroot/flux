@@ -604,6 +604,46 @@ public final class Evaluation implements IEvaluation {
 								}
 							}
 						}
+						else if (Hex88Board.knightList[myColor].size == 1) {
+							if (Hex88Board.pawnList[myColor].size == 0) {
+								// KRNK*
+
+								if (Hex88Board.queenList[enemyColor].size == 0) {
+									if (Hex88Board.rookList[enemyColor].size == 1) {
+										if (Hex88Board.bishopList[enemyColor].size == 0) {
+											if (Hex88Board.knightList[enemyColor].size == 0) {
+												if (Hex88Board.pawnList[enemyColor].size == 0) {
+													// KRNKN
+
+													drawFactor[myColor] = 0;
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+					else if (Hex88Board.bishopList[myColor].size == 1) {
+						if (Hex88Board.knightList[myColor].size == 0) {
+							if (Hex88Board.pawnList[myColor].size == 0) {
+								// KRBK*
+
+								if (Hex88Board.queenList[enemyColor].size == 0) {
+									if (Hex88Board.rookList[enemyColor].size == 1) {
+										if (Hex88Board.bishopList[enemyColor].size == 0) {
+											if (Hex88Board.knightList[enemyColor].size == 0) {
+												if (Hex88Board.pawnList[enemyColor].size == 0) {
+													// KRBKR
+
+													drawFactor[myColor] = 0;
+												}
+											}
+										}
+									}
+								}
+							}
+						}
 					}
 				}
 			} else if (Hex88Board.queenList[myColor].size == 1) {
