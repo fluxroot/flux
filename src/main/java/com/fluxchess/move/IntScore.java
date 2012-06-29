@@ -20,7 +20,6 @@ package com.fluxchess.move;
 
 import jcpi.data.GenericScore;
 
-
 /**
  * IntScore
  *
@@ -57,7 +56,7 @@ public class IntScore {
 	 * @param value the GenericScore.
 	 * @return the IntScore value.
 	 */
-	public static int valueOfValue(GenericScore value) {
+	public static int valueOfScore(GenericScore value) {
 		assert value != null;
 
 		switch (value) {
