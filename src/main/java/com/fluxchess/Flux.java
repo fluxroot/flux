@@ -67,7 +67,7 @@ public final class Flux extends AbstractEngine {
 	/**
 	 * Creates a new Flux.
 	 * 
-	 * @param protocol the protocol.
+	 * @param communication the AbstractCommunication.
 	 */
 	public Flux(AbstractCommunication communication) {
 		super(communication);
