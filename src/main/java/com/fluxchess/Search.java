@@ -76,7 +76,7 @@ public final class Search implements Runnable {
 	public static final int CHECKMATE_THRESHOLD = CHECKMATE - 1000;
 
 	private static final int ASPIRATIONWINDOW = 20;
-	private static final int ASPIRATIONWINDOW_ADJUSTMENT = 200;
+	private static final int[] ASPIRATIONWINDOW_ADJUSTMENT = new int[] {20, 20, 40, 80, 160, 320, CHECKMATE};
 
 	private static final int TIMEEXTENSION_MARGIN = 30;
 	
@@ -523,18 +523,13 @@ public final class Search implements Runnable {
 			}
 
 			//## BEGIN Aspiration Windows
-			// Notes: Ideas from Ed Schröder. We open the aspiration window
-			// twice, as the first adjustment should be wide enough.
 			if (!(this.stopped && this.canStop) && Configuration.useAspirationWindows && this.showPvNumber <= 1 && currentDepth >= transpositionDepth) {
-				// First adjustment
-				if (value <= alpha || value >= beta) {
-					if (value <= alpha) {
-						alpha -= ASPIRATIONWINDOW_ADJUSTMENT;
-					} else if (value >= beta) {
-						beta += ASPIRATIONWINDOW_ADJUSTMENT;
-					} else {
-						assert false : "Alpha: " + alpha + ", Beta: " + beta + ", Value: " + value;
-					}
+				int adjustmentIndex = 0;
+				while (adjustmentIndex < ASPIRATIONWINDOW_ADJUSTMENT.length && (value <= alpha || value >= beta)) {
+					int newAspirationWindow = ASPIRATIONWINDOW_ADJUSTMENT[adjustmentIndex];
+
+					alpha -= newAspirationWindow;
+					beta += newAspirationWindow;
 					if (alpha < -CHECKMATE) {
 						alpha = -CHECKMATE;
 					}
@@ -542,20 +537,19 @@ public final class Search implements Runnable {
 						beta = CHECKMATE;
 					}
 
+					Result moveResultAdjustment = new Result();
+					
 					// Do the Alpha-Beta search again
-					value = alphaBetaRoot(currentDepth, alpha, beta, 0, rootMoveList, isCheck, moveResult);
+					value = alphaBetaRoot(currentDepth, alpha, beta, 0, rootMoveList, isCheck, moveResultAdjustment);
 
-					if (!(this.stopped && this.canStop)) {
-						// Second adjustment
-						// Open window to full width
-						if (value <= alpha || value >= beta) {
-							alpha = -CHECKMATE;
-							beta = CHECKMATE;
-
-							// Do the Alpha-Beta search again
-							value = alphaBetaRoot(currentDepth, alpha, beta, 0, rootMoveList, isCheck, moveResult);
-						}
+					if (this.stopped && this.canStop) {
+						break;
 					}
+					
+					// We have a new move result
+					moveResult = moveResultAdjustment;
+
+					adjustmentIndex++;
 				}
 
 				// Adjust aspiration window
@@ -1075,60 +1069,17 @@ public final class Search implements Runnable {
 		if (Configuration.useInternalIterativeDeepening) {
 			if (pvNode
 					&& depth >= IID_DEPTH
-					&& transpositionMove == IntMove.NOMOVE) {
+					&& transpositionMove == IntMove.NOMOVE
+					// alpha is not equal the initial -CHECKMATE anymore, because of depth >= IID_DEPTH
+					// so alpha has a real value. Don't do IID if it's a checkmate value
+					&& Math.abs(alpha) < CHECKMATE_THRESHOLD) {
 				int oldAlpha = alpha;
 				int oldBeta = beta;
 				alpha = -CHECKMATE;
 				beta = CHECKMATE;
 
 				for (int newDepth = 1; newDepth < depth; newDepth++) {
-					int value = alphaBeta(newDepth, alpha, beta, height, true, false);
-
-					//## BEGIN Aspiration Windows
-					if (!(this.stopped && this.canStop) && Configuration.useAspirationWindows) {
-						// First adjustment
-						if (value <= alpha || value >= beta) {
-							if (value <= alpha) {
-								alpha -= ASPIRATIONWINDOW_ADJUSTMENT;
-							} else if (value >= beta) {
-								beta += ASPIRATIONWINDOW_ADJUSTMENT;
-							} else {
-								assert false : "Alpha: " + alpha + ", Beta: " + beta + ", Value: " + value;
-							}
-							if (alpha < -CHECKMATE) {
-								alpha = -CHECKMATE;
-							}
-							if (beta > CHECKMATE) {
-								beta = CHECKMATE;
-							}
-
-							// Do the Alpha-Beta search again
-							value = alphaBeta(newDepth, alpha, beta, height, true, false);
-
-							if (!(this.stopped && this.canStop)) {
-								// Second adjustment
-								// Open window to full width
-								if (value <= alpha || value >= beta) {
-									alpha = -CHECKMATE;
-									beta = CHECKMATE;
-
-									// Do the Alpha-Beta search again
-									value = alphaBeta(newDepth, alpha, beta, height, true, false);
-								}
-							}
-						}
-
-						// Adjust aspiration window
-						alpha = value - ASPIRATIONWINDOW;
-						beta = value + ASPIRATIONWINDOW;
-						if (alpha < -CHECKMATE) {
-							alpha = -CHECKMATE;
-						}
-						if (beta > CHECKMATE) {
-							beta = CHECKMATE;
-						}
-					}
-					//## ENDOF Aspiration Windows
+					alphaBeta(newDepth, alpha, beta, height, true, false);
 
 					if (this.stopped && this.canStop) {
 						return oldAlpha;
