@@ -134,7 +134,6 @@ public final class Search implements Runnable {
 	// Search information
 	private static final MoveList[] pvList = new MoveList[MAX_HEIGHT + 1];
 	private static final HashMap<Integer, PrincipalVariation> multiPvMap = new HashMap<Integer, PrincipalVariation>(MAX_MOVES);
-	private static final SearchStackEntry[] searchStack = new SearchStackEntry[MAX_HEIGHT + 1];
 	private Result bestResult = null;
 	private final int[] timeTable;
 
@@ -148,10 +147,6 @@ public final class Search implements Runnable {
 		
 		for (int i = 0; i < pvList.length; i++) {
 			pvList[i] = new MoveList();
-		}
-
-		for (int i = 0; i < searchStack.length; i++) {
-			searchStack[i] = new SearchStackEntry();
 		}
 	}
 
@@ -720,7 +715,6 @@ public final class Search implements Runnable {
 
 		// Reset
 		pvList[height].resetList();
-		searchStack[height].clear();
 	}
 	
 	private int alphaBetaRoot(int depth, int alpha, int beta, int height, MoveList rootMoveList, boolean isCheck, Result moveResult) {
