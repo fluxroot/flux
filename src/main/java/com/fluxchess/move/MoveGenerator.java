@@ -305,8 +305,8 @@ public final class MoveGenerator {
 			case GEN_GOODCAPTURE:
 				generateCaptures();
 				tempMoveList.resetList();
-//				moveRater.rateFromMVVLVA(moveList);
-				moveRater.rateFromMVPD(moveList);
+				moveRater.rateFromMVVLVA(moveList);
+//				moveRater.rateFromMVPD(moveList);
 				MoveSorter.sort(moveList);
 				generator[generatorHistory].testState = GEN_GOODCAPTURE;
 				break;
@@ -339,8 +339,8 @@ public final class MoveGenerator {
 				break;
 			case GEN_GOODCAPTURE_QS:
 				generateCaptures();
-//				moveRater.rateFromMVVLVA(moveList);
-				moveRater.rateFromMVPD(moveList);
+				moveRater.rateFromMVVLVA(moveList);
+//				moveRater.rateFromMVPD(moveList);
 				MoveSorter.sort(moveList);
 				generator[generatorHistory].testState = GEN_GOODCAPTURE_QS;
 				break;
