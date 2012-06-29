@@ -25,36 +25,32 @@ package com.fluxchess.table;
  */
 public final class PawnTable {
 
-	public static final int ENTRYSIZE = 16;
+	public static final int ENTRYSIZE = 12;
 
 	private final int size;
 	
 	private final long[] zobristCode;
-	private final int[] opening;
-	private final int[] endgame;
+	private final int[] value;
 	
 	public PawnTable(int newSize) {
 		assert newSize >= 1;
 
 		this.size = newSize;
 		this.zobristCode = new long[this.size];
-		this.opening = new int[this.size];
-		this.endgame = new int[this.size];
+		this.value = new int[this.size];
 	}
 
 	/**
-	 * Puts a zobrist code and opening and endgame value into the table.
+	 * Puts a zobrist code and value into the table.
 	 * 
 	 * @param newZobristCode the zobrist code.
-	 * @param newOpening the opening value.
-	 * @param newEndgame the endgame value.
+	 * @param value the value.
 	 */
-	public void put(long newZobristCode, int newOpening, int newEndgame) {
+	public void put(long newZobristCode, int value) {
 		int position = (int) (newZobristCode % this.size);
 
 		this.zobristCode[position] = newZobristCode;
-		this.opening[position] = newOpening;
-		this.endgame[position] = newEndgame;
+		this.value[position] = value;
 	}
 	
 	/**
@@ -74,35 +70,19 @@ public final class PawnTable {
 	}
 
 	/**
-	 * Returns the opening given the zobrist code.
+	 * Returns the value given the zobrist code.
 	 * 
 	 * @param newZobristCode the zobrist code.
-	 * @return the opening value.
+	 * @return the value.
 	 */
-	public int getOpening(long newZobristCode) {
+	public int getValue(long newZobristCode) {
 		int position = (int) (newZobristCode % this.size);
 
 		if (this.zobristCode[position] == newZobristCode) {
-			return this.opening[position];
+			return this.value[position];
 		}
 		
 		throw new IllegalArgumentException();
 	}
 	
-	/**
-	 * Returns the endgame given the zobrist code.
-	 * 
-	 * @param newZobristCode the zobrist code.
-	 * @return the endgame value.
-	 */
-	public int getEndgame(long newZobristCode) {
-		int position = (int) (newZobristCode % this.size);
-
-		if (this.zobristCode[position] == newZobristCode) {
-			return this.endgame[position];
-		}
-		
-		throw new IllegalArgumentException();
-	}
-
 }

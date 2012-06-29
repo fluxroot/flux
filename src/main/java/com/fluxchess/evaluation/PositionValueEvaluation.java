@@ -18,15 +18,17 @@
 */
 package com.fluxchess.evaluation;
 
+import com.fluxchess.board.Hex88Board;
+import com.fluxchess.board.IntChessman;
 import com.fluxchess.board.IntColor;
-import com.fluxchess.board.IntGamePhase;
+import com.fluxchess.board.PositionList;
 
 /**
- * PositionValues
+ * PositionValueEvaluation
  *
  * @author Phokham Nonava
  */
-public final class PositionValues {
+public final class PositionValueEvaluation {
 
 	private static final int[][] positionValueOpening = {
 		{ // Empty
@@ -227,28 +229,106 @@ public final class PositionValues {
 	};
 
 	/**
-	 * Creates a new PositionValues.
+	 * Creates a new PositionValueEvaluation.
 	 */
-	public PositionValues() {
+	public PositionValueEvaluation() {
 	}
 
-	public static int getPositionValue(int phase, int chessman, int chessmanColor, int chessmanPosition) {
-		assert phase != IntGamePhase.NOGAMEPHASE;
-		assert chessmanColor != IntColor.NOCOLOR;
-		assert (chessmanPosition & 0x88) == 0;
+	public static int evaluatePositionValue(int myColor) {
+		assert myColor != IntColor.NOCOLOR;
+		
+		// Initialize
+		int opening = 0;
+		int endgame = 0;
 
-		int position = chessmanPosition;
-		if (chessmanColor == IntColor.BLACK) {
-			position = 127 - 8 - chessmanPosition;
-		} else {
-			assert chessmanColor == IntColor.WHITE;
+		// Pawns
+		PositionList chessmanList = Hex88Board.pawnList[myColor];
+		int[] chessmanValueOpening = positionValueOpening[IntChessman.PAWN];
+		int[] chessmanValueEndgame = positionValueEndgame[IntChessman.PAWN];
+		for (int i = 0; i < chessmanList.size; i++) {
+			int position = chessmanList.position[i];
+			if (myColor == IntColor.BLACK) {
+				position = 127 - 8 - position;
+			} else {
+				assert myColor == IntColor.WHITE;
+			}
+			opening += chessmanValueOpening[position];
+			endgame += chessmanValueEndgame[position];
 		}
 
-		if (phase == IntGamePhase.ENDGAME) {
-			return positionValueEndgame[chessman][position];
-		} else {
-			return positionValueOpening[chessman][position];
+		// Knights
+		chessmanList = Hex88Board.knightList[myColor];
+		chessmanValueOpening = positionValueOpening[IntChessman.KNIGHT];
+		chessmanValueEndgame = positionValueEndgame[IntChessman.KNIGHT];
+		for (int i = 0; i < chessmanList.size; i++) {
+			int position = chessmanList.position[i];
+			if (myColor == IntColor.BLACK) {
+				position = 127 - 8 - position;
+			} else {
+				assert myColor == IntColor.WHITE;
+			}
+			opening += chessmanValueOpening[position];
+			endgame += chessmanValueEndgame[position];
 		}
+		
+		// Bishops
+		chessmanList = Hex88Board.bishopList[myColor];
+		chessmanValueOpening = positionValueOpening[IntChessman.BISHOP];
+		chessmanValueEndgame = positionValueEndgame[IntChessman.BISHOP];
+		for (int i = 0; i < chessmanList.size; i++) {
+			int position = chessmanList.position[i];
+			if (myColor == IntColor.BLACK) {
+				position = 127 - 8 - position;
+			} else {
+				assert myColor == IntColor.WHITE;
+			}
+			opening += chessmanValueOpening[position];
+			endgame += chessmanValueEndgame[position];
+		}
+
+		// Rooks
+		chessmanList = Hex88Board.rookList[myColor];
+		chessmanValueOpening = positionValueOpening[IntChessman.ROOK];
+		chessmanValueEndgame = positionValueEndgame[IntChessman.ROOK];
+		for (int i = 0; i < chessmanList.size; i++) {
+			int position = chessmanList.position[i];
+			if (myColor == IntColor.BLACK) {
+				position = 127 - 8 - position;
+			} else {
+				assert myColor == IntColor.WHITE;
+			}
+			opening += chessmanValueOpening[position];
+			endgame += chessmanValueEndgame[position];
+		}
+
+		// Queens
+		chessmanList = Hex88Board.queenList[myColor];
+		chessmanValueOpening = positionValueOpening[IntChessman.QUEEN];
+		chessmanValueEndgame = positionValueEndgame[IntChessman.QUEEN];
+		for (int i = 0; i < chessmanList.size; i++) {
+			int position = chessmanList.position[i];
+			if (myColor == IntColor.BLACK) {
+				position = 127 - 8 - position;
+			} else {
+				assert myColor == IntColor.WHITE;
+			}
+			opening += chessmanValueOpening[position];
+			endgame += chessmanValueEndgame[position];
+		}
+
+		// King
+		assert Hex88Board.kingList[myColor].size == 1;
+		int position = Hex88Board.kingList[myColor].position[0];
+		if (myColor == IntColor.BLACK) {
+			position = 127 - 8 - position;
+		} else {
+			assert myColor == IntColor.WHITE;
+		}
+		opening += positionValueOpening[IntChessman.KING][position];
+		endgame += positionValueEndgame[IntChessman.KING][position];
+
+		// Return linear mix
+		return Evaluation.createLinearMix(myColor, opening, endgame);
 	}
 
 }

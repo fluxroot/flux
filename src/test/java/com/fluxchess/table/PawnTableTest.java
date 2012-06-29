@@ -36,15 +36,13 @@ public class PawnTableTest {
 	public void testPawnTable() {
 		PawnTable table = new PawnTable(1024);
 		
-		table.put(1, 1, 1);
+		table.put(1, 1);
 		assertTrue(table.exists(1));
-		assertEquals(1, table.getOpening(1));
-		assertEquals(1, table.getEndgame(1));
+		assertEquals(1, table.getValue(1));
 
-		table.put(2, 2, 2);
+		table.put(2, 2);
 		assertTrue(table.exists(2));
-		assertEquals(2, table.getOpening(2));
-		assertEquals(2, table.getEndgame(2));
+		assertEquals(2, table.getValue(2));
 	}
 
 	@Test

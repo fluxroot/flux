@@ -29,7 +29,6 @@ import jcpi.data.GenericPiece;
 import jcpi.data.GenericPosition;
 
 import com.fluxchess.Search;
-import com.fluxchess.evaluation.PositionValues;
 import com.fluxchess.move.IntCastling;
 import com.fluxchess.move.IntMove;
 import com.fluxchess.table.RepetitionTable;
@@ -59,6 +58,7 @@ public final class Hex88Board {
 	public static final int GAMEPHASE_ENDGAME_VALUE =
 		IntChessman.VALUE_KING
 		+ 2 * IntChessman.VALUE_ROOK;
+	public static final int GAMEPHASE_INTERVAL = GAMEPHASE_OPENING_VALUE - GAMEPHASE_ENDGAME_VALUE;
 	private static final int GAMEPHASE_ENDGAME_COUNT = 2;
 	
 	private static final Random random = new Random(0);
@@ -117,10 +117,6 @@ public final class Hex88Board {
 	public static final int[] materialValue = new int[IntColor.ARRAY_DIMENSION];
 	public static final int[] materialCount = new int[IntColor.ARRAY_DIMENSION];
 	public static final int[] materialCountAll = new int[IntColor.ARRAY_DIMENSION];
-
-	// The positional values. We always keep the values current.
-	public static final int[] positionValueOpening = new int[IntColor.ARRAY_DIMENSION];
-	public static final int[] positionValueEndgame = new int[IntColor.ARRAY_DIMENSION];
 
 	// Our repetition table
 	private static RepetitionTable repetitionTable;
@@ -192,12 +188,6 @@ public final class Hex88Board {
 			materialCountAll[color] = 0;
 		}
 		
-		// Initialize the positional values
-		for (int color : IntColor.values) {
-			positionValueOpening[color] = 0;
-			positionValueEndgame[color] = 0;
-		}
-
 		// Initialize the board
 		for (int position : IntPosition.values) {
 			board[position] = IntChessman.NOPIECE;
@@ -307,8 +297,6 @@ public final class Hex88Board {
 		materialValue[color] += IntChessman.getValueFromChessman(chessman);
 		if (update) {
 			this.zobristCode ^= zobristChessman[chessman][color][position];
-			positionValueOpening[color] += PositionValues.getPositionValue(IntGamePhase.OPENING, chessman, color, position);
-			positionValueEndgame[color] += PositionValues.getPositionValue(IntGamePhase.ENDGAME, chessman, color, position);
 		}
 	}
 	
@@ -371,8 +359,6 @@ public final class Hex88Board {
 		materialValue[color] -= IntChessman.getValueFromChessman(chessman);
 		if (update) {
 			this.zobristCode ^= zobristChessman[chessman][color][position];
-			positionValueOpening[color] -= PositionValues.getPositionValue(IntGamePhase.OPENING, chessman, color, position);
-			positionValueEndgame[color] -= PositionValues.getPositionValue(IntGamePhase.ENDGAME, chessman, color, position);
 		}
 		
 		return piece;
@@ -441,10 +427,6 @@ public final class Hex88Board {
 			long[] tempZobristChessman = zobristChessman[chessman][color];
 			this.zobristCode ^= tempZobristChessman[start];
 			this.zobristCode ^= tempZobristChessman[end];
-			positionValueOpening[color] -= PositionValues.getPositionValue(IntGamePhase.OPENING, chessman, color, start);
-			positionValueEndgame[color] -= PositionValues.getPositionValue(IntGamePhase.ENDGAME, chessman, color, start);
-			positionValueOpening[color] += PositionValues.getPositionValue(IntGamePhase.OPENING, chessman, color, end);
-			positionValueEndgame[color] += PositionValues.getPositionValue(IntGamePhase.ENDGAME, chessman, color, end);
 		}
 
 		return piece;
@@ -1089,10 +1071,6 @@ public final class Hex88Board {
 		currentStackEntry.halfMoveClockHistory = this.halfMoveClock;
 		currentStackEntry.enPassantHistory = this.enPassantSquare;
 		currentStackEntry.captureSquareHistory = this.captureSquare;
-		for (int color : IntColor.values) {
-			currentStackEntry.positionValueOpening[color] = positionValueOpening[color];
-			currentStackEntry.positionValueEndgame[color] = positionValueEndgame[color];
-		}
 		
 		// Update stack size
 		this.stackSize++;
@@ -1172,10 +1150,6 @@ public final class Hex88Board {
 		this.halfMoveClock = currentStackEntry.halfMoveClockHistory;
 		this.enPassantSquare = currentStackEntry.enPassantHistory;
 		this.captureSquare = currentStackEntry.captureSquareHistory;
-		for (int color : IntColor.values) {
-			positionValueOpening[color] = currentStackEntry.positionValueOpening[color];
-			positionValueEndgame[color] = currentStackEntry.positionValueEndgame[color];
-		}
 
 		switch (type) {
 		case IntMove.NORMAL:

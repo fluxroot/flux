@@ -30,8 +30,6 @@ public final class Hex88BoardStackEntry {
 	public int halfMoveClockHistory = 0;
 	public int enPassantHistory = 0;
 	public int captureSquareHistory = 0;
-	public final int[] positionValueOpening = new int[IntColor.ARRAY_DIMENSION];
-	public final int[] positionValueEndgame = new int[IntColor.ARRAY_DIMENSION];
 
 	public Hex88BoardStackEntry() {
 		clear();
@@ -43,10 +41,6 @@ public final class Hex88BoardStackEntry {
 		this.halfMoveClockHistory = 0;
 		this.enPassantHistory = 0;
 		this.captureSquareHistory = 0;
-		for (int color : IntColor.values) {
-			this.positionValueOpening[color] = 0;
-			this.positionValueEndgame[color] = 0;
-		}
 	}
 
 }
