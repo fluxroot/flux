@@ -74,11 +74,11 @@ task tar(type: Tar) {
 	into ("$baseDir") {
 		from 'README.md'
 		from 'COPYING'
-		from 'Flux.ini'
-		from 'polyglot.ini-Windows'
-		from 'polyglot.ini-Linux'
-		from 'Flux.bat'
-		from ('Flux') {
+		from 'src/dist/Flux.ini'
+		from 'src/dist/polyglot.ini-Windows'
+		from 'src/dist/polyglot.ini-Linux'
+		from 'src/dist/Flux.bat'
+		from ('src/dist/Flux') {
 			fileMode = 0755
 		}
 		from jar
