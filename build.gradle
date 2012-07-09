@@ -67,9 +67,8 @@ task jcpi {
 task download(dependsOn: 'jcpi') << {
 }
 
-task tar(type: Tar) {
+task dist(type: Zip) {
 	def baseDir = "${project.name}-${project.version}"
-	compression = Compression.GZIP
 	
 	into ("$baseDir") {
 		from 'README.md'
@@ -86,7 +85,7 @@ task tar(type: Tar) {
 }
 
 artifacts {
-	archives tar
+	archives dist
 }
 
 task wrapper(type: Wrapper) {
