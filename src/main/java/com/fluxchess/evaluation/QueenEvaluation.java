@@ -32,12 +32,12 @@ import com.fluxchess.move.MoveGenerator;
  */
 public final class QueenEvaluation {
 
-	private static final int EVAL_QUEEN_MOBILITY_BASE = -13;
-	private static final int EVAL_QUEEN_MOBILITYFACTOR_OPENING = 1;
-	private static final int EVAL_QUEEN_MOBILITYFACTOR_ENDGAME = 2;
-	private static final int EVAL_QUEEN_SAFETY = 40;
-	private static final int EVAL_QUEEN_SEVENTHRANK_OPENING = 10;
-	private static final int EVAL_QUEEN_SEVENTHRANK_ENDGAME = 20;
+	public static int EVAL_QUEEN_MOBILITY_BASE = -13;
+	public static int EVAL_QUEEN_MOBILITYFACTOR_OPENING = 1;
+	public static int EVAL_QUEEN_MOBILITYFACTOR_ENDGAME = 2;
+	public static int EVAL_QUEEN_SAFETY = 40;
+	public static int EVAL_QUEEN_SEVENTHRANK_OPENING = 10;
+	public static int EVAL_QUEEN_SEVENTHRANK_ENDGAME = 20;
 	
 	private QueenEvaluation() {
 	}
