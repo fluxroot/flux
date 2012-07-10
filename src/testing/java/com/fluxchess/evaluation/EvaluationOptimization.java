@@ -65,7 +65,17 @@ public final class EvaluationOptimization {
 		}
 		
 		// Build parameter list
+		this.parameters.add(new EVAL_KNIGHT_MOBILITY_BASE());
+		this.parameters.add(new EVAL_KNIGHT_MOBILITYFACTOR());
+		this.parameters.add(new EVAL_KNIGHT_SAFETY());
+		this.parameters.add(new EVAL_BISHOP_MOBILITY_BASE());
+		this.parameters.add(new EVAL_BISHOP_MOBILITYFACTOR());
+		this.parameters.add(new EVAL_BISHOP_PAIR());
+		this.parameters.add(new EVAL_BISHOP_SAFETY());
+		this.parameters.add(new EVAL_ROOK_MOBILITY_BASE());
+		this.parameters.add(new EVAL_ROOK_SAFETY());
 		this.parameters.add(new EVAL_QUEEN_MOBILITY_BASE());
+		this.parameters.add(new EVAL_QUEEN_SAFETY());
 	}
 	
 	public static void main(String[] args) {
@@ -93,29 +103,54 @@ public final class EvaluationOptimization {
 		loop(0);
 	}
 	
-	public void print() {
+	private void print() {
 		System.out.println("Found new parameter solution with rss = " + this.rss);
 		for (Parameter parameter : this.parameters) {
 			parameter.print();
 		}
 	}
 	
-	private void loop(int i) {
+	private double loop(int i) {
 		if (i < this.parameters.size()) {
 			Parameter parameter = this.parameters.get(i);
 
-			for (int value = parameter.min; value <= parameter.max; value++) {
-				parameter.set(value);
+			double baserss = loop(i + 1);
+			double newrss = baserss;
 
-				loop(i + 1);
+			// +
+			for (int increment = 1; increment <= parameter.range; increment++) {
+				parameter.set(parameter.defaultValue + increment);
+				double looprss = loop(i + 1);
+				
+				if (looprss >= newrss) {
+					break;
+				} else {
+					newrss = looprss;
+				}
 			}
+			
+			if (newrss == baserss) {
+				// -
+				for (int increment = 1; increment <= parameter.range; increment++) {
+					parameter.set(parameter.defaultValue - increment);
+					double looprss = loop(i + 1);
+
+					if (looprss >= newrss) {
+						break;
+					} else {
+						newrss = looprss;
+					}
+				}
+			}
+
+			return newrss;
 		} else {
-			evaluate();
+			return evaluate();
 		}
 	}
 	
-	private void evaluate() {
-		double temprss = 0;
+	private double evaluate() {
+		double newrss = 0;
 		for (Entry<GenericBoard, Integer> entry : this.solutions.entrySet()) {
 			GenericBoard genericBoard = entry.getKey();
 			int value = entry.getValue();
@@ -125,18 +160,20 @@ public final class EvaluationOptimization {
 			Evaluation evaluation = new Evaluation(new EvaluationTable(1), new PawnTable(1));
 			int result = evaluation.evaluate(board);
 			
-			temprss += Math.pow(value - result, 2);
+			newrss += Math.pow(value - result, 2);
 		}
 		
-		if (temprss < rss) {
+		if (newrss < rss) {
 			for (Parameter parameter : this.parameters) {
 				parameter.store();
 			}
 			
-			rss = temprss;
+			rss = newrss;
 
 			print();
 		}
+		
+		return newrss;
 	}
 
 }

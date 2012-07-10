@@ -19,33 +19,24 @@
 package com.fluxchess.evaluation;
 
 /**
- * Parameter
+ * EVAL_BISHOP_MOBILITYFACTOR
  *
  * @author Phokham Nonava
  */
-public abstract class Parameter {
+public final class EVAL_BISHOP_MOBILITYFACTOR extends Parameter {
 
-	public final String name;
-	public final int range;
-	public final int defaultValue;
-	
-	public int value;
-
-	public Parameter(String name, int range) {
-		this.name = name;
-		this.range = range;
-		this.defaultValue = get();
-	}
-	
-	public void store() {
-		this.value = get();
+	public EVAL_BISHOP_MOBILITYFACTOR() {
+		super("EVAL_BISHOP_MOBILITYFACTOR", 50);
 	}
 
-	public void print() {
-		System.out.println(this.name + " = " + this.value);
+	@Override
+	public void set(int value) {
+		BishopEvaluation.EVAL_BISHOP_MOBILITYFACTOR = value;
 	}
-	
-	public abstract int get();
-	public abstract void set(int value);
-	
+
+	@Override
+	public int get() {
+		return BishopEvaluation.EVAL_BISHOP_MOBILITYFACTOR;
+	}
+
 }

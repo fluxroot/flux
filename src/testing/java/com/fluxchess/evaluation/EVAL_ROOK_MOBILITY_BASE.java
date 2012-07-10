@@ -19,33 +19,24 @@
 package com.fluxchess.evaluation;
 
 /**
- * Parameter
+ * EVAL_ROOK_MOBILITY_BASE
  *
  * @author Phokham Nonava
  */
-public abstract class Parameter {
+public final class EVAL_ROOK_MOBILITY_BASE extends Parameter {
 
-	public final String name;
-	public final int range;
-	public final int defaultValue;
-	
-	public int value;
-
-	public Parameter(String name, int range) {
-		this.name = name;
-		this.range = range;
-		this.defaultValue = get();
-	}
-	
-	public void store() {
-		this.value = get();
+	public EVAL_ROOK_MOBILITY_BASE() {
+		super("EVAL_ROOK_MOBILITY_BASE", 50);
 	}
 
-	public void print() {
-		System.out.println(this.name + " = " + this.value);
+	@Override
+	public void set(int value) {
+		RookEvaluation.EVAL_ROOK_MOBILITY_BASE = value;
 	}
-	
-	public abstract int get();
-	public abstract void set(int value);
-	
+
+	@Override
+	public int get() {
+		return RookEvaluation.EVAL_ROOK_MOBILITY_BASE;
+	}
+
 }

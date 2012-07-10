@@ -26,7 +26,7 @@ package com.fluxchess.evaluation;
 public final class EVAL_QUEEN_MOBILITY_BASE extends Parameter {
 
 	public EVAL_QUEEN_MOBILITY_BASE() {
-		super("EVAL_QUEEN_MOBILITY_BASE", -100, 100);
+		super("EVAL_QUEEN_MOBILITY_BASE", 50);
 	}
 
 	@Override

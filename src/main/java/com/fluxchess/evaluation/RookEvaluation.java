@@ -32,15 +32,15 @@ import com.fluxchess.move.MoveGenerator;
  */
 public final class RookEvaluation {
 
-	private static final int EVAL_ROOK_MOBILITY_BASE = -7;
-	private static final int EVAL_ROOK_MOBILITYFACTOR_OPENING = 2;
-	private static final int EVAL_ROOK_MOBILITYFACTOR_ENDGAME = 4;
-	private static final int EVAL_ROOK_SAFETY = 20;
-	private static final int EVAL_ROOK_OPENFILE = 20;
-	private static final int EVAL_ROOK_NEARKINGFILE = 10;
-	private static final int EVAL_ROOK_SEVENTHRANK_OPENING = 20;
-	private static final int EVAL_ROOK_SEVENTHRANK_ENDGAME = 40;
-	private static final int EVAL_ROOK_SEVENTHRANK_BONUS = 10;
+	public static int EVAL_ROOK_MOBILITY_BASE = -7;
+	public static int EVAL_ROOK_MOBILITYFACTOR_OPENING = 2;
+	public static int EVAL_ROOK_MOBILITYFACTOR_ENDGAME = 4;
+	public static int EVAL_ROOK_SAFETY = 20;
+	public static int EVAL_ROOK_OPENFILE = 20;
+	public static int EVAL_ROOK_NEARKINGFILE = 10;
+	public static int EVAL_ROOK_SEVENTHRANK_OPENING = 20;
+	public static int EVAL_ROOK_SEVENTHRANK_ENDGAME = 40;
+	public static int EVAL_ROOK_SEVENTHRANK_BONUS = 10;
 
 	private RookEvaluation() {
 	}

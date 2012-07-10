@@ -31,10 +31,10 @@ import com.fluxchess.move.MoveGenerator;
  */
 public final class BishopEvaluation {
 
-	private static final int EVAL_BISHOP_MOBILITY_BASE = -6;
-	private static final int EVAL_BISHOP_MOBILITYFACTOR = 5;
-	private static final int EVAL_BISHOP_SAFETY = 10;
-	private static final int EVAL_BISHOP_PAIR = 50;
+	public static int EVAL_BISHOP_MOBILITY_BASE = -6;
+	public static int EVAL_BISHOP_MOBILITYFACTOR = 5;
+	public static int EVAL_BISHOP_SAFETY = 10;
+	public static int EVAL_BISHOP_PAIR = 50;
 
 	private BishopEvaluation() {
 	}

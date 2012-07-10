@@ -19,33 +19,24 @@
 package com.fluxchess.evaluation;
 
 /**
- * Parameter
+ * EVAL_KNIGHT_SAFETY
  *
  * @author Phokham Nonava
  */
-public abstract class Parameter {
+public final class EVAL_KNIGHT_SAFETY extends Parameter {
 
-	public final String name;
-	public final int range;
-	public final int defaultValue;
-	
-	public int value;
-
-	public Parameter(String name, int range) {
-		this.name = name;
-		this.range = range;
-		this.defaultValue = get();
-	}
-	
-	public void store() {
-		this.value = get();
+	public EVAL_KNIGHT_SAFETY() {
+		super("EVAL_KNIGHT_SAFETY", 50);
 	}
 
-	public void print() {
-		System.out.println(this.name + " = " + this.value);
+	@Override
+	public void set(int value) {
+		KnightEvaluation.EVAL_KNIGHT_SAFETY = value;
 	}
-	
-	public abstract int get();
-	public abstract void set(int value);
-	
+
+	@Override
+	public int get() {
+		return KnightEvaluation.EVAL_KNIGHT_SAFETY;
+	}
+
 }

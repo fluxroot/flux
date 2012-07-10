@@ -31,9 +31,9 @@ import com.fluxchess.move.MoveGenerator;
  */
 public final class KnightEvaluation {
 
-	private static final int EVAL_KNIGHT_MOBILITY_BASE = -4;
-	private static final int EVAL_KNIGHT_MOBILITYFACTOR = 4;
-	private static final int EVAL_KNIGHT_SAFETY = 10;
+	public static int EVAL_KNIGHT_MOBILITY_BASE = -4;
+	public static int EVAL_KNIGHT_MOBILITYFACTOR = 4;
+	public static int EVAL_KNIGHT_SAFETY = 10;
 
 	private KnightEvaluation() {
 	}
