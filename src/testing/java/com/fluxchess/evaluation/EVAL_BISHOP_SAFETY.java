@@ -26,16 +26,16 @@ package com.fluxchess.evaluation;
 public final class EVAL_BISHOP_SAFETY extends Parameter {
 
 	public EVAL_BISHOP_SAFETY() {
-		super("EVAL_BISHOP_SAFETY", 50);
+		super("EVAL_BISHOP_SAFETY");
 	}
 
 	@Override
-	public void set(int value) {
+	public void setValue(int value) {
 		BishopEvaluation.EVAL_BISHOP_SAFETY = value;
 	}
 
 	@Override
-	public int get() {
+	public int getValue() {
 		return BishopEvaluation.EVAL_BISHOP_SAFETY;
 	}
 

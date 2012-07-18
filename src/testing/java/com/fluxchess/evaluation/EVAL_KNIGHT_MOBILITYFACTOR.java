@@ -26,16 +26,16 @@ package com.fluxchess.evaluation;
 public final class EVAL_KNIGHT_MOBILITYFACTOR extends Parameter {
 
 	public EVAL_KNIGHT_MOBILITYFACTOR() {
-		super("EVAL_KNIGHT_MOBILITYFACTOR", 50);
+		super("EVAL_KNIGHT_MOBILITYFACTOR");
 	}
 
 	@Override
-	public void set(int value) {
+	public void setValue(int value) {
 		KnightEvaluation.EVAL_KNIGHT_MOBILITYFACTOR = value;
 	}
 
 	@Override
-	public int get() {
+	public int getValue() {
 		return KnightEvaluation.EVAL_KNIGHT_MOBILITYFACTOR;
 	}
 

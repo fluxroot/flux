@@ -26,26 +26,34 @@ package com.fluxchess.evaluation;
 public abstract class Parameter {
 
 	public final String name;
-	public final int range;
-	public final int defaultValue;
-	
-	public int value;
+	public int defaultValue;
+	public int defaultIncrement;
 
-	public Parameter(String name, int range) {
+	private int increment = 1;
+
+	public Parameter(String name) {
 		this.name = name;
-		this.range = range;
-		this.defaultValue = get();
+		store();
 	}
 	
 	public void store() {
-		this.value = get();
+		this.defaultValue = getValue();
+		this.defaultIncrement = this.increment;
 	}
 
 	public void print() {
-		System.out.println(this.name + " = " + this.value);
+		System.out.println(this.name + " = " + this.defaultValue);
 	}
 	
-	public abstract int get();
-	public abstract void set(int value);
+	public int getIncrement() {
+		return this.increment;
+	}
+	
+	public void setIncrement(int value) {
+		this.increment = value;
+	}
+	
+	public abstract int getValue();
+	public abstract void setValue(int value);
 	
 }

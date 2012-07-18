@@ -26,16 +26,16 @@ package com.fluxchess.evaluation;
 public final class EVAL_ROOK_SAFETY extends Parameter {
 
 	public EVAL_ROOK_SAFETY() {
-		super("EVAL_ROOK_SAFETY", 50);
+		super("EVAL_ROOK_SAFETY");
 	}
 
 	@Override
-	public void set(int value) {
+	public void setValue(int value) {
 		RookEvaluation.EVAL_ROOK_SAFETY = value;
 	}
 
 	@Override
-	public int get() {
+	public int getValue() {
 		return RookEvaluation.EVAL_ROOK_SAFETY;
 	}
 

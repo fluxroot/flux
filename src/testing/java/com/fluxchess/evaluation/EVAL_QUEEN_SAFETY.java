@@ -26,16 +26,16 @@ package com.fluxchess.evaluation;
 public final class EVAL_QUEEN_SAFETY extends Parameter {
 
 	public EVAL_QUEEN_SAFETY() {
-		super("EVAL_QUEEN_SAFETY", 50);
+		super("EVAL_QUEEN_SAFETY");
 	}
 
 	@Override
-	public void set(int value) {
+	public void setValue(int value) {
 		QueenEvaluation.EVAL_QUEEN_SAFETY = value;
 	}
 
 	@Override
-	public int get() {
+	public int getValue() {
 		return QueenEvaluation.EVAL_QUEEN_SAFETY;
 	}
 

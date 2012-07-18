@@ -19,24 +19,24 @@
 package com.fluxchess.evaluation;
 
 /**
- * EVAL_QUEEN_MOBILITY_BASE
+ * EVAL_PAWN_PASSER_ENDGAME_MIN
  *
  * @author Phokham Nonava
  */
-public final class EVAL_QUEEN_MOBILITY_BASE extends Parameter {
+public final class EVAL_PAWN_PASSER_ENDGAME_MIN extends Parameter {
 
-	public EVAL_QUEEN_MOBILITY_BASE() {
-		super("EVAL_QUEEN_MOBILITY_BASE");
+	public EVAL_PAWN_PASSER_ENDGAME_MIN() {
+		super("EVAL_PAWN_PASSER_ENDGAME_MIN");
 	}
 
 	@Override
 	public void setValue(int value) {
-		QueenEvaluation.EVAL_QUEEN_MOBILITY_BASE = value;
+		PawnPasserEvaluation.EVAL_PAWN_PASSER_ENDGAME_MIN = value;
 	}
 
 	@Override
 	public int getValue() {
-		return QueenEvaluation.EVAL_QUEEN_MOBILITY_BASE;
+		return PawnPasserEvaluation.EVAL_PAWN_PASSER_ENDGAME_MIN;
 	}
 
 }

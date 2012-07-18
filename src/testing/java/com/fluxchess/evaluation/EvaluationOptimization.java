@@ -44,7 +44,6 @@ public final class EvaluationOptimization {
 
 	private final Map<GenericBoard, Integer> solutions = new HashMap<GenericBoard, Integer>();
 	private final ArrayList<Parameter> parameters = new ArrayList<Parameter>();
-	private double rss = Double.MAX_VALUE;
 
 	public EvaluationOptimization(BufferedReader file) throws IOException, IllegalNotationException {
 		if (file == null) throw new IllegalArgumentException();
@@ -65,17 +64,34 @@ public final class EvaluationOptimization {
 		}
 		
 		// Build parameter list
+		this.parameters.add(new EVAL_PAWN_PASSER_ENDGAME_MAX());
+		this.parameters.add(new EVAL_PAWN_PASSER_ENDGAME_MIN());
+
 		this.parameters.add(new EVAL_KNIGHT_MOBILITY_BASE());
 		this.parameters.add(new EVAL_KNIGHT_MOBILITYFACTOR());
 		this.parameters.add(new EVAL_KNIGHT_SAFETY());
+
 		this.parameters.add(new EVAL_BISHOP_MOBILITY_BASE());
 		this.parameters.add(new EVAL_BISHOP_MOBILITYFACTOR());
 		this.parameters.add(new EVAL_BISHOP_PAIR());
 		this.parameters.add(new EVAL_BISHOP_SAFETY());
+		
 		this.parameters.add(new EVAL_ROOK_MOBILITY_BASE());
 		this.parameters.add(new EVAL_ROOK_SAFETY());
+		this.parameters.add(new EVAL_ROOK_MOBILITYFACTOR_ENDGAME());
+		this.parameters.add(new EVAL_ROOK_MOBILITYFACTOR_OPENING());
+		this.parameters.add(new EVAL_ROOK_NEARKINGFILE());
+		this.parameters.add(new EVAL_ROOK_OPENFILE());
+		this.parameters.add(new EVAL_ROOK_SEVENTHRANK_BONUS());
+		this.parameters.add(new EVAL_ROOK_SEVENTHRANK_ENDGAME());
+		this.parameters.add(new EVAL_ROOK_SEVENTHRANK_OPENING());
+
 		this.parameters.add(new EVAL_QUEEN_MOBILITY_BASE());
 		this.parameters.add(new EVAL_QUEEN_SAFETY());
+		this.parameters.add(new EVAL_QUEEN_MOBILITYFACTOR_ENDGAME());
+		this.parameters.add(new EVAL_QUEEN_MOBILITYFACTOR_OPENING());
+		this.parameters.add(new EVAL_QUEEN_SEVENTHRANK_ENDGAME());
+		this.parameters.add(new EVAL_QUEEN_SEVENTHRANK_OPENING());
 	}
 	
 	public static void main(String[] args) {
@@ -100,57 +116,57 @@ public final class EvaluationOptimization {
 	}
 
 	public void calculate() {
-		loop(0);
+		double rss = Double.MAX_VALUE;
+		double newrss = rss / 2;
+
+		while (newrss < rss) {
+			rss = newrss;
+			newrss = loop(0, rss);
+		}
 	}
 	
-	private void print() {
-		System.out.println("Found new parameter solution with rss = " + this.rss);
+	private void print(double rss) {
+		System.out.println("Found new parameter solution with rss = " + rss);
 		for (Parameter parameter : this.parameters) {
 			parameter.print();
 		}
 	}
 	
-	private double loop(int i) {
+	private double loop(int i, double rss) {
 		if (i < this.parameters.size()) {
 			Parameter parameter = this.parameters.get(i);
 
-			double baserss = loop(i + 1);
-			double newrss = baserss;
+			parameter.setIncrement(parameter.defaultIncrement);
+			parameter.setValue(parameter.defaultValue + parameter.getIncrement());
 
-			// +
-			for (int increment = 1; increment <= parameter.range; increment++) {
-				parameter.set(parameter.defaultValue + increment);
-				double looprss = loop(i + 1);
-				
-				if (looprss >= newrss) {
-					break;
+			double newrss = loop(i + 1, rss);
+			if (newrss < rss) {
+				rss = newrss;
+			} else {
+				parameter.setIncrement(-1 * parameter.defaultIncrement);
+				parameter.setValue(parameter.defaultValue + parameter.getIncrement());
+
+				newrss = loop(i + 1, rss);
+				if (newrss < rss) {
+					rss = newrss;
 				} else {
-					newrss = looprss;
-				}
-			}
-			
-			if (newrss == baserss) {
-				// -
-				for (int increment = 1; increment <= parameter.range; increment++) {
-					parameter.set(parameter.defaultValue - increment);
-					double looprss = loop(i + 1);
-
-					if (looprss >= newrss) {
-						break;
-					} else {
-						newrss = looprss;
+					parameter.setValue(parameter.defaultValue);
+					newrss = loop(i + 1, rss);
+					if (newrss < rss) {
+						rss = newrss;
 					}
 				}
 			}
 
-			return newrss;
+			return rss;
 		} else {
-			return evaluate();
+			return evaluate(rss);
 		}
 	}
 	
-	private double evaluate() {
-		double newrss = 0;
+	private double evaluate(double rss) {
+		double newrss = 0.0;
+
 		for (Entry<GenericBoard, Integer> entry : this.solutions.entrySet()) {
 			GenericBoard genericBoard = entry.getKey();
 			int value = entry.getValue();
@@ -164,16 +180,16 @@ public final class EvaluationOptimization {
 		}
 		
 		if (newrss < rss) {
+			rss = newrss;
+
 			for (Parameter parameter : this.parameters) {
 				parameter.store();
 			}
-			
-			rss = newrss;
 
-			print();
+			print(rss);
 		}
 		
-		return newrss;
+		return rss;
 	}
 
 }

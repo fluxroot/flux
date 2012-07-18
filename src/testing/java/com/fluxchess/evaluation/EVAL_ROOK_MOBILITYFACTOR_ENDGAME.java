@@ -19,24 +19,24 @@
 package com.fluxchess.evaluation;
 
 /**
- * EVAL_QUEEN_MOBILITY_BASE
+ * EVAL_ROOK_MOBILITYFACTOR_ENDGAME
  *
  * @author Phokham Nonava
  */
-public final class EVAL_QUEEN_MOBILITY_BASE extends Parameter {
+public final class EVAL_ROOK_MOBILITYFACTOR_ENDGAME extends Parameter {
 
-	public EVAL_QUEEN_MOBILITY_BASE() {
-		super("EVAL_QUEEN_MOBILITY_BASE");
+	public EVAL_ROOK_MOBILITYFACTOR_ENDGAME() {
+		super("EVAL_ROOK_MOBILITYFACTOR_ENDGAME");
 	}
 
 	@Override
 	public void setValue(int value) {
-		QueenEvaluation.EVAL_QUEEN_MOBILITY_BASE = value;
+		RookEvaluation.EVAL_ROOK_MOBILITYFACTOR_ENDGAME = value;
 	}
 
 	@Override
 	public int getValue() {
-		return QueenEvaluation.EVAL_QUEEN_MOBILITY_BASE;
+		return RookEvaluation.EVAL_ROOK_MOBILITYFACTOR_ENDGAME;
 	}
 
 }

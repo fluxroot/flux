@@ -36,8 +36,8 @@ public final class PawnPasserEvaluation {
 	private static final int EVAL_PAWN_PASSER_MAXBONUS = 6 * 6 * 6;
 	private static final int EVAL_PAWN_PASSER_OPENING_MIN = 10;
 	private static final int EVAL_PAWN_PASSER_OPENING_MAX = 70;
-	private static final int EVAL_PAWN_PASSER_ENDGAME_MIN = 20;
-	private static final int EVAL_PAWN_PASSER_ENDGAME_MAX = 140;
+	public static int EVAL_PAWN_PASSER_ENDGAME_MIN = 20;
+	public static int EVAL_PAWN_PASSER_ENDGAME_MAX = 140;
 	private static final int EVAL_PAWN_PASSER_FREE = 60;
 	private static final int EVAL_PAWN_PASSER_UNSTOPPABLE = 800;
 	private static final int EVAL_PAWN_MYKING_DISTANCE = 5;
