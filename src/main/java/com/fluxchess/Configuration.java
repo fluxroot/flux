@@ -18,9 +18,6 @@
 */
 package com.fluxchess;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.Hashtable;
 import java.util.Properties;
 
@@ -85,8 +82,6 @@ public final class Configuration {
 
 	public static final Hashtable<String, Option> configuration = new Hashtable<String, Option>();
 
-	private static final String configurationFile = "Flux.ini";
-	
 	static {
 		configuration.put(KEY_Ponder, new Option(KEY_Ponder, TYPE_Check, "true", null, null, null));
 		configuration.put(KEY_MultiPv, new Option(KEY_MultiPv, TYPE_Spin, "1", "1", "256", null));
@@ -140,26 +135,6 @@ public final class Configuration {
 				assert option.defaultValue != null;
 				defaultProperties.setProperty(option.name, option.defaultValue);
 			}
-		}
-
-		// Read the properties file
-		try {
-			Properties properties = new Properties(defaultProperties);
-			FileInputStream file = new FileInputStream(configurationFile);
-			properties.load(file);
-			file.close();
-			
-			// For each property set the value
-			for (Option option : configuration.values()) {
-				assert option.name != null;
-				setOption(option.name, properties.getProperty(option.name));
-			}
-			
-			ChessLogger.getLogger().debug("Loaded settings from " + configurationFile + " file.");
-		} catch (FileNotFoundException e) {
-			ChessLogger.getLogger().debug(configurationFile + " file not found. Using application defaults.");
-		} catch (IOException e) {
-			ChessLogger.getLogger().debug("An I/O exception occurred. Using application defaults.");
 		}
 	}
 

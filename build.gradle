@@ -73,9 +73,6 @@ task dist(type: Zip) {
 	into ("$baseDir") {
 		from 'README.md'
 		from 'COPYING'
-		from 'src/dist/Flux.ini'
-		from 'src/dist/polyglot.ini-Windows'
-		from 'src/dist/polyglot.ini-Linux'
 		from 'src/dist/Flux.bat'
 		from ('src/dist/Flux') {
 			fileMode = 0755
