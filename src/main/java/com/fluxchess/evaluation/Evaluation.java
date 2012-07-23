@@ -89,7 +89,7 @@ public final class Evaluation {
 			total += material[myColor] - material[enemyColor];
 
 			// Evaluate position
-			total += PositionValueEvaluation.evaluatePositionValue(myColor) - PositionValueEvaluation.evaluatePositionValue(enemyColor);
+			total += PositionValueEvaluation.evaluatePositionValue(myColor, board) - PositionValueEvaluation.evaluatePositionValue(enemyColor, board);
 
 			// Evaluate knights
 			total += KnightEvaluation.evaluateKnight(myColor, enemyColor, board) - KnightEvaluation.evaluateKnight(enemyColor, myColor, board);
@@ -143,22 +143,6 @@ public final class Evaluation {
 		}
 
 		return total;
-	}
-
-	public static int createLinearMix(int myColor, int opening, int endgame) {
-		// Create evaluation mix
-		// This allows us to make a smooth transition from the opening to the
-		// ending
-		int myMaterial = material[myColor];
-		if (myMaterial > Hex88Board.GAMEPHASE_OPENING_VALUE) {
-			myMaterial = Hex88Board.GAMEPHASE_INTERVAL;
-		} else if (myMaterial < Hex88Board.GAMEPHASE_ENDGAME_VALUE) {
-			myMaterial = 0;
-		} else {
-			myMaterial -= Hex88Board.GAMEPHASE_ENDGAME_VALUE;
-		}
-
-		return (((opening - endgame) * myMaterial) / Hex88Board.GAMEPHASE_INTERVAL) + endgame;
 	}
 
 }

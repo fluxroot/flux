@@ -134,7 +134,7 @@ public final class PawnStructureEvaluation {
 			}
 		}
 
-		return Evaluation.createLinearMix(myColor, opening, endgame);
+		return board.getGamePhaseEvaluation(myColor, opening, endgame);
 	}
 
 }

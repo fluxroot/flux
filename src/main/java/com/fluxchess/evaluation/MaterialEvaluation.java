@@ -36,7 +36,7 @@ public final class MaterialEvaluation {
 	public static int evaluateMaterial(int myColor) {
 		assert myColor != IntColor.NOCOLOR;
 
-		int total = Hex88Board.materialValue[myColor];
+		int total = Hex88Board.materialValueAll[myColor];
 
 //		if (Hex88Board.materialCount[myColor] == 1) {
 //			if (Hex88Board.knightList[myColor].size == 1) {

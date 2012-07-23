@@ -218,7 +218,7 @@ public final class KingEvaluation {
 		
 		opening -= pawnShieldPenalty;
 
-		return Evaluation.createLinearMix(myColor, opening, endgame);
+		return board.getGamePhaseEvaluation(myColor, opening, endgame);
 	}
 	
 	private static int getPawnShieldPenalty(int myColor, int kingPosition) {

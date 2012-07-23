@@ -247,7 +247,7 @@ public final class PawnPasserEvaluation {
 			}
 		}
 
-		return Evaluation.createLinearMix(myColor, opening, endgame);
+		return board.getGamePhaseEvaluation(myColor, opening, endgame);
 	}
 
 }

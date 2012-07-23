@@ -116,7 +116,7 @@ public final class QueenEvaluation {
 			}
 		}
 
-		return Evaluation.createLinearMix(myColor, opening, endgame);
+		return board.getGamePhaseEvaluation(myColor, opening, endgame);
 	}
 	
 }

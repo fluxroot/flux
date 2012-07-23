@@ -49,16 +49,18 @@ public final class Hex88Board {
 	private static final int STACKSIZE = Search.MAX_MOVES;
 
 	// Game phase thresholds
-	public static final int GAMEPHASE_OPENING_VALUE =
+	private static final int GAMEPHASE_OPENING_VALUE =
 		IntChessman.VALUE_KING
 		+ 1 * IntChessman.VALUE_QUEEN
 		+ 2 * IntChessman.VALUE_ROOK
 		+ 2 * IntChessman.VALUE_BISHOP
-		+ 2 * IntChessman.VALUE_KNIGHT;
-	public static final int GAMEPHASE_ENDGAME_VALUE =
+		+ 2 * IntChessman.VALUE_KNIGHT
+		+ 8 * IntChessman.VALUE_PAWN;
+	private static final int GAMEPHASE_ENDGAME_VALUE =
 		IntChessman.VALUE_KING
-		+ 2 * IntChessman.VALUE_ROOK;
-	public static final int GAMEPHASE_INTERVAL = GAMEPHASE_OPENING_VALUE - GAMEPHASE_ENDGAME_VALUE;
+		+ 1 * IntChessman.VALUE_QUEEN
+		+ 1 * IntChessman.VALUE_ROOK;
+	private static final int GAMEPHASE_INTERVAL = GAMEPHASE_OPENING_VALUE - GAMEPHASE_ENDGAME_VALUE;
 	private static final int GAMEPHASE_ENDGAME_COUNT = 2;
 	
 	private static final Random random = new Random(0);
@@ -113,9 +115,13 @@ public final class Hex88Board {
 	// The active color
 	public int activeColor = IntColor.WHITE;
 	
-	// The material value and counter. We always keep the values current.
-	public static final int[] materialValue = new int[IntColor.ARRAY_DIMENSION];
+	// Material values of all pieces (pawns, knights, bishops, rooks, queens, king)
+	public static final int[] materialValueAll = new int[IntColor.ARRAY_DIMENSION];
+
+	// Material counters of minor and major pieces (knights, bishops, rooks, queens)
 	public static final int[] materialCount = new int[IntColor.ARRAY_DIMENSION];
+
+	// Material counters of all pieces without the king (pawns, knights, bishops, rooks, queens)
 	public static final int[] materialCountAll = new int[IntColor.ARRAY_DIMENSION];
 
 	// Our repetition table
@@ -183,7 +189,7 @@ public final class Hex88Board {
 
 		// Initialize the material values and counters
 		for (int color : IntColor.values) {
-			materialValue[color] = 0;
+			materialValueAll[color] = 0;
 			materialCount[color] = 0;
 			materialCountAll[color] = 0;
 		}
@@ -294,7 +300,7 @@ public final class Hex88Board {
 		
 		// Update
 		board[position] = piece;
-		materialValue[color] += IntChessman.getValueFromChessman(chessman);
+		materialValueAll[color] += IntChessman.getValueFromChessman(chessman);
 		if (update) {
 			this.zobristCode ^= zobristChessman[chessman][color][position];
 		}
@@ -356,7 +362,7 @@ public final class Hex88Board {
 
 		// Update
 		board[position] = IntChessman.NOPIECE;
-		materialValue[color] -= IntChessman.getValueFromChessman(chessman);
+		materialValueAll[color] -= IntChessman.getValueFromChessman(chessman);
 		if (update) {
 			this.zobristCode ^= zobristChessman[chessman][color][position];
 		}
@@ -564,9 +570,9 @@ public final class Hex88Board {
 	 * @return the game phase.
 	 */
 	public int getGamePhase() {
-		if (materialValue[IntColor.WHITE] >= GAMEPHASE_OPENING_VALUE && materialValue[IntColor.BLACK] >= GAMEPHASE_OPENING_VALUE) {
+		if (materialValueAll[IntColor.WHITE] >= GAMEPHASE_OPENING_VALUE && materialValueAll[IntColor.BLACK] >= GAMEPHASE_OPENING_VALUE) {
 			return IntGamePhase.OPENING;
-		} else if (materialValue[IntColor.WHITE] <= GAMEPHASE_ENDGAME_VALUE || materialValue[IntColor.BLACK] <= GAMEPHASE_ENDGAME_VALUE
+		} else if (materialValueAll[IntColor.WHITE] <= GAMEPHASE_ENDGAME_VALUE || materialValueAll[IntColor.BLACK] <= GAMEPHASE_ENDGAME_VALUE
 				|| materialCount[IntColor.WHITE] <= GAMEPHASE_ENDGAME_COUNT || materialCount[IntColor.BLACK] <= GAMEPHASE_ENDGAME_COUNT) {
 			return IntGamePhase.ENDGAME;
 		} else {
@@ -574,6 +580,30 @@ public final class Hex88Board {
 		}
 	}
 	
+	/**
+	 * Returns the evaluation value mix from the opening and endgame values depending on the current game phase.
+	 * This allows us to make a smooth transition from the opening to the endgame.
+	 * 
+	 * @param myColor the color.
+	 * @param opening the opening evaluation value.
+	 * @param endgame the endgame evaluation value.
+	 * 
+	 * @return the evaluation value mix from the opening and endgame values depending on the current game phase.
+	 */
+	public int getGamePhaseEvaluation(int myColor, int opening, int endgame) {
+		int intervalMaterial = materialValueAll[myColor];
+
+		if (intervalMaterial >= GAMEPHASE_OPENING_VALUE) {
+			intervalMaterial = GAMEPHASE_INTERVAL;
+		} else if (intervalMaterial <= GAMEPHASE_ENDGAME_VALUE) {
+			intervalMaterial = 0;
+		} else {
+			intervalMaterial -= GAMEPHASE_ENDGAME_VALUE;
+		}
+
+		return (((opening - endgame) * intervalMaterial) / GAMEPHASE_INTERVAL) + endgame;
+	}
+
 	/**
 	 * Returns whether this board state is a repetition.
 	 * 

@@ -234,7 +234,7 @@ public final class PositionValueEvaluation {
 	public PositionValueEvaluation() {
 	}
 
-	public static int evaluatePositionValue(int myColor) {
+	public static int evaluatePositionValue(int myColor, Hex88Board board) {
 		assert myColor != IntColor.NOCOLOR;
 		
 		// Initialize
@@ -328,7 +328,7 @@ public final class PositionValueEvaluation {
 		endgame += positionValueEndgame[IntChessman.KING][position];
 
 		// Return linear mix
-		return Evaluation.createLinearMix(myColor, opening, endgame);
+		return board.getGamePhaseEvaluation(myColor, opening, endgame);
 	}
 
 }
