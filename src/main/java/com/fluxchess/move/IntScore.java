@@ -25,7 +25,7 @@ import jcpi.data.GenericScore;
  *
  * @author Phokham Nonava
  */
-public class IntScore {
+public final class IntScore {
 
 	/**
 	 * Represents no score

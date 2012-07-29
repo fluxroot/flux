@@ -23,7 +23,7 @@ package com.fluxchess.board;
  *
  * @author Phokham Nonava
  */
-public class IntGamePhase {
+public final class IntGamePhase {
 
 	/**
 	 * Represents no game phase

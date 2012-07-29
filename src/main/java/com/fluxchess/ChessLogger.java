@@ -27,7 +27,7 @@ import jcpi.commands.GuiInformationCommand;
  *
  * @author Phokham Nonava
  */
-public class ChessLogger {
+public final class ChessLogger {
 
 	// Singleton Pattern
 	private static final ChessLogger instance = new ChessLogger();
