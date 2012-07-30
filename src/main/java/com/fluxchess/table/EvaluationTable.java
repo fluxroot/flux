@@ -18,6 +18,10 @@
 */
 package com.fluxchess.table;
 
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
 /**
  * EvaluationTable
  *
@@ -32,6 +36,10 @@ public final class EvaluationTable {
 	
 	private final EvaluationTableEntry[] entry;
 	
+	private final ReadWriteLock lock;
+	private final Lock readLock;
+	private final Lock writeLock;
+	
 	public EvaluationTable(int newSize) {
 		assert newSize >= 1;
 
@@ -42,6 +50,11 @@ public final class EvaluationTable {
 		for (int i = 0; i < this.entry.length; i++) {
 			this.entry[i] = new EvaluationTableEntry();
 		}
+		
+		// Initialize locks
+		this.lock = new ReentrantReadWriteLock();
+		this.readLock = this.lock.readLock();
+		this.writeLock = this.lock.writeLock();
 	}
 
 	/**
@@ -52,10 +65,16 @@ public final class EvaluationTable {
 	 */
 	public void put(long newZobristCode, int newEvaluation) {
 		int position = (int) (newZobristCode % this.size);
-		EvaluationTableEntry currentEntry = this.entry[position];
+		
+		this.writeLock.lock();
+		try {
+			EvaluationTableEntry currentEntry = this.entry[position];
 
-		currentEntry.zobristCode = newZobristCode;
-		currentEntry.evaluation = newEvaluation;
+			currentEntry.zobristCode = newZobristCode;
+			currentEntry.evaluation = newEvaluation;
+		} finally {
+			this.writeLock.unlock();
+		}
 	}
 
 	/**
@@ -66,12 +85,18 @@ public final class EvaluationTable {
 	 */
 	public EvaluationTableEntry get(long newZobristCode) {
 		int position = (int) (newZobristCode % this.size);
-		EvaluationTableEntry currentEntry = this.entry[position];
+		
+		this.readLock.lock();
+		try {
+			EvaluationTableEntry currentEntry = this.entry[position];
 
-		if (currentEntry.zobristCode == newZobristCode) {
-			return currentEntry;
-		} else {
-			return null;
+			if (currentEntry.zobristCode == newZobristCode) {
+				return currentEntry;
+			} else {
+				return null;
+			}
+		} finally {
+			this.readLock.unlock();
 		}
 	}
 	

@@ -19,6 +19,9 @@
 package com.fluxchess.table;
 
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import jcpi.data.GenericMove;
 
@@ -47,6 +50,10 @@ public final class TranspositionTable {
 	// Number of slots used
 	private int slotsUsed = 0;
 	
+	private final ReadWriteLock lock;
+	private final Lock readLock;
+	private final Lock writeLock;
+
 	/**
 	 * Creates a new TranspositionTable.
 	 * 
@@ -65,17 +72,27 @@ public final class TranspositionTable {
 
 		this.currentAge = 0;
 		this.slotsUsed = 0;
+
+		// Initialize locks
+		this.lock = new ReentrantReadWriteLock();
+		this.readLock = this.lock.readLock();
+		this.writeLock = this.lock.writeLock();
 	}
 	
 	/**
 	 * Clears the Transposition Table.
 	 */
 	public void clear() {
-		this.currentAge = 0;
-		this.slotsUsed = 0;
-		
-		for (int i = 0; i < this.entry.length; i++) {
-			this.entry[i].clear();
+		this.writeLock.lock();
+		try {
+			this.currentAge = 0;
+			this.slotsUsed = 0;
+			
+			for (int i = 0; i < this.entry.length; i++) {
+				this.entry[i].clear();
+			}
+		} finally {
+			this.writeLock.unlock();
 		}
 	}
 
@@ -83,8 +100,13 @@ public final class TranspositionTable {
 	 * Increase the age of the Transposition Table.
 	 */
 	public void increaseAge() {
-		this.currentAge++;
-		this.slotsUsed = 0;
+		this.writeLock.lock();
+		try {
+			this.currentAge++;
+			this.slotsUsed = 0;
+		} finally {
+			this.writeLock.unlock();
+		}
 	}
 
 	/**
@@ -102,38 +124,44 @@ public final class TranspositionTable {
 		assert height >= 0;
 		
 		int position = (int) (zobristCode % this.size);
-		TranspositionTableEntry currentEntry = this.entry[position];
+		
+		this.writeLock.lock();
+		try {
+			TranspositionTableEntry currentEntry = this.entry[position];
 
-		//## BEGIN "always replace" Scheme
-		if (currentEntry.zobristCode == 0 || currentEntry.age != this.currentAge) {
-			// This is a new entry
-			this.slotsUsed++;
-			currentEntry.zobristCode = zobristCode;
-			currentEntry.age = this.currentAge;
-			currentEntry.depth = depth;
-			currentEntry.setValue(value, height);
-			currentEntry.type = type;
-			currentEntry.move = move;
-			currentEntry.mateThreat = mateThreat;
-		} else if (currentEntry.zobristCode == zobristCode) {
-			// The same zobrist key already exists
-			if (depth >= currentEntry.depth && move != IntMove.NOMOVE) {
+			//## BEGIN "always replace" Scheme
+			if (currentEntry.zobristCode == 0 || currentEntry.age != this.currentAge) {
+				// This is a new entry
+				this.slotsUsed++;
+				currentEntry.zobristCode = zobristCode;
+				currentEntry.age = this.currentAge;
+				currentEntry.depth = depth;
+				currentEntry.setValue(value, height);
+				currentEntry.type = type;
+				currentEntry.move = move;
+				currentEntry.mateThreat = mateThreat;
+			} else if (currentEntry.zobristCode == zobristCode) {
+				// The same zobrist key already exists
+				if (depth >= currentEntry.depth && move != IntMove.NOMOVE) {
+					currentEntry.depth = depth;
+					currentEntry.setValue(value, height);
+					currentEntry.type = type;
+					currentEntry.move = move;
+					currentEntry.mateThreat = mateThreat;
+				}
+			} else {
+				// We have a collision. Overwrite existing entry
+				currentEntry.zobristCode = zobristCode;
 				currentEntry.depth = depth;
 				currentEntry.setValue(value, height);
 				currentEntry.type = type;
 				currentEntry.move = move;
 				currentEntry.mateThreat = mateThreat;
 			}
-		} else {
-			// We have a collision. Overwrite existing entry
-			currentEntry.zobristCode = zobristCode;
-			currentEntry.depth = depth;
-			currentEntry.setValue(value, height);
-			currentEntry.type = type;
-			currentEntry.move = move;
-			currentEntry.mateThreat = mateThreat;
+			//## ENDOF "always replace" Scheme
+		} finally {
+			this.writeLock.unlock();
 		}
-		//## ENDOF "always replace" Scheme
 	}
 
 	/**
@@ -144,12 +172,18 @@ public final class TranspositionTable {
 	 */
 	public TranspositionTableEntry get(long zobristCode) {
 		int position = (int) (zobristCode % this.size);
-		TranspositionTableEntry currentEntry = this.entry[position];
+		
+		this.readLock.lock();
+		try {
+			TranspositionTableEntry currentEntry = this.entry[position];
 
-		if (currentEntry.zobristCode == zobristCode && currentEntry.age == this.currentAge) {
-			return currentEntry;
-		} else {
-			return null;
+			if (currentEntry.zobristCode == zobristCode && currentEntry.age == this.currentAge) {
+				return currentEntry;
+			} else {
+				return null;
+			}
+		} finally {
+			this.readLock.unlock();
 		}
 	}
 
@@ -166,20 +200,25 @@ public final class TranspositionTable {
 		assert depth >= 0;
 		assert moveList != null;
 		
-		TranspositionTableEntry currentEntry = get(board.zobristCode);
+		this.readLock.lock();
+		try {
+			TranspositionTableEntry currentEntry = get(board.zobristCode);
 
-		if (currentEntry == null
-				|| depth == 0
-				|| currentEntry.move == IntMove.NOMOVE) {
-			return moveList;
-		} else {
-			moveList.add(IntMove.toGenericMove(currentEntry.move));
+			if (currentEntry == null
+					|| depth == 0
+					|| currentEntry.move == IntMove.NOMOVE) {
+				return moveList;
+			} else {
+				moveList.add(IntMove.toGenericMove(currentEntry.move));
 
-			board.makeMove(currentEntry.move);
-			List<GenericMove> newMoveList = getMoveList(board, depth - 1, moveList);
-			board.undoMove(currentEntry.move);
-			
-			return newMoveList;
+				board.makeMove(currentEntry.move);
+				List<GenericMove> newMoveList = getMoveList(board, depth - 1, moveList);
+				board.undoMove(currentEntry.move);
+				
+				return newMoveList;
+			}
+		} finally {
+			this.readLock.unlock();
 		}
 	}
 
@@ -189,7 +228,12 @@ public final class TranspositionTable {
 	 * @return the permill of slots used.
 	 */
 	public int getPermillUsed() {
-		return (int) ((1000L * (long) this.slotsUsed) / (long) this.size);
+		this.readLock.lock();
+		try {
+			return (int) ((1000L * (long) this.slotsUsed) / (long) this.size);
+		} finally {
+			this.readLock.unlock();
+		}
 	}
 
 }

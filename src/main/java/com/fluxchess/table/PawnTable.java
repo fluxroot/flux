@@ -18,6 +18,10 @@
 */
 package com.fluxchess.table;
 
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
 /**
  * PawnTable
  *
@@ -32,12 +36,21 @@ public final class PawnTable {
 	private final long[] zobristCode;
 	private final int[] value;
 	
+	private final ReadWriteLock lock;
+	private final Lock readLock;
+	private final Lock writeLock;
+
 	public PawnTable(int newSize) {
 		assert newSize >= 1;
 
 		this.size = newSize;
 		this.zobristCode = new long[this.size];
 		this.value = new int[this.size];
+
+		// Initialize locks
+		this.lock = new ReentrantReadWriteLock();
+		this.readLock = this.lock.readLock();
+		this.writeLock = this.lock.writeLock();
 	}
 
 	/**
@@ -49,8 +62,13 @@ public final class PawnTable {
 	public void put(long newZobristCode, int value) {
 		int position = (int) (newZobristCode % this.size);
 
-		this.zobristCode[position] = newZobristCode;
-		this.value[position] = value;
+		this.writeLock.lock();
+		try {
+			this.zobristCode[position] = newZobristCode;
+			this.value[position] = value;
+		} finally {
+			this.writeLock.unlock();
+		}
 	}
 	
 	/**
@@ -62,10 +80,15 @@ public final class PawnTable {
 	public boolean exists(long newZobristCode) {
 		int position = (int) (newZobristCode % this.size);
 		
-		if (this.zobristCode[position] == newZobristCode) {
-			return true;
-		} else {
-			return false;
+		this.readLock.lock();
+		try {
+			if (this.zobristCode[position] == newZobristCode) {
+				return true;
+			} else {
+				return false;
+			}
+		} finally {
+			this.readLock.unlock();
 		}
 	}
 
@@ -78,11 +101,16 @@ public final class PawnTable {
 	public int getValue(long newZobristCode) {
 		int position = (int) (newZobristCode % this.size);
 
-		if (this.zobristCode[position] == newZobristCode) {
-			return this.value[position];
+		this.readLock.lock();
+		try {
+			if (this.zobristCode[position] == newZobristCode) {
+				return this.value[position];
+			}
+			
+			throw new IllegalArgumentException();
+		} finally {
+			this.readLock.unlock();
 		}
-		
-		throw new IllegalArgumentException();
 	}
 	
 }
