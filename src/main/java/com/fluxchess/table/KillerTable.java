@@ -31,16 +31,16 @@ public final class KillerTable {
 
 	private static final int MAXSIZE = Search.MAX_HEIGHT + 1;
 
-	private static final int[] primaryKiller = new int[MAXSIZE];
-	private static final int[] secondaryKiller = new int[MAXSIZE];
+	private final int[] primaryKiller = new int[MAXSIZE];
+	private final int[] secondaryKiller = new int[MAXSIZE];
 
 	/**
 	 * Creates a new KillerTable.
 	 */
 	public KillerTable() {
 		for (int i = 0; i < MAXSIZE; i++) {
-			primaryKiller[i] = IntMove.NOMOVE;
-			secondaryKiller[i] = IntMove.NOMOVE;
+			this.primaryKiller[i] = IntMove.NOMOVE;
+			this.secondaryKiller[i] = IntMove.NOMOVE;
 		}
 	}
 	
@@ -55,13 +55,13 @@ public final class KillerTable {
 		assert height >= 0;
 		
 		// Update killers
-		if (primaryKiller[height] != killer) {
-			secondaryKiller[height] = primaryKiller[height];
-			primaryKiller[height] = killer;
+		if (this.primaryKiller[height] != killer) {
+			this.secondaryKiller[height] = this.primaryKiller[height];
+			this.primaryKiller[height] = killer;
 		}
 		
-		assert primaryKiller[height] == killer;
-		assert secondaryKiller[height] != killer;
+		assert this.primaryKiller[height] == killer;
+		assert this.secondaryKiller[height] != killer;
 	}
 	
 	/**
@@ -73,7 +73,7 @@ public final class KillerTable {
 	public int getPrimaryKiller(int height) {
 		assert height >= 0;
 
-		return primaryKiller[height];
+		return this.primaryKiller[height];
 	}
 
 	/**
@@ -84,7 +84,7 @@ public final class KillerTable {
 	public int getSecondaryKiller(int height) {
 		assert height >= 0;
 		
-		return secondaryKiller[height];
+		return this.secondaryKiller[height];
 	}
 
 }
