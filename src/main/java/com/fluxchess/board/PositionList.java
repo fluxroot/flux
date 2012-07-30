@@ -25,19 +25,19 @@ package com.fluxchess.board;
  */
 public final class PositionList {
 
-	public final int MAXSIZE;
+	public static final int MAXSIZE = 64;
 
-	public final int[] position;
+	public final int[] position = new int[MAXSIZE];
 	public int size = 0;
 
 	public PositionList() {
-		this.MAXSIZE = 64;
-		this.position = new int[MAXSIZE];
 	}
 	
-	public PositionList(int MAXSIZE) {
-		this.MAXSIZE = MAXSIZE;
-		this.position = new int[MAXSIZE];
+	public PositionList(PositionList list) {
+		assert list != null;
+		
+		System.arraycopy(list.position, 0, this.position, 0, list.size);
+		this.size = list.size;
 	}
-
+	
 }
