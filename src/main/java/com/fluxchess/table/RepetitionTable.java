@@ -29,23 +29,34 @@ public final class RepetitionTable {
 
 	private static final int MAXSIZE = Search.MAX_MOVES;
 
-	private static long[] zobristCode;
+	private long[] zobristCode = new long[MAXSIZE];
 	private int size = 0;
 
 	/**
 	 * Creates a new RepetitionTable.
 	 */
 	public RepetitionTable() {
-		zobristCode = new long[MAXSIZE];
 	}
 
+	/**
+	 * Creates a new RepetitionTable.
+	 * 
+	 * @param table the repetition table to be copied.
+	 */
+	public RepetitionTable(RepetitionTable table) {
+		assert table != null;
+		
+		System.arraycopy(table.zobristCode, 0, zobristCode, 0, table.size);
+		this.size = table.size;
+	}
+	
 	/**
 	 * Puts a new zobrist code into the table.
 	 * 
 	 * @param newZobristCode the zobrist code.
 	 */
 	public void put(long newZobristCode) {
-		zobristCode[this.size++] = newZobristCode;
+		this.zobristCode[this.size++] = newZobristCode;
 	}
 	
 	/**
@@ -58,7 +69,7 @@ public final class RepetitionTable {
 
 		// Find the zobrist code from the end of the list
 		for (int i = this.size - 1; i >= 0; i--) {
-			if (zobristCode[i] == newZobristCode) {
+			if (this.zobristCode[i] == newZobristCode) {
 				index = i;
 				break;
 			}
@@ -67,7 +78,7 @@ public final class RepetitionTable {
 		// Remove and shift
 		if (index != -1) {
 			for (int i = index + 1; i < this.size; i++) {
-				zobristCode[index] = zobristCode[i];
+				this.zobristCode[index] = this.zobristCode[i];
 				index++;
 			}
 
@@ -88,7 +99,7 @@ public final class RepetitionTable {
 	 */
 	public boolean exists(long newZobristCode) {
 		for (int i = this.size - 1; i >= 0; i--) {
-			if (zobristCode[i] == newZobristCode) {
+			if (this.zobristCode[i] == newZobristCode) {
 				return true;
 			}
 		}
