@@ -226,7 +226,7 @@ public final class KingEvaluation {
 		assert (kingPosition & 0x88) == 0;
 		
 		// Initialize
-		byte[] myPawnTable = PawnTableEvaluation.pawnTable[myColor];
+		byte[] myPawnTable = PawnTableEvaluation.getInstance().pawnTable[myColor];
 
 		int kingFile = IntPosition.getFile(kingPosition);
 		int kingRank = IntPosition.getRank(kingPosition);

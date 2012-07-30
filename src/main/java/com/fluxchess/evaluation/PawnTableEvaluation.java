@@ -33,19 +33,25 @@ import com.fluxchess.board.PositionList;
 public final class PawnTableEvaluation {
 
 	// Our pawn structure table. 8 + 2 -> 2 Sentinels for each side.
-	public static final byte[][] pawnTable = new byte[IntColor.ARRAY_DIMENSION][10];
+	public final byte[][] pawnTable = new byte[IntColor.ARRAY_DIMENSION][10];
+	
+	private static final PawnTableEvaluation instance = new PawnTableEvaluation();
 	
 	private PawnTableEvaluation() {
 	}
+
+	public static PawnTableEvaluation getInstance() {
+		return instance;
+	}
 	
-	public static void createPawnTable(int myColor) {
+	public void createPawnTable(int myColor) {
 		assert myColor != IntColor.NOCOLOR;
 
 		// Zero our table
-		Arrays.fill(pawnTable[myColor], (byte) 0);
+		Arrays.fill(this.pawnTable[myColor], (byte) 0);
 		
 		// Initialize
-		byte[] myPawnTable = pawnTable[myColor];
+		byte[] myPawnTable = this.pawnTable[myColor];
 		PositionList myPawnList = Hex88Board.pawnList[myColor];
 
 		// Evaluate each pawn

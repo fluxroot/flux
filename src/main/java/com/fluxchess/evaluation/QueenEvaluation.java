@@ -51,7 +51,7 @@ public final class QueenEvaluation {
 		int opening = 0;
 		int endgame = 0;
 		byte[] enemyAttackTable = AttackTableEvaluation.getInstance().attackTable[enemyColor];
-		byte[] enemyPawnTable = PawnTableEvaluation.pawnTable[enemyColor];
+		byte[] enemyPawnTable = PawnTableEvaluation.getInstance().pawnTable[enemyColor];
 		PositionList myQueenList = Hex88Board.queenList[myColor];
 		
 		// Evaluate the queen

@@ -77,8 +77,8 @@ public final class Evaluation {
 		// Create tables
 		AttackTableEvaluation.getInstance().createAttackTable(myColor, board);
 		AttackTableEvaluation.getInstance().createAttackTable(enemyColor, board);
-		PawnTableEvaluation.createPawnTable(myColor);
-		PawnTableEvaluation.createPawnTable(enemyColor);
+		PawnTableEvaluation.getInstance().createPawnTable(myColor);
+		PawnTableEvaluation.getInstance().createPawnTable(enemyColor);
 
 		// Evaluate draw
 		int drawFactor = DrawEvaluation.evaluateDraw(board);

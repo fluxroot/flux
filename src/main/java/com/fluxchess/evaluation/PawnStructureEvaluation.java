@@ -51,7 +51,7 @@ public final class PawnStructureEvaluation {
 		int endgame = 0;
 		byte[] myAttackTable = AttackTableEvaluation.getInstance().attackTable[myColor];
 		byte[] enemyAttackTable = AttackTableEvaluation.getInstance().attackTable[enemyColor];
-		byte[] myPawnTable = PawnTableEvaluation.pawnTable[myColor];
+		byte[] myPawnTable = PawnTableEvaluation.getInstance().pawnTable[myColor];
 		PositionList myPawnList = Hex88Board.pawnList[myColor];
 
 		// Evaluate each pawn
