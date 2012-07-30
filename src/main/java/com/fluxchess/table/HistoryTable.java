@@ -33,13 +33,12 @@ public final class HistoryTable {
 
 	public static final int MAX_HISTORYVALUE = 65536;
 
-	private static int[][] historyTable;
+	private final int[][] historyTable = new int[IntChessman.PIECE_VALUE_SIZE][Hex88Board.BOARDSIZE];
 
 	/**
 	 * Creates a new HistoryTable.
 	 */
 	public HistoryTable() {
-		historyTable = new int[IntChessman.PIECE_VALUE_SIZE][Hex88Board.BOARDSIZE];
 	}
 	
 	/**
@@ -57,7 +56,7 @@ public final class HistoryTable {
 		assert IntMove.getChessmanColor(move) != IntColor.NOCOLOR;
 		assert (end & 0x88) == 0;
 		
-		return historyTable[piece][end];
+		return this.historyTable[piece][end];
 	}
 
 	/**
@@ -74,12 +73,12 @@ public final class HistoryTable {
 		assert IntMove.getChessmanColor(move) != IntColor.NOCOLOR;
 		assert (end & 0x88) == 0;
 		
-		historyTable[piece][end] += depth;
+		this.historyTable[piece][end] += depth;
 		
-		if (historyTable[piece][end] >= MAX_HISTORYVALUE) {
+		if (this.historyTable[piece][end] >= MAX_HISTORYVALUE) {
 			for (int pieceValue : IntChessman.pieceValues) {
 				for (int positionValue : IntPosition.values) {
-					historyTable[pieceValue][positionValue] /= 2;
+					this.historyTable[pieceValue][positionValue] /= 2;
 				}
 			}
 		}
