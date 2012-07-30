@@ -54,7 +54,7 @@ public final class PawnPasserEvaluation {
 		// Initialize
 		int opening = 0;
 		int endgame = 0;
-		byte[] myAttackTable = AttackTableEvaluation.attackTable[myColor];
+		byte[] myAttackTable = AttackTableEvaluation.getInstance().attackTable[myColor];
 		byte[] enemyPawnTable = PawnTableEvaluation.pawnTable[enemyColor];
 		PositionList myPawnList = Hex88Board.pawnList[myColor];
 

@@ -125,7 +125,7 @@ public final class DrawEvaluation {
 		assert board != null;
 
 		// Initialize
-		byte[] myAttackTable = AttackTableEvaluation.attackTable[myColor];
+		byte[] myAttackTable = AttackTableEvaluation.getInstance().attackTable[myColor];
 
 		assert Hex88Board.pawnList[myColor].size == 1;
 		int pawnPosition = Hex88Board.pawnList[myColor].position[0];
@@ -236,7 +236,7 @@ public final class DrawEvaluation {
 		assert enemyColor != IntColor.NOCOLOR;
 		assert board != null;
 
-		byte[] enemyAttackTable = AttackTableEvaluation.attackTable[enemyColor];
+		byte[] enemyAttackTable = AttackTableEvaluation.getInstance().attackTable[enemyColor];
 
 		// Check the promotion path
 		int delta = 16;
@@ -263,7 +263,7 @@ public final class DrawEvaluation {
 		assert enemyColor != IntColor.NOCOLOR;
 		assert board != null;
 
-		byte[] enemyAttackTable = AttackTableEvaluation.attackTable[enemyColor];
+		byte[] enemyAttackTable = AttackTableEvaluation.getInstance().attackTable[enemyColor];
 
 		// Check the promotion path
 		int delta = 16;

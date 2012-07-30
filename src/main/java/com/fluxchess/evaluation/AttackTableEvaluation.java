@@ -39,29 +39,35 @@ public final class AttackTableEvaluation {
 	public static final byte BIT_QUEEN = 1 << 6;
 	public static final byte BIT_KING = -128;
 
+	private static final AttackTableEvaluation instance = new AttackTableEvaluation();
+	
 	// Our attack table
-	public static final byte[][] attackTable = new byte[IntColor.ARRAY_DIMENSION][Hex88Board.BOARDSIZE];
+	public final byte[][] attackTable = new byte[IntColor.ARRAY_DIMENSION][Hex88Board.BOARDSIZE];
 
 	private AttackTableEvaluation() {
 	}
 	
-	public static void createAttackTable(int myColor, Hex88Board board) {
+	public static AttackTableEvaluation getInstance() {
+		return instance;
+	}
+	
+	public void createAttackTable(int myColor, Hex88Board board) {
 		assert myColor != IntColor.NOCOLOR;
 		assert board != null;
 
 		// Zero our table
-		Arrays.fill(attackTable[myColor], (byte) 0);
+		Arrays.fill(this.attackTable[myColor], (byte) 0);
 
 		// Fill attack table
-		pawnInformationToAttackTable(myColor, board, attackTable[myColor]);
-		knightInformationToAttackTable(myColor, board, attackTable[myColor]);
-		bishopInformationToAttackTable(myColor, board, attackTable[myColor]);
-		rookInformationToAttackTable(myColor, board, attackTable[myColor]);
-		queenInformationToAttackTable(myColor, board, attackTable[myColor]);
-		kingInformationToAttackTable(myColor, board, attackTable[myColor]);
+		pawnInformationToAttackTable(myColor, board, this.attackTable[myColor]);
+		knightInformationToAttackTable(myColor, board, this.attackTable[myColor]);
+		bishopInformationToAttackTable(myColor, board, this.attackTable[myColor]);
+		rookInformationToAttackTable(myColor, board, this.attackTable[myColor]);
+		queenInformationToAttackTable(myColor, board, this.attackTable[myColor]);
+		kingInformationToAttackTable(myColor, board, this.attackTable[myColor]);
 	}
 
-	private static void pawnInformationToAttackTable(int myColor, Hex88Board board, byte[] myAttackTable) {
+	private void pawnInformationToAttackTable(int myColor, Hex88Board board, byte[] myAttackTable) {
 		assert myColor != IntColor.NOCOLOR;
 		assert board != null;
 		assert myAttackTable != null;
@@ -93,7 +99,7 @@ public final class AttackTableEvaluation {
 		}
 	}
 
-	private static void knightInformationToAttackTable(int myColor, Hex88Board board, byte[] myAttackTable) {
+	private void knightInformationToAttackTable(int myColor, Hex88Board board, byte[] myAttackTable) {
 		assert myColor != IntColor.NOCOLOR;
 		assert board != null;
 		assert myAttackTable != null;
@@ -116,7 +122,7 @@ public final class AttackTableEvaluation {
 		}
 	}
 
-	private static void bishopInformationToAttackTable(int myColor, Hex88Board board, byte[] myAttackTable) {
+	private void bishopInformationToAttackTable(int myColor, Hex88Board board, byte[] myAttackTable) {
 		assert myColor != IntColor.NOCOLOR;
 		assert board != null;
 		assert myAttackTable != null;
@@ -146,7 +152,7 @@ public final class AttackTableEvaluation {
 		}
 	}
 
-	private static void rookInformationToAttackTable(int myColor, Hex88Board board, byte[] myAttackTable) {
+	private void rookInformationToAttackTable(int myColor, Hex88Board board, byte[] myAttackTable) {
 		assert myColor != IntColor.NOCOLOR;
 		assert board != null;
 		assert myAttackTable != null;
@@ -176,7 +182,7 @@ public final class AttackTableEvaluation {
 		}
 	}
 
-	private static void queenInformationToAttackTable(int myColor, Hex88Board board, byte[] myAttackTable) {
+	private void queenInformationToAttackTable(int myColor, Hex88Board board, byte[] myAttackTable) {
 		assert myColor != IntColor.NOCOLOR;
 		assert board != null;
 		assert myAttackTable != null;
@@ -206,7 +212,7 @@ public final class AttackTableEvaluation {
 		}
 	}
 
-	private static void kingInformationToAttackTable(int myColor, Hex88Board board, byte[] myAttackTable) {
+	private void kingInformationToAttackTable(int myColor, Hex88Board board, byte[] myAttackTable) {
 		assert myColor != IntColor.NOCOLOR;
 		assert board != null;
 		assert myAttackTable != null;

@@ -46,7 +46,7 @@ public final class BishopEvaluation {
 
 		// Initialize
 		int total = 0;
-		byte[] enemyAttackTable = AttackTableEvaluation.attackTable[enemyColor];
+		byte[] enemyAttackTable = AttackTableEvaluation.getInstance().attackTable[enemyColor];
 		PositionList myBishopList = Hex88Board.bishopList[myColor];
 		
 		// Evaluate each bishop

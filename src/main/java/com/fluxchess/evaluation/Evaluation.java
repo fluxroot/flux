@@ -75,8 +75,8 @@ public final class Evaluation {
 		total = 0;
 
 		// Create tables
-		AttackTableEvaluation.createAttackTable(myColor, board);
-		AttackTableEvaluation.createAttackTable(enemyColor, board);
+		AttackTableEvaluation.getInstance().createAttackTable(myColor, board);
+		AttackTableEvaluation.getInstance().createAttackTable(enemyColor, board);
 		PawnTableEvaluation.createPawnTable(myColor);
 		PawnTableEvaluation.createPawnTable(enemyColor);
 

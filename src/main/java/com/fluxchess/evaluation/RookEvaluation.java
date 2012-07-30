@@ -53,7 +53,7 @@ public final class RookEvaluation {
 		// Initialize
 		int opening = 0;
 		int endgame = 0;
-		byte[] enemyAttackTable = AttackTableEvaluation.attackTable[enemyColor];
+		byte[] enemyAttackTable = AttackTableEvaluation.getInstance().attackTable[enemyColor];
 		byte[] myPawnTable = PawnTableEvaluation.pawnTable[myColor];
 		byte[] enemyPawnTable = PawnTableEvaluation.pawnTable[enemyColor];
 		PositionList myRookList = Hex88Board.rookList[myColor];

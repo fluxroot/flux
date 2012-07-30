@@ -45,7 +45,7 @@ public final class KnightEvaluation {
 
 		// Initialize
 		int total = 0;
-		byte[] enemyAttackTable = AttackTableEvaluation.attackTable[enemyColor];
+		byte[] enemyAttackTable = AttackTableEvaluation.getInstance().attackTable[enemyColor];
 		PositionList myKnightList = Hex88Board.knightList[myColor];
 		
 		// Evaluate each knight
