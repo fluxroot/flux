@@ -228,10 +228,7 @@ public final class PositionValueEvaluation {
 		}
 	};
 
-	/**
-	 * Creates a new PositionValueEvaluation.
-	 */
-	public PositionValueEvaluation() {
+	private PositionValueEvaluation() {
 	}
 
 	public static int evaluatePositionValue(int myColor, Hex88Board board) {
