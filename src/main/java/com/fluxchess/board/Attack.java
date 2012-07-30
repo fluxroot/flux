@@ -42,6 +42,15 @@ public final class Attack {
 	public Attack() {
 	}
 
+	public Attack(Attack attack) {
+		assert attack != null;
+		
+		this.count = attack.count;
+		System.arraycopy(attack.delta, 0, this.delta, 0, MAXATTACK);
+		System.arraycopy(attack.position, 0, this.position, 0, MAXATTACK);
+		this.numberOfMoves = attack.numberOfMoves;
+	}
+	
 	public boolean isCheck() {
 		return this.count != 0;
 	}
