@@ -35,6 +35,16 @@ public final class Hex88BoardStackEntry {
 		clear();
 	}
 
+	public Hex88BoardStackEntry(Hex88BoardStackEntry entry) {
+		assert entry != null;
+		
+		this.zobristHistory = entry.zobristHistory;
+		this.pawnZobristHistory = entry.pawnZobristHistory;
+		this.halfMoveClockHistory = entry.halfMoveClockHistory;
+		this.enPassantHistory = entry.enPassantHistory;
+		this.captureSquareHistory = entry.captureSquareHistory;
+	}
+	
 	public void clear() {
 		this.zobristHistory = 0;
 		this.pawnZobristHistory = 0;
