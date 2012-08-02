@@ -1651,7 +1651,7 @@ public final class Hex88Board {
 	private void addPosition(int position, PositionList list) {
 		assert (position & 0x88) == 0;
 		assert list != null;
-		assert list.size >= 0 && list.size < list.MAXSIZE;
+		assert list.size >= 0 && list.size < PositionList.MAXSIZE;
 		
 		// Iterate over the list from the end
 		int j = list.size;
@@ -1667,7 +1667,7 @@ public final class Hex88Board {
 		list.position[j] = position;
 		list.size++;
 		
-		assert list.size > 0 && list.size <= list.MAXSIZE;
+		assert list.size > 0 && list.size <= PositionList.MAXSIZE;
 	}
 
 	/**
@@ -1679,7 +1679,7 @@ public final class Hex88Board {
 	private void removePosition(int position, PositionList list) {
 		assert (position & 0x88) == 0;
 		assert list != null;
-		assert list.size > 0 && list.size <= list.MAXSIZE;
+		assert list.size > 0 && list.size <= PositionList.MAXSIZE;
 
 		// Iterate over the list from the beginning
 		int j = 0;
@@ -1692,7 +1692,7 @@ public final class Hex88Board {
 
 		list.size--;
 
-		assert list.size >= 0 && list.size < list.MAXSIZE;
+		assert list.size >= 0 && list.size < PositionList.MAXSIZE;
 	}
 
 	public String toString() {
