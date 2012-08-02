@@ -239,7 +239,7 @@ public final class PositionValueEvaluation {
 		int endgame = 0;
 
 		// Pawns
-		PositionList chessmanList = Hex88Board.pawnList[myColor];
+		PositionList chessmanList = board.pawnList[myColor];
 		int[] chessmanValueOpening = positionValueOpening[IntChessman.PAWN];
 		int[] chessmanValueEndgame = positionValueEndgame[IntChessman.PAWN];
 		for (int i = 0; i < chessmanList.size; i++) {
@@ -254,7 +254,7 @@ public final class PositionValueEvaluation {
 		}
 
 		// Knights
-		chessmanList = Hex88Board.knightList[myColor];
+		chessmanList = board.knightList[myColor];
 		chessmanValueOpening = positionValueOpening[IntChessman.KNIGHT];
 		chessmanValueEndgame = positionValueEndgame[IntChessman.KNIGHT];
 		for (int i = 0; i < chessmanList.size; i++) {
@@ -269,7 +269,7 @@ public final class PositionValueEvaluation {
 		}
 		
 		// Bishops
-		chessmanList = Hex88Board.bishopList[myColor];
+		chessmanList = board.bishopList[myColor];
 		chessmanValueOpening = positionValueOpening[IntChessman.BISHOP];
 		chessmanValueEndgame = positionValueEndgame[IntChessman.BISHOP];
 		for (int i = 0; i < chessmanList.size; i++) {
@@ -284,7 +284,7 @@ public final class PositionValueEvaluation {
 		}
 
 		// Rooks
-		chessmanList = Hex88Board.rookList[myColor];
+		chessmanList = board.rookList[myColor];
 		chessmanValueOpening = positionValueOpening[IntChessman.ROOK];
 		chessmanValueEndgame = positionValueEndgame[IntChessman.ROOK];
 		for (int i = 0; i < chessmanList.size; i++) {
@@ -299,7 +299,7 @@ public final class PositionValueEvaluation {
 		}
 
 		// Queens
-		chessmanList = Hex88Board.queenList[myColor];
+		chessmanList = board.queenList[myColor];
 		chessmanValueOpening = positionValueOpening[IntChessman.QUEEN];
 		chessmanValueEndgame = positionValueEndgame[IntChessman.QUEEN];
 		for (int i = 0; i < chessmanList.size; i++) {
@@ -314,8 +314,8 @@ public final class PositionValueEvaluation {
 		}
 
 		// King
-		assert Hex88Board.kingList[myColor].size == 1;
-		int position = Hex88Board.kingList[myColor].position[0];
+		assert board.kingList[myColor].size == 1;
+		int position = board.kingList[myColor].position[0];
 		if (myColor == IntColor.BLACK) {
 			position = 127 - 8 - position;
 		} else {

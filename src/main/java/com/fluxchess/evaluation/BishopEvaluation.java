@@ -47,7 +47,7 @@ public final class BishopEvaluation {
 		// Initialize
 		int total = 0;
 		byte[] enemyAttackTable = AttackTableEvaluation.getInstance().attackTable[enemyColor];
-		PositionList myBishopList = Hex88Board.bishopList[myColor];
+		PositionList myBishopList = board.bishopList[myColor];
 		
 		// Evaluate each bishop
 		for (int i = 0; i < myBishopList.size; i++) {
@@ -59,7 +59,7 @@ public final class BishopEvaluation {
 			for (int delta : MoveGenerator.moveDeltaBishop) {
 				int targetPosition = bishopPosition + delta;
 				while ((targetPosition & 0x88) == 0) {
-					int target = Hex88Board.board[targetPosition];
+					int target = board.board[targetPosition];
 					if (target == IntChessman.NOPIECE) {
 						allMobility++;
 						targetPosition += delta;

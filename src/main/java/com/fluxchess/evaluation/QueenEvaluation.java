@@ -52,7 +52,7 @@ public final class QueenEvaluation {
 		int endgame = 0;
 		byte[] enemyAttackTable = AttackTableEvaluation.getInstance().attackTable[enemyColor];
 		byte[] enemyPawnTable = PawnTableEvaluation.getInstance().pawnTable[enemyColor];
-		PositionList myQueenList = Hex88Board.queenList[myColor];
+		PositionList myQueenList = board.queenList[myColor];
 		
 		// Evaluate the queen
 		for (int i = 0; i < myQueenList.size; i++) {
@@ -65,7 +65,7 @@ public final class QueenEvaluation {
 			for (int delta : MoveGenerator.moveDeltaQueen) {
 				int targetPosition = queenPosition + delta;
 				while ((targetPosition & 0x88) == 0) {
-					int target = Hex88Board.board[targetPosition];
+					int target = board.board[targetPosition];
 					if (target == IntChessman.NOPIECE) {
 						allMobility++;
 						targetPosition += delta;
@@ -100,7 +100,7 @@ public final class QueenEvaluation {
 				assert myColor == IntColor.WHITE;
 			}
 			if (queenRank == seventhRank) {
-				int kingPosition = Hex88Board.kingList[enemyColor].position[0];
+				int kingPosition = board.kingList[enemyColor].position[0];
 				int kingRank = IntPosition.getRank(kingPosition);
 				boolean enemyPawnExists = false;
 				for (int j = 1; j < enemyPawnTable.length - 1; j++) {

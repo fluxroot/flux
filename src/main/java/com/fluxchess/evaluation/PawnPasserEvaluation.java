@@ -56,14 +56,14 @@ public final class PawnPasserEvaluation {
 		int endgame = 0;
 		byte[] myAttackTable = AttackTableEvaluation.getInstance().attackTable[myColor];
 		byte[] enemyPawnTable = PawnTableEvaluation.getInstance().pawnTable[enemyColor];
-		PositionList myPawnList = Hex88Board.pawnList[myColor];
+		PositionList myPawnList = board.pawnList[myColor];
 
-		assert Hex88Board.kingList[enemyColor].size == 1;
-		int enemyKingPosition = Hex88Board.kingList[enemyColor].position[0];
+		assert board.kingList[enemyColor].size == 1;
+		int enemyKingPosition = board.kingList[enemyColor].position[0];
 		int enemyKingFile = IntPosition.getFile(enemyKingPosition);
 		int enemyKingRank = IntPosition.getRank(enemyKingPosition);
-		assert Hex88Board.kingList[myColor].size == 1;
-		int myKingPosition = Hex88Board.kingList[myColor].position[0];
+		assert board.kingList[myColor].size == 1;
+		int myKingPosition = board.kingList[myColor].position[0];
 		int myKingFile = IntPosition.getFile(myKingPosition);
 		int myKingRank = IntPosition.getRank(myKingPosition);
 
@@ -72,7 +72,7 @@ public final class PawnPasserEvaluation {
 			int pawnPosition = myPawnList.position[i];
 			int pawnFile = IntPosition.getFile(pawnPosition);
 			int pawnRank = IntPosition.getRank(pawnPosition);
-			int pawn = Hex88Board.board[pawnPosition];
+			int pawn = board.board[pawnPosition];
 			int tableFile = pawnFile + 1;
 
 			// Passed pawn
@@ -90,7 +90,7 @@ public final class PawnPasserEvaluation {
 						// Check whether the rook is in front of us
 						int endPosition = pawnPosition + 16;
 						for (int j = pawnRank + 1; j <= 7; j++) {
-							int chessman = Hex88Board.board[endPosition];
+							int chessman = board.board[endPosition];
 							if (chessman != IntChessman.NOPIECE) {
 								if (IntChessman.getChessman(chessman) == IntChessman.ROOK && IntChessman.getColor(chessman) == myColor) {
 									// We have no bad rook
@@ -117,7 +117,7 @@ public final class PawnPasserEvaluation {
 						// Check whether the rook is in front of us
 						int endPosition = pawnPosition - 16;
 						for (int j = pawnRank - 1; j >= 0; j--) {
-							int chessman = Hex88Board.board[endPosition];
+							int chessman = board.board[endPosition];
 							if (chessman != IntChessman.NOPIECE) {
 								if (IntChessman.getChessman(chessman) == IntChessman.ROOK && IntChessman.getColor(chessman) == myColor) {
 									// We have no bad rook
@@ -148,14 +148,14 @@ public final class PawnPasserEvaluation {
 				endgameMax -= myKingDistance * EVAL_PAWN_MYKING_DISTANCE;
 				endgameMax += enemyKingDistance * EVAL_PAWN_ENEMYKING_DISTANCE;
 
-				if (Hex88Board.materialCount[enemyColor] == 0) {
+				if (board.materialCount[enemyColor] == 0) {
 					// Unstoppable passer
 					if (myColor == IntColor.WHITE) {
 						// Is a friendly chessman blocking our promotion path?
 						boolean pathClear = true;
 						int endPosition = pawnPosition + 16;
 						for (int j = pawnRank + 1; j <= 7; j++) {
-							int chessman = Hex88Board.board[endPosition];
+							int chessman = board.board[endPosition];
 							if (chessman != IntChessman.NOPIECE && IntChessman.getColor(chessman) == myColor) {
 								pathClear = false;
 							}
@@ -194,7 +194,7 @@ public final class PawnPasserEvaluation {
 						boolean pathClear = true;
 						int endPosition = pawnPosition - 16;
 						for (int j = pawnRank - 1; j >= 0; j--) {
-							int chessman = Hex88Board.board[endPosition];
+							int chessman = board.board[endPosition];
 							if (chessman != IntChessman.NOPIECE && IntChessman.getColor(chessman) == myColor) {
 								pathClear = false;
 							}
@@ -230,7 +230,7 @@ public final class PawnPasserEvaluation {
 				} else {
 					// Free passer
 					assert ((pawnPosition + sign * 16) & 0x88) == 0;
-					if (Hex88Board.board[pawnPosition + sign * 16] == IntChessman.NOPIECE) {
+					if (board.board[pawnPosition + sign * 16] == IntChessman.NOPIECE) {
 						// TODO: Do we have to consider promotion moves?
 						int move = IntMove.createMove(IntMove.NORMAL, pawnPosition, pawnPosition + sign * 16, pawn, IntChessman.NOPIECE, IntChessman.NOPIECE);
 						if (MoveSee.seeMove(move, myColor) >= 0) {

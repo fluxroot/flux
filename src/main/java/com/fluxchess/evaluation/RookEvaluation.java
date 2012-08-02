@@ -56,7 +56,7 @@ public final class RookEvaluation {
 		byte[] enemyAttackTable = AttackTableEvaluation.getInstance().attackTable[enemyColor];
 		byte[] myPawnTable = PawnTableEvaluation.getInstance().pawnTable[myColor];
 		byte[] enemyPawnTable = PawnTableEvaluation.getInstance().pawnTable[enemyColor];
-		PositionList myRookList = Hex88Board.rookList[myColor];
+		PositionList myRookList = board.rookList[myColor];
 		int totalRook7th = 0;
 		
 		// Evaluate each rook
@@ -72,7 +72,7 @@ public final class RookEvaluation {
 			for (int delta : MoveGenerator.moveDeltaRook) {
 				int targetPosition = rookPosition + delta;
 				while ((targetPosition & 0x88) == 0) {
-					int target = Hex88Board.board[targetPosition];
+					int target = board.board[targetPosition];
 					if (target == IntChessman.NOPIECE) {
 						allMobility++;
 						targetPosition += delta;
@@ -104,7 +104,7 @@ public final class RookEvaluation {
 				if (enemyPawnTable[tableFile] == 0) {
 					totalOpenFile += EVAL_ROOK_OPENFILE / 2;
 				}
-				int kingPosition = Hex88Board.kingList[enemyColor].position[0];
+				int kingPosition = board.kingList[enemyColor].position[0];
 				int kingFile = IntPosition.getFile(kingPosition);
 				int delta = Math.abs(kingFile - rookFile);
 				if (delta <= 1) {
@@ -126,7 +126,7 @@ public final class RookEvaluation {
 				assert myColor == IntColor.WHITE;
 			}
 			if (rookRank == seventhRank) {
-				int kingPosition = Hex88Board.kingList[enemyColor].position[0];
+				int kingPosition = board.kingList[enemyColor].position[0];
 				int kingRank = IntPosition.getRank(kingPosition);
 				boolean enemyPawnExists = false;
 				for (int j = 1; j < enemyPawnTable.length - 1; j++) {

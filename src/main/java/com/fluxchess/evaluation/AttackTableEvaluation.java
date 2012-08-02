@@ -73,7 +73,7 @@ public final class AttackTableEvaluation {
 		assert myAttackTable != null;
 
 		// Initialize
-		PositionList myPawnList = Hex88Board.pawnList[myColor];
+		PositionList myPawnList = board.pawnList[myColor];
 
 		// Evaluate each pawn
 		for (int i = 0; i < myPawnList.size; i++) {
@@ -105,7 +105,7 @@ public final class AttackTableEvaluation {
 		assert myAttackTable != null;
 
 		// Initialize
-		PositionList myKnightList = Hex88Board.knightList[myColor];
+		PositionList myKnightList = board.knightList[myColor];
 
 		// Evaluate each knight
 		for (int i = 0; i < myKnightList.size; i++) {
@@ -128,7 +128,7 @@ public final class AttackTableEvaluation {
 		assert myAttackTable != null;
 
 		// Initialize
-		PositionList myBishopList = Hex88Board.bishopList[myColor];
+		PositionList myBishopList = board.bishopList[myColor];
 		
 		// Evaluate each bishop
 		for (int i = 0; i < myBishopList.size; i++) {
@@ -141,7 +141,7 @@ public final class AttackTableEvaluation {
 					myAttackTable[targetPosition]++;
 					myAttackTable[targetPosition] |= BIT_MINOR;
 					
-					int target = Hex88Board.board[targetPosition];
+					int target = board.board[targetPosition];
 					if (target == IntChessman.NOPIECE) {
 						targetPosition += delta;
 					} else {
@@ -158,7 +158,7 @@ public final class AttackTableEvaluation {
 		assert myAttackTable != null;
 
 		// Initialize
-		PositionList myRookList = Hex88Board.rookList[myColor];
+		PositionList myRookList = board.rookList[myColor];
 		
 		// Evaluate each rook
 		for (int i = 0; i < myRookList.size; i++) {
@@ -171,7 +171,7 @@ public final class AttackTableEvaluation {
 					myAttackTable[targetPosition]++;
 					myAttackTable[targetPosition] |= BIT_ROOK;
 					
-					int target = Hex88Board.board[targetPosition];
+					int target = board.board[targetPosition];
 					if (target == IntChessman.NOPIECE) {
 						targetPosition += delta;
 					} else {
@@ -188,7 +188,7 @@ public final class AttackTableEvaluation {
 		assert myAttackTable != null;
 
 		// Initialize
-		PositionList myQueenList = Hex88Board.queenList[myColor];
+		PositionList myQueenList = board.queenList[myColor];
 
 		// Evaluate the queen
 		for (int i = 0; i < myQueenList.size; i++) {
@@ -201,7 +201,7 @@ public final class AttackTableEvaluation {
 					myAttackTable[targetPosition]++;
 					myAttackTable[targetPosition] |= BIT_QUEEN;
 					
-					int target = Hex88Board.board[targetPosition];
+					int target = board.board[targetPosition];
 					if (target == IntChessman.NOPIECE) {
 						targetPosition += delta;
 					} else {
@@ -218,7 +218,7 @@ public final class AttackTableEvaluation {
 		assert myAttackTable != null;
 
 		// Initialize
-		PositionList myKingList = Hex88Board.kingList[myColor];
+		PositionList myKingList = board.kingList[myColor];
 		
 		// Evaluate the king
 		assert myKingList.size == 1;

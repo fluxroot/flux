@@ -61,7 +61,7 @@ public final class KingEvaluation {
 		int endgame = 0;
 		byte[] myAttackTable = AttackTableEvaluation.getInstance().attackTable[myColor];
 		byte[] enemyAttackTable = AttackTableEvaluation.getInstance().attackTable[enemyColor];
-		PositionList myKingList = Hex88Board.kingList[myColor];
+		PositionList myKingList = board.kingList[myColor];
 		
 		// Evaluate the king
 		assert myKingList.size == 1;
@@ -86,7 +86,7 @@ public final class KingEvaluation {
 		if ((attackedSquare & 0x88) == 0 && enemyAttackTable[attackedSquare] != 0) {
 			attackCount += 4;
 			flag |= enemyAttackTable[attackedSquare];
-			int chessman = Hex88Board.board[attackedSquare];
+			int chessman = board.board[attackedSquare];
 			if (chessman == IntChessman.NOPIECE || IntChessman.getColor(chessman) == enemyColor) {
 				attackCount += 3;
 			}
@@ -98,7 +98,7 @@ public final class KingEvaluation {
 		if ((attackedSquare & 0x88) == 0 && enemyAttackTable[attackedSquare] != 0) {
 			attackCount += 4;
 			flag |= enemyAttackTable[attackedSquare];
-			int chessman = Hex88Board.board[attackedSquare];
+			int chessman = board.board[attackedSquare];
 			if (chessman == IntChessman.NOPIECE || IntChessman.getColor(chessman) == enemyColor) {
 				attackCount += 3;
 			}
@@ -110,7 +110,7 @@ public final class KingEvaluation {
 		if ((attackedSquare & 0x88) == 0 && enemyAttackTable[attackedSquare] != 0) {
 			attackCount += 4;
 			flag |= enemyAttackTable[attackedSquare];
-			int chessman = Hex88Board.board[attackedSquare];
+			int chessman = board.board[attackedSquare];
 			if (chessman == IntChessman.NOPIECE || IntChessman.getColor(chessman) == enemyColor) {
 				attackCount += 3;
 			}
@@ -122,7 +122,7 @@ public final class KingEvaluation {
 		if ((attackedSquare & 0x88) == 0 && enemyAttackTable[attackedSquare] != 0) {
 			attackCount += 4;
 			flag |= enemyAttackTable[attackedSquare];
-			int chessman = Hex88Board.board[attackedSquare];
+			int chessman = board.board[attackedSquare];
 			if (chessman == IntChessman.NOPIECE || IntChessman.getColor(chessman) == enemyColor) {
 				attackCount += 3;
 			}
@@ -134,7 +134,7 @@ public final class KingEvaluation {
 		if ((attackedSquare & 0x88) == 0 && enemyAttackTable[attackedSquare] != 0) {
 			attackCount += 4;
 			flag |= enemyAttackTable[attackedSquare];
-			int chessman = Hex88Board.board[attackedSquare];
+			int chessman = board.board[attackedSquare];
 			if (chessman == IntChessman.NOPIECE || IntChessman.getColor(chessman) == enemyColor) {
 				attackCount += 3;
 			}
@@ -146,7 +146,7 @@ public final class KingEvaluation {
 		if ((attackedSquare & 0x88) == 0 && enemyAttackTable[attackedSquare] != 0) {
 			attackCount += 4;
 			flag |= enemyAttackTable[attackedSquare];
-			int chessman = Hex88Board.board[attackedSquare];
+			int chessman = board.board[attackedSquare];
 			if (chessman == IntChessman.NOPIECE || IntChessman.getColor(chessman) == enemyColor) {
 				attackCount += 3;
 			}
@@ -158,7 +158,7 @@ public final class KingEvaluation {
 		if ((attackedSquare & 0x88) == 0 && enemyAttackTable[attackedSquare] != 0) {
 			attackCount += 4;
 			flag |= enemyAttackTable[attackedSquare];
-			int chessman = Hex88Board.board[attackedSquare];
+			int chessman = board.board[attackedSquare];
 			if (chessman == IntChessman.NOPIECE || IntChessman.getColor(chessman) == enemyColor) {
 				attackCount += 3;
 			}
@@ -170,7 +170,7 @@ public final class KingEvaluation {
 		if ((attackedSquare & 0x88) == 0 && enemyAttackTable[attackedSquare] != 0) {
 			attackCount += 4;
 			flag |= enemyAttackTable[attackedSquare];
-			int chessman = Hex88Board.board[attackedSquare];
+			int chessman = board.board[attackedSquare];
 			if (chessman == IntChessman.NOPIECE || IntChessman.getColor(chessman) == enemyColor) {
 				attackCount += 3;
 			}
@@ -201,13 +201,13 @@ public final class KingEvaluation {
 		int positionPenalty = getPawnShieldPenalty(myColor, kingPosition);
 		int castlingPenalty = positionPenalty;
 		
-		if ((Hex88Board.castling & castlingKingside) != 0) {
+		if ((board.castling & castlingKingside) != 0) {
 			int tempPenalty = getPawnShieldPenalty(myColor, castlingPositionKingside);
 			if (tempPenalty < castlingPenalty) {
 				castlingPenalty = tempPenalty;
 			}
 		}
-		if ((Hex88Board.castling & castlingQueenside) != 0) {
+		if ((board.castling & castlingQueenside) != 0) {
 			int tempPenalty = getPawnShieldPenalty(myColor, castlingPositionQueenside);
 			if (tempPenalty < castlingPenalty) {
 				castlingPenalty = tempPenalty;

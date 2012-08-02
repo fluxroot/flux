@@ -46,7 +46,7 @@ public final class KnightEvaluation {
 		// Initialize
 		int total = 0;
 		byte[] enemyAttackTable = AttackTableEvaluation.getInstance().attackTable[enemyColor];
-		PositionList myKnightList = Hex88Board.knightList[myColor];
+		PositionList myKnightList = board.knightList[myColor];
 		
 		// Evaluate each knight
 		for (int i = 0; i < myKnightList.size; i++) {
@@ -58,7 +58,7 @@ public final class KnightEvaluation {
 			for (int delta : MoveGenerator.moveDeltaKnight) {
 				int targetPosition = knightPosition + delta;
 				if ((targetPosition & 0x88) == 0) {
-					int target = Hex88Board.board[targetPosition];
+					int target = board.board[targetPosition];
 					if (target == IntChessman.NOPIECE) {
 						allMobility++;
 					} else {

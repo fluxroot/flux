@@ -77,15 +77,15 @@ public final class Evaluation {
 		// Create tables
 		AttackTableEvaluation.getInstance().createAttackTable(myColor, board);
 		AttackTableEvaluation.getInstance().createAttackTable(enemyColor, board);
-		PawnTableEvaluation.getInstance().createPawnTable(myColor);
-		PawnTableEvaluation.getInstance().createPawnTable(enemyColor);
+		PawnTableEvaluation.getInstance().createPawnTable(myColor, board);
+		PawnTableEvaluation.getInstance().createPawnTable(enemyColor, board);
 
 		// Evaluate draw
 		int drawFactor = DrawEvaluation.evaluateDraw(board);
 		if (drawFactor > 0) {
 			// Evaluate material
-			material[myColor] = MaterialEvaluation.evaluateMaterial(myColor);
-			material[enemyColor] = MaterialEvaluation.evaluateMaterial(enemyColor);
+			material[myColor] = MaterialEvaluation.evaluateMaterial(myColor, board);
+			material[enemyColor] = MaterialEvaluation.evaluateMaterial(enemyColor, board);
 			total += material[myColor] - material[enemyColor];
 
 			// Evaluate position

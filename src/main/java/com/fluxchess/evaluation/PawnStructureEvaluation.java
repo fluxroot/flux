@@ -52,7 +52,7 @@ public final class PawnStructureEvaluation {
 		byte[] myAttackTable = AttackTableEvaluation.getInstance().attackTable[myColor];
 		byte[] enemyAttackTable = AttackTableEvaluation.getInstance().attackTable[enemyColor];
 		byte[] myPawnTable = PawnTableEvaluation.getInstance().pawnTable[myColor];
-		PositionList myPawnList = Hex88Board.pawnList[myColor];
+		PositionList myPawnList = board.pawnList[myColor];
 
 		// Evaluate each pawn
 		for (int i = 0; i < myPawnList.size; i++) {
@@ -104,7 +104,7 @@ public final class PawnStructureEvaluation {
 						// We are protecting a buddy on the left or right side
 						// Check whether we can advance
 						assert ((pawnPosition + sign * 16) & 0x88) == 0;
-						int chessman = Hex88Board.board[pawnPosition + sign * 16];
+						int chessman = board.board[pawnPosition + sign * 16];
 						if ((chessman == IntChessman.NOPIECE || IntChessman.getChessman(chessman) != IntChessman.PAWN)
 								&& (enemyAttackTable[pawnPosition] & AttackTableEvaluation.BIT_PAWN) == 0
 								&& (enemyAttackTable[pawnPosition + sign * 16] & AttackTableEvaluation.BIT_PAWN) == 0) {
@@ -115,8 +115,8 @@ public final class PawnStructureEvaluation {
 									|| myPawnTable[tableFile - 1] == pawnRank + sign * 2)) {
 						// We can do a pawn double advance
 						assert ((pawnPosition + sign * 32) & 0x88) == 0;
-						int chessman1 = Hex88Board.board[pawnPosition + sign * 16];
-						int chessman2 = Hex88Board.board[pawnPosition + sign * 32];
+						int chessman1 = board.board[pawnPosition + sign * 16];
+						int chessman2 = board.board[pawnPosition + sign * 32];
 						if ((chessman1 == IntChessman.NOPIECE || IntChessman.getChessman(chessman1) != IntChessman.PAWN)
 								&& (chessman2 == IntChessman.NOPIECE || IntChessman.getChessman(chessman2) != IntChessman.PAWN)
 								&& (enemyAttackTable[pawnPosition] & AttackTableEvaluation.BIT_PAWN) == 0

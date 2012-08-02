@@ -42,41 +42,41 @@ public final class DrawEvaluation {
 		for (int myColor : IntColor.values) {
 			int enemyColor = IntColor.switchColor(myColor);
 			
-			assert Hex88Board.kingList[myColor].size != 0;
-			assert Hex88Board.kingList[enemyColor].size != 0;
+			assert board.kingList[myColor].size != 0;
+			assert board.kingList[enemyColor].size != 0;
 			
-			if (Hex88Board.queenList[myColor].size == 0) {
-				if (Hex88Board.rookList[myColor].size == 0) {
-					if (Hex88Board.bishopList[myColor].size == 0) {
-						if (Hex88Board.knightList[myColor].size == 0) {
-							if (Hex88Board.pawnList[myColor].size == 0) {
+			if (board.queenList[myColor].size == 0) {
+				if (board.rookList[myColor].size == 0) {
+					if (board.bishopList[myColor].size == 0) {
+						if (board.knightList[myColor].size == 0) {
+							if (board.pawnList[myColor].size == 0) {
 								// KK*
-								assert Hex88Board.materialCountAll[myColor] == 0;
+								assert board.materialCountAll[myColor] == 0;
 
-								if (Hex88Board.queenList[enemyColor].size == 0) {
-									if (Hex88Board.rookList[enemyColor].size == 0) {
-										if (Hex88Board.bishopList[enemyColor].size == 0) {
-											if (Hex88Board.knightList[enemyColor].size == 0) {
-												if (Hex88Board.pawnList[enemyColor].size == 0) {
+								if (board.queenList[enemyColor].size == 0) {
+									if (board.rookList[enemyColor].size == 0) {
+										if (board.bishopList[enemyColor].size == 0) {
+											if (board.knightList[enemyColor].size == 0) {
+												if (board.pawnList[enemyColor].size == 0) {
 													// KK
-													assert Hex88Board.materialCountAll[enemyColor] == 0;
+													assert board.materialCountAll[enemyColor] == 0;
 
 													return 0;
-												} else if (Hex88Board.pawnList[enemyColor].size == 1) {
+												} else if (board.pawnList[enemyColor].size == 1) {
 													// KKP
 
 													return evaluateDrawKPK(enemyColor, myColor, board);
 												}
-											} else if (Hex88Board.knightList[enemyColor].size == 1) {
-												if (Hex88Board.pawnList[enemyColor].size == 0) {
+											} else if (board.knightList[enemyColor].size == 1) {
+												if (board.pawnList[enemyColor].size == 0) {
 													// KKN
 													
 													return 0;
 												}
 											}
-										} else if (Hex88Board.bishopList[enemyColor].size == 1) {
-											if (Hex88Board.knightList[enemyColor].size == 0) {
-												if (Hex88Board.pawnList[enemyColor].size == 0) {
+										} else if (board.bishopList[enemyColor].size == 1) {
+											if (board.knightList[enemyColor].size == 0) {
+												if (board.pawnList[enemyColor].size == 0) {
 													// KKB
 													
 													return 0;
@@ -85,22 +85,22 @@ public final class DrawEvaluation {
 										}
 									}
 								}
-							} else if (Hex88Board.pawnList[myColor].size == 1) {
+							} else if (board.pawnList[myColor].size == 1) {
 								// KPK*
 								
-								if (Hex88Board.queenList[enemyColor].size == 0) {
-									if (Hex88Board.rookList[enemyColor].size == 0) {
-										if (Hex88Board.bishopList[enemyColor].size == 0) {
-											if (Hex88Board.knightList[enemyColor].size == 1) {
-												if (Hex88Board.pawnList[enemyColor].size == 0) {
+								if (board.queenList[enemyColor].size == 0) {
+									if (board.rookList[enemyColor].size == 0) {
+										if (board.bishopList[enemyColor].size == 0) {
+											if (board.knightList[enemyColor].size == 1) {
+												if (board.pawnList[enemyColor].size == 0) {
 													// KPKN
 
 													return evaluateDrawKPKN(myColor, enemyColor, board);
 												}
 											}
-										} else if (Hex88Board.bishopList[enemyColor].size == 1) {
-											if (Hex88Board.knightList[enemyColor].size == 0) {
-												if (Hex88Board.pawnList[enemyColor].size == 0) {
+										} else if (board.bishopList[enemyColor].size == 1) {
+											if (board.knightList[enemyColor].size == 0) {
+												if (board.pawnList[enemyColor].size == 0) {
 													// KPKB
 
 													return evaluateDrawKPKB(myColor, enemyColor, board);
@@ -127,16 +127,16 @@ public final class DrawEvaluation {
 		// Initialize
 		byte[] myAttackTable = AttackTableEvaluation.getInstance().attackTable[myColor];
 
-		assert Hex88Board.pawnList[myColor].size == 1;
-		int pawnPosition = Hex88Board.pawnList[myColor].position[0];
+		assert board.pawnList[myColor].size == 1;
+		int pawnPosition = board.pawnList[myColor].position[0];
 		int pawnFile = IntPosition.getFile(pawnPosition);
 		int pawnRank = IntPosition.getRank(pawnPosition);
-		assert Hex88Board.kingList[enemyColor].size == 1;
-		int enemyKingPosition = Hex88Board.kingList[enemyColor].position[0];
+		assert board.kingList[enemyColor].size == 1;
+		int enemyKingPosition = board.kingList[enemyColor].position[0];
 		int enemyKingFile = IntPosition.getFile(enemyKingPosition);
 		int enemyKingRank = IntPosition.getRank(enemyKingPosition);
-		assert Hex88Board.kingList[myColor].size == 1;
-		int myKingPosition = Hex88Board.kingList[myColor].position[0];
+		assert board.kingList[myColor].size == 1;
+		int myKingPosition = board.kingList[myColor].position[0];
 		int myKingFile = IntPosition.getFile(myKingPosition);
 		int myKingRank = IntPosition.getRank(myKingPosition);
 
@@ -245,9 +245,9 @@ public final class DrawEvaluation {
 		} else {
 			assert myColor == IntColor.WHITE;
 		}
-		int end = Hex88Board.pawnList[myColor].position[0] + delta;
+		int end = board.pawnList[myColor].position[0] + delta;
 		while ((end & 0x88) == 0) {
-			int chessman = Hex88Board.board[end];
+			int chessman = board.board[end];
 			if ((chessman != IntChessman.NOPIECE && IntChessman.getColor(chessman) == enemyColor) || (enemyAttackTable[end] & AttackTableEvaluation.BIT_MINOR) != 0) {
 				return 1;
 			} else {
@@ -272,9 +272,9 @@ public final class DrawEvaluation {
 		} else {
 			assert myColor == IntColor.WHITE;
 		}
-		int end = Hex88Board.pawnList[myColor].position[0] + delta;
+		int end = board.pawnList[myColor].position[0] + delta;
 		while ((end & 0x88) == 0) {
-			int chessman = Hex88Board.board[end];
+			int chessman = board.board[end];
 			if ((chessman != IntChessman.NOPIECE && IntChessman.getColor(chessman) == enemyColor) || (enemyAttackTable[end] & AttackTableEvaluation.BIT_MINOR) != 0) {
 				return 1;
 			} else {

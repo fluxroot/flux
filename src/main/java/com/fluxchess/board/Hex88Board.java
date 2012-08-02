@@ -72,19 +72,19 @@ public final class Hex88Board {
 	private static final long[] zobristEnPassant = new long[BOARDSIZE];
 
 	//## BEGIN 0x88 Board Representation
-	public static final int[] board = new int[BOARDSIZE];
+	public final int[] board = new int[BOARDSIZE];
 	//## ENDOF 0x88 Board Representation
 
 	// The chessman lists.
-	public static final PositionList[] pawnList = new PositionList[IntColor.ARRAY_DIMENSION];
-	public static final PositionList[] knightList = new PositionList[IntColor.ARRAY_DIMENSION];
-	public static final PositionList[] bishopList = new PositionList[IntColor.ARRAY_DIMENSION];
-	public static final PositionList[] rookList = new PositionList[IntColor.ARRAY_DIMENSION];
-	public static final PositionList[] queenList = new PositionList[IntColor.ARRAY_DIMENSION];
-	public static final PositionList[] kingList = new PositionList[IntColor.ARRAY_DIMENSION];
+	public final PositionList[] pawnList = new PositionList[IntColor.ARRAY_DIMENSION];
+	public final PositionList[] knightList = new PositionList[IntColor.ARRAY_DIMENSION];
+	public final PositionList[] bishopList = new PositionList[IntColor.ARRAY_DIMENSION];
+	public final PositionList[] rookList = new PositionList[IntColor.ARRAY_DIMENSION];
+	public final PositionList[] queenList = new PositionList[IntColor.ARRAY_DIMENSION];
+	public final PositionList[] kingList = new PositionList[IntColor.ARRAY_DIMENSION];
 
 	// Board stack
-	private static final Hex88BoardStackEntry[] stack = new Hex88BoardStackEntry[STACKSIZE];
+	private final Hex88BoardStackEntry[] stack = new Hex88BoardStackEntry[STACKSIZE];
 	private int stackSize = 0;
 	
 	// Zobrist code
@@ -97,13 +97,13 @@ public final class Hex88Board {
 	public int enPassantSquare = IntPosition.NOPOSITION;
 
 	// Castling
-	public static int castling;
-	private static final int[] castlingHistory = new int[STACKSIZE];
+	public int castling;
+	private final int[] castlingHistory = new int[STACKSIZE];
 	private int castlingHistorySize = 0;
 	
 	// Capture
 	public int captureSquare = IntPosition.NOPOSITION;
-	private static final int[] captureHistory = new int[STACKSIZE];
+	private final int[] captureHistory = new int[STACKSIZE];
 	private int captureHistorySize = 0;
 	
 	// Half move clock
@@ -116,21 +116,21 @@ public final class Hex88Board {
 	public int activeColor = IntColor.WHITE;
 	
 	// Material values of all pieces (pawns, knights, bishops, rooks, queens, king)
-	public static final int[] materialValueAll = new int[IntColor.ARRAY_DIMENSION];
+	public final int[] materialValueAll = new int[IntColor.ARRAY_DIMENSION];
 
 	// Material counters of minor and major pieces (knights, bishops, rooks, queens)
-	public static final int[] materialCount = new int[IntColor.ARRAY_DIMENSION];
+	public final int[] materialCount = new int[IntColor.ARRAY_DIMENSION];
 
 	// Material counters of all pieces without the king (pawns, knights, bishops, rooks, queens)
-	public static final int[] materialCountAll = new int[IntColor.ARRAY_DIMENSION];
+	public final int[] materialCountAll = new int[IntColor.ARRAY_DIMENSION];
 
 	// Our repetition table
-	private static RepetitionTable repetitionTable;
+	private final RepetitionTable repetitionTable;
 
 	// Attack
-	private static final Attack[][] attackHistory = new Attack[STACKSIZE + 1][IntColor.ARRAY_DIMENSION];
+	private final Attack[][] attackHistory = new Attack[STACKSIZE + 1][IntColor.ARRAY_DIMENSION];
 	private int attackHistorySize = 0;
-	private static final Attack tempAttack = new Attack();
+	private final Attack tempAttack = new Attack();
 	
 	// Initialize the zobrist keys
 	static {
@@ -154,10 +154,6 @@ public final class Hex88Board {
 		for (int i = 0; i < BOARDSIZE; i++) {
 			zobristEnPassant[i] = Math.abs(random.nextLong());
 		}
-		
-		for (int i = 0; i < stack.length; i++) {
-			stack[i] = new Hex88BoardStackEntry();
-		}
 	}
 	
 	/**
@@ -169,6 +165,10 @@ public final class Hex88Board {
 	public Hex88Board(GenericBoard newBoard) {
 		// Initialize repetition table
 		repetitionTable = new RepetitionTable();
+
+		for (int i = 0; i < stack.length; i++) {
+			stack[i] = new Hex88BoardStackEntry();
+		}
 
 		// Initialize the position lists
 		for (int color : IntColor.values) {

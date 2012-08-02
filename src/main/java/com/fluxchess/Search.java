@@ -1536,8 +1536,8 @@ public final class Search implements Runnable {
 		}
 
 		// Extend another ply if we enter a pawn endgame
-		if (Hex88Board.materialCount[board.activeColor] == 0
-				&& Hex88Board.materialCount[IntColor.switchColor(board.activeColor)] == 1
+		if (board.materialCount[board.activeColor] == 0
+				&& board.materialCount[IntColor.switchColor(board.activeColor)] == 1
 				&& IntMove.getTarget(move) != IntChessman.NOPIECE
 				&& IntMove.getTarget(move) != IntChessman.PAWN) {
 			newDepth++;

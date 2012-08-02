@@ -44,7 +44,7 @@ public final class PawnTableEvaluation {
 		return instance;
 	}
 	
-	public void createPawnTable(int myColor) {
+	public void createPawnTable(int myColor, Hex88Board board) {
 		assert myColor != IntColor.NOCOLOR;
 
 		// Zero our table
@@ -52,7 +52,7 @@ public final class PawnTableEvaluation {
 		
 		// Initialize
 		byte[] myPawnTable = this.pawnTable[myColor];
-		PositionList myPawnList = Hex88Board.pawnList[myColor];
+		PositionList myPawnList = board.pawnList[myColor];
 
 		// Evaluate each pawn
 		for (int i = 0; i < myPawnList.size; i++) {
