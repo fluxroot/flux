@@ -247,6 +247,74 @@ public final class Hex88Board {
 	}
 	
 	/**
+	 * Creates a new board.
+	 * 
+	 * @param board the board to be copied.
+	 */
+	public Hex88Board(Hex88Board board) {
+		// Initialize the board
+		System.arraycopy(board.board, 0, this.board, 0, BOARDSIZE);
+		
+		// Initialize the position lists
+		for (int color : IntColor.values) {
+			pawnList[color] = new PositionList(board.pawnList[color]);
+			knightList[color] = new PositionList(board.knightList[color]);
+			bishopList[color] = new PositionList(board.bishopList[color]);
+			rookList[color] = new PositionList(board.rookList[color]);
+			queenList[color] = new PositionList(board.queenList[color]);
+			kingList[color] = new PositionList(board.kingList[color]);
+		}
+
+		for (int i = 0; i < STACKSIZE; i++) {
+			stack[i] = new Hex88BoardStackEntry(board.stack[i]);
+		}
+		this.stackSize = board.stackSize;
+
+		this.zobristCode = board.zobristCode;
+		this.pawnZobristCode = board.pawnZobristCode;
+
+		// Initialize en passant
+		this.enPassantSquare = board.enPassantSquare;
+		
+		// Initialize castling
+		castling = board.castling;
+		System.arraycopy(board.castlingHistory, 0, this.castlingHistory, 0, STACKSIZE);
+		this.castlingHistorySize = board.castlingHistorySize;
+		
+		// Initialize capture
+		this.captureSquare = board.captureSquare;
+		System.arraycopy(board.captureHistory, 0, this.captureHistory, 0, STACKSIZE);
+		this.captureHistorySize = board.captureHistorySize;
+		
+		// Initialize the half move clock
+		this.halfMoveClock = board.halfMoveClock;
+		
+		// Initialize the full move number
+		this.halfMoveNumber = board.halfMoveNumber;
+
+		// Initialize the active color
+		this.activeColor = board.activeColor;
+
+		// Initialize the material values and counters
+		for (int color : IntColor.values) {
+			materialValueAll[color] = board.materialValueAll[color];
+			materialCount[color] = board.materialCount[color];
+			materialCountAll[color] = board.materialCountAll[color];
+		}
+
+		// Initialize repetition table
+		repetitionTable = new RepetitionTable(board.repetitionTable);
+
+		// Initialize the attack list
+		for (int i = 0; i < STACKSIZE + 1; i++) {
+			for (int j = 0; j < IntColor.ARRAY_DIMENSION; j++) {
+				attackHistory[i][j] = new Attack(board.attackHistory[i][j]);
+			}
+		}
+		this.attackHistorySize = board.attackHistorySize;
+	}
+	
+	/**
 	 * Puts the piece on the board at the given position.
 	 * 
 	 * @param piece the piece.
