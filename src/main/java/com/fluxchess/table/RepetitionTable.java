@@ -46,7 +46,7 @@ public final class RepetitionTable {
 	public RepetitionTable(RepetitionTable table) {
 		assert table != null;
 		
-		System.arraycopy(table.zobristCode, 0, zobristCode, 0, table.size);
+		System.arraycopy(table.zobristCode, 0, zobristCode, 0, MAXSIZE);
 		this.size = table.size;
 	}
 	

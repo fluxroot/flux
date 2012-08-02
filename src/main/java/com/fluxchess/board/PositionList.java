@@ -36,7 +36,7 @@ public final class PositionList {
 	public PositionList(PositionList list) {
 		assert list != null;
 		
-		System.arraycopy(list.position, 0, this.position, 0, list.size);
+		System.arraycopy(list.position, 0, this.position, 0, MAXSIZE);
 		this.size = list.size;
 	}
 	
