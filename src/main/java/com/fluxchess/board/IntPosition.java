@@ -209,4 +209,21 @@ public final class IntPosition {
 		return rank;
 	}
 
+	/**
+	 * Returns the field color of the position. We return an IntColor for now.
+	 * Maybe this should be a IntFieldColor.
+	 * 
+	 * @param position the position
+	 * @return the IntColor of the field.
+	 */
+	public static int getFieldColor(int position) {
+		assert position != NOPOSITION;
+
+		if ((((position % 16) + ((position >>> 4) % 2)) % 2) == 0) {
+			return IntColor.BLACK;
+		} else {
+			return IntColor.WHITE;
+		}
+	}
+	
 }
