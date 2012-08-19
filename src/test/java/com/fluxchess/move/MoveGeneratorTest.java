@@ -34,11 +34,6 @@ import org.junit.Test;
 import com.fluxchess.board.Attack;
 import com.fluxchess.board.Hex88Board;
 import com.fluxchess.board.IntChessman;
-import com.fluxchess.move.IntMove;
-import com.fluxchess.move.MoveGenerator;
-import com.fluxchess.move.MoveList;
-import com.fluxchess.move.MoveRater;
-import com.fluxchess.move.MoveSee;
 import com.fluxchess.table.HistoryTable;
 import com.fluxchess.table.KillerTable;
 
@@ -118,7 +113,7 @@ public class MoveGeneratorTest {
 		}
 	}
 
-	private int miniMax(Hex88Board board, MoveGenerator generator, int depth, int maxDepth) {
+	private int miniMax(Hex88Board board, MoveGenerator moveGenerator, int depth, int maxDepth) {
 		if (depth == 0) {
 			return 1;
 		}
@@ -129,10 +124,10 @@ public class MoveGeneratorTest {
 		}
 		
 		Attack attack = board.getAttack(board.activeColor);
-		MoveGenerator.initializeMain(attack, 0, IntMove.NOMOVE);
+		moveGenerator.initializeMain(attack, 0, IntMove.NOMOVE);
 
 		int nodes = 0;
-		int move = MoveGenerator.getNextMove();
+		int move = moveGenerator.getNextMove();
 		while (move != IntMove.NOMOVE) {
 			boolean isCheckingMove = board.isCheckingMove(move);
 			GenericBoard oldBoard = board.getBoard();
@@ -141,7 +136,7 @@ public class MoveGeneratorTest {
 			board.makeMove(move);
 			boolean isCheckingMoveReal = board.getAttack(board.activeColor).isCheck();
 			assertEquals(oldBoard.toString() + ", " + IntMove.toGenericMove(move).toString(), isCheckingMoveReal, isCheckingMove);
-			nodes = miniMax(board, generator, depth - 1, maxDepth);
+			nodes = miniMax(board, moveGenerator, depth - 1, maxDepth);
 			board.undoMove(move);
 			assert captureSquare == board.captureSquare;
 			
@@ -149,10 +144,10 @@ public class MoveGeneratorTest {
 //				System.out.println(IntMove.toGenericMove(move).toLongAlgebraicNotation() + ": " + nodes);
 //			}
 			totalNodes += nodes;
-			move = MoveGenerator.getNextMove();
+			move = moveGenerator.getNextMove();
 		}
 
-		MoveGenerator.destroy();
+		moveGenerator.destroy();
 
 		this.table.put(board.zobristCode, totalNodes);
 		
@@ -167,8 +162,7 @@ public class MoveGeneratorTest {
 			board = new GenericBoard("8/8/3K4/3Nn3/3nN3/4k3/8/8 b - - 0 1");
 			Hex88Board testBoard = new Hex88Board(board);
 
-			new MoveGenerator(testBoard, new KillerTable(), new HistoryTable());
-			miniMaxQuiescentCheckingMoves(testBoard, 3, 3);
+			miniMaxQuiescentCheckingMoves(testBoard, new MoveGenerator(testBoard, new KillerTable(), new HistoryTable()), 3, 3);
 		} catch (IllegalNotationException e) {
 			fail();
 		}
@@ -202,8 +196,7 @@ public class MoveGeneratorTest {
 						new MoveSee(testBoard);
 
 						System.out.println("Testing " + tokens[0].trim() + " depth " + depth + " with nodes number " + nodesNumber + ":");
-						new MoveGenerator(testBoard, new KillerTable(), new HistoryTable());
-						miniMaxQuiescentCheckingMoves(testBoard, depth, depth);
+						miniMaxQuiescentCheckingMoves(testBoard, new MoveGenerator(testBoard, new KillerTable(), new HistoryTable()), depth, depth);
 					}
 
 					line = file.readLine();
@@ -216,7 +209,7 @@ public class MoveGeneratorTest {
 		}
 	}
 
-	private void miniMaxQuiescentCheckingMoves(Hex88Board board, int depth, int maxDepth) {
+	private void miniMaxQuiescentCheckingMoves(Hex88Board board, MoveGenerator moveGenerator, int depth, int maxDepth) {
 		if (depth == 0) {
 			return;
 		}
@@ -225,35 +218,35 @@ public class MoveGeneratorTest {
 
 		// Get quiescent move list
 		MoveList quiescentMoveList = new MoveList();
-		MoveGenerator.initializeQuiescent(attack, true);
-		int move = MoveGenerator.getNextMove();
+		moveGenerator.initializeQuiescent(attack, true);
+		int move = moveGenerator.getNextMove();
 		while (move != IntMove.NOMOVE) {
 			quiescentMoveList.move[quiescentMoveList.tail++] = move;
-			move = MoveGenerator.getNextMove();
+			move = moveGenerator.getNextMove();
 		}
-		MoveGenerator.destroy();
+		moveGenerator.destroy();
 
 		// Do main moves and count
 		MoveList mainMoveList = new MoveList();
-		MoveGenerator.initializeMain(attack, 0, IntMove.NOMOVE);
-		move = MoveGenerator.getNextMove();
+		moveGenerator.initializeMain(attack, 0, IntMove.NOMOVE);
+		move = moveGenerator.getNextMove();
 		while (move != IntMove.NOMOVE) {
 			if (!attack.isCheck()) {
 				if ((IntMove.getTarget(move) != IntChessman.NOPIECE && isGoodCapture(move, board)) || (IntMove.getTarget(move) == IntChessman.NOPIECE && board.isCheckingMove(move)) && MoveSee.seeMove(move, IntMove.getChessmanColor(move)) >= 0) {
 					board.makeMove(move);
-					miniMaxQuiescentCheckingMoves(board, depth - 1, maxDepth);
+					miniMaxQuiescentCheckingMoves(board, moveGenerator, depth - 1, maxDepth);
 					board.undoMove(move);
 					mainMoveList.move[mainMoveList.tail++] = move;
 				}
 			} else {
 				board.makeMove(move);
-				miniMaxQuiescentCheckingMoves(board, depth - 1, maxDepth);
+				miniMaxQuiescentCheckingMoves(board, moveGenerator, depth - 1, maxDepth);
 				board.undoMove(move);
 				mainMoveList.move[mainMoveList.tail++] = move;
 			}
-			move = MoveGenerator.getNextMove();
+			move = moveGenerator.getNextMove();
 		}
-		MoveGenerator.destroy();
+		moveGenerator.destroy();
 
 		assertEquals(printDifference(board, mainMoveList, quiescentMoveList), mainMoveList.getLength(), quiescentMoveList.getLength());
 		

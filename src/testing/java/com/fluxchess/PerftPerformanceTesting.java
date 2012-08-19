@@ -40,25 +40,25 @@ import com.fluxchess.table.KillerTable;
  */
 public class PerftPerformanceTesting {
 
-	private static long miniMax(Hex88Board board, MoveGenerator generator, int depth, int maxDepth) {
+	private static long miniMax(Hex88Board board, MoveGenerator moveGenerator, int depth, int maxDepth) {
 		if (depth == 0) {
 			return 1;
 		}
 
 		Attack attack = board.getAttack(board.activeColor);
-		MoveGenerator.initializeMain(attack, 0, IntMove.NOMOVE);
+		moveGenerator.initializeMain(attack, 0, IntMove.NOMOVE);
 
 		long totalNodes = 0;
-		int move = MoveGenerator.getNextMove();
+		int move = moveGenerator.getNextMove();
 		while (move != IntMove.NOMOVE) {
 			board.makeMove(move);
-			totalNodes += miniMax(board, generator, depth - 1, maxDepth);
+			totalNodes += miniMax(board, moveGenerator, depth - 1, maxDepth);
 			board.undoMove(move);
 
-			move = MoveGenerator.getNextMove();
+			move = moveGenerator.getNextMove();
 		}
 
-		MoveGenerator.destroy();
+		moveGenerator.destroy();
 
 		return totalNodes;
 	}
@@ -73,10 +73,10 @@ public class PerftPerformanceTesting {
 					new MoveSee(testBoard);
 					KillerTable killerTable = new KillerTable();
 					HistoryTable historyTable = new HistoryTable();
-					MoveGenerator generator = new MoveGenerator(testBoard, killerTable, historyTable);
+					MoveGenerator moveGenerator = new MoveGenerator(testBoard, killerTable, historyTable);
 					
 					long startTime = System.currentTimeMillis();
-					long result = miniMax(testBoard, generator, 6, 6);
+					long result = miniMax(testBoard, moveGenerator, 6, 6);
 					long endTime = System.currentTimeMillis();
 					
 					System.out.printf("Found %d nodes in %d.%d seconds.", result, (endTime - startTime) / 1000, (endTime - startTime) % 1000);

@@ -122,6 +122,7 @@ public final class Search implements Runnable {
 	private int showPvNumber = 1;
 	
 	// Search logic
+	private MoveGenerator moveGenerator;
 	private Evaluation evaluation;
 	private static Hex88Board board;
 	private final int myColor;
@@ -169,7 +170,7 @@ public final class Search implements Runnable {
 		killerTable = new KillerTable();
 		historyTable = new HistoryTable();
 
-		new MoveGenerator(newBoard, killerTable, historyTable);
+		this.moveGenerator = new MoveGenerator(newBoard, killerTable, historyTable);
 		new MoveSee(newBoard);
 
 		this.info = newInfo;
@@ -449,14 +450,14 @@ public final class Search implements Runnable {
 		boolean isCheck = attack.isCheck();
 
 		if (this.searchMoveList.getLength() == 0) {
-			MoveGenerator.initializeMain(attack, 0, transpositionMove);
+			this.moveGenerator.initializeMain(attack, 0, transpositionMove);
 
 			int move = IntMove.NOMOVE;
-			while ((move = MoveGenerator.getNextMove()) != IntMove.NOMOVE) {
+			while ((move = this.moveGenerator.getNextMove()) != IntMove.NOMOVE) {
 				rootMoveList.move[rootMoveList.tail++] = move;
 			}
 			
-			MoveGenerator.destroy();
+			this.moveGenerator.destroy();
 		} else {
 			for (int i = this.searchMoveList.head; i < this.searchMoveList.tail; i++) {
 				rootMoveList.move[rootMoveList.tail++] = this.searchMoveList.move[i];
@@ -1098,7 +1099,7 @@ public final class Search implements Runnable {
 		//## ENDOF Internal Iterative Deepening
 		
 		// Initialize the move generator
-		MoveGenerator.initializeMain(attack, height, transpositionMove);
+		this.moveGenerator.initializeMain(attack, height, transpositionMove);
 
 		// Initialize Single-Response Extension
 		boolean isSingleReply;
@@ -1109,7 +1110,7 @@ public final class Search implements Runnable {
 		}
 		
 		int move = IntMove.NOMOVE;
-		while ((move = MoveGenerator.getNextMove()) != IntMove.NOMOVE) {
+		while ((move = this.moveGenerator.getNextMove()) != IntMove.NOMOVE) {
 			//## BEGIN Minor Promotion Pruning
 			if (Configuration.useMinorPromotionPruning
 					&& !this.analyzeMode
@@ -1277,7 +1278,7 @@ public final class Search implements Runnable {
 			}
 		}
 
-		MoveGenerator.destroy();
+		this.moveGenerator.destroy();
 		
 		// If we cannot move, check for checkmate and stalemate.
 		if (bestValue == -INFINITY) {
@@ -1408,10 +1409,10 @@ public final class Search implements Runnable {
 		}
 
 		// Initialize the move generator
-		MoveGenerator.initializeQuiescent(attack, checkingDepth >= 0);
+		this.moveGenerator.initializeQuiescent(attack, checkingDepth >= 0);
 
 		int move = IntMove.NOMOVE;
-		while ((move = MoveGenerator.getNextMove()) != IntMove.NOMOVE) {
+		while ((move = this.moveGenerator.getNextMove()) != IntMove.NOMOVE) {
 			//## BEGIN Futility Pruning
 			if (Configuration.useDeltaPruning) {
 				if (!pvNode
@@ -1471,7 +1472,7 @@ public final class Search implements Runnable {
 			}
 		}
 
-		MoveGenerator.destroy();
+		this.moveGenerator.destroy();
 
 		if (bestValue == -INFINITY) {
 			assert isCheck;
