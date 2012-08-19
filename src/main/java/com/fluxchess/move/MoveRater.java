@@ -28,7 +28,7 @@ import com.fluxchess.table.HistoryTable;
  */
 public final class MoveRater {
 
-	private static HistoryTable historyTable;
+	private HistoryTable historyTable;
 	
 	/**
 	 * Creates a new MoveRater.
