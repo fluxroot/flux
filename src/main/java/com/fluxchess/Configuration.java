@@ -63,7 +63,7 @@ public final class Configuration {
 	public static final boolean useMateThreatExtension = true;
 	
 	// Options
-	public static int numberOfThreads = Runtime.getRuntime().availableProcessors();
+	public static int numberOfThreads = 1;
 	public static boolean showRefutations = false;
 	public static int showPvNumber = 1;
 	public static boolean analyzeMode = false;
@@ -85,7 +85,7 @@ public final class Configuration {
 	public static final Hashtable<String, Option> configuration = new Hashtable<String, Option>();
 
 	static {
-		configuration.put(KEY_Threads, new Option(KEY_Threads, TYPE_Spin, "1", "1", Integer.toString(numberOfThreads), null));
+		configuration.put(KEY_Threads, new Option(KEY_Threads, TYPE_Spin, "1", "1", Integer.toString(Runtime.getRuntime().availableProcessors()), null));
 		configuration.put(KEY_Ponder, new Option(KEY_Ponder, TYPE_Check, "true", null, null, null));
 		configuration.put(KEY_MultiPv, new Option(KEY_MultiPv, TYPE_Spin, "1", "1", "256", null));
 		configuration.put(KEY_Hash, new Option(KEY_Hash, TYPE_Spin, "16", "4", "256", null));
