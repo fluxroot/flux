@@ -1,1 +1,1 @@
-java -Xmx1024M -jar Flux-2.2.1.jar
+java -Xmx1024M -jar Flux-$version$.jar

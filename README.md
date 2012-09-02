@@ -1,4 +1,4 @@
-Flux Chess 2.2.1 UCI
+Flux Chess $version$ UCI
 ====================
 
 Copyright 2007-2012 Phokham Nonava <pn@nonava.com>  
@@ -123,7 +123,7 @@ source, use the following steps.
 `./gradlew build`
 
 ### Grab him
-`cp build/distributions/Flux-2.2.1.zip <very important engine directory>`
+`cp build/distributions/Flux-$version$.zip <very important engine directory>`
 
 
 License
