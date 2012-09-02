@@ -40,76 +40,76 @@ public final class PawnTable {
 	private final Lock readLock;
 	private final Lock writeLock;
 
-	public PawnTable(int newSize) {
-		assert newSize >= 1;
+	public PawnTable(int size) {
+		assert size >= 1;
 
-		this.size = newSize;
-		this.zobristCode = new long[this.size];
-		this.value = new int[this.size];
+		this.size = size;
+		zobristCode = new long[size];
+		value = new int[size];
 
 		// Initialize locks
-		this.lock = new ReentrantReadWriteLock();
-		this.readLock = this.lock.readLock();
-		this.writeLock = this.lock.writeLock();
+		lock = new ReentrantReadWriteLock();
+		readLock = lock.readLock();
+		writeLock = lock.writeLock();
 	}
 
 	/**
 	 * Puts a zobrist code and value into the table.
 	 * 
-	 * @param newZobristCode the zobrist code.
+	 * @param zobristCode the zobrist code.
 	 * @param value the value.
 	 */
-	public void put(long newZobristCode, int value) {
-		int position = (int) (newZobristCode % this.size);
+	public void put(long zobristCode, int value) {
+		int position = (int) (zobristCode % size);
 
-		this.writeLock.lock();
+		writeLock.lock();
 		try {
-			this.zobristCode[position] = newZobristCode;
+			this.zobristCode[position] = zobristCode;
 			this.value[position] = value;
 		} finally {
-			this.writeLock.unlock();
+			writeLock.unlock();
 		}
 	}
 	
 	/**
 	 * Returns whether or not this zobrist code exists in the table.
 	 * 
-	 * @param newZobristCode the zobrist code.
+	 * @param zobristCode the zobrist code.
 	 * @return true if the zobrist code exists in the table, false otherwise.
 	 */
-	public boolean exists(long newZobristCode) {
-		int position = (int) (newZobristCode % this.size);
+	public boolean exists(long zobristCode) {
+		int position = (int) (zobristCode % size);
 		
-		this.readLock.lock();
+		readLock.lock();
 		try {
-			if (this.zobristCode[position] == newZobristCode) {
+			if (this.zobristCode[position] == zobristCode) {
 				return true;
 			} else {
 				return false;
 			}
 		} finally {
-			this.readLock.unlock();
+			readLock.unlock();
 		}
 	}
 
 	/**
 	 * Returns the value given the zobrist code.
 	 * 
-	 * @param newZobristCode the zobrist code.
+	 * @param zobristCode the zobrist code.
 	 * @return the value.
 	 */
-	public int getValue(long newZobristCode) {
-		int position = (int) (newZobristCode % this.size);
+	public int getValue(long zobristCode) {
+		int position = (int) (zobristCode % size);
 
-		this.readLock.lock();
+		readLock.lock();
 		try {
-			if (this.zobristCode[position] == newZobristCode) {
-				return this.value[position];
+			if (this.zobristCode[position] == zobristCode) {
+				return value[position];
 			}
 			
 			throw new IllegalArgumentException();
 		} finally {
-			this.readLock.unlock();
+			readLock.unlock();
 		}
 	}
 	

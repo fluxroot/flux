@@ -58,12 +58,12 @@ public class SearchTest extends AbstractCommunication implements ICommunication 
 	
 	public SearchTest() {
 		try {
-			this.commandQueue.add(new EngineInitializeRequestCommand());
-			this.commandQueue.add(new EngineNewGameCommand());
-			this.commandQueue.add(new EngineAnalyzeCommand(new GenericBoard("5n2/B3K3/2p2Np1/4k3/7P/3bN1P1/2Prn1P1/1q6 w - -"), new ArrayList<GenericMove>()));
+			commandQueue.add(new EngineInitializeRequestCommand());
+			commandQueue.add(new EngineNewGameCommand());
+			commandQueue.add(new EngineAnalyzeCommand(new GenericBoard("5n2/B3K3/2p2Np1/4k3/7P/3bN1P1/2Prn1P1/1q6 w - -"), new ArrayList<GenericMove>()));
 			EngineStartCalculatingCommand startCommand = new EngineStartCalculatingCommand();
 			startCommand.setDepth(3);
-			this.commandQueue.add(startCommand);
+			commandQueue.add(startCommand);
 		} catch (IllegalNotationException e) {
 			e.printStackTrace();
 		}
@@ -73,7 +73,7 @@ public class SearchTest extends AbstractCommunication implements ICommunication 
 	public void testMate30() {
 		AbstractEngine engine = new Flux(this);
 		engine.run();
-		assertEquals(this.found, true);
+		assertEquals(found, true);
 	}
 	
 	public void send(IGuiCommand command) {
@@ -83,7 +83,7 @@ public class SearchTest extends AbstractCommunication implements ICommunication 
 	public IEngineCommand receive() {
 		IEngineCommand command = null;
 		try {
-			command = this.commandQueue.take();
+			command = commandQueue.take();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -103,14 +103,14 @@ public class SearchTest extends AbstractCommunication implements ICommunication 
 	}
 
 	public void visit(GuiBestMoveCommand command) {
-		this.commandQueue.add(new EngineQuitCommand());
+		commandQueue.add(new EngineQuitCommand());
 		System.out.println(command);
 	}
 
 	public void visit(GuiInformationCommand command) {
 		if (command.getMate() != null) {
 			if (command.getMate() == 30) {
-				this.found = true;
+				found = true;
 			}
 		}
 		System.out.println(command);

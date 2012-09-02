@@ -48,10 +48,10 @@ public final class PawnTableEvaluation {
 		assert myColor != IntColor.NOCOLOR;
 
 		// Zero our table
-		Arrays.fill(this.pawnTable[myColor], (byte) 0);
+		Arrays.fill(pawnTable[myColor], (byte) 0);
 		
 		// Initialize
-		byte[] myPawnTable = this.pawnTable[myColor];
+		byte[] myPawnTable = pawnTable[myColor];
 		PositionList myPawnList = board.pawnList[myColor];
 
 		// Evaluate each pawn

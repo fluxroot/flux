@@ -38,19 +38,19 @@ public final class Hex88BoardStackEntry {
 	public Hex88BoardStackEntry(Hex88BoardStackEntry entry) {
 		assert entry != null;
 		
-		this.zobristHistory = entry.zobristHistory;
-		this.pawnZobristHistory = entry.pawnZobristHistory;
-		this.halfMoveClockHistory = entry.halfMoveClockHistory;
-		this.enPassantHistory = entry.enPassantHistory;
-		this.captureSquareHistory = entry.captureSquareHistory;
+		zobristHistory = entry.zobristHistory;
+		pawnZobristHistory = entry.pawnZobristHistory;
+		halfMoveClockHistory = entry.halfMoveClockHistory;
+		enPassantHistory = entry.enPassantHistory;
+		captureSquareHistory = entry.captureSquareHistory;
 	}
 	
 	public void clear() {
-		this.zobristHistory = 0;
-		this.pawnZobristHistory = 0;
-		this.halfMoveClockHistory = 0;
-		this.enPassantHistory = 0;
-		this.captureSquareHistory = 0;
+		zobristHistory = 0;
+		pawnZobristHistory = 0;
+		halfMoveClockHistory = 0;
+		enPassantHistory = 0;
+		captureSquareHistory = 0;
 	}
 
 }

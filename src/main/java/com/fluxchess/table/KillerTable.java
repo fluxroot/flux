@@ -39,8 +39,8 @@ public final class KillerTable {
 	 */
 	public KillerTable() {
 		for (int i = 0; i < MAXSIZE; i++) {
-			this.primaryKiller[i] = IntMove.NOMOVE;
-			this.secondaryKiller[i] = IntMove.NOMOVE;
+			primaryKiller[i] = IntMove.NOMOVE;
+			secondaryKiller[i] = IntMove.NOMOVE;
 		}
 	}
 	
@@ -55,13 +55,13 @@ public final class KillerTable {
 		assert height >= 0;
 		
 		// Update killers
-		if (this.primaryKiller[height] != killer) {
-			this.secondaryKiller[height] = this.primaryKiller[height];
-			this.primaryKiller[height] = killer;
+		if (primaryKiller[height] != killer) {
+			secondaryKiller[height] = primaryKiller[height];
+			primaryKiller[height] = killer;
 		}
 		
-		assert this.primaryKiller[height] == killer;
-		assert this.secondaryKiller[height] != killer;
+		assert primaryKiller[height] == killer;
+		assert secondaryKiller[height] != killer;
 	}
 	
 	/**
@@ -73,7 +73,7 @@ public final class KillerTable {
 	public int getPrimaryKiller(int height) {
 		assert height >= 0;
 
-		return this.primaryKiller[height];
+		return primaryKiller[height];
 	}
 
 	/**
@@ -84,7 +84,7 @@ public final class KillerTable {
 	public int getSecondaryKiller(int height) {
 		assert height >= 0;
 		
-		return this.secondaryKiller[height];
+		return secondaryKiller[height];
 	}
 
 }

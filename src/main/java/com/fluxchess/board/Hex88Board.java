@@ -207,39 +207,39 @@ public final class Hex88Board {
 		
 		// Initialize en passant
 		if (newBoard.getEnPassant() != null) {
-			this.enPassantSquare = IntPosition.valueOfPosition(newBoard.getEnPassant());
-			this.zobristCode ^= zobristEnPassant[IntPosition.valueOfPosition(newBoard.getEnPassant())];
+			enPassantSquare = IntPosition.valueOfPosition(newBoard.getEnPassant());
+			zobristCode ^= zobristEnPassant[IntPosition.valueOfPosition(newBoard.getEnPassant())];
 		}
 		
 		// Initialize castling
 		castling = 0;
 		if (newBoard.getCastling(GenericColor.WHITE, GenericCastling.KINGSIDE) != null) {
 			castling |= IntCastling.WHITE_KINGSIDE;
-			this.zobristCode ^= zobristCastling[IntCastling.WHITE_KINGSIDE];
+			zobristCode ^= zobristCastling[IntCastling.WHITE_KINGSIDE];
 		}
 		if (newBoard.getCastling(GenericColor.WHITE, GenericCastling.QUEENSIDE) != null) {
 			castling |= IntCastling.WHITE_QUEENSIDE;
-			this.zobristCode ^= zobristCastling[IntCastling.WHITE_QUEENSIDE];
+			zobristCode ^= zobristCastling[IntCastling.WHITE_QUEENSIDE];
 		}
 		if (newBoard.getCastling(GenericColor.BLACK, GenericCastling.KINGSIDE) != null) {
 			castling |= IntCastling.BLACK_KINGSIDE;
-			this.zobristCode ^= zobristCastling[IntCastling.BLACK_KINGSIDE];
+			zobristCode ^= zobristCastling[IntCastling.BLACK_KINGSIDE];
 		}
 		if (newBoard.getCastling(GenericColor.BLACK, GenericCastling.QUEENSIDE) != null) {
 			castling |= IntCastling.BLACK_QUEENSIDE;
-			this.zobristCode ^= zobristCastling[IntCastling.BLACK_QUEENSIDE];
+			zobristCode ^= zobristCastling[IntCastling.BLACK_QUEENSIDE];
 		}
 		
 		// Initialize the active color
-		if (this.activeColor != IntColor.valueOfColor(newBoard.getActiveColor())) {
-			this.activeColor = IntColor.valueOfColor(newBoard.getActiveColor());
-			this.zobristCode ^= zobristActiveColor;
-			this.pawnZobristCode ^= zobristActiveColor;
+		if (activeColor != IntColor.valueOfColor(newBoard.getActiveColor())) {
+			activeColor = IntColor.valueOfColor(newBoard.getActiveColor());
+			zobristCode ^= zobristActiveColor;
+			pawnZobristCode ^= zobristActiveColor;
 		}
 
 		// Initialize the half move clock
 		assert newBoard.getHalfMoveClock() >= 0;
-		this.halfMoveClock = newBoard.getHalfMoveClock();
+		halfMoveClock = newBoard.getHalfMoveClock();
 		
 		// Initialize the full move number
 		assert newBoard.getFullMoveNumber() > 0;
@@ -268,32 +268,32 @@ public final class Hex88Board {
 		for (int i = 0; i < STACKSIZE; i++) {
 			stack[i] = new Hex88BoardStackEntry(board.stack[i]);
 		}
-		this.stackSize = board.stackSize;
+		stackSize = board.stackSize;
 
-		this.zobristCode = board.zobristCode;
-		this.pawnZobristCode = board.pawnZobristCode;
+		zobristCode = board.zobristCode;
+		pawnZobristCode = board.pawnZobristCode;
 
 		// Initialize en passant
-		this.enPassantSquare = board.enPassantSquare;
+		enPassantSquare = board.enPassantSquare;
 		
 		// Initialize castling
 		castling = board.castling;
-		System.arraycopy(board.castlingHistory, 0, this.castlingHistory, 0, STACKSIZE);
-		this.castlingHistorySize = board.castlingHistorySize;
+		System.arraycopy(board.castlingHistory, 0, castlingHistory, 0, STACKSIZE);
+		castlingHistorySize = board.castlingHistorySize;
 		
 		// Initialize capture
-		this.captureSquare = board.captureSquare;
-		System.arraycopy(board.captureHistory, 0, this.captureHistory, 0, STACKSIZE);
-		this.captureHistorySize = board.captureHistorySize;
+		captureSquare = board.captureSquare;
+		System.arraycopy(board.captureHistory, 0, captureHistory, 0, STACKSIZE);
+		captureHistorySize = board.captureHistorySize;
 		
 		// Initialize the half move clock
-		this.halfMoveClock = board.halfMoveClock;
+		halfMoveClock = board.halfMoveClock;
 		
 		// Initialize the full move number
-		this.halfMoveNumber = board.halfMoveNumber;
+		halfMoveNumber = board.halfMoveNumber;
 
 		// Initialize the active color
-		this.activeColor = board.activeColor;
+		activeColor = board.activeColor;
 
 		// Initialize the material values and counters
 		for (int color : IntColor.values) {
@@ -311,7 +311,7 @@ public final class Hex88Board {
 				attackHistory[i][j] = new Attack(board.attackHistory[i][j]);
 			}
 		}
-		this.attackHistorySize = board.attackHistorySize;
+		attackHistorySize = board.attackHistorySize;
 	}
 	
 	/**
@@ -335,7 +335,7 @@ public final class Hex88Board {
 			addPosition(position, pawnList[color]);
 			materialCountAll[color]++;
 			if (update) {
-				this.pawnZobristCode ^= zobristChessman[IntChessman.PAWN][color][position];
+				pawnZobristCode ^= zobristChessman[IntChessman.PAWN][color][position];
 			}
 			break;
 		case IntChessman.KNIGHT:
@@ -370,7 +370,7 @@ public final class Hex88Board {
 		board[position] = piece;
 		materialValueAll[color] += IntChessman.getValueFromChessman(chessman);
 		if (update) {
-			this.zobristCode ^= zobristChessman[chessman][color][position];
+			zobristCode ^= zobristChessman[chessman][color][position];
 		}
 	}
 	
@@ -397,7 +397,7 @@ public final class Hex88Board {
 			removePosition(position, pawnList[color]);
 			materialCountAll[color]--;
 			if (update) {
-				this.pawnZobristCode ^= zobristChessman[IntChessman.PAWN][color][position];
+				pawnZobristCode ^= zobristChessman[IntChessman.PAWN][color][position];
 			}
 			break;
 		case IntChessman.KNIGHT:
@@ -432,7 +432,7 @@ public final class Hex88Board {
 		board[position] = IntChessman.NOPIECE;
 		materialValueAll[color] -= IntChessman.getValueFromChessman(chessman);
 		if (update) {
-			this.zobristCode ^= zobristChessman[chessman][color][position];
+			zobristCode ^= zobristChessman[chessman][color][position];
 		}
 		
 		return piece;
@@ -465,8 +465,8 @@ public final class Hex88Board {
 			addPosition(end, pawnList[color]);
 			if (update) {
 				long[] tempZobristChessman = zobristChessman[IntChessman.PAWN][color];
-				this.pawnZobristCode ^= tempZobristChessman[start];
-				this.pawnZobristCode ^= tempZobristChessman[end];
+				pawnZobristCode ^= tempZobristChessman[start];
+				pawnZobristCode ^= tempZobristChessman[end];
 			}
 			break;
 		case IntChessman.KNIGHT:
@@ -499,8 +499,8 @@ public final class Hex88Board {
 		board[end] = piece;
 		if (update) {
 			long[] tempZobristChessman = zobristChessman[chessman][color];
-			this.zobristCode ^= tempZobristChessman[start];
-			this.zobristCode ^= tempZobristChessman[end];
+			zobristCode ^= tempZobristChessman[start];
+			zobristCode ^= tempZobristChessman[end];
 		}
 
 		return piece;
@@ -579,7 +579,7 @@ public final class Hex88Board {
 		}
 
 		// Set active color
-		newBoard.setActiveColor(IntColor.valueOfIntColor(this.activeColor));
+		newBoard.setActiveColor(IntColor.valueOfIntColor(activeColor));
 
 		// Set castling
 		if ((castling & IntCastling.WHITE_KINGSIDE) != 0) {
@@ -596,12 +596,12 @@ public final class Hex88Board {
 		}
 		
 		// Set en passant
-		if (this.enPassantSquare != IntPosition.NOPOSITION) {
-			newBoard.setEnPassant(IntPosition.valueOfIntPosition(this.enPassantSquare));
+		if (enPassantSquare != IntPosition.NOPOSITION) {
+			newBoard.setEnPassant(IntPosition.valueOfIntPosition(enPassantSquare));
 		}
 
 		// Set half move clock
-		newBoard.setHalfMoveClock(this.halfMoveClock);
+		newBoard.setHalfMoveClock(halfMoveClock);
 		
 		// Set full move number
 		newBoard.setFullMoveNumber(getFullMoveNumber());
@@ -615,7 +615,7 @@ public final class Hex88Board {
 	 * @return the full move number.
 	 */
 	public int getFullMoveNumber() {
-		return this.halfMoveNumber / 2;
+		return halfMoveNumber / 2;
 	}
 
 	/**
@@ -626,9 +626,9 @@ public final class Hex88Board {
 	private void setFullMoveNumber(int fullMoveNumber) {
 		assert fullMoveNumber > 0;
 
-		this.halfMoveNumber = fullMoveNumber * 2;
-		if (this.activeColor == IntColor.valueOfColor(GenericColor.BLACK)) {
-			this.halfMoveNumber++;
+		halfMoveNumber = fullMoveNumber * 2;
+		if (activeColor == IntColor.valueOfColor(GenericColor.BLACK)) {
+			halfMoveNumber++;
 		}
 	}
 
@@ -678,7 +678,7 @@ public final class Hex88Board {
 	 * @return true if this board state is a repetition, false otherwise.
 	 */
 	public boolean isRepetition() {
-		return repetitionTable.exists(this.zobristCode);
+		return repetitionTable.exists(zobristCode);
 	}
 	
 	/**
@@ -869,7 +869,7 @@ public final class Hex88Board {
 	 * @param color the Color of the target king.
 	 */
 	public Attack getAttack(int color) {
-		Attack attack = attackHistory[this.attackHistorySize][color];
+		Attack attack = attackHistory[attackHistorySize][color];
 		if (attack.count != Attack.NOATTACK) {
 			return attack;
 		}
@@ -1161,40 +1161,40 @@ public final class Hex88Board {
 	 */
 	public void makeMove(int move) {
 		// Get current stack entry
-		Hex88BoardStackEntry currentStackEntry = stack[this.stackSize];
+		Hex88BoardStackEntry currentStackEntry = stack[stackSize];
 		
 		// Save history
-		currentStackEntry.zobristHistory = this.zobristCode;
-		currentStackEntry.pawnZobristHistory = this.pawnZobristCode;
-		currentStackEntry.halfMoveClockHistory = this.halfMoveClock;
-		currentStackEntry.enPassantHistory = this.enPassantSquare;
-		currentStackEntry.captureSquareHistory = this.captureSquare;
+		currentStackEntry.zobristHistory = zobristCode;
+		currentStackEntry.pawnZobristHistory = pawnZobristCode;
+		currentStackEntry.halfMoveClockHistory = halfMoveClock;
+		currentStackEntry.enPassantHistory = enPassantSquare;
+		currentStackEntry.captureSquareHistory = captureSquare;
 		
 		// Update stack size
-		this.stackSize++;
-		assert this.stackSize < STACKSIZE;
+		stackSize++;
+		assert stackSize < STACKSIZE;
 
 		int type = IntMove.getType(move);
 
 		switch (type) {
 		case IntMove.NORMAL:
-			repetitionTable.put(this.zobristCode);
+			repetitionTable.put(zobristCode);
 			makeMoveNormal(move);
 			break;
 		case IntMove.PAWNDOUBLE:
-			repetitionTable.put(this.zobristCode);
+			repetitionTable.put(zobristCode);
 			makeMovePawnDouble(move);
 			break;
 		case IntMove.PAWNPROMOTION:
-			repetitionTable.put(this.zobristCode);
+			repetitionTable.put(zobristCode);
 			makeMovePawnPromotion(move);
 			break;
 		case IntMove.ENPASSANT:
-			repetitionTable.put(this.zobristCode);
+			repetitionTable.put(zobristCode);
 			makeMoveEnPassant(move);
 			break;
 		case IntMove.CASTLING:
-			repetitionTable.put(this.zobristCode);
+			repetitionTable.put(zobristCode);
 			makeMoveCastling(move);
 			break;
 		case IntMove.NULL:
@@ -1205,17 +1205,17 @@ public final class Hex88Board {
 		}
 
 		// Update half move number
-		this.halfMoveNumber++;
+		halfMoveNumber++;
 		
 		// Update active color
-		this.activeColor = IntColor.switchColor(this.activeColor);
-		this.zobristCode ^= zobristActiveColor;
-		this.pawnZobristCode ^= zobristActiveColor;
+		activeColor = IntColor.switchColor(activeColor);
+		zobristCode ^= zobristActiveColor;
+		pawnZobristCode ^= zobristActiveColor;
 
 		// Update attack list
-		this.attackHistorySize++;
-		attackHistory[this.attackHistorySize][IntColor.WHITE].count = Attack.NOATTACK;
-		attackHistory[this.attackHistorySize][IntColor.BLACK].count = Attack.NOATTACK;
+		attackHistorySize++;
+		attackHistory[attackHistorySize][IntColor.WHITE].count = Attack.NOATTACK;
+		attackHistory[attackHistorySize][IntColor.BLACK].count = Attack.NOATTACK;
 	}
 	
 	/**
@@ -1227,48 +1227,48 @@ public final class Hex88Board {
 		int type = IntMove.getType(move);
 
 		// Update attack list
-		this.attackHistorySize--;
+		attackHistorySize--;
 
 		// Update active color
-		this.activeColor = IntColor.switchColor(this.activeColor);
+		activeColor = IntColor.switchColor(activeColor);
 
 		// Update half move number
-		this.halfMoveNumber--;
+		halfMoveNumber--;
 
 		// Update stack size
-		this.stackSize--;
-		assert this.stackSize >= 0;
+		stackSize--;
+		assert stackSize >= 0;
 
 		// Get current stack entry
-		Hex88BoardStackEntry currentStackEntry = stack[this.stackSize];
+		Hex88BoardStackEntry currentStackEntry = stack[stackSize];
 
 		// Restore zobrist history
-		this.zobristCode = currentStackEntry.zobristHistory;
-		this.pawnZobristCode = currentStackEntry.pawnZobristHistory;
-		this.halfMoveClock = currentStackEntry.halfMoveClockHistory;
-		this.enPassantSquare = currentStackEntry.enPassantHistory;
-		this.captureSquare = currentStackEntry.captureSquareHistory;
+		zobristCode = currentStackEntry.zobristHistory;
+		pawnZobristCode = currentStackEntry.pawnZobristHistory;
+		halfMoveClock = currentStackEntry.halfMoveClockHistory;
+		enPassantSquare = currentStackEntry.enPassantHistory;
+		captureSquare = currentStackEntry.captureSquareHistory;
 
 		switch (type) {
 		case IntMove.NORMAL:
 			undoMoveNormal(move);
-			repetitionTable.remove(this.zobristCode);
+			repetitionTable.remove(zobristCode);
 			break;
 		case IntMove.PAWNDOUBLE:
 			undoMovePawnDouble(move);
-			repetitionTable.remove(this.zobristCode);
+			repetitionTable.remove(zobristCode);
 			break;
 		case IntMove.PAWNPROMOTION:
 			undoMovePawnPromotion(move);
-			repetitionTable.remove(this.zobristCode);
+			repetitionTable.remove(zobristCode);
 			break;
 		case IntMove.ENPASSANT:
 			undoMoveEnPassant(move);
-			repetitionTable.remove(this.zobristCode);
+			repetitionTable.remove(zobristCode);
 			break;
 		case IntMove.CASTLING:
 			undoMoveCastling(move);
-			repetitionTable.remove(this.zobristCode);
+			repetitionTable.remove(zobristCode);
 			break;
 		case IntMove.NULL:
 			break;
@@ -1279,7 +1279,7 @@ public final class Hex88Board {
 	
 	private void makeMoveNormal(int move) {
 		// Save the castling rights
-		castlingHistory[this.castlingHistorySize++] = castling;
+		castlingHistory[castlingHistorySize++] = castling;
 		int newCastling = castling;
 
 		// Save the captured chessman
@@ -1288,8 +1288,8 @@ public final class Hex88Board {
 		if (board[endPosition] != IntChessman.NOPIECE) {
 			target = remove(endPosition, true);
 			assert IntMove.getTarget(move) != IntChessman.NOPIECE : IntMove.toString(move);
-			captureHistory[this.captureHistorySize++] = target;
-			this.captureSquare = endPosition;
+			captureHistory[captureHistorySize++] = target;
+			captureSquare = endPosition;
 
 			switch (endPosition) {
 			case IntPosition.a1:
@@ -1320,11 +1320,11 @@ public final class Hex88Board {
 				|| (newCastling ^ castling) == IntCastling.BLACK_QUEENSIDE
 				|| (newCastling ^ castling) == (IntCastling.WHITE_KINGSIDE | IntCastling.WHITE_QUEENSIDE)
 				|| (newCastling ^ castling) == (IntCastling.BLACK_KINGSIDE | IntCastling.BLACK_QUEENSIDE);
-				this.zobristCode ^= zobristCastling[newCastling ^ castling];
+				zobristCode ^= zobristCastling[newCastling ^ castling];
 				castling = newCastling;
 			}
 		} else {
-			this.captureSquare = IntPosition.NOPOSITION;
+			captureSquare = IntPosition.NOPOSITION;
 		}
 
 		// Move the piece
@@ -1362,21 +1362,21 @@ public final class Hex88Board {
 			|| (newCastling ^ castling) == IntCastling.BLACK_QUEENSIDE
 			|| (newCastling ^ castling) == (IntCastling.WHITE_KINGSIDE | IntCastling.WHITE_QUEENSIDE)
 			|| (newCastling ^ castling) == (IntCastling.BLACK_KINGSIDE | IntCastling.BLACK_QUEENSIDE);
-			this.zobristCode ^= zobristCastling[newCastling ^ castling];
+			zobristCode ^= zobristCastling[newCastling ^ castling];
 			castling = newCastling;
 		}
 
 		// Update en passant
-		if (this.enPassantSquare != IntPosition.NOPOSITION) {
-			this.zobristCode ^= zobristEnPassant[this.enPassantSquare];
-			this.enPassantSquare = IntPosition.NOPOSITION;
+		if (enPassantSquare != IntPosition.NOPOSITION) {
+			zobristCode ^= zobristEnPassant[enPassantSquare];
+			enPassantSquare = IntPosition.NOPOSITION;
 		}
 
 		// Update half move clock
 		if (chessman == IntChessman.PAWN || target != IntChessman.NOPIECE) {
-			this.halfMoveClock = 0;
+			halfMoveClock = 0;
 		} else {
-			this.halfMoveClock++;
+			halfMoveClock++;
 		}
 	}
 	
@@ -1389,11 +1389,11 @@ public final class Hex88Board {
 		// Restore the captured chessman
 		int target = IntMove.getTarget(move);
 		if (target != IntChessman.NOPIECE) {
-			put(captureHistory[--this.captureHistorySize], endPosition, false);
+			put(captureHistory[--captureHistorySize], endPosition, false);
 		}
 
 		// Restore the castling rights
-		castling = castlingHistory[--this.castlingHistorySize];
+		castling = castlingHistory[--castlingHistorySize];
 	}
 	
 	private void makeMovePawnPromotion(int move) {
@@ -1410,13 +1410,13 @@ public final class Hex88Board {
 		int target = IntChessman.NOPIECE;
 		if (board[endPosition] != IntChessman.NOPIECE) {
 			// Save the castling rights
-			castlingHistory[this.castlingHistorySize++] = castling;
+			castlingHistory[castlingHistorySize++] = castling;
 			int newCastling = castling;
 
 			target = remove(endPosition, true);
 			assert IntMove.getTarget(move) != IntChessman.NOPIECE;
-			captureHistory[this.captureHistorySize++] = target;
-			this.captureSquare = endPosition;
+			captureHistory[captureHistorySize++] = target;
+			captureSquare = endPosition;
 
 			switch (endPosition) {
 			case IntPosition.a1:
@@ -1447,11 +1447,11 @@ public final class Hex88Board {
 				|| (newCastling ^ castling) == IntCastling.BLACK_QUEENSIDE
 				|| (newCastling ^ castling) == (IntCastling.WHITE_KINGSIDE | IntCastling.WHITE_QUEENSIDE)
 				|| (newCastling ^ castling) == (IntCastling.BLACK_KINGSIDE | IntCastling.BLACK_QUEENSIDE);
-				this.zobristCode ^= zobristCastling[newCastling ^ castling];
+				zobristCode ^= zobristCastling[newCastling ^ castling];
 				castling = newCastling;
 			}
 		} else {
-			this.captureSquare = IntPosition.NOPOSITION;
+			captureSquare = IntPosition.NOPOSITION;
 		}
 
 		// Create the promotion chessman
@@ -1460,13 +1460,13 @@ public final class Hex88Board {
 		put(promotionPiece, endPosition, true);
 
 		// Update en passant
-		if (this.enPassantSquare != IntPosition.NOPOSITION) {
-			this.zobristCode ^= zobristEnPassant[this.enPassantSquare];
-			this.enPassantSquare = IntPosition.NOPOSITION;
+		if (enPassantSquare != IntPosition.NOPOSITION) {
+			zobristCode ^= zobristEnPassant[enPassantSquare];
+			enPassantSquare = IntPosition.NOPOSITION;
 		}
 
 		// Update half move clock
-		this.halfMoveClock = 0;
+		halfMoveClock = 0;
 	}
 	
 	private void undoMovePawnPromotion(int move) {
@@ -1477,10 +1477,10 @@ public final class Hex88Board {
 		// Restore the captured chessman
 		int target = IntMove.getTarget(move);
 		if (target != IntChessman.NOPIECE) {
-			put(captureHistory[--this.captureHistorySize], endPosition, false);
+			put(captureHistory[--captureHistorySize], endPosition, false);
 
 			// Restore the castling rights
-			castling = castlingHistory[--this.castlingHistorySize];
+			castling = castlingHistory[--castlingHistorySize];
 		}
 
 		// Put the pawn at the start position
@@ -1503,7 +1503,7 @@ public final class Hex88Board {
 		assert Math.abs(startPosition - endPosition) == 32;
 
 		// Update the capture square
-		this.captureSquare = IntPosition.NOPOSITION;
+		captureSquare = IntPosition.NOPOSITION;
 		
 		// Calculate the en passant position
 		int targetPosition;
@@ -1519,15 +1519,15 @@ public final class Hex88Board {
 		assert Math.abs(startPosition - targetPosition) == 16;
 
 		// Update en passant
-		if (this.enPassantSquare != IntPosition.NOPOSITION) {
-			this.zobristCode ^= zobristEnPassant[this.enPassantSquare];
+		if (enPassantSquare != IntPosition.NOPOSITION) {
+			zobristCode ^= zobristEnPassant[enPassantSquare];
 		}
 		
-		this.enPassantSquare = targetPosition;
-		this.zobristCode ^= zobristEnPassant[targetPosition];
+		enPassantSquare = targetPosition;
+		zobristCode ^= zobristEnPassant[targetPosition];
 
 		// Update half move clock
-		this.halfMoveClock = 0;
+		halfMoveClock = 0;
 	}
 
 	private void undoMovePawnDouble(int move) {
@@ -1537,7 +1537,7 @@ public final class Hex88Board {
 
 	private void makeMoveCastling(int move) {
 		// Save the castling rights
-		castlingHistory[this.castlingHistorySize++] = castling;
+		castlingHistory[castlingHistorySize++] = castling;
 		int newCastling = castling;
 
 		// Move the king
@@ -1585,20 +1585,20 @@ public final class Hex88Board {
 		|| (newCastling ^ castling) == IntCastling.BLACK_QUEENSIDE
 		|| (newCastling ^ castling) == (IntCastling.WHITE_KINGSIDE | IntCastling.WHITE_QUEENSIDE)
 		|| (newCastling ^ castling) == (IntCastling.BLACK_KINGSIDE | IntCastling.BLACK_QUEENSIDE);
-		this.zobristCode ^= zobristCastling[newCastling ^ castling];
+		zobristCode ^= zobristCastling[newCastling ^ castling];
 		castling = newCastling;
 
 		// Update the capture square
-		this.captureSquare = IntPosition.NOPOSITION;
+		captureSquare = IntPosition.NOPOSITION;
 
 		// Update en passant
-		if (this.enPassantSquare != IntPosition.NOPOSITION) {
-			this.zobristCode ^= zobristEnPassant[this.enPassantSquare];
-			this.enPassantSquare = IntPosition.NOPOSITION;
+		if (enPassantSquare != IntPosition.NOPOSITION) {
+			zobristCode ^= zobristEnPassant[enPassantSquare];
+			enPassantSquare = IntPosition.NOPOSITION;
 		}
 
 		// Update half move clock
-		this.halfMoveClock++;
+		halfMoveClock++;
 	}
 	
 	private void undoMoveCastling(int move) {
@@ -1635,7 +1635,7 @@ public final class Hex88Board {
 		move(kingEndPosition, IntMove.getStart(move), false);
 
 		// Restore the castling rights
-		castling = castlingHistory[--this.castlingHistorySize];
+		castling = castlingHistory[--castlingHistorySize];
 	}
 	
 	private void makeMoveEnPassant(int move) {
@@ -1661,20 +1661,20 @@ public final class Hex88Board {
 		assert IntMove.getTarget(move) != IntChessman.NOPIECE;
 		assert IntChessman.getChessman(target) == IntChessman.PAWN;
 		assert IntChessman.getColor(target) == IntColor.switchColor(pawnColor);
-		captureHistory[this.captureHistorySize++] = target;
+		captureHistory[captureHistorySize++] = target;
 
 		// Update the capture square
 		// This is the end position of the move, not the en passant position
-		this.captureSquare = endPosition;
+		captureSquare = endPosition;
 
 		// Update en passant
-		if (this.enPassantSquare != IntPosition.NOPOSITION) {
-			this.zobristCode ^= zobristEnPassant[this.enPassantSquare];
-			this.enPassantSquare = IntPosition.NOPOSITION;
+		if (enPassantSquare != IntPosition.NOPOSITION) {
+			zobristCode ^= zobristEnPassant[enPassantSquare];
+			enPassantSquare = IntPosition.NOPOSITION;
 		}
 
 		// Update half move clock
-		this.halfMoveClock = 0;
+		halfMoveClock = 0;
 	}
 
 	private void undoMoveEnPassant(int move) {
@@ -1693,21 +1693,21 @@ public final class Hex88Board {
 		}
 
 		// Restore the captured pawn
-		put(captureHistory[--this.captureHistorySize], targetPosition, false);
+		put(captureHistory[--captureHistorySize], targetPosition, false);
 	}
 
 	private void makeMoveNull(int move) {
 		// Update the capture square
-		this.captureSquare = IntPosition.NOPOSITION;
+		captureSquare = IntPosition.NOPOSITION;
 
 		// Update en passant
-		if (this.enPassantSquare != IntPosition.NOPOSITION) {
-			this.zobristCode ^= zobristEnPassant[this.enPassantSquare];
-			this.enPassantSquare = IntPosition.NOPOSITION;
+		if (enPassantSquare != IntPosition.NOPOSITION) {
+			zobristCode ^= zobristEnPassant[enPassantSquare];
+			enPassantSquare = IntPosition.NOPOSITION;
 		}
 
 		// Update half move clock
-		this.halfMoveClock++;
+		halfMoveClock++;
 	}
 
 	/**

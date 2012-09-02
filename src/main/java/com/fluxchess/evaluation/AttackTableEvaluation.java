@@ -56,15 +56,15 @@ public final class AttackTableEvaluation {
 		assert board != null;
 
 		// Zero our table
-		Arrays.fill(this.attackTable[myColor], (byte) 0);
+		Arrays.fill(attackTable[myColor], (byte) 0);
 
 		// Fill attack table
-		pawnInformationToAttackTable(myColor, board, this.attackTable[myColor]);
-		knightInformationToAttackTable(myColor, board, this.attackTable[myColor]);
-		bishopInformationToAttackTable(myColor, board, this.attackTable[myColor]);
-		rookInformationToAttackTable(myColor, board, this.attackTable[myColor]);
-		queenInformationToAttackTable(myColor, board, this.attackTable[myColor]);
-		kingInformationToAttackTable(myColor, board, this.attackTable[myColor]);
+		pawnInformationToAttackTable(myColor, board, attackTable[myColor]);
+		knightInformationToAttackTable(myColor, board, attackTable[myColor]);
+		bishopInformationToAttackTable(myColor, board, attackTable[myColor]);
+		rookInformationToAttackTable(myColor, board, attackTable[myColor]);
+		queenInformationToAttackTable(myColor, board, attackTable[myColor]);
+		kingInformationToAttackTable(myColor, board, attackTable[myColor]);
 	}
 
 	private void pawnInformationToAttackTable(int myColor, Hex88Board board, byte[] myAttackTable) {

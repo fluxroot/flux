@@ -34,8 +34,8 @@ public final class EvaluationTableEntry {
 	}
 
 	public void clear() {
-		this.zobristCode = 0;
-		this.evaluation = -Search.INFINITY;
+		zobristCode = 0;
+		evaluation = -Search.INFINITY;
 	}
 
 }

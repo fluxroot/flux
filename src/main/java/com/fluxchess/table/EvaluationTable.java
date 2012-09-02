@@ -40,63 +40,63 @@ public final class EvaluationTable {
 	private final Lock readLock;
 	private final Lock writeLock;
 	
-	public EvaluationTable(int newSize) {
-		assert newSize >= 1;
+	public EvaluationTable(int size) {
+		assert size >= 1;
 
-		this.size = newSize;
+		this.size = size;
 
 		// Initialize entry
-		this.entry = new EvaluationTableEntry[newSize];
-		for (int i = 0; i < this.entry.length; i++) {
-			this.entry[i] = new EvaluationTableEntry();
+		entry = new EvaluationTableEntry[size];
+		for (int i = 0; i < entry.length; i++) {
+			entry[i] = new EvaluationTableEntry();
 		}
 		
 		// Initialize locks
-		this.lock = new ReentrantReadWriteLock();
-		this.readLock = this.lock.readLock();
-		this.writeLock = this.lock.writeLock();
+		lock = new ReentrantReadWriteLock();
+		readLock = lock.readLock();
+		writeLock = lock.writeLock();
 	}
 
 	/**
 	 * Puts a zobrist code and evaluation value into the table.
 	 * 
-	 * @param newZobristCode the zobrist code.
-	 * @param newEvaluation the evaluation value.
+	 * @param zobristCode the zobrist code.
+	 * @param value the evaluation value.
 	 */
-	public void put(long newZobristCode, int newEvaluation) {
-		int position = (int) (newZobristCode % this.size);
+	public void put(long zobristCode, int value) {
+		int position = (int) (zobristCode % size);
 		
-		this.writeLock.lock();
+		writeLock.lock();
 		try {
-			EvaluationTableEntry currentEntry = this.entry[position];
+			EvaluationTableEntry currentEntry = entry[position];
 
-			currentEntry.zobristCode = newZobristCode;
-			currentEntry.evaluation = newEvaluation;
+			currentEntry.zobristCode = zobristCode;
+			currentEntry.evaluation = value;
 		} finally {
-			this.writeLock.unlock();
+			writeLock.unlock();
 		}
 	}
 
 	/**
 	 * Returns the evaluation table entry given the zobrist code.
 	 * 
-	 * @param newZobristCode the zobrist code.
+	 * @param zobristCode the zobrist code.
 	 * @return the evaluation table entry or null if there exists no entry.
 	 */
-	public EvaluationTableEntry get(long newZobristCode) {
-		int position = (int) (newZobristCode % this.size);
+	public EvaluationTableEntry get(long zobristCode) {
+		int position = (int) (zobristCode % size);
 		
-		this.readLock.lock();
+		readLock.lock();
 		try {
-			EvaluationTableEntry currentEntry = this.entry[position];
+			EvaluationTableEntry currentEntry = entry[position];
 
-			if (currentEntry.zobristCode == newZobristCode) {
+			if (currentEntry.zobristCode == zobristCode) {
 				return currentEntry;
 			} else {
 				return null;
 			}
 		} finally {
-			this.readLock.unlock();
+			readLock.unlock();
 		}
 	}
 	

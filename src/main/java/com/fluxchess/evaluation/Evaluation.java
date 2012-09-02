@@ -39,17 +39,17 @@ public final class Evaluation {
 	
 	// The hash tables
 	private final EvaluationTable evaluationTable;
-	private final PawnTable pawnHashtable;
+	private final PawnTable pawntable;
 
 	/**
 	 * Creates a new Evaluation.
 	 */
-	public Evaluation(EvaluationTable newEvaluationTable, PawnTable newPawnTable) {
-		assert newEvaluationTable != null;
-		assert newPawnTable != null;
+	public Evaluation(EvaluationTable evaluationTable, PawnTable pawnTable) {
+		assert evaluationTable != null;
+		assert pawnTable != null;
 
-		this.evaluationTable = newEvaluationTable;
-		this.pawnHashtable = newPawnTable;
+		this.evaluationTable = evaluationTable;
+		this.pawntable = pawnTable;
 	}
 
 	/**
@@ -63,7 +63,7 @@ public final class Evaluation {
 
 		// Check the evaluation table
 		if (Configuration.useEvaluationTable) {
-			EvaluationTableEntry entry = this.evaluationTable.get(board.zobristCode);
+			EvaluationTableEntry entry = evaluationTable.get(board.zobristCode);
 			if (entry != null) {
 				return entry.evaluation;
 			}
@@ -109,12 +109,12 @@ public final class Evaluation {
 			// Evaluate the pawn structures
 			long pawnZobristCode = board.pawnZobristCode;
 			int pawnStructureValue = 0;
-			if (Configuration.usePawnTable && this.pawnHashtable.exists(pawnZobristCode)) {
-				pawnStructureValue = this.pawnHashtable.getValue(pawnZobristCode);
+			if (Configuration.usePawnTable && pawntable.exists(pawnZobristCode)) {
+				pawnStructureValue = pawntable.getValue(pawnZobristCode);
 			} else {
 				pawnStructureValue = PawnStructureEvaluation.evaluatePawnStructure(myColor, enemyColor, board) - PawnStructureEvaluation.evaluatePawnStructure(enemyColor, myColor, board);
 				if (Configuration.usePawnTable) {
-					this.pawnHashtable.put(pawnZobristCode, pawnStructureValue);
+					pawntable.put(pawnZobristCode, pawnStructureValue);
 				}
 			}
 			total += pawnStructureValue;
@@ -139,7 +139,7 @@ public final class Evaluation {
 		
 		// Store the result and return
 		if (Configuration.useEvaluationTable) {
-			this.evaluationTable.put(board.zobristCode, total);
+			evaluationTable.put(board.zobristCode, total);
 		}
 
 		return total;

@@ -37,20 +37,20 @@ public abstract class Parameter {
 	}
 	
 	public void store() {
-		this.defaultValue = getValue();
-		this.defaultIncrement = this.increment;
+		defaultValue = getValue();
+		defaultIncrement = increment;
 	}
 
 	public void print() {
-		System.out.println(this.name + " = " + this.defaultValue);
+		System.out.println(name + " = " + defaultValue);
 	}
 	
 	public int getIncrement() {
-		return this.increment;
+		return increment;
 	}
 	
 	public void setIncrement(int value) {
-		this.increment = value;
+		increment = value;
 	}
 	
 	public abstract int getValue();

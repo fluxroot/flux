@@ -56,14 +56,14 @@ public class FluxTesting extends AbstractCommunication implements ICommunication
 	List<GenericMove> moveList = new ArrayList<GenericMove>();
 	
 	public FluxTesting() {
-		this.commandQueue.add(new EngineInitializeRequestCommand());
-		this.commandQueue.add(new EngineDebugCommand(false, true));
-		this.commandQueue.add(new EngineReadyRequestCommand("test"));
-		this.commandQueue.add(new EngineNewGameCommand());
-		this.commandQueue.add(new EngineAnalyzeCommand(new GenericBoard(GenericBoard.STANDARDSETUP), this.moveList));
+		commandQueue.add(new EngineInitializeRequestCommand());
+		commandQueue.add(new EngineDebugCommand(false, true));
+		commandQueue.add(new EngineReadyRequestCommand("test"));
+		commandQueue.add(new EngineNewGameCommand());
+		commandQueue.add(new EngineAnalyzeCommand(new GenericBoard(GenericBoard.STANDARDSETUP), moveList));
 		EngineStartCalculatingCommand startCommand = new EngineStartCalculatingCommand();
 		startCommand.setMoveTime(5000L);
-		this.commandQueue.add(startCommand);
+		commandQueue.add(startCommand);
 	}
 
 	public static void main(String[] args) {
@@ -79,7 +79,7 @@ public class FluxTesting extends AbstractCommunication implements ICommunication
 	public IEngineCommand receive() {
 		IEngineCommand command = null;
 		try {
-			command = this.commandQueue.take();
+			command = commandQueue.take();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -106,14 +106,14 @@ public class FluxTesting extends AbstractCommunication implements ICommunication
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			this.moveList.add(command.bestMove);
-			this.commandQueue.add(new EngineStopCalculatingCommand());
-			this.commandQueue.add(new EngineAnalyzeCommand(new GenericBoard(GenericBoard.STANDARDSETUP), this.moveList));
+			moveList.add(command.bestMove);
+			commandQueue.add(new EngineStopCalculatingCommand());
+			commandQueue.add(new EngineAnalyzeCommand(new GenericBoard(GenericBoard.STANDARDSETUP), moveList));
 			EngineStartCalculatingCommand startCommand = new EngineStartCalculatingCommand();
 			startCommand.setMoveTime(5000L);
-			this.commandQueue.add(startCommand);
+			commandQueue.add(startCommand);
 		} else {
-			this.commandQueue.add(new EngineQuitCommand());
+			commandQueue.add(new EngineQuitCommand());
 		}
 	}
 

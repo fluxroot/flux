@@ -57,42 +57,42 @@ public final class TranspositionTable {
 	/**
 	 * Creates a new TranspositionTable.
 	 * 
-	 * @param newSize the size.
+	 * @param size the size.
 	 */
-	public TranspositionTable(int newSize) {
-		assert newSize >= 1;
+	public TranspositionTable(int size) {
+		assert size >= 1;
 		
-		this.size = newSize;
+		this.size = size;
 
 		// Initialize entry
-		this.entry = new TranspositionTableEntry[newSize];
-		for (int i = 0; i < this.entry.length; i++) {
-			this.entry[i] = new TranspositionTableEntry();
+		entry = new TranspositionTableEntry[size];
+		for (int i = 0; i < entry.length; i++) {
+			entry[i] = new TranspositionTableEntry();
 		}
 
-		this.currentAge = 0;
-		this.slotsUsed = 0;
+		currentAge = 0;
+		slotsUsed = 0;
 
 		// Initialize locks
-		this.lock = new ReentrantReadWriteLock();
-		this.readLock = this.lock.readLock();
-		this.writeLock = this.lock.writeLock();
+		lock = new ReentrantReadWriteLock();
+		readLock = lock.readLock();
+		writeLock = lock.writeLock();
 	}
 	
 	/**
 	 * Clears the Transposition Table.
 	 */
 	public void clear() {
-		this.writeLock.lock();
+		writeLock.lock();
 		try {
-			this.currentAge = 0;
-			this.slotsUsed = 0;
+			currentAge = 0;
+			slotsUsed = 0;
 			
-			for (int i = 0; i < this.entry.length; i++) {
-				this.entry[i].clear();
+			for (int i = 0; i < entry.length; i++) {
+				entry[i].clear();
 			}
 		} finally {
-			this.writeLock.unlock();
+			writeLock.unlock();
 		}
 	}
 
@@ -100,12 +100,12 @@ public final class TranspositionTable {
 	 * Increase the age of the Transposition Table.
 	 */
 	public void increaseAge() {
-		this.writeLock.lock();
+		writeLock.lock();
 		try {
-			this.currentAge++;
-			this.slotsUsed = 0;
+			currentAge++;
+			slotsUsed = 0;
 		} finally {
-			this.writeLock.unlock();
+			writeLock.unlock();
 		}
 	}
 
@@ -123,18 +123,18 @@ public final class TranspositionTable {
 		assert type != IntScore.NOSCORE;
 		assert height >= 0;
 		
-		int position = (int) (zobristCode % this.size);
+		int position = (int) (zobristCode % size);
 		
-		this.writeLock.lock();
+		writeLock.lock();
 		try {
-			TranspositionTableEntry currentEntry = this.entry[position];
+			TranspositionTableEntry currentEntry = entry[position];
 
 			//## BEGIN "always replace" Scheme
-			if (currentEntry.zobristCode == 0 || currentEntry.age != this.currentAge) {
+			if (currentEntry.zobristCode == 0 || currentEntry.age != currentAge) {
 				// This is a new entry
-				this.slotsUsed++;
+				slotsUsed++;
 				currentEntry.zobristCode = zobristCode;
-				currentEntry.age = this.currentAge;
+				currentEntry.age = currentAge;
 				currentEntry.depth = depth;
 				currentEntry.setValue(value, height);
 				currentEntry.type = type;
@@ -160,7 +160,7 @@ public final class TranspositionTable {
 			}
 			//## ENDOF "always replace" Scheme
 		} finally {
-			this.writeLock.unlock();
+			writeLock.unlock();
 		}
 	}
 
@@ -171,19 +171,19 @@ public final class TranspositionTable {
 	 * @return the transposition table entry or null if there exists no entry.
 	 */
 	public TranspositionTableEntry get(long zobristCode) {
-		int position = (int) (zobristCode % this.size);
+		int position = (int) (zobristCode % size);
 		
-		this.readLock.lock();
+		readLock.lock();
 		try {
-			TranspositionTableEntry currentEntry = this.entry[position];
+			TranspositionTableEntry currentEntry = entry[position];
 
-			if (currentEntry.zobristCode == zobristCode && currentEntry.age == this.currentAge) {
+			if (currentEntry.zobristCode == zobristCode && currentEntry.age == currentAge) {
 				return currentEntry;
 			} else {
 				return null;
 			}
 		} finally {
-			this.readLock.unlock();
+			readLock.unlock();
 		}
 	}
 
@@ -200,7 +200,7 @@ public final class TranspositionTable {
 		assert depth >= 0;
 		assert moveList != null;
 		
-		this.readLock.lock();
+		readLock.lock();
 		try {
 			TranspositionTableEntry currentEntry = get(board.zobristCode);
 
@@ -218,7 +218,7 @@ public final class TranspositionTable {
 				return newMoveList;
 			}
 		} finally {
-			this.readLock.unlock();
+			readLock.unlock();
 		}
 	}
 
@@ -228,11 +228,11 @@ public final class TranspositionTable {
 	 * @return the permill of slots used.
 	 */
 	public int getPermillUsed() {
-		this.readLock.lock();
+		readLock.lock();
 		try {
-			return (int) ((1000L * (long) this.slotsUsed) / (long) this.size);
+			return (int) ((1000L * (long) slotsUsed) / (long) size);
 		} finally {
-			this.readLock.unlock();
+			readLock.unlock();
 		}
 	}
 

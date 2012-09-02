@@ -133,7 +133,7 @@ public final class MoveGenerator {
 
 		this.board = board;
 		this.killerTable = killerTable;
-		this.moveRater = new MoveRater(historyTable);
+		moveRater = new MoveRater(historyTable);
 		
 		moveList = new MoveList();
 		tempMoveList = new MoveList();
@@ -153,8 +153,8 @@ public final class MoveGenerator {
 		generatorHistory++;
 
 		generator[generatorHistory].transpositionMove = transpositionMove;
-		generator[generatorHistory].primaryKillerMove = this.killerTable.getPrimaryKiller(height);
-		generator[generatorHistory].secondaryKillerMove = this.killerTable.getSecondaryKiller(height);
+		generator[generatorHistory].primaryKillerMove = killerTable.getPrimaryKiller(height);
+		generator[generatorHistory].secondaryKillerMove = killerTable.getSecondaryKiller(height);
 		
 		if (attack.isCheck()) {
 			generateEvasion(attack);

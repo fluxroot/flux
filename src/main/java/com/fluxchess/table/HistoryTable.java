@@ -56,7 +56,7 @@ public final class HistoryTable {
 		assert IntMove.getChessmanColor(move) != IntColor.NOCOLOR;
 		assert (end & 0x88) == 0;
 		
-		return this.historyTable[piece][end];
+		return historyTable[piece][end];
 	}
 
 	/**
@@ -73,12 +73,12 @@ public final class HistoryTable {
 		assert IntMove.getChessmanColor(move) != IntColor.NOCOLOR;
 		assert (end & 0x88) == 0;
 		
-		this.historyTable[piece][end] += depth;
+		historyTable[piece][end] += depth;
 		
-		if (this.historyTable[piece][end] >= MAX_HISTORYVALUE) {
+		if (historyTable[piece][end] >= MAX_HISTORYVALUE) {
 			for (int pieceValue : IntChessman.pieceValues) {
 				for (int positionValue : IntPosition.values) {
-					this.historyTable[pieceValue][positionValue] /= 2;
+					historyTable[pieceValue][positionValue] /= 2;
 				}
 			}
 		}

@@ -33,31 +33,31 @@ public final class TestPerftTable {
 	private int[] age;
 	
 	public TestPerftTable() {
-		this.zobristCode = new long[this.size];
-		this.nodeNumber = new int[this.size];
-		this.age = new int[this.size];
+		zobristCode = new long[size];
+		nodeNumber = new int[size];
+		age = new int[size];
 	}
 
 	public void put(long newZobristCode, int newNodeNumber) {
-		int position = (int) (newZobristCode % this.size);
+		int position = (int) (newZobristCode % size);
 
-		this.zobristCode[position] = newZobristCode;
-		this.nodeNumber[position] = newNodeNumber;
-		this.age[position] = this.currentAge;
+		zobristCode[position] = newZobristCode;
+		nodeNumber[position] = newNodeNumber;
+		age[position] = currentAge;
 	}
 	
 	public int get(long newZobristCode) {
-		int position = (int) (newZobristCode % this.size);
+		int position = (int) (newZobristCode % size);
 
-		if (this.zobristCode[position] == newZobristCode && this.currentAge == this.age[position]) {
-			return this.nodeNumber[position];
+		if (zobristCode[position] == newZobristCode && currentAge == age[position]) {
+			return nodeNumber[position];
 		} else {
 			return 0;
 		}
 	}
 	
 	public void increaseAge() {
-		this.currentAge++;
+		currentAge++;
 	}
 
 }
