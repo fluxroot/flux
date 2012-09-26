@@ -67,8 +67,9 @@ task jcpi {
 task download(dependsOn: 'jcpi') << {
 }
 
-task dist(type: Zip) {
-	def baseDir = "${project.name}-${project.version}"
+task distJar(type: Zip) {
+	classifier = 'jar'
+	def baseDir = "${project.name}-${project.version}-$classifier"
 	
 	into ("$baseDir") {
 		from 'README.md'
@@ -81,8 +82,20 @@ task dist(type: Zip) {
 	}
 }
 
+task distExe(type: Zip) {
+	classifier = 'exe'
+	def baseDir = "${project.name}-${project.version}-$classifier"
+	
+	into ("$baseDir") {
+		from 'README.md'
+		from 'COPYING'
+		from "$buildDir/libs/${project.name}-${project.version}.exe"
+	}
+}
+
 artifacts {
-	archives dist
+	archives distJar
+	archives distExe
 }
 
 task wrapper(type: Wrapper) {
