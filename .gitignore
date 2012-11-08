@@ -1,13 +1,13 @@
 # Gradle
-/.gradle
-/build
-/lib
+.gradle/
+build/
 
-# Eclipse
-/.classpath
-/.project
-/.settings
-/bin
+# Libraries
+/lib/
 
 # Testing
-/run
+/run/
+
+# Eclipse
+.settings/
+bin/
