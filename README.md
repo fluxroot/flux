@@ -1,5 +1,5 @@
-Flux Chess $version$ UCI
-====================
+Flux Chess UCI
+==============
 
 Copyright 2007-2012 Phokham Nonava <pn@nonava.com>  
 http://www.fluxchess.com/

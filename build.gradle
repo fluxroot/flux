@@ -1,44 +1,27 @@
-/*
-** Copyright 2007-2012 Phokham Nonava
-**
-** This file is part of Flux Chess.
-**
-** Flux Chess is free software: you can redistribute it and/or modify
-** it under the terms of the GNU Lesser General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
-** (at your option) any later version.
-**
-** Flux Chess is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-** GNU Lesser General Public License for more details.
-**
-** You should have received a copy of the GNU Lesser General Public License
-** along with Flux Chess.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 apply plugin: 'java'
 
 description = 'Flux Chess'
 
 group = 'com.fluxchess'
 
-sourceCompatibility = 1.6
-targetCompatibility = 1.6
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
 
 repositories {
 	mavenCentral()
 }
 
-def jcpisrc = 'http://cloud.github.com/downloads/fluxroot/jcpi/jcpi-0.2.1.zip'
-File jcpizip = file('lib/jcpi-0.2.1.zip')
-File jcpijar = file('lib/jcpi-0.2.1/jcpi-0.2.1.jar')
+configurations {
+	eclipse {
+		extendsFrom compile
+	}
+}
 
 dependencies {
-	compile files(jcpijar) {
+	compile 'jcpi:jcpi:0.2.1' {
 		builtBy 'download'
 	}
-	testCompile group: 'junit', name: 'junit', version: '4.+'
+	testCompile 'junit:junit:4.+'
 }
 
 jar {
@@ -52,6 +35,10 @@ jar {
 }
 
 task jcpi {
+	def jcpisrc = 'http://cloud.github.com/downloads/fluxroot/jcpi/jcpi-0.2.1.zip'
+	File jcpizip = file('vendor/jcpi-0.2.1.zip')
+	File jcpijar = file('vendor/jcpi-0.2.1/jcpi-0.2.1.jar')
+
 	inputs.file jcpizip
 	outputs.file jcpijar
 	doLast {
@@ -59,7 +46,7 @@ task jcpi {
 		downloadFile(jcpisrc, jcpizip)
 		copy {
 			from zipTree(jcpizip)
-			into 'lib'
+			into 'vendor'
 		}
 	}
 }
@@ -99,7 +86,7 @@ artifacts {
 }
 
 task wrapper(type: Wrapper) {
-	gradleVersion = '1.0-rc-3'
+	gradleVersion = '1.2'
 }
 
 def downloadFile(srcUrl, destUrl) {
