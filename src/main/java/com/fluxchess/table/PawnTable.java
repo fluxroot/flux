@@ -29,88 +29,88 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  */
 public final class PawnTable {
 
-	public static final int ENTRYSIZE = 12;
+    public static final int ENTRYSIZE = 12;
 
-	private final int size;
-	
-	private final long[] zobristCode;
-	private final int[] value;
-	
-	private final ReadWriteLock lock;
-	private final Lock readLock;
-	private final Lock writeLock;
+    private final int size;
 
-	public PawnTable(int size) {
-		assert size >= 1;
+    private final long[] zobristCode;
+    private final int[] value;
 
-		this.size = size;
-		zobristCode = new long[size];
-		value = new int[size];
+    private final ReadWriteLock lock;
+    private final Lock readLock;
+    private final Lock writeLock;
 
-		// Initialize locks
-		lock = new ReentrantReadWriteLock();
-		readLock = lock.readLock();
-		writeLock = lock.writeLock();
-	}
+    public PawnTable(int size) {
+        assert size >= 1;
 
-	/**
-	 * Puts a zobrist code and value into the table.
-	 * 
-	 * @param zobristCode the zobrist code.
-	 * @param value the value.
-	 */
-	public void put(long zobristCode, int value) {
-		int position = (int) (zobristCode % size);
+        this.size = size;
+        zobristCode = new long[size];
+        value = new int[size];
 
-		writeLock.lock();
-		try {
-			this.zobristCode[position] = zobristCode;
-			this.value[position] = value;
-		} finally {
-			writeLock.unlock();
-		}
-	}
-	
-	/**
-	 * Returns whether or not this zobrist code exists in the table.
-	 * 
-	 * @param zobristCode the zobrist code.
-	 * @return true if the zobrist code exists in the table, false otherwise.
-	 */
-	public boolean exists(long zobristCode) {
-		int position = (int) (zobristCode % size);
-		
-		readLock.lock();
-		try {
-			if (this.zobristCode[position] == zobristCode) {
-				return true;
-			} else {
-				return false;
-			}
-		} finally {
-			readLock.unlock();
-		}
-	}
+        // Initialize locks
+        lock = new ReentrantReadWriteLock();
+        readLock = lock.readLock();
+        writeLock = lock.writeLock();
+    }
 
-	/**
-	 * Returns the value given the zobrist code.
-	 * 
-	 * @param zobristCode the zobrist code.
-	 * @return the value.
-	 */
-	public int getValue(long zobristCode) {
-		int position = (int) (zobristCode % size);
+    /**
+     * Puts a zobrist code and value into the table.
+     *
+     * @param zobristCode the zobrist code.
+     * @param value the value.
+     */
+    public void put(long zobristCode, int value) {
+        int position = (int) (zobristCode % size);
 
-		readLock.lock();
-		try {
-			if (this.zobristCode[position] == zobristCode) {
-				return value[position];
-			}
-			
-			throw new IllegalArgumentException();
-		} finally {
-			readLock.unlock();
-		}
-	}
-	
+        writeLock.lock();
+        try {
+            this.zobristCode[position] = zobristCode;
+            this.value[position] = value;
+        } finally {
+            writeLock.unlock();
+        }
+    }
+
+    /**
+     * Returns whether or not this zobrist code exists in the table.
+     *
+     * @param zobristCode the zobrist code.
+     * @return true if the zobrist code exists in the table, false otherwise.
+     */
+    public boolean exists(long zobristCode) {
+        int position = (int) (zobristCode % size);
+
+        readLock.lock();
+        try {
+            if (this.zobristCode[position] == zobristCode) {
+                return true;
+            } else {
+                return false;
+            }
+        } finally {
+            readLock.unlock();
+        }
+    }
+
+    /**
+     * Returns the value given the zobrist code.
+     *
+     * @param zobristCode the zobrist code.
+     * @return the value.
+     */
+    public int getValue(long zobristCode) {
+        int position = (int) (zobristCode % size);
+
+        readLock.lock();
+        try {
+            if (this.zobristCode[position] == zobristCode) {
+                return value[position];
+            }
+
+            throw new IllegalArgumentException();
+        } finally {
+            readLock.unlock();
+        }
+    }
+
 }

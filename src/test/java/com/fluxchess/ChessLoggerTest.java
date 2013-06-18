@@ -29,9 +29,9 @@ import com.fluxchess.ChessLogger;
  */
 public class ChessLoggerTest {
 
-	@Test
-	public void testShowTrace() {
-		ChessLogger.showTrace();
-	}
+    @Test
+    public void testShowTrace() {
+        ChessLogger.showTrace();
+    }
 
 }

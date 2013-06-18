@@ -25,18 +25,18 @@ package com.fluxchess.evaluation;
  */
 public final class EVAL_ROOK_NEARKINGFILE extends Parameter {
 
-	public EVAL_ROOK_NEARKINGFILE() {
-		super("EVAL_ROOK_NEARKINGFILE");
-	}
+    public EVAL_ROOK_NEARKINGFILE() {
+        super("EVAL_ROOK_NEARKINGFILE");
+    }
 
-	@Override
-	public void setValue(int value) {
-		RookEvaluation.EVAL_ROOK_NEARKINGFILE = value;
-	}
+    @Override
+    public void setValue(int value) {
+        RookEvaluation.EVAL_ROOK_NEARKINGFILE = value;
+    }
 
-	@Override
-	public int getValue() {
-		return RookEvaluation.EVAL_ROOK_NEARKINGFILE;
-	}
+    @Override
+    public int getValue() {
+        return RookEvaluation.EVAL_ROOK_NEARKINGFILE;
+    }
 
 }

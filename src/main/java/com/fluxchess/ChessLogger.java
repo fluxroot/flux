@@ -29,45 +29,45 @@ import jcpi.commands.GuiInformationCommand;
  */
 public final class ChessLogger {
 
-	// Singleton Pattern
-	private static final ChessLogger instance = new ChessLogger();
-	
-	private static AbstractCommunication protocol = null;
-	private static boolean debug = false;
-	
-	private ChessLogger() {
-	}
-	
-	public static ChessLogger getLogger() {
-		return instance;
-	}
-	
-	public static void setProtocol(AbstractCommunication newProtocol) {
-		protocol = newProtocol;
-	}
-	
-	public static boolean getDebug() {
-		return debug;
-	}
+    // Singleton Pattern
+    private static final ChessLogger instance = new ChessLogger();
 
-	public static void setDebug(boolean mode) {
-		debug = mode;
-	}
-	
-	public void debug(String information) {
-		if (debug && protocol != null) {
-			GuiInformationCommand command = new GuiInformationCommand();
-			command.setString(information);
-			protocol.send(command);
-		}
-	}
-	
-	public static void showTrace() {
-		try {
-			throw new Exception();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
+    private static AbstractCommunication protocol = null;
+    private static boolean debug = false;
+
+    private ChessLogger() {
+    }
+
+    public static ChessLogger getLogger() {
+        return instance;
+    }
+
+    public static void setProtocol(AbstractCommunication newProtocol) {
+        protocol = newProtocol;
+    }
+
+    public static boolean getDebug() {
+        return debug;
+    }
+
+    public static void setDebug(boolean mode) {
+        debug = mode;
+    }
+
+    public void debug(String information) {
+        if (debug && protocol != null) {
+            GuiInformationCommand command = new GuiInformationCommand();
+            command.setString(information);
+            protocol.send(command);
+        }
+    }
+
+    public static void showTrace() {
+        try {
+            throw new Exception();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

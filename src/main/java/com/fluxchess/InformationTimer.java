@@ -36,284 +36,284 @@ import com.fluxchess.table.TranspositionTable;
  */
 public final class InformationTimer {
 
-	private final AbstractCommunication protocol;
-	private final TranspositionTable transpositionTable;
-	private Search search = null;
-	
-	// GuiInformationCommand values
-	public int currentDepth = 0;
-	public int currentMaxDepth = 0;
-	public long totalTimeStart = 0;
-	public long totalNodes = 0;
+    private final AbstractCommunication protocol;
+    private final TranspositionTable transpositionTable;
+    private Search search = null;
 
-	// Used for output status
-	private long currentTimeStart = 0;
-	
-	// Additional GuiInformationCommand values
-	private GenericMove currentMove = null;
-	private int currentMoveNumber = 0;
-	
-	/**
-	 * Creates a new InformationTimer
-	 * 
-	 * @param protocol the protocol.
-	 */
-	public InformationTimer(AbstractCommunication protocol, TranspositionTable transpositionTable) {
-		assert protocol != null;
-		assert transpositionTable != null;
-		
-		this.protocol = protocol;
-		this.transpositionTable = transpositionTable;
-	}
+    // GuiInformationCommand values
+    public int currentDepth = 0;
+    public int currentMaxDepth = 0;
+    public long totalTimeStart = 0;
+    public long totalNodes = 0;
 
-	/**
-	 * Sets the search.
-	 * 
-	 * @param search the search.
-	 */
-	public void setSearch(Search search) {
-		this.search = search;
-	}
+    // Used for output status
+    private long currentTimeStart = 0;
 
-	/**
-	 * Starts the InformationTimer.
-	 */
-	public void start() {
-		if (search == null) throw new IllegalStateException();
-		
-		// Set the current time
-		totalTimeStart = System.currentTimeMillis();
-		currentTimeStart = totalTimeStart;
-	}
-	
-	/**
-	 * Stops the InformationTimer.
-	 */
-	public void stop() {
-		// Do nothing
-	}
-	
-	/**
-	 * Sets the current depth.
-	 * 
-	 * @param currentDepth the current depth.
-	 */
-	public void setCurrentDepth(int currentDepth) {
-		assert currentDepth >= 0;
-		
-		this.currentDepth = currentDepth;
-		currentMaxDepth = currentDepth;
-	}
-	
-	/**
-	 * Sets the current maximum reached depth.
-	 * 
-	 * @param currentDepth the current depth.
-	 */
-	public void setCurrentMaxDepth(int currentDepth) {
-		assert currentDepth >= 0;
-		
-		if (currentDepth > currentMaxDepth) {
-			currentMaxDepth = currentDepth;
-		}
-	}
-	
-	/**
-	 * Sends the best move and ponder move.
-	 * 
-	 * @param bestMove the best move or null if there's no best move.
-	 * @param ponderMove the ponder move or null if there's no ponder move.
-	 */
-	public void sendBestMove(GenericMove bestMove, GenericMove ponderMove) {
-		protocol.send(new GuiBestMoveCommand(bestMove, ponderMove));
-	}
+    // Additional GuiInformationCommand values
+    private GenericMove currentMove = null;
+    private int currentMoveNumber = 0;
 
-	/**
-	 * Sends the current move and current move number.
-	 * 
-	 * @param currentMove the current move.
-	 * @param currentMoveNumber the current move number.
-	 */
-	public void sendInformationMove(GenericMove currentMove, int currentMoveNumber) {
-		assert currentMove != null;
-		assert currentMoveNumber >= 0;
-		
-		this.currentMove = currentMove;
-		this.currentMoveNumber = currentMoveNumber;
+    /**
+     * Creates a new InformationTimer
+     *
+     * @param protocol the protocol.
+     */
+    public InformationTimer(AbstractCommunication protocol, TranspositionTable transpositionTable) {
+        assert protocol != null;
+        assert transpositionTable != null;
 
-		// Safety guard: Reduce output pollution
-		long currentTimeDelta = System.currentTimeMillis() - totalTimeStart;
-		if (currentTimeDelta >= 1000) {
-			GuiInformationCommand command = new GuiInformationCommand();
+        this.protocol = protocol;
+        this.transpositionTable = transpositionTable;
+    }
 
-			command.setCurrentMove(currentMove);
-			command.setCurrentMoveNumber(currentMoveNumber);
+    /**
+     * Sets the search.
+     *
+     * @param search the search.
+     */
+    public void setSearch(Search search) {
+        this.search = search;
+    }
 
-			protocol.send(command);
-		}
-	}
+    /**
+     * Starts the InformationTimer.
+     */
+    public void start() {
+        if (search == null) throw new IllegalStateException();
 
-	/**
-	 * Sends the refutations information.
-	 * 
-	 * @param refutationList the current refutation move list.
-	 */
-	public void sendInformationRefutations(List<GenericMove> refutationList) {
-		assert refutationList != null;
+        // Set the current time
+        totalTimeStart = System.currentTimeMillis();
+        currentTimeStart = totalTimeStart;
+    }
 
-		// Safety guard: Reduce output pollution
-		long currentTimeDelta = System.currentTimeMillis() - totalTimeStart;
-		if (currentTimeDelta >= 1000) {
-			GuiInformationCommand command = new GuiInformationCommand();
+    /**
+     * Stops the InformationTimer.
+     */
+    public void stop() {
+        // Do nothing
+    }
 
-			command.setRefutationList(refutationList);
+    /**
+     * Sets the current depth.
+     *
+     * @param currentDepth the current depth.
+     */
+    public void setCurrentDepth(int currentDepth) {
+        assert currentDepth >= 0;
 
-			protocol.send(command);
-		}
-	}
+        this.currentDepth = currentDepth;
+        currentMaxDepth = currentDepth;
+    }
 
-	/**
-	 * Sends the current depth.
-	 */
-	public void sendInformationDepth() {
-		// Safety guard: Reduce output pollution
-		long currentTimeDelta = System.currentTimeMillis() - totalTimeStart;
-		if (currentTimeDelta >= 1000) {
-			GuiInformationCommand command = new GuiInformationCommand();
+    /**
+     * Sets the current maximum reached depth.
+     *
+     * @param currentDepth the current depth.
+     */
+    public void setCurrentMaxDepth(int currentDepth) {
+        assert currentDepth >= 0;
 
-			command.setDepth(currentDepth);
-			command.setMaxDepth(currentMaxDepth);
+        if (currentDepth > currentMaxDepth) {
+            currentMaxDepth = currentDepth;
+        }
+    }
 
-			protocol.send(command);
-		}
-	}
+    /**
+     * Sends the best move and ponder move.
+     *
+     * @param bestMove the best move or null if there's no best move.
+     * @param ponderMove the ponder move or null if there's no ponder move.
+     */
+    public void sendBestMove(GenericMove bestMove, GenericMove ponderMove) {
+        protocol.send(new GuiBestMoveCommand(bestMove, ponderMove));
+    }
 
-	/**
-	 * Sends the current status.
-	 */
-	public void sendInformationStatus() {
-		long currentTimeDelta = System.currentTimeMillis() - currentTimeStart;
-		if (currentTimeDelta >= 1000) {
-			// Only output after a delay of 1 second
-			GuiInformationCommand command = new GuiInformationCommand();
+    /**
+     * Sends the current move and current move number.
+     *
+     * @param currentMove the current move.
+     * @param currentMoveNumber the current move number.
+     */
+    public void sendInformationMove(GenericMove currentMove, int currentMoveNumber) {
+        assert currentMove != null;
+        assert currentMoveNumber >= 0;
 
-			command.setDepth(currentDepth);
-			command.setMaxDepth(currentMaxDepth);
-			command.setHash(transpositionTable.getPermillUsed());
-			command.setNps(getCurrentNps());
-			command.setTime(System.currentTimeMillis() - totalTimeStart);
-			command.setNodes(totalNodes);
+        this.currentMove = currentMove;
+        this.currentMoveNumber = currentMoveNumber;
 
-			if (currentMove != null) {
-				command.setCurrentMove(currentMove);
-				command.setCurrentMoveNumber(currentMoveNumber);
-			}
+        // Safety guard: Reduce output pollution
+        long currentTimeDelta = System.currentTimeMillis() - totalTimeStart;
+        if (currentTimeDelta >= 1000) {
+            GuiInformationCommand command = new GuiInformationCommand();
 
-			protocol.send(command);
-			
-			currentTimeStart = System.currentTimeMillis();
-		}
-	}
+            command.setCurrentMove(currentMove);
+            command.setCurrentMoveNumber(currentMoveNumber);
 
-	/**
-	 * Sends the current status.
-	 */
-	public void sendInformationSummary() {
-		GuiInformationCommand command = new GuiInformationCommand();
+            protocol.send(command);
+        }
+    }
 
-		command.setDepth(currentDepth);
-		command.setMaxDepth(currentMaxDepth);
-		command.setHash(transpositionTable.getPermillUsed());
-		command.setNps(getCurrentNps());
-		command.setTime(System.currentTimeMillis() - totalTimeStart);
-		command.setNodes(totalNodes);
+    /**
+     * Sends the refutations information.
+     *
+     * @param refutationList the current refutation move list.
+     */
+    public void sendInformationRefutations(List<GenericMove> refutationList) {
+        assert refutationList != null;
 
-		protocol.send(command);
+        // Safety guard: Reduce output pollution
+        long currentTimeDelta = System.currentTimeMillis() - totalTimeStart;
+        if (currentTimeDelta >= 1000) {
+            GuiInformationCommand command = new GuiInformationCommand();
 
-		currentTimeStart = System.currentTimeMillis();
-	}
+            command.setRefutationList(refutationList);
 
-	/**
-	 * Sends the centipawn information.
-	 * 
-	 * @param currentCentipawns the current centipawn value.
-	 * @param currentMoveList the current move list/principal variation.
-	 */
-	public void sendInformationCentipawns(PrincipalVariation pv, int pvNumber) {
-		assert pv != null;
-		assert pvNumber >= 1;
+            protocol.send(command);
+        }
+    }
 
-		if (pvNumber <= Configuration.showPvNumber) {
-			GuiInformationCommand command = new GuiInformationCommand();
+    /**
+     * Sends the current depth.
+     */
+    public void sendInformationDepth() {
+        // Safety guard: Reduce output pollution
+        long currentTimeDelta = System.currentTimeMillis() - totalTimeStart;
+        if (currentTimeDelta >= 1000) {
+            GuiInformationCommand command = new GuiInformationCommand();
 
-			command.setDepth(pv.depth);
-			command.setMaxDepth(pv.maxDepth);
-			command.setHash(pv.hash);
-			command.setNps(pv.nps);
-			command.setTime(pv.time);
-			command.setNodes(pv.totalNodes);
+            command.setDepth(currentDepth);
+            command.setMaxDepth(currentMaxDepth);
 
-			command.setCentipawns(pv.value);
-			command.setValue(IntScore.valueOfIntScore(pv.type));
-			command.setMoveList(pv.pv);
+            protocol.send(command);
+        }
+    }
 
-			if (Configuration.showPvNumber > 1) {
-				command.setPvNumber(pvNumber);
-			}
-			
-			protocol.send(command);
+    /**
+     * Sends the current status.
+     */
+    public void sendInformationStatus() {
+        long currentTimeDelta = System.currentTimeMillis() - currentTimeStart;
+        if (currentTimeDelta >= 1000) {
+            // Only output after a delay of 1 second
+            GuiInformationCommand command = new GuiInformationCommand();
 
-			currentTimeStart = System.currentTimeMillis();
-		}
-	}
+            command.setDepth(currentDepth);
+            command.setMaxDepth(currentMaxDepth);
+            command.setHash(transpositionTable.getPermillUsed());
+            command.setNps(getCurrentNps());
+            command.setTime(System.currentTimeMillis() - totalTimeStart);
+            command.setNodes(totalNodes);
 
-	/**
-	 * Sends the mate information.
-	 * 
-	 * @param currentMateDepth the current mate depth.
-	 * @param currentMoveList the current move list/principal variation.
-	 */
-	public void sendInformationMate(PrincipalVariation pv, int currentMateDepth, int pvNumber) {
-		assert pv != null;
-		assert pvNumber >= 1;
+            if (currentMove != null) {
+                command.setCurrentMove(currentMove);
+                command.setCurrentMoveNumber(currentMoveNumber);
+            }
 
-		if (pvNumber <= Configuration.showPvNumber) {
-			GuiInformationCommand command = new GuiInformationCommand();
+            protocol.send(command);
 
-			command.setDepth(pv.depth);
-			command.setMaxDepth(pv.maxDepth);
-			command.setHash(pv.hash);
-			command.setNps(pv.nps);
-			command.setTime(pv.time);
-			command.setNodes(pv.totalNodes);
+            currentTimeStart = System.currentTimeMillis();
+        }
+    }
 
-			command.setMate(currentMateDepth);
-			command.setValue(IntScore.valueOfIntScore(pv.type));
-			command.setMoveList(pv.pv);
+    /**
+     * Sends the current status.
+     */
+    public void sendInformationSummary() {
+        GuiInformationCommand command = new GuiInformationCommand();
 
-			if (Configuration.showPvNumber > 1) {
-				command.setPvNumber(pvNumber);
-			}
+        command.setDepth(currentDepth);
+        command.setMaxDepth(currentMaxDepth);
+        command.setHash(transpositionTable.getPermillUsed());
+        command.setNps(getCurrentNps());
+        command.setTime(System.currentTimeMillis() - totalTimeStart);
+        command.setNodes(totalNodes);
 
-			protocol.send(command);
-			
-			currentTimeStart = System.currentTimeMillis();
-		}
-	}
+        protocol.send(command);
 
-	/**
-	 * Returns the current nps.
-	 * 
-	 * @return the current nps.
-	 */
-	public long getCurrentNps() {
-		long currentNps = 0;
-		long currentTimeDelta = System.currentTimeMillis() - totalTimeStart;
-		if (currentTimeDelta >= 1000) {
-			currentNps = (totalNodes * 1000) / currentTimeDelta;
-		}
-		
-		return currentNps;
-	}
+        currentTimeStart = System.currentTimeMillis();
+    }
+
+    /**
+     * Sends the centipawn information.
+     *
+     * @param currentCentipawns the current centipawn value.
+     * @param currentMoveList the current move list/principal variation.
+     */
+    public void sendInformationCentipawns(PrincipalVariation pv, int pvNumber) {
+        assert pv != null;
+        assert pvNumber >= 1;
+
+        if (pvNumber <= Configuration.showPvNumber) {
+            GuiInformationCommand command = new GuiInformationCommand();
+
+            command.setDepth(pv.depth);
+            command.setMaxDepth(pv.maxDepth);
+            command.setHash(pv.hash);
+            command.setNps(pv.nps);
+            command.setTime(pv.time);
+            command.setNodes(pv.totalNodes);
+
+            command.setCentipawns(pv.value);
+            command.setValue(IntScore.valueOfIntScore(pv.type));
+            command.setMoveList(pv.pv);
+
+            if (Configuration.showPvNumber > 1) {
+                command.setPvNumber(pvNumber);
+            }
+
+            protocol.send(command);
+
+            currentTimeStart = System.currentTimeMillis();
+        }
+    }
+
+    /**
+     * Sends the mate information.
+     *
+     * @param currentMateDepth the current mate depth.
+     * @param currentMoveList the current move list/principal variation.
+     */
+    public void sendInformationMate(PrincipalVariation pv, int currentMateDepth, int pvNumber) {
+        assert pv != null;
+        assert pvNumber >= 1;
+
+        if (pvNumber <= Configuration.showPvNumber) {
+            GuiInformationCommand command = new GuiInformationCommand();
+
+            command.setDepth(pv.depth);
+            command.setMaxDepth(pv.maxDepth);
+            command.setHash(pv.hash);
+            command.setNps(pv.nps);
+            command.setTime(pv.time);
+            command.setNodes(pv.totalNodes);
+
+            command.setMate(currentMateDepth);
+            command.setValue(IntScore.valueOfIntScore(pv.type));
+            command.setMoveList(pv.pv);
+
+            if (Configuration.showPvNumber > 1) {
+                command.setPvNumber(pvNumber);
+            }
+
+            protocol.send(command);
+
+            currentTimeStart = System.currentTimeMillis();
+        }
+    }
+
+    /**
+     * Returns the current nps.
+     *
+     * @return the current nps.
+     */
+    public long getCurrentNps() {
+        long currentNps = 0;
+        long currentTimeDelta = System.currentTimeMillis() - totalTimeStart;
+        if (currentTimeDelta >= 1000) {
+            currentNps = (totalNodes * 1000) / currentTimeDelta;
+        }
+
+        return currentNps;
+    }
 
 }

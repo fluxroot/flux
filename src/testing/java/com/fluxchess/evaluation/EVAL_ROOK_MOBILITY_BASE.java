@@ -25,18 +25,18 @@ package com.fluxchess.evaluation;
  */
 public final class EVAL_ROOK_MOBILITY_BASE extends Parameter {
 
-	public EVAL_ROOK_MOBILITY_BASE() {
-		super("EVAL_ROOK_MOBILITY_BASE");
-	}
+    public EVAL_ROOK_MOBILITY_BASE() {
+        super("EVAL_ROOK_MOBILITY_BASE");
+    }
 
-	@Override
-	public void setValue(int value) {
-		RookEvaluation.EVAL_ROOK_MOBILITY_BASE = value;
-	}
+    @Override
+    public void setValue(int value) {
+        RookEvaluation.EVAL_ROOK_MOBILITY_BASE = value;
+    }
 
-	@Override
-	public int getValue() {
-		return RookEvaluation.EVAL_ROOK_MOBILITY_BASE;
-	}
+    @Override
+    public int getValue() {
+        return RookEvaluation.EVAL_ROOK_MOBILITY_BASE;
+    }
 
 }

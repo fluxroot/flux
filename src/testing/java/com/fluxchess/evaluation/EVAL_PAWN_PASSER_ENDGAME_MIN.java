@@ -25,18 +25,18 @@ package com.fluxchess.evaluation;
  */
 public final class EVAL_PAWN_PASSER_ENDGAME_MIN extends Parameter {
 
-	public EVAL_PAWN_PASSER_ENDGAME_MIN() {
-		super("EVAL_PAWN_PASSER_ENDGAME_MIN");
-	}
+    public EVAL_PAWN_PASSER_ENDGAME_MIN() {
+        super("EVAL_PAWN_PASSER_ENDGAME_MIN");
+    }
 
-	@Override
-	public void setValue(int value) {
-		PawnPasserEvaluation.EVAL_PAWN_PASSER_ENDGAME_MIN = value;
-	}
+    @Override
+    public void setValue(int value) {
+        PawnPasserEvaluation.EVAL_PAWN_PASSER_ENDGAME_MIN = value;
+    }
 
-	@Override
-	public int getValue() {
-		return PawnPasserEvaluation.EVAL_PAWN_PASSER_ENDGAME_MIN;
-	}
+    @Override
+    public int getValue() {
+        return PawnPasserEvaluation.EVAL_PAWN_PASSER_ENDGAME_MIN;
+    }
 
 }

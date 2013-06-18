@@ -25,18 +25,18 @@ package com.fluxchess.evaluation;
  */
 public final class EVAL_ROOK_OPENFILE extends Parameter {
 
-	public EVAL_ROOK_OPENFILE() {
-		super("EVAL_ROOK_OPENFILE");
-	}
+    public EVAL_ROOK_OPENFILE() {
+        super("EVAL_ROOK_OPENFILE");
+    }
 
-	@Override
-	public void setValue(int value) {
-		RookEvaluation.EVAL_ROOK_OPENFILE = value;
-	}
+    @Override
+    public void setValue(int value) {
+        RookEvaluation.EVAL_ROOK_OPENFILE = value;
+    }
 
-	@Override
-	public int getValue() {
-		return RookEvaluation.EVAL_ROOK_OPENFILE;
-	}
+    @Override
+    public int getValue() {
+        return RookEvaluation.EVAL_ROOK_OPENFILE;
+    }
 
 }

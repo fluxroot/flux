@@ -33,205 +33,205 @@ import com.fluxchess.move.MoveGenerator;
  */
 public final class AttackTableEvaluation {
 
-	public static final byte BIT_PAWN = 1 << 3;
-	public static final byte BIT_MINOR = 1 << 4;
-	public static final byte BIT_ROOK = 1 << 5;
-	public static final byte BIT_QUEEN = 1 << 6;
-	public static final byte BIT_KING = -128;
+    public static final byte BIT_PAWN = 1 << 3;
+    public static final byte BIT_MINOR = 1 << 4;
+    public static final byte BIT_ROOK = 1 << 5;
+    public static final byte BIT_QUEEN = 1 << 6;
+    public static final byte BIT_KING = -128;
 
-	private static final AttackTableEvaluation instance = new AttackTableEvaluation();
-	
-	// Our attack table
-	public final byte[][] attackTable = new byte[IntColor.ARRAY_DIMENSION][Hex88Board.BOARDSIZE];
+    private static final AttackTableEvaluation instance = new AttackTableEvaluation();
 
-	private AttackTableEvaluation() {
-	}
-	
-	public static AttackTableEvaluation getInstance() {
-		return instance;
-	}
-	
-	public void createAttackTable(int myColor, Hex88Board board) {
-		assert myColor != IntColor.NOCOLOR;
-		assert board != null;
+    // Our attack table
+    public final byte[][] attackTable = new byte[IntColor.ARRAY_DIMENSION][Hex88Board.BOARDSIZE];
 
-		// Zero our table
-		Arrays.fill(attackTable[myColor], (byte) 0);
+    private AttackTableEvaluation() {
+    }
 
-		// Fill attack table
-		pawnInformationToAttackTable(myColor, board, attackTable[myColor]);
-		knightInformationToAttackTable(myColor, board, attackTable[myColor]);
-		bishopInformationToAttackTable(myColor, board, attackTable[myColor]);
-		rookInformationToAttackTable(myColor, board, attackTable[myColor]);
-		queenInformationToAttackTable(myColor, board, attackTable[myColor]);
-		kingInformationToAttackTable(myColor, board, attackTable[myColor]);
-	}
+    public static AttackTableEvaluation getInstance() {
+        return instance;
+    }
 
-	private void pawnInformationToAttackTable(int myColor, Hex88Board board, byte[] myAttackTable) {
-		assert myColor != IntColor.NOCOLOR;
-		assert board != null;
-		assert myAttackTable != null;
+    public void createAttackTable(int myColor, Hex88Board board) {
+        assert myColor != IntColor.NOCOLOR;
+        assert board != null;
 
-		// Initialize
-		PositionList myPawnList = board.pawnList[myColor];
+        // Zero our table
+        Arrays.fill(attackTable[myColor], (byte) 0);
 
-		// Evaluate each pawn
-		for (int i = 0; i < myPawnList.size; i++) {
-			int pawnPosition = myPawnList.position[i];
-			
-			// Fill attack table
-			for (int j = 1; j < MoveGenerator.moveDeltaPawn.length; j++) {
-				int delta = MoveGenerator.moveDeltaPawn[j];
+        // Fill attack table
+        pawnInformationToAttackTable(myColor, board, attackTable[myColor]);
+        knightInformationToAttackTable(myColor, board, attackTable[myColor]);
+        bishopInformationToAttackTable(myColor, board, attackTable[myColor]);
+        rookInformationToAttackTable(myColor, board, attackTable[myColor]);
+        queenInformationToAttackTable(myColor, board, attackTable[myColor]);
+        kingInformationToAttackTable(myColor, board, attackTable[myColor]);
+    }
 
-				int targetPosition = pawnPosition;
-				if (myColor == IntColor.WHITE) {
-					targetPosition += delta;
-				} else {
-					assert myColor == IntColor.BLACK;
-					
-					targetPosition -= delta;
-				}
-				if ((targetPosition & 0x88) == 0) {
-					myAttackTable[targetPosition]++;
-					myAttackTable[targetPosition] |= BIT_PAWN;
-				}
-			}
-		}
-	}
+    private void pawnInformationToAttackTable(int myColor, Hex88Board board, byte[] myAttackTable) {
+        assert myColor != IntColor.NOCOLOR;
+        assert board != null;
+        assert myAttackTable != null;
 
-	private void knightInformationToAttackTable(int myColor, Hex88Board board, byte[] myAttackTable) {
-		assert myColor != IntColor.NOCOLOR;
-		assert board != null;
-		assert myAttackTable != null;
+        // Initialize
+        PositionList myPawnList = board.pawnList[myColor];
 
-		// Initialize
-		PositionList myKnightList = board.knightList[myColor];
+        // Evaluate each pawn
+        for (int i = 0; i < myPawnList.size; i++) {
+            int pawnPosition = myPawnList.position[i];
 
-		// Evaluate each knight
-		for (int i = 0; i < myKnightList.size; i++) {
-			int knightPosition = myKnightList.position[i];
+            // Fill attack table
+            for (int j = 1; j < MoveGenerator.moveDeltaPawn.length; j++) {
+                int delta = MoveGenerator.moveDeltaPawn[j];
 
-			// Fill attack table
-			for (int delta : MoveGenerator.moveDeltaKnight) {
-				int targetPosition = knightPosition + delta;
-				if ((targetPosition & 0x88) == 0) {
-					myAttackTable[targetPosition]++;
-					myAttackTable[targetPosition] |= BIT_MINOR;
-				}
-			}
-		}
-	}
+                int targetPosition = pawnPosition;
+                if (myColor == IntColor.WHITE) {
+                    targetPosition += delta;
+                } else {
+                    assert myColor == IntColor.BLACK;
 
-	private void bishopInformationToAttackTable(int myColor, Hex88Board board, byte[] myAttackTable) {
-		assert myColor != IntColor.NOCOLOR;
-		assert board != null;
-		assert myAttackTable != null;
+                    targetPosition -= delta;
+                }
+                if ((targetPosition & 0x88) == 0) {
+                    myAttackTable[targetPosition]++;
+                    myAttackTable[targetPosition] |= BIT_PAWN;
+                }
+            }
+        }
+    }
 
-		// Initialize
-		PositionList myBishopList = board.bishopList[myColor];
-		
-		// Evaluate each bishop
-		for (int i = 0; i < myBishopList.size; i++) {
-			int bishopPosition = myBishopList.position[i];
+    private void knightInformationToAttackTable(int myColor, Hex88Board board, byte[] myAttackTable) {
+        assert myColor != IntColor.NOCOLOR;
+        assert board != null;
+        assert myAttackTable != null;
 
-			// Fill attack table
-			for (int delta : MoveGenerator.moveDeltaBishop) {
-				int targetPosition = bishopPosition + delta;
-				while ((targetPosition & 0x88) == 0) {
-					myAttackTable[targetPosition]++;
-					myAttackTable[targetPosition] |= BIT_MINOR;
-					
-					int target = board.board[targetPosition];
-					if (target == IntChessman.NOPIECE) {
-						targetPosition += delta;
-					} else {
-						break;
-					}
-				}
-			}
-		}
-	}
+        // Initialize
+        PositionList myKnightList = board.knightList[myColor];
 
-	private void rookInformationToAttackTable(int myColor, Hex88Board board, byte[] myAttackTable) {
-		assert myColor != IntColor.NOCOLOR;
-		assert board != null;
-		assert myAttackTable != null;
+        // Evaluate each knight
+        for (int i = 0; i < myKnightList.size; i++) {
+            int knightPosition = myKnightList.position[i];
 
-		// Initialize
-		PositionList myRookList = board.rookList[myColor];
-		
-		// Evaluate each rook
-		for (int i = 0; i < myRookList.size; i++) {
-			int rookPosition = myRookList.position[i];
+            // Fill attack table
+            for (int delta : MoveGenerator.moveDeltaKnight) {
+                int targetPosition = knightPosition + delta;
+                if ((targetPosition & 0x88) == 0) {
+                    myAttackTable[targetPosition]++;
+                    myAttackTable[targetPosition] |= BIT_MINOR;
+                }
+            }
+        }
+    }
 
-			// Fill attack table
-			for (int delta : MoveGenerator.moveDeltaRook) {
-				int targetPosition = rookPosition + delta;
-				while ((targetPosition & 0x88) == 0) {
-					myAttackTable[targetPosition]++;
-					myAttackTable[targetPosition] |= BIT_ROOK;
-					
-					int target = board.board[targetPosition];
-					if (target == IntChessman.NOPIECE) {
-						targetPosition += delta;
-					} else {
-						break;
-					}
-				}
-			}
-		}
-	}
+    private void bishopInformationToAttackTable(int myColor, Hex88Board board, byte[] myAttackTable) {
+        assert myColor != IntColor.NOCOLOR;
+        assert board != null;
+        assert myAttackTable != null;
 
-	private void queenInformationToAttackTable(int myColor, Hex88Board board, byte[] myAttackTable) {
-		assert myColor != IntColor.NOCOLOR;
-		assert board != null;
-		assert myAttackTable != null;
+        // Initialize
+        PositionList myBishopList = board.bishopList[myColor];
 
-		// Initialize
-		PositionList myQueenList = board.queenList[myColor];
+        // Evaluate each bishop
+        for (int i = 0; i < myBishopList.size; i++) {
+            int bishopPosition = myBishopList.position[i];
 
-		// Evaluate the queen
-		for (int i = 0; i < myQueenList.size; i++) {
-			int queenPosition = myQueenList.position[i];
+            // Fill attack table
+            for (int delta : MoveGenerator.moveDeltaBishop) {
+                int targetPosition = bishopPosition + delta;
+                while ((targetPosition & 0x88) == 0) {
+                    myAttackTable[targetPosition]++;
+                    myAttackTable[targetPosition] |= BIT_MINOR;
 
-			// Fill attack table
-			for (int delta : MoveGenerator.moveDeltaQueen) {
-				int targetPosition = queenPosition + delta;
-				while ((targetPosition & 0x88) == 0) {
-					myAttackTable[targetPosition]++;
-					myAttackTable[targetPosition] |= BIT_QUEEN;
-					
-					int target = board.board[targetPosition];
-					if (target == IntChessman.NOPIECE) {
-						targetPosition += delta;
-					} else {
-						break;
-					}
-				}
-			}
-		}
-	}
+                    int target = board.board[targetPosition];
+                    if (target == IntChessman.NOPIECE) {
+                        targetPosition += delta;
+                    } else {
+                        break;
+                    }
+                }
+            }
+        }
+    }
 
-	private void kingInformationToAttackTable(int myColor, Hex88Board board, byte[] myAttackTable) {
-		assert myColor != IntColor.NOCOLOR;
-		assert board != null;
-		assert myAttackTable != null;
+    private void rookInformationToAttackTable(int myColor, Hex88Board board, byte[] myAttackTable) {
+        assert myColor != IntColor.NOCOLOR;
+        assert board != null;
+        assert myAttackTable != null;
 
-		// Initialize
-		PositionList myKingList = board.kingList[myColor];
-		
-		// Evaluate the king
-		assert myKingList.size == 1;
-		int kingPosition = myKingList.position[0];
+        // Initialize
+        PositionList myRookList = board.rookList[myColor];
 
-		// Fill attack table
-		for (int delta : MoveGenerator.moveDeltaKing) {
-			int targetPosition = kingPosition + delta;
-			if ((targetPosition & 0x88) == 0) {
-				myAttackTable[targetPosition]++;
-				myAttackTable[targetPosition] |= BIT_KING;
-			}
-		}
-	}
+        // Evaluate each rook
+        for (int i = 0; i < myRookList.size; i++) {
+            int rookPosition = myRookList.position[i];
+
+            // Fill attack table
+            for (int delta : MoveGenerator.moveDeltaRook) {
+                int targetPosition = rookPosition + delta;
+                while ((targetPosition & 0x88) == 0) {
+                    myAttackTable[targetPosition]++;
+                    myAttackTable[targetPosition] |= BIT_ROOK;
+
+                    int target = board.board[targetPosition];
+                    if (target == IntChessman.NOPIECE) {
+                        targetPosition += delta;
+                    } else {
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    private void queenInformationToAttackTable(int myColor, Hex88Board board, byte[] myAttackTable) {
+        assert myColor != IntColor.NOCOLOR;
+        assert board != null;
+        assert myAttackTable != null;
+
+        // Initialize
+        PositionList myQueenList = board.queenList[myColor];
+
+        // Evaluate the queen
+        for (int i = 0; i < myQueenList.size; i++) {
+            int queenPosition = myQueenList.position[i];
+
+            // Fill attack table
+            for (int delta : MoveGenerator.moveDeltaQueen) {
+                int targetPosition = queenPosition + delta;
+                while ((targetPosition & 0x88) == 0) {
+                    myAttackTable[targetPosition]++;
+                    myAttackTable[targetPosition] |= BIT_QUEEN;
+
+                    int target = board.board[targetPosition];
+                    if (target == IntChessman.NOPIECE) {
+                        targetPosition += delta;
+                    } else {
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    private void kingInformationToAttackTable(int myColor, Hex88Board board, byte[] myAttackTable) {
+        assert myColor != IntColor.NOCOLOR;
+        assert board != null;
+        assert myAttackTable != null;
+
+        // Initialize
+        PositionList myKingList = board.kingList[myColor];
+
+        // Evaluate the king
+        assert myKingList.size == 1;
+        int kingPosition = myKingList.position[0];
+
+        // Fill attack table
+        for (int delta : MoveGenerator.moveDeltaKing) {
+            int targetPosition = kingPosition + delta;
+            if ((targetPosition & 0x88) == 0) {
+                myAttackTable[targetPosition]++;
+                myAttackTable[targetPosition] |= BIT_KING;
+            }
+        }
+    }
 
 }

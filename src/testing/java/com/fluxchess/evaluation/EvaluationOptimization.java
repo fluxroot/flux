@@ -42,154 +42,154 @@ import com.fluxchess.table.PawnTable;
  */
 public final class EvaluationOptimization {
 
-	private final Map<GenericBoard, Integer> solutions = new HashMap<GenericBoard, Integer>();
-	private final ArrayList<Parameter> parameters = new ArrayList<Parameter>();
+    private final Map<GenericBoard, Integer> solutions = new HashMap<GenericBoard, Integer>();
+    private final ArrayList<Parameter> parameters = new ArrayList<Parameter>();
 
-	public EvaluationOptimization(BufferedReader file) throws IOException, IllegalNotationException {
-		if (file == null) throw new IllegalArgumentException();
+    public EvaluationOptimization(BufferedReader file) throws IOException, IllegalNotationException {
+        if (file == null) throw new IllegalArgumentException();
 
-		// Build solution database
-		String line = file.readLine();
-		while (line != null) {
-			String[] tokens = line.split(";");
-			
-			if (tokens.length == 2) {
-				String fen = tokens[0].trim();
-				int value = Integer.parseInt(tokens[1].trim());
-				
-				solutions.put(new GenericBoard(fen), value);
-			}
+        // Build solution database
+        String line = file.readLine();
+        while (line != null) {
+            String[] tokens = line.split(";");
 
-			line = file.readLine();
-		}
-		
-		// Build parameter list
-		parameters.add(new EVAL_PAWN_PASSER_ENDGAME_MAX());
-		parameters.add(new EVAL_PAWN_PASSER_ENDGAME_MIN());
+            if (tokens.length == 2) {
+                String fen = tokens[0].trim();
+                int value = Integer.parseInt(tokens[1].trim());
 
-		parameters.add(new EVAL_KNIGHT_MOBILITY_BASE());
-		parameters.add(new EVAL_KNIGHT_MOBILITYFACTOR());
-		parameters.add(new EVAL_KNIGHT_SAFETY());
+                solutions.put(new GenericBoard(fen), value);
+            }
 
-		parameters.add(new EVAL_BISHOP_MOBILITY_BASE());
-		parameters.add(new EVAL_BISHOP_MOBILITYFACTOR());
-		parameters.add(new EVAL_BISHOP_PAIR());
-		parameters.add(new EVAL_BISHOP_SAFETY());
-		
-		parameters.add(new EVAL_ROOK_MOBILITY_BASE());
-		parameters.add(new EVAL_ROOK_SAFETY());
-		parameters.add(new EVAL_ROOK_MOBILITYFACTOR_ENDGAME());
-		parameters.add(new EVAL_ROOK_MOBILITYFACTOR_OPENING());
-		parameters.add(new EVAL_ROOK_NEARKINGFILE());
-		parameters.add(new EVAL_ROOK_OPENFILE());
-		parameters.add(new EVAL_ROOK_SEVENTHRANK_BONUS());
-		parameters.add(new EVAL_ROOK_SEVENTHRANK_ENDGAME());
-		parameters.add(new EVAL_ROOK_SEVENTHRANK_OPENING());
+            line = file.readLine();
+        }
 
-		parameters.add(new EVAL_QUEEN_MOBILITY_BASE());
-		parameters.add(new EVAL_QUEEN_SAFETY());
-		parameters.add(new EVAL_QUEEN_MOBILITYFACTOR_ENDGAME());
-		parameters.add(new EVAL_QUEEN_MOBILITYFACTOR_OPENING());
-		parameters.add(new EVAL_QUEEN_SEVENTHRANK_ENDGAME());
-		parameters.add(new EVAL_QUEEN_SEVENTHRANK_OPENING());
-	}
-	
-	public static void main(String[] args) {
-		try {
-			BufferedReader file = null;
-			try {
-				file = new BufferedReader(new FileReader("evaluation.db"));
-			} catch (FileNotFoundException e) {
-				file = new BufferedReader(new FileReader("src/test/resources/evaluation.db"));
-			}
+        // Build parameter list
+        parameters.add(new EVAL_PAWN_PASSER_ENDGAME_MAX());
+        parameters.add(new EVAL_PAWN_PASSER_ENDGAME_MIN());
 
-			EvaluationOptimization optimization = new EvaluationOptimization(file);
+        parameters.add(new EVAL_KNIGHT_MOBILITY_BASE());
+        parameters.add(new EVAL_KNIGHT_MOBILITYFACTOR());
+        parameters.add(new EVAL_KNIGHT_SAFETY());
 
-			optimization.calculate();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (IllegalNotationException e) {
-			e.printStackTrace();
-		}
-	}
+        parameters.add(new EVAL_BISHOP_MOBILITY_BASE());
+        parameters.add(new EVAL_BISHOP_MOBILITYFACTOR());
+        parameters.add(new EVAL_BISHOP_PAIR());
+        parameters.add(new EVAL_BISHOP_SAFETY());
 
-	public void calculate() {
-		double rss = Double.MAX_VALUE;
-		double newrss = rss / 2;
+        parameters.add(new EVAL_ROOK_MOBILITY_BASE());
+        parameters.add(new EVAL_ROOK_SAFETY());
+        parameters.add(new EVAL_ROOK_MOBILITYFACTOR_ENDGAME());
+        parameters.add(new EVAL_ROOK_MOBILITYFACTOR_OPENING());
+        parameters.add(new EVAL_ROOK_NEARKINGFILE());
+        parameters.add(new EVAL_ROOK_OPENFILE());
+        parameters.add(new EVAL_ROOK_SEVENTHRANK_BONUS());
+        parameters.add(new EVAL_ROOK_SEVENTHRANK_ENDGAME());
+        parameters.add(new EVAL_ROOK_SEVENTHRANK_OPENING());
 
-		while (newrss < rss) {
-			rss = newrss;
-			newrss = loop(0, rss);
-		}
-	}
-	
-	private void print(double rss) {
-		System.out.println("Found new parameter solution with rss = " + rss);
-		for (Parameter parameter : parameters) {
-			parameter.print();
-		}
-	}
-	
-	private double loop(int i, double rss) {
-		if (i < parameters.size()) {
-			Parameter parameter = parameters.get(i);
+        parameters.add(new EVAL_QUEEN_MOBILITY_BASE());
+        parameters.add(new EVAL_QUEEN_SAFETY());
+        parameters.add(new EVAL_QUEEN_MOBILITYFACTOR_ENDGAME());
+        parameters.add(new EVAL_QUEEN_MOBILITYFACTOR_OPENING());
+        parameters.add(new EVAL_QUEEN_SEVENTHRANK_ENDGAME());
+        parameters.add(new EVAL_QUEEN_SEVENTHRANK_OPENING());
+    }
 
-			parameter.setIncrement(parameter.defaultIncrement);
-			parameter.setValue(parameter.defaultValue + parameter.getIncrement());
+    public static void main(String[] args) {
+        try {
+            BufferedReader file = null;
+            try {
+                file = new BufferedReader(new FileReader("evaluation.db"));
+            } catch (FileNotFoundException e) {
+                file = new BufferedReader(new FileReader("src/test/resources/evaluation.db"));
+            }
 
-			double newrss = loop(i + 1, rss);
-			if (newrss < rss) {
-				rss = newrss;
-			} else {
-				parameter.setIncrement(-1 * parameter.defaultIncrement);
-				parameter.setValue(parameter.defaultValue + parameter.getIncrement());
+            EvaluationOptimization optimization = new EvaluationOptimization(file);
 
-				newrss = loop(i + 1, rss);
-				if (newrss < rss) {
-					rss = newrss;
-				} else {
-					parameter.setValue(parameter.defaultValue);
-					newrss = loop(i + 1, rss);
-					if (newrss < rss) {
-						rss = newrss;
-					}
-				}
-			}
+            optimization.calculate();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (IllegalNotationException e) {
+            e.printStackTrace();
+        }
+    }
 
-			return rss;
-		} else {
-			return evaluate(rss);
-		}
-	}
-	
-	private double evaluate(double rss) {
-		double newrss = 0.0;
+    public void calculate() {
+        double rss = Double.MAX_VALUE;
+        double newrss = rss / 2;
 
-		for (Entry<GenericBoard, Integer> entry : solutions.entrySet()) {
-			GenericBoard genericBoard = entry.getKey();
-			int value = entry.getValue();
+        while (newrss < rss) {
+            rss = newrss;
+            newrss = loop(0, rss);
+        }
+    }
 
-			Hex88Board board = new Hex88Board(genericBoard);
-			new MoveSee(board);
-			Evaluation evaluation = new Evaluation(new EvaluationTable(1), new PawnTable(1));
-			int result = evaluation.evaluate(board);
-			
-			newrss += Math.pow(value - result, 2);
-		}
-		
-		if (newrss < rss) {
-			rss = newrss;
+    private void print(double rss) {
+        System.out.println("Found new parameter solution with rss = " + rss);
+        for (Parameter parameter : parameters) {
+            parameter.print();
+        }
+    }
 
-			for (Parameter parameter : parameters) {
-				parameter.store();
-			}
+    private double loop(int i, double rss) {
+        if (i < parameters.size()) {
+            Parameter parameter = parameters.get(i);
 
-			print(rss);
-		}
-		
-		return rss;
-	}
+            parameter.setIncrement(parameter.defaultIncrement);
+            parameter.setValue(parameter.defaultValue + parameter.getIncrement());
+
+            double newrss = loop(i + 1, rss);
+            if (newrss < rss) {
+                rss = newrss;
+            } else {
+                parameter.setIncrement(-1 * parameter.defaultIncrement);
+                parameter.setValue(parameter.defaultValue + parameter.getIncrement());
+
+                newrss = loop(i + 1, rss);
+                if (newrss < rss) {
+                    rss = newrss;
+                } else {
+                    parameter.setValue(parameter.defaultValue);
+                    newrss = loop(i + 1, rss);
+                    if (newrss < rss) {
+                        rss = newrss;
+                    }
+                }
+            }
+
+            return rss;
+        } else {
+            return evaluate(rss);
+        }
+    }
+
+    private double evaluate(double rss) {
+        double newrss = 0.0;
+
+        for (Entry<GenericBoard, Integer> entry : solutions.entrySet()) {
+            GenericBoard genericBoard = entry.getKey();
+            int value = entry.getValue();
+
+            Hex88Board board = new Hex88Board(genericBoard);
+            new MoveSee(board);
+            Evaluation evaluation = new Evaluation(new EvaluationTable(1), new PawnTable(1));
+            int result = evaluation.evaluate(board);
+
+            newrss += Math.pow(value - result, 2);
+        }
+
+        if (newrss < rss) {
+            rss = newrss;
+
+            for (Parameter parameter : parameters) {
+                parameter.store();
+            }
+
+            print(rss);
+        }
+
+        return rss;
+    }
 
 }

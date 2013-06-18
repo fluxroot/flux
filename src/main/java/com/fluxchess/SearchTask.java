@@ -20,7 +20,7 @@ package com.fluxchess;
 
 /**
  * SearchTask
- * 
+ *
  * @author Phokham Nonava
  */
 public class SearchTask {

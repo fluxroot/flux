@@ -43,257 +43,257 @@ import com.fluxchess.move.IntMove;
  */
 public class Hex88BoardTest {
 
-	@Test
-	public void testClassCreation() {
-		// Setup a new board
-		GenericBoard board = new GenericBoard(GenericBoard.STANDARDSETUP);
-		Hex88Board testBoard = new Hex88Board(board);
+    @Test
+    public void testClassCreation() {
+        // Setup a new board
+        GenericBoard board = new GenericBoard(GenericBoard.STANDARDSETUP);
+        Hex88Board testBoard = new Hex88Board(board);
 
-		// Test chessman setup
-		for (GenericFile file : GenericFile.values()) {
-			for (GenericRank rank : GenericRank.values()) {
-				GenericPiece piece = board.getPiece(GenericPosition.valueOf(file, rank));
-				int testChessman = testBoard.board[IntPosition.valueOfPosition(GenericPosition.valueOf(file, rank))];
-				if (piece == null) {
-					assertEquals(IntChessman.NOPIECE, testChessman);
-				} else {
-					assertEquals(IntChessman.valueOfChessman(piece.chessman), IntChessman.getChessman(testChessman));
-					assertEquals(IntColor.valueOfColor(piece.color), IntChessman.getColor(testChessman));
-				}
-			}
-		}
+        // Test chessman setup
+        for (GenericFile file : GenericFile.values()) {
+            for (GenericRank rank : GenericRank.values()) {
+                GenericPiece piece = board.getPiece(GenericPosition.valueOf(file, rank));
+                int testChessman = testBoard.board[IntPosition.valueOfPosition(GenericPosition.valueOf(file, rank))];
+                if (piece == null) {
+                    assertEquals(IntChessman.NOPIECE, testChessman);
+                } else {
+                    assertEquals(IntChessman.valueOfChessman(piece.chessman), IntChessman.getChessman(testChessman));
+                    assertEquals(IntColor.valueOfColor(piece.color), IntChessman.getColor(testChessman));
+                }
+            }
+        }
 
-		// Test active color
-		assertEquals(IntColor.valueOfColor(board.getActiveColor()), testBoard.activeColor);
+        // Test active color
+        assertEquals(IntColor.valueOfColor(board.getActiveColor()), testBoard.activeColor);
 
-		// Test en passant
-		if (board.getEnPassant() == null) {
-			assertEquals(IntPosition.NOPOSITION, testBoard.enPassantSquare);
-		} else {
-			assertEquals(IntPosition.valueOfPosition(board.getEnPassant()), testBoard.enPassantSquare);
-		}
+        // Test en passant
+        if (board.getEnPassant() == null) {
+            assertEquals(IntPosition.NOPOSITION, testBoard.enPassantSquare);
+        } else {
+            assertEquals(IntPosition.valueOfPosition(board.getEnPassant()), testBoard.enPassantSquare);
+        }
 
-		// Test half move clock
-		assertEquals(board.getHalfMoveClock(), testBoard.halfMoveClock);
+        // Test half move clock
+        assertEquals(board.getHalfMoveClock(), testBoard.halfMoveClock);
 
-		// Test full move number
-		assertEquals(board.getFullMoveNumber(), testBoard.getFullMoveNumber());
+        // Test full move number
+        assertEquals(board.getFullMoveNumber(), testBoard.getFullMoveNumber());
 
-		// Test game phase
-		assertEquals(IntGamePhase.OPENING, testBoard.getGamePhase());
+        // Test game phase
+        assertEquals(IntGamePhase.OPENING, testBoard.getGamePhase());
 
-		// Test material value
-		assertEquals(IntChessman.VALUE_KING + IntChessman.VALUE_QUEEN + 2 * IntChessman.VALUE_ROOK + 2 * IntChessman.VALUE_BISHOP + 2 * IntChessman.VALUE_KNIGHT + 8 * IntChessman.VALUE_PAWN, testBoard.materialValueAll[IntColor.WHITE]);
-		assertEquals(1 /* QUEEN */ + 2 /* ROOKS */ + 2 /* BISHOPS */ + 2 /* KNIGHTS */, testBoard.materialCount[IntColor.WHITE]);
-		assertEquals(1 /* QUEEN */ + 2 /* ROOKS */ + 2 /* BISHOPS */ + 2 /* KNIGHTS */ + 8 /* PAWNS */, testBoard.materialCountAll[IntColor.WHITE]);
-	}
+        // Test material value
+        assertEquals(IntChessman.VALUE_KING + IntChessman.VALUE_QUEEN + 2 * IntChessman.VALUE_ROOK + 2 * IntChessman.VALUE_BISHOP + 2 * IntChessman.VALUE_KNIGHT + 8 * IntChessman.VALUE_PAWN, testBoard.materialValueAll[IntColor.WHITE]);
+        assertEquals(1 /* QUEEN */ + 2 /* ROOKS */ + 2 /* BISHOPS */ + 2 /* KNIGHTS */, testBoard.materialCount[IntColor.WHITE]);
+        assertEquals(1 /* QUEEN */ + 2 /* ROOKS */ + 2 /* BISHOPS */ + 2 /* KNIGHTS */ + 8 /* PAWNS */, testBoard.materialCountAll[IntColor.WHITE]);
+    }
 
-	@Test
-	public void testCopyConstructor() {
-		GenericBoard board = new GenericBoard(GenericBoard.STANDARDSETUP);
-		Hex88Board testBoard = new Hex88Board(board);
-		
-		Hex88Board copyBoard = new Hex88Board(testBoard);
-		
-		assertEquals(testBoard.toString(), copyBoard.toString());
-	}
-	
-	@Test
-	public void testMakeMoveNormalMove() {
-		GenericBoard board = new GenericBoard(GenericBoard.STANDARDSETUP);
-		Hex88Board testBoard = new Hex88Board(board);
+    @Test
+    public void testCopyConstructor() {
+        GenericBoard board = new GenericBoard(GenericBoard.STANDARDSETUP);
+        Hex88Board testBoard = new Hex88Board(board);
 
-		int move = IntMove.createMove(IntMove.NORMAL, 16, 32, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
-		testBoard.makeMove(move);
-		testBoard.undoMove(move);
+        Hex88Board copyBoard = new Hex88Board(testBoard);
 
-		assertEquals(board, testBoard.getBoard());
-	}
+        assertEquals(testBoard.toString(), copyBoard.toString());
+    }
 
-	@Test
-	public void testMakeMovePawnPromotionMove() {
-		GenericBoard board = null;
-		try {
-			board = new GenericBoard("8/P5k1/8/8/2K5/8/8/8 w - - 0 1");
-		} catch (IllegalNotationException e) {
-			e.printStackTrace();
-			fail();
-		}
-		Hex88Board testBoard = new Hex88Board(board);
+    @Test
+    public void testMakeMoveNormalMove() {
+        GenericBoard board = new GenericBoard(GenericBoard.STANDARDSETUP);
+        Hex88Board testBoard = new Hex88Board(board);
 
-		int move = IntMove.createMove(IntMove.PAWNPROMOTION, 96, 112, IntChessman.createPiece(IntChessman.PAWN, IntColor.WHITE), IntChessman.NOPIECE, IntChessman.QUEEN);
-		testBoard.makeMove(move);
-		testBoard.undoMove(move);
+        int move = IntMove.createMove(IntMove.NORMAL, 16, 32, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
+        testBoard.makeMove(move);
+        testBoard.undoMove(move);
 
-		assertEquals(board, testBoard.getBoard());
-	}
+        assertEquals(board, testBoard.getBoard());
+    }
 
-	@Test
-	public void testMakeMovePawnDoubleMove() {
-		GenericBoard board = new GenericBoard(GenericBoard.STANDARDSETUP);
-		Hex88Board testBoard = new Hex88Board(board);
+    @Test
+    public void testMakeMovePawnPromotionMove() {
+        GenericBoard board = null;
+        try {
+            board = new GenericBoard("8/P5k1/8/8/2K5/8/8/8 w - - 0 1");
+        } catch (IllegalNotationException e) {
+            e.printStackTrace();
+            fail();
+        }
+        Hex88Board testBoard = new Hex88Board(board);
 
-		int move = IntMove.createMove(IntMove.PAWNDOUBLE, 16, 48, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
-		testBoard.makeMove(move);
-		testBoard.undoMove(move);
+        int move = IntMove.createMove(IntMove.PAWNPROMOTION, 96, 112, IntChessman.createPiece(IntChessman.PAWN, IntColor.WHITE), IntChessman.NOPIECE, IntChessman.QUEEN);
+        testBoard.makeMove(move);
+        testBoard.undoMove(move);
 
-		assertEquals(board, testBoard.getBoard());
-	}
-	
-	@Test
-	public void testMakeMoveCastlingMove() {
-		GenericBoard board = null;
-		try {
-			board = new GenericBoard("r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1");
-		} catch (IllegalNotationException e) {
-			e.printStackTrace();
-			fail();
-		}
-		Hex88Board testBoard = new Hex88Board(board);
+        assertEquals(board, testBoard.getBoard());
+    }
 
-		int move = IntMove.createMove(IntMove.CASTLING, 4, 2, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
-		testBoard.makeMove(move);
-		testBoard.undoMove(move);
-		assertEquals(board, testBoard.getBoard());
+    @Test
+    public void testMakeMovePawnDoubleMove() {
+        GenericBoard board = new GenericBoard(GenericBoard.STANDARDSETUP);
+        Hex88Board testBoard = new Hex88Board(board);
 
-		move = IntMove.createMove(IntMove.CASTLING, 4, 6, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
-		testBoard.makeMove(move);
-		testBoard.undoMove(move);
-		assertEquals(board, testBoard.getBoard());
-	}
+        int move = IntMove.createMove(IntMove.PAWNDOUBLE, 16, 48, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
+        testBoard.makeMove(move);
+        testBoard.undoMove(move);
 
-	@Test
-	public void testMakeMoveEnPassantMove() {
-		GenericBoard board = null;
-		try {
-			board = new GenericBoard("5k2/8/8/8/3Pp3/8/8/3K4 b - d3 0 1");
-		} catch (IllegalNotationException e) {
-			e.printStackTrace();
-			fail();
-		}
-		Hex88Board testBoard = new Hex88Board(board);
+        assertEquals(board, testBoard.getBoard());
+    }
 
-		// Make en passant move
-		int move = IntMove.createMove(IntMove.ENPASSANT, IntPosition.e4, IntPosition.d3, IntChessman.createPiece(IntChessman.PAWN, IntColor.BLACK), IntChessman.createPiece(IntChessman.PAWN, IntColor.WHITE), IntChessman.NOPIECE);
-		testBoard.makeMove(move);
-		testBoard.undoMove(move);
+    @Test
+    public void testMakeMoveCastlingMove() {
+        GenericBoard board = null;
+        try {
+            board = new GenericBoard("r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1");
+        } catch (IllegalNotationException e) {
+            e.printStackTrace();
+            fail();
+        }
+        Hex88Board testBoard = new Hex88Board(board);
 
-		assertEquals(board, testBoard.getBoard());
-	}
+        int move = IntMove.createMove(IntMove.CASTLING, 4, 2, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
+        testBoard.makeMove(move);
+        testBoard.undoMove(move);
+        assertEquals(board, testBoard.getBoard());
 
-	@Test
-	public void testMakeMoveNullMove() {
-		GenericBoard board = new GenericBoard(GenericBoard.STANDARDSETUP);
-		Hex88Board testBoard = new Hex88Board(board);
+        move = IntMove.createMove(IntMove.CASTLING, 4, 6, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
+        testBoard.makeMove(move);
+        testBoard.undoMove(move);
+        assertEquals(board, testBoard.getBoard());
+    }
 
-		int move = IntMove.createMove(IntMove.NULL, IntPosition.NOPOSITION, IntPosition.NOPOSITION, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
-		testBoard.makeMove(move);
-		testBoard.undoMove(move);
+    @Test
+    public void testMakeMoveEnPassantMove() {
+        GenericBoard board = null;
+        try {
+            board = new GenericBoard("5k2/8/8/8/3Pp3/8/8/3K4 b - d3 0 1");
+        } catch (IllegalNotationException e) {
+            e.printStackTrace();
+            fail();
+        }
+        Hex88Board testBoard = new Hex88Board(board);
 
-		assertEquals(board, testBoard.getBoard());
-	}
+        // Make en passant move
+        int move = IntMove.createMove(IntMove.ENPASSANT, IntPosition.e4, IntPosition.d3, IntChessman.createPiece(IntChessman.PAWN, IntColor.BLACK), IntChessman.createPiece(IntChessman.PAWN, IntColor.WHITE), IntChessman.NOPIECE);
+        testBoard.makeMove(move);
+        testBoard.undoMove(move);
 
-	@Test
-	public void testZobrist() {
-		GenericBoard board = null;
-		try {
-			board = new GenericBoard("r3k2r/2P5/8/5p2/3p4/8/2PB4/R3K2R w KQkq - 0 1");
-		} catch (IllegalNotationException e) {
-			e.printStackTrace();
-			fail();
-		}
+        assertEquals(board, testBoard.getBoard());
+    }
 
-		Hex88Board testBoard = new Hex88Board(board);
-		// Move white bishop
-		int move = IntMove.createMove(IntMove.NORMAL, IntPosition.d2, IntPosition.e3, IntChessman.createPiece(IntChessman.BISHOP, IntColor.WHITE), IntChessman.NOPIECE, IntChessman.NOPIECE);
-		testBoard.makeMove(move);
-		// Castling black KINGSIDE
-		move = IntMove.createMove(IntMove.CASTLING, IntPosition.e8, IntPosition.g8, IntChessman.createPiece(IntChessman.KING, IntColor.BLACK), IntChessman.NOPIECE, IntChessman.NOPIECE);
-		testBoard.makeMove(move);
-		// Move white pawn
-		move = IntMove.createMove(IntMove.PAWNDOUBLE, IntPosition.c2, IntPosition.c4, IntChessman.createPiece(IntChessman.PAWN, IntColor.WHITE), IntChessman.NOPIECE, IntChessman.NOPIECE);
-		testBoard.makeMove(move);
-		// Move black pawn
-		move = IntMove.createMove(IntMove.ENPASSANT, IntPosition.d4, IntPosition.c3, IntChessman.createPiece(IntChessman.PAWN, IntColor.BLACK), IntChessman.createPiece(IntChessman.PAWN, IntColor.WHITE), IntChessman.NOPIECE);
-		testBoard.makeMove(move);
-		// Move white pawn
-		move = IntMove.createMove(IntMove.PAWNPROMOTION, IntPosition.c7, IntPosition.c8, IntChessman.createPiece(IntChessman.PAWN, IntColor.WHITE), IntChessman.NOPIECE, IntChessman.QUEEN);
-		testBoard.makeMove(move);
-		long zobrist1 = testBoard.zobristCode;
-		long pawnZobrist1 = testBoard.pawnZobristCode;
+    @Test
+    public void testMakeMoveNullMove() {
+        GenericBoard board = new GenericBoard(GenericBoard.STANDARDSETUP);
+        Hex88Board testBoard = new Hex88Board(board);
 
-		testBoard = new Hex88Board(board);
-		// Move white pawn
-		move = IntMove.createMove(IntMove.PAWNDOUBLE, IntPosition.c2, IntPosition.c4, IntChessman.createPiece(IntChessman.PAWN, IntColor.WHITE), IntChessman.NOPIECE, IntChessman.NOPIECE);
-		testBoard.makeMove(move);
-		// Move black pawn
-		move = IntMove.createMove(IntMove.ENPASSANT, IntPosition.d4, IntPosition.c3, IntChessman.createPiece(IntChessman.PAWN, IntColor.BLACK), IntChessman.createPiece(IntChessman.PAWN, IntColor.WHITE), IntChessman.NOPIECE);
-		testBoard.makeMove(move);
-		// Move white bishop
-		move = IntMove.createMove(IntMove.NORMAL, IntPosition.d2, IntPosition.e3, IntChessman.createPiece(IntChessman.BISHOP, IntColor.WHITE), IntChessman.NOPIECE, IntChessman.NOPIECE);
-		testBoard.makeMove(move);
-		// Castling black KINGSIDE
-		move = IntMove.createMove(IntMove.CASTLING, IntPosition.e8, IntPosition.g8, IntChessman.createPiece(IntChessman.KING, IntColor.BLACK), IntChessman.NOPIECE, IntChessman.NOPIECE);
-		testBoard.makeMove(move);
-		// Move white pawn
-		move = IntMove.createMove(IntMove.PAWNPROMOTION, IntPosition.c7, IntPosition.c8, IntChessman.createPiece(IntChessman.PAWN, IntColor.WHITE), IntChessman.NOPIECE, IntChessman.QUEEN);
-		testBoard.makeMove(move);
-		long zobrist2 = testBoard.zobristCode;
-		long pawnZobrist2 = testBoard.pawnZobristCode;
-		
-		assertEquals(zobrist1, zobrist2);
-		assertEquals(pawnZobrist1, pawnZobrist2);
-	}
+        int move = IntMove.createMove(IntMove.NULL, IntPosition.NOPOSITION, IntPosition.NOPOSITION, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
+        testBoard.makeMove(move);
+        testBoard.undoMove(move);
 
-	@Test
-	public void testActiveColor() {
-		GenericBoard board = new GenericBoard(GenericBoard.STANDARDSETUP);
-		Hex88Board testBoard = new Hex88Board(board);
+        assertEquals(board, testBoard.getBoard());
+    }
 
-		// Move white pawn
-		int move = IntMove.createMove(IntMove.NORMAL, 16, 32, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
-		testBoard.makeMove(move);
-		assertEquals(IntColor.BLACK, testBoard.activeColor);
+    @Test
+    public void testZobrist() {
+        GenericBoard board = null;
+        try {
+            board = new GenericBoard("r3k2r/2P5/8/5p2/3p4/8/2PB4/R3K2R w KQkq - 0 1");
+        } catch (IllegalNotationException e) {
+            e.printStackTrace();
+            fail();
+        }
 
-		// Move black pawn
-		move = IntMove.createMove(IntMove.NORMAL, 96, 80, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
-		testBoard.makeMove(move);
-		assertEquals(IntColor.WHITE, testBoard.activeColor);
-	}
+        Hex88Board testBoard = new Hex88Board(board);
+        // Move white bishop
+        int move = IntMove.createMove(IntMove.NORMAL, IntPosition.d2, IntPosition.e3, IntChessman.createPiece(IntChessman.BISHOP, IntColor.WHITE), IntChessman.NOPIECE, IntChessman.NOPIECE);
+        testBoard.makeMove(move);
+        // Castling black KINGSIDE
+        move = IntMove.createMove(IntMove.CASTLING, IntPosition.e8, IntPosition.g8, IntChessman.createPiece(IntChessman.KING, IntColor.BLACK), IntChessman.NOPIECE, IntChessman.NOPIECE);
+        testBoard.makeMove(move);
+        // Move white pawn
+        move = IntMove.createMove(IntMove.PAWNDOUBLE, IntPosition.c2, IntPosition.c4, IntChessman.createPiece(IntChessman.PAWN, IntColor.WHITE), IntChessman.NOPIECE, IntChessman.NOPIECE);
+        testBoard.makeMove(move);
+        // Move black pawn
+        move = IntMove.createMove(IntMove.ENPASSANT, IntPosition.d4, IntPosition.c3, IntChessman.createPiece(IntChessman.PAWN, IntColor.BLACK), IntChessman.createPiece(IntChessman.PAWN, IntColor.WHITE), IntChessman.NOPIECE);
+        testBoard.makeMove(move);
+        // Move white pawn
+        move = IntMove.createMove(IntMove.PAWNPROMOTION, IntPosition.c7, IntPosition.c8, IntChessman.createPiece(IntChessman.PAWN, IntColor.WHITE), IntChessman.NOPIECE, IntChessman.QUEEN);
+        testBoard.makeMove(move);
+        long zobrist1 = testBoard.zobristCode;
+        long pawnZobrist1 = testBoard.pawnZobristCode;
 
-	@Test
-	public void testHalfMoveClock() {
-		GenericBoard board = new GenericBoard(GenericBoard.STANDARDSETUP);
-		Hex88Board testBoard = new Hex88Board(board);
+        testBoard = new Hex88Board(board);
+        // Move white pawn
+        move = IntMove.createMove(IntMove.PAWNDOUBLE, IntPosition.c2, IntPosition.c4, IntChessman.createPiece(IntChessman.PAWN, IntColor.WHITE), IntChessman.NOPIECE, IntChessman.NOPIECE);
+        testBoard.makeMove(move);
+        // Move black pawn
+        move = IntMove.createMove(IntMove.ENPASSANT, IntPosition.d4, IntPosition.c3, IntChessman.createPiece(IntChessman.PAWN, IntColor.BLACK), IntChessman.createPiece(IntChessman.PAWN, IntColor.WHITE), IntChessman.NOPIECE);
+        testBoard.makeMove(move);
+        // Move white bishop
+        move = IntMove.createMove(IntMove.NORMAL, IntPosition.d2, IntPosition.e3, IntChessman.createPiece(IntChessman.BISHOP, IntColor.WHITE), IntChessman.NOPIECE, IntChessman.NOPIECE);
+        testBoard.makeMove(move);
+        // Castling black KINGSIDE
+        move = IntMove.createMove(IntMove.CASTLING, IntPosition.e8, IntPosition.g8, IntChessman.createPiece(IntChessman.KING, IntColor.BLACK), IntChessman.NOPIECE, IntChessman.NOPIECE);
+        testBoard.makeMove(move);
+        // Move white pawn
+        move = IntMove.createMove(IntMove.PAWNPROMOTION, IntPosition.c7, IntPosition.c8, IntChessman.createPiece(IntChessman.PAWN, IntColor.WHITE), IntChessman.NOPIECE, IntChessman.QUEEN);
+        testBoard.makeMove(move);
+        long zobrist2 = testBoard.zobristCode;
+        long pawnZobrist2 = testBoard.pawnZobristCode;
 
-		// Move white pawn
-		int move = IntMove.createMove(IntMove.NORMAL, 16, 32, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
-		testBoard.makeMove(move);
-		assertEquals(0, testBoard.halfMoveClock);
+        assertEquals(zobrist1, zobrist2);
+        assertEquals(pawnZobrist1, pawnZobrist2);
+    }
 
-		// Move black pawn
-		move = IntMove.createMove(IntMove.NORMAL, 96, 80, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
-		testBoard.makeMove(move);
-		// Move white knight
-		move = IntMove.createMove(IntMove.NORMAL, 1, 34, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
-		testBoard.makeMove(move);
-		assertEquals(1, testBoard.halfMoveClock);
-	}
+    @Test
+    public void testActiveColor() {
+        GenericBoard board = new GenericBoard(GenericBoard.STANDARDSETUP);
+        Hex88Board testBoard = new Hex88Board(board);
 
-	@Test
-	public void testFullMoveNumber() {
-		GenericBoard board = new GenericBoard(GenericBoard.STANDARDSETUP);
-		Hex88Board testBoard = new Hex88Board(board);
+        // Move white pawn
+        int move = IntMove.createMove(IntMove.NORMAL, 16, 32, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
+        testBoard.makeMove(move);
+        assertEquals(IntColor.BLACK, testBoard.activeColor);
 
-		// Move white pawn
-		int move = IntMove.createMove(IntMove.NORMAL, 16, 32, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
-		testBoard.makeMove(move);
-		assertEquals(1, testBoard.getFullMoveNumber());
+        // Move black pawn
+        move = IntMove.createMove(IntMove.NORMAL, 96, 80, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
+        testBoard.makeMove(move);
+        assertEquals(IntColor.WHITE, testBoard.activeColor);
+    }
 
-		// Move black pawn
-		move = IntMove.createMove(IntMove.NORMAL, 96, 80, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
-		testBoard.makeMove(move);
-		assertEquals(2, testBoard.getFullMoveNumber());
-	}
+    @Test
+    public void testHalfMoveClock() {
+        GenericBoard board = new GenericBoard(GenericBoard.STANDARDSETUP);
+        Hex88Board testBoard = new Hex88Board(board);
+
+        // Move white pawn
+        int move = IntMove.createMove(IntMove.NORMAL, 16, 32, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
+        testBoard.makeMove(move);
+        assertEquals(0, testBoard.halfMoveClock);
+
+        // Move black pawn
+        move = IntMove.createMove(IntMove.NORMAL, 96, 80, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
+        testBoard.makeMove(move);
+        // Move white knight
+        move = IntMove.createMove(IntMove.NORMAL, 1, 34, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
+        testBoard.makeMove(move);
+        assertEquals(1, testBoard.halfMoveClock);
+    }
+
+    @Test
+    public void testFullMoveNumber() {
+        GenericBoard board = new GenericBoard(GenericBoard.STANDARDSETUP);
+        Hex88Board testBoard = new Hex88Board(board);
+
+        // Move white pawn
+        int move = IntMove.createMove(IntMove.NORMAL, 16, 32, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
+        testBoard.makeMove(move);
+        assertEquals(1, testBoard.getFullMoveNumber());
+
+        // Move black pawn
+        move = IntMove.createMove(IntMove.NORMAL, 96, 80, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
+        testBoard.makeMove(move);
+        assertEquals(2, testBoard.getFullMoveNumber());
+    }
 
 }

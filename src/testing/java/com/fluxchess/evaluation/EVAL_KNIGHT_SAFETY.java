@@ -25,18 +25,18 @@ package com.fluxchess.evaluation;
  */
 public final class EVAL_KNIGHT_SAFETY extends Parameter {
 
-	public EVAL_KNIGHT_SAFETY() {
-		super("EVAL_KNIGHT_SAFETY");
-	}
+    public EVAL_KNIGHT_SAFETY() {
+        super("EVAL_KNIGHT_SAFETY");
+    }
 
-	@Override
-	public void setValue(int value) {
-		KnightEvaluation.EVAL_KNIGHT_SAFETY = value;
-	}
+    @Override
+    public void setValue(int value) {
+        KnightEvaluation.EVAL_KNIGHT_SAFETY = value;
+    }
 
-	@Override
-	public int getValue() {
-		return KnightEvaluation.EVAL_KNIGHT_SAFETY;
-	}
+    @Override
+    public int getValue() {
+        return KnightEvaluation.EVAL_KNIGHT_SAFETY;
+    }
 
 }

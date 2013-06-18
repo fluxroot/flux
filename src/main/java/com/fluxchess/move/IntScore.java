@@ -27,72 +27,72 @@ import jcpi.data.GenericScore;
  */
 public final class IntScore {
 
-	/**
-	 * Represents no score
-	 */
-	public static final int NOSCORE = -9;
+    /**
+     * Represents no score
+     */
+    public static final int NOSCORE = -9;
 
-	/**
-	 * IntScore values
-	 */
-	public static final int EXACT = 0;
-	public static final int ALPHA = 1;
-	public static final int BETA = 2;
+    /**
+     * IntScore values
+     */
+    public static final int EXACT = 0;
+    public static final int ALPHA = 1;
+    public static final int BETA = 2;
 
-	/**
-	 * IntScore mask
-	 */
-	public static final int MASK = 0x3;
+    /**
+     * IntScore mask
+     */
+    public static final int MASK = 0x3;
 
-	/**
-	 * IntScore cannot be instantiated.
-	 */
-	private IntScore() {
-	}
+    /**
+     * IntScore cannot be instantiated.
+     */
+    private IntScore() {
+    }
 
-	/**
-	 * Returns the IntScore value of the GenericScore.
-	 * 
-	 * @param value the GenericScore.
-	 * @return the IntScore value.
-	 */
-	public static int valueOfScore(GenericScore value) {
-		assert value != null;
+    /**
+     * Returns the IntScore value of the GenericScore.
+     *
+     * @param value the GenericScore.
+     * @return the IntScore value.
+     */
+    public static int valueOfScore(GenericScore value) {
+        assert value != null;
 
-		switch (value) {
-		case EXACT:
-			return EXACT;
-		case ALPHA:
-			return ALPHA;
-		case BETA:
-			return BETA;
-		default:
-			assert false : value;
-			break;
-		}
+        switch (value) {
+        case EXACT:
+            return EXACT;
+        case ALPHA:
+            return ALPHA;
+        case BETA:
+            return BETA;
+        default:
+            assert false : value;
+            break;
+        }
 
-		throw new IllegalArgumentException();
-	}
+        throw new IllegalArgumentException();
+    }
 
-	/**
-	 * Returns the GenericScore of the IntScore value.
-	 * 
-	 * @param value the IntScore value.
-	 * @return the GenericScore.
-	 */
-	public static GenericScore valueOfIntScore(int value) {
-		assert value != NOSCORE;
+    /**
+     * Returns the GenericScore of the IntScore value.
+     *
+     * @param value the IntScore value.
+     * @return the GenericScore.
+     */
+    public static GenericScore valueOfIntScore(int value) {
+        assert value != NOSCORE;
 
-		switch (value) {
-		case EXACT:
-			return GenericScore.EXACT;
-		case ALPHA:
-			return GenericScore.ALPHA;
-		case BETA:
-			return GenericScore.BETA;
-		default:
-			throw new IllegalArgumentException();
-		}
-	}
+        switch (value) {
+        case EXACT:
+            return GenericScore.EXACT;
+        case ALPHA:
+            return GenericScore.ALPHA;
+        case BETA:
+            return GenericScore.BETA;
+        default:
+            throw new IllegalArgumentException();
+        }
+    }
 
 }

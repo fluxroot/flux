@@ -25,18 +25,18 @@ package com.fluxchess.evaluation;
  */
 public final class EVAL_QUEEN_MOBILITYFACTOR_OPENING extends Parameter {
 
-	public EVAL_QUEEN_MOBILITYFACTOR_OPENING() {
-		super("EVAL_QUEEN_MOBILITYFACTOR_OPENING");
-	}
+    public EVAL_QUEEN_MOBILITYFACTOR_OPENING() {
+        super("EVAL_QUEEN_MOBILITYFACTOR_OPENING");
+    }
 
-	@Override
-	public void setValue(int value) {
-		QueenEvaluation.EVAL_QUEEN_MOBILITYFACTOR_OPENING = value;
-	}
+    @Override
+    public void setValue(int value) {
+        QueenEvaluation.EVAL_QUEEN_MOBILITYFACTOR_OPENING = value;
+    }
 
-	@Override
-	public int getValue() {
-		return QueenEvaluation.EVAL_QUEEN_MOBILITYFACTOR_OPENING;
-	}
+    @Override
+    public int getValue() {
+        return QueenEvaluation.EVAL_QUEEN_MOBILITYFACTOR_OPENING;
+    }
 
 }
