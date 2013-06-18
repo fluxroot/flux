@@ -25,18 +25,18 @@ package com.fluxchess.evaluation;
  */
 public final class EVAL_BISHOP_MOBILITY_BASE extends Parameter {
 
-	public EVAL_BISHOP_MOBILITY_BASE() {
-		super("EVAL_BISHOP_MOBILITY_BASE");
-	}
+    public EVAL_BISHOP_MOBILITY_BASE() {
+        super("EVAL_BISHOP_MOBILITY_BASE");
+    }
 
-	@Override
-	public void setValue(int value) {
-		BishopEvaluation.EVAL_BISHOP_MOBILITY_BASE = value;
-	}
+    @Override
+    public void setValue(int value) {
+        BishopEvaluation.EVAL_BISHOP_MOBILITY_BASE = value;
+    }
 
-	@Override
-	public int getValue() {
-		return BishopEvaluation.EVAL_BISHOP_MOBILITY_BASE;
-	}
+    @Override
+    public int getValue() {
+        return BishopEvaluation.EVAL_BISHOP_MOBILITY_BASE;
+    }
 
 }

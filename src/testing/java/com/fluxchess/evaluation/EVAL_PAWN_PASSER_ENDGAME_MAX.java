@@ -25,18 +25,18 @@ package com.fluxchess.evaluation;
  */
 public final class EVAL_PAWN_PASSER_ENDGAME_MAX extends Parameter {
 
-	public EVAL_PAWN_PASSER_ENDGAME_MAX() {
-		super("EVAL_PAWN_PASSER_ENDGAME_MAX");
-	}
+    public EVAL_PAWN_PASSER_ENDGAME_MAX() {
+        super("EVAL_PAWN_PASSER_ENDGAME_MAX");
+    }
 
-	@Override
-	public void setValue(int value) {
-		PawnPasserEvaluation.EVAL_PAWN_PASSER_ENDGAME_MAX = value;
-	}
+    @Override
+    public void setValue(int value) {
+        PawnPasserEvaluation.EVAL_PAWN_PASSER_ENDGAME_MAX = value;
+    }
 
-	@Override
-	public int getValue() {
-		return PawnPasserEvaluation.EVAL_PAWN_PASSER_ENDGAME_MAX;
-	}
+    @Override
+    public int getValue() {
+        return PawnPasserEvaluation.EVAL_PAWN_PASSER_ENDGAME_MAX;
+    }
 
 }

@@ -25,18 +25,18 @@ package com.fluxchess.evaluation;
  */
 public final class EVAL_QUEEN_SEVENTHRANK_ENDGAME extends Parameter {
 
-	public EVAL_QUEEN_SEVENTHRANK_ENDGAME() {
-		super("EVAL_QUEEN_SEVENTHRANK_ENDGAME");
-	}
+    public EVAL_QUEEN_SEVENTHRANK_ENDGAME() {
+        super("EVAL_QUEEN_SEVENTHRANK_ENDGAME");
+    }
 
-	@Override
-	public void setValue(int value) {
-		QueenEvaluation.EVAL_QUEEN_SEVENTHRANK_ENDGAME = value;
-	}
+    @Override
+    public void setValue(int value) {
+        QueenEvaluation.EVAL_QUEEN_SEVENTHRANK_ENDGAME = value;
+    }
 
-	@Override
-	public int getValue() {
-		return QueenEvaluation.EVAL_QUEEN_SEVENTHRANK_ENDGAME;
-	}
+    @Override
+    public int getValue() {
+        return QueenEvaluation.EVAL_QUEEN_SEVENTHRANK_ENDGAME;
+    }
 
 }

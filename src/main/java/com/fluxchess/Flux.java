@@ -57,315 +57,315 @@ import com.fluxchess.table.TranspositionTable;
  */
 public final class Flux extends AbstractEngine {
 
-	private Hex88Board board = null;
-	private TranspositionTable transpositionTable;
-	private EvaluationTable evaluationTable;
-	private PawnTable pawnTable;
-	private final int[] timeTable = new int[Search.MAX_HEIGHT + 1];
-	private Search search;
+    private Hex88Board board = null;
+    private TranspositionTable transpositionTable;
+    private EvaluationTable evaluationTable;
+    private PawnTable pawnTable;
+    private final int[] timeTable = new int[Search.MAX_HEIGHT + 1];
+    private Search search;
 
-	/**
-	 * Creates a new Flux.
-	 * 
-	 * @param communication the AbstractCommunication.
-	 */
-	public Flux(AbstractCommunication communication) {
-		super(communication);
+    /**
+     * Creates a new Flux.
+     *
+     * @param communication the AbstractCommunication.
+     */
+    public Flux(AbstractCommunication communication) {
+        super(communication);
 
-		// Set the protocol
-		ChessLogger.setProtocol(communication);
+        // Set the protocol
+        ChessLogger.setProtocol(communication);
 
-		// Transposition Table
-		int megabyteValue = Integer.parseInt(((Option) Configuration.configuration.get(Configuration.KEY_Hash)).defaultValue);;
-		int numberOfEntries = megabyteValue * 1024 * 1024 / TranspositionTable.ENTRYSIZE;
-		transpositionTable = new TranspositionTable(numberOfEntries);
-		
-		// Evaluation Table
-		megabyteValue = Integer.parseInt(((Option) Configuration.configuration.get(Configuration.KEY_HashEvaluation)).defaultValue);
-		numberOfEntries = megabyteValue * 1024 * 1024 / EvaluationTable.ENTRYSIZE;
-		evaluationTable = new EvaluationTable(numberOfEntries);
+        // Transposition Table
+        int megabyteValue = Integer.parseInt(((Option) Configuration.configuration.get(Configuration.KEY_Hash)).defaultValue);;
+        int numberOfEntries = megabyteValue * 1024 * 1024 / TranspositionTable.ENTRYSIZE;
+        transpositionTable = new TranspositionTable(numberOfEntries);
 
-		// Pawn Table
-		megabyteValue = Integer.parseInt(((Option) Configuration.configuration.get(Configuration.KEY_HashPawn)).defaultValue);
-		numberOfEntries = megabyteValue * 1024 * 1024 / PawnTable.ENTRYSIZE;
-		pawnTable = new PawnTable(numberOfEntries);
+        // Evaluation Table
+        megabyteValue = Integer.parseInt(((Option) Configuration.configuration.get(Configuration.KEY_HashEvaluation)).defaultValue);
+        numberOfEntries = megabyteValue * 1024 * 1024 / EvaluationTable.ENTRYSIZE;
+        evaluationTable = new EvaluationTable(numberOfEntries);
 
-		// Run GC
-		Runtime.getRuntime().gc();
+        // Pawn Table
+        megabyteValue = Integer.parseInt(((Option) Configuration.configuration.get(Configuration.KEY_HashPawn)).defaultValue);
+        numberOfEntries = megabyteValue * 1024 * 1024 / PawnTable.ENTRYSIZE;
+        pawnTable = new PawnTable(numberOfEntries);
 
-		// Create a new search
-		search = new Search(new Evaluation(evaluationTable, pawnTable), new Hex88Board(new GenericBoard(GenericBoard.STANDARDSETUP)), transpositionTable, new InformationTimer(communication, transpositionTable), timeTable);
-	}
-	
-	/**
-	 * The main function.
-	 * 
-	 * @param args not used.
-	 */
-	public static void main(String[] args) {
-		AbstractEngine engine = new Flux(new StandardIoCommunication());
-		engine.run();
-	}
+        // Run GC
+        Runtime.getRuntime().gc();
 
-	public void visit(EngineInitializeRequestCommand command) {
-		assert command != null;
-		
-		ChessLogger.getLogger().debug("Received Protocol command.");
-		
-		// Stop calculating
-		new EngineStopCalculatingCommand().accept(this);
+        // Create a new search
+        search = new Search(new Evaluation(evaluationTable, pawnTable), new Hex88Board(new GenericBoard(GenericBoard.STANDARDSETUP)), transpositionTable, new InformationTimer(communication, transpositionTable), timeTable);
+    }
 
-		// Load the configuration
-		Configuration.loadConfiguration();
+    /**
+     * The main function.
+     *
+     * @param args not used.
+     */
+    public static void main(String[] args) {
+        AbstractEngine engine = new Flux(new StandardIoCommunication());
+        engine.run();
+    }
 
-		// Transposition Table
-		int megabyteValue;
-		try {
-			megabyteValue = Integer.parseInt(((Option) Configuration.configuration.get(Configuration.KEY_Hash)).getValue());
-		} catch (NumberFormatException e) {
-			megabyteValue = Integer.parseInt(((Option) Configuration.configuration.get(Configuration.KEY_Hash)).defaultValue);;
-		}
-		int numberOfEntries = megabyteValue * 1024 * 1024 / TranspositionTable.ENTRYSIZE;
-		transpositionTable = new TranspositionTable(numberOfEntries);
-		
-		// Evaluation Table
-		try {
-			megabyteValue = Integer.parseInt(((Option) Configuration.configuration.get(Configuration.KEY_HashEvaluation)).getValue());;
-		} catch (NumberFormatException e) {
-			megabyteValue = Integer.parseInt(((Option) Configuration.configuration.get(Configuration.KEY_HashEvaluation)).defaultValue);
-		}
-		numberOfEntries = megabyteValue * 1024 * 1024 / EvaluationTable.ENTRYSIZE;
-		evaluationTable = new EvaluationTable(numberOfEntries);
+    public void visit(EngineInitializeRequestCommand command) {
+        assert command != null;
 
-		// Pawn Table
-		try {
-			megabyteValue = Integer.parseInt(((Option) Configuration.configuration.get(Configuration.KEY_HashPawn)).getValue());;
-		} catch (NumberFormatException e) {
-			megabyteValue = Integer.parseInt(((Option) Configuration.configuration.get(Configuration.KEY_HashPawn)).defaultValue);
-		}
-		numberOfEntries = megabyteValue * 1024 * 1024 / PawnTable.ENTRYSIZE;
-		pawnTable = new PawnTable(numberOfEntries);
+        ChessLogger.getLogger().debug("Received Protocol command.");
 
-		// Run GC
-		Runtime.getRuntime().gc();
-		
-		// Send the initialization commands
-		GuiInitializeAnswerCommand initializeCommand = new GuiInitializeAnswerCommand(Configuration.name, Configuration.author);
-		for (Iterator<Option> iter = Configuration.configuration.values().iterator(); iter.hasNext();) {
-			Option option = iter.next();
-			initializeCommand.addOption(option);
-		}
-		communication.send(initializeCommand);
-	}
+        // Stop calculating
+        new EngineStopCalculatingCommand().accept(this);
 
-	protected void quit() {
-		ChessLogger.getLogger().debug("Received Quit command.");
+        // Load the configuration
+        Configuration.loadConfiguration();
 
-		// Stop calculating
-		new EngineStopCalculatingCommand().accept(this);
-	}
+        // Transposition Table
+        int megabyteValue;
+        try {
+            megabyteValue = Integer.parseInt(((Option) Configuration.configuration.get(Configuration.KEY_Hash)).getValue());
+        } catch (NumberFormatException e) {
+            megabyteValue = Integer.parseInt(((Option) Configuration.configuration.get(Configuration.KEY_Hash)).defaultValue);;
+        }
+        int numberOfEntries = megabyteValue * 1024 * 1024 / TranspositionTable.ENTRYSIZE;
+        transpositionTable = new TranspositionTable(numberOfEntries);
 
-	public void visit(EngineReadyRequestCommand command) {
-		assert command != null;
-		
-		ChessLogger.getLogger().debug("Received ReadyRequest command.");
+        // Evaluation Table
+        try {
+            megabyteValue = Integer.parseInt(((Option) Configuration.configuration.get(Configuration.KEY_HashEvaluation)).getValue());;
+        } catch (NumberFormatException e) {
+            megabyteValue = Integer.parseInt(((Option) Configuration.configuration.get(Configuration.KEY_HashEvaluation)).defaultValue);
+        }
+        numberOfEntries = megabyteValue * 1024 * 1024 / EvaluationTable.ENTRYSIZE;
+        evaluationTable = new EvaluationTable(numberOfEntries);
 
-		// Send a pong back
-		communication.send(new GuiReadyAnswerCommand(command.token));
-	}
+        // Pawn Table
+        try {
+            megabyteValue = Integer.parseInt(((Option) Configuration.configuration.get(Configuration.KEY_HashPawn)).getValue());;
+        } catch (NumberFormatException e) {
+            megabyteValue = Integer.parseInt(((Option) Configuration.configuration.get(Configuration.KEY_HashPawn)).defaultValue);
+        }
+        numberOfEntries = megabyteValue * 1024 * 1024 / PawnTable.ENTRYSIZE;
+        pawnTable = new PawnTable(numberOfEntries);
 
-	public void visit(EngineDebugCommand command) {
-		assert command != null;
-		
-		ChessLogger.getLogger().debug("Received Debug command.");
+        // Run GC
+        Runtime.getRuntime().gc();
 
-		GuiInformationCommand infoCommand = new GuiInformationCommand();
+        // Send the initialization commands
+        GuiInitializeAnswerCommand initializeCommand = new GuiInitializeAnswerCommand(Configuration.name, Configuration.author);
+        for (Iterator<Option> iter = Configuration.configuration.values().iterator(); iter.hasNext();) {
+            Option option = iter.next();
+            initializeCommand.addOption(option);
+        }
+        communication.send(initializeCommand);
+    }
 
-		boolean state = ChessLogger.getDebug();
-		if (command.toggle) {
-			state = !state;
-		} else {
-			state = command.debug;
-		}
+    protected void quit() {
+        ChessLogger.getLogger().debug("Received Quit command.");
 
-		if (state) {
-			infoCommand.setString("Turning on debugging mode");
-		} else {
-			infoCommand.setString("Turning off debugging mode");
-		}
-		communication.send(infoCommand);
+        // Stop calculating
+        new EngineStopCalculatingCommand().accept(this);
+    }
 
-		ChessLogger.setDebug(state);
-	}
+    public void visit(EngineReadyRequestCommand command) {
+        assert command != null;
 
-	public void visit(EngineNewGameCommand command) {
-		assert command != null;
-		
-		ChessLogger.getLogger().debug("Received New command.");
+        ChessLogger.getLogger().debug("Received ReadyRequest command.");
 
-		// Stop calculating
-		new EngineStopCalculatingCommand().accept(this);
-		
-		// Clear the hash table
-		transpositionTable.clear();
-		
-		// Clear time table
-		Arrays.fill(timeTable, 0);
-	}
+        // Send a pong back
+        communication.send(new GuiReadyAnswerCommand(command.token));
+    }
 
-	public void visit(EngineAnalyzeCommand command) {
-		assert command != null;
-		
-		ChessLogger.getLogger().debug("Received Analyze command.");
+    public void visit(EngineDebugCommand command) {
+        assert command != null;
 
-		if (!search.isStopped()) {
-			search.stop();
-		}
+        ChessLogger.getLogger().debug("Received Debug command.");
 
-		// Create a new board
-		board = new Hex88Board(command.board);
-		
-		// Make all moves
-		List<GenericMove> moveList = command.moveList;
-		for (GenericMove move : moveList) {
-			int newMove = IntMove.convertMove(move, board);
-			board.makeMove(newMove);
-		}
-	}
+        GuiInformationCommand infoCommand = new GuiInformationCommand();
 
-	public void visit(EnginePonderHitCommand command) {
-		assert command != null;
-		
-		ChessLogger.getLogger().debug("Received PonderHit command.");
+        boolean state = ChessLogger.getDebug();
+        if (command.toggle) {
+            state = !state;
+        } else {
+            state = command.debug;
+        }
 
-		if (!search.isStopped()) {
-			search.ponderhit();
-		} else {
-			ChessLogger.getLogger().debug("There is no search active.");
-		}
-	}
+        if (state) {
+            infoCommand.setString("Turning on debugging mode");
+        } else {
+            infoCommand.setString("Turning off debugging mode");
+        }
+        communication.send(infoCommand);
 
-	public void visit(EngineStartCalculatingCommand command) {
-		assert command != null;
-		
-		ChessLogger.getLogger().debug("Received StartCalculating command.");
+        ChessLogger.setDebug(state);
+    }
 
-		if (board != null) {
-			if (search.isStopped()) {
-				// Create a new search
-				search = new Search(new Evaluation(evaluationTable, pawnTable), board, transpositionTable, new InformationTimer(communication, transpositionTable), timeTable);
+    public void visit(EngineNewGameCommand command) {
+        assert command != null;
 
-				// Set all search parameters
-				if (command.getDepth() != null && command.getDepth() > 0) {
-					search.setSearchDepth(command.getDepth());
-				}
-				if (command.getNodes() != null && command.getNodes() > 0) {
-					search.setSearchNodes(command.getNodes());
-				}
-				if (command.getMoveTime() != null && command.getMoveTime() > 0) {
-					search.setSearchTime(command.getMoveTime());
-				}
-				for (GenericColor side : GenericColor.values()) {
-					if (command.getClock(side) != null && command.getClock(side) > 0) {
-						search.setSearchClock(IntColor.valueOfColor(side), command.getClock(side));
-					}
-					if (command.getClockIncrement(side) != null && command.getClockIncrement(side) > 0) {
-						search.setSearchClockIncrement(IntColor.valueOfColor(side), command.getClockIncrement(side));
-					}
-				}
-				if (command.getMovesToGo() != null && command.getMovesToGo() > 0) {
-					search.setSearchMovesToGo(command.getMovesToGo());
-				}
-				if (command.getInfinite()) {
-					search.setSearchInfinite();
-				}
-				if (command.getPonder()) {
-					search.setSearchPonder();
-				}
-				if (command.getSearchMoveList() != null) {
-					search.setSearchMoveList(command.getSearchMoveList());
-				}
+        ChessLogger.getLogger().debug("Received New command.");
 
-				// Go...
-				search.start();
-				board = null;
-			} else {
-				ChessLogger.getLogger().debug("There is already a search running.");
-			}
-		} else {
-			ChessLogger.getLogger().debug("Please do a position command first.");
-		}
-	}
+        // Stop calculating
+        new EngineStopCalculatingCommand().accept(this);
 
-	public void visit(EngineStopCalculatingCommand command) {
-		assert command != null;
-		
-		ChessLogger.getLogger().debug("Received StopCalculating command.");
+        // Clear the hash table
+        transpositionTable.clear();
 
-		if (!search.isStopped()) {
-			// Stop the search
-			search.stop();
-		} else {
-			ChessLogger.getLogger().debug("There is no search active.");
-		}
-	}
+        // Clear time table
+        Arrays.fill(timeTable, 0);
+    }
 
-	public void visit(EngineSetOptionCommand command) {
-		assert command != null;
+    public void visit(EngineAnalyzeCommand command) {
+        assert command != null;
 
-		Configuration.setOption(command.name, command.value);
+        ChessLogger.getLogger().debug("Received Analyze command.");
 
-		ChessLogger.getLogger().debug("Received SetOption command.");
+        if (!search.isStopped()) {
+            search.stop();
+        }
 
-		if (command.name.equalsIgnoreCase(Configuration.KEY_ClearHash)) {
-			// Clear our hash table
-			transpositionTable.clear();
-		} else if (command.name.equalsIgnoreCase(Configuration.KEY_Hash)) {
-			// Set the new size of the hash table
-			int megabyteValue;
-			try {
-				megabyteValue = Integer.parseInt(((Option) Configuration.configuration.get(Configuration.KEY_Hash)).getValue());
-			} catch (NumberFormatException e) {
-				megabyteValue = Integer.parseInt(((Option) Configuration.configuration.get(Configuration.KEY_Hash)).defaultValue);;
-				ChessLogger.getLogger().debug(e.getMessage());
-			}
-			ChessLogger.getLogger().debug("Using Transposition Table size of " + megabyteValue + " MB");
-			int numberOfEntries = megabyteValue * 1024 * 1024 / TranspositionTable.ENTRYSIZE;
-			transpositionTable = new TranspositionTable(numberOfEntries);
+        // Create a new board
+        board = new Hex88Board(command.board);
 
-			// Run GC
-			Runtime.getRuntime().gc();
-		} else if (command.name.equalsIgnoreCase(Configuration.KEY_HashEvaluation)) {
-			// Set the new size of the evaluation hash table
-			int megabyteValue;
-			try {
-				megabyteValue = Integer.parseInt(((Option) Configuration.configuration.get(Configuration.KEY_HashEvaluation)).getValue());;
-			} catch (NumberFormatException e) {
-				megabyteValue = Integer.parseInt(((Option) Configuration.configuration.get(Configuration.KEY_HashEvaluation)).defaultValue);
-				ChessLogger.getLogger().debug(e.getMessage());
-			}
-			ChessLogger.getLogger().debug("Using Evaluation Table size of " + megabyteValue + " MB");
-			int numberOfEntries = megabyteValue * 1024 * 1024 / EvaluationTable.ENTRYSIZE;
-			evaluationTable = new EvaluationTable(numberOfEntries);
+        // Make all moves
+        List<GenericMove> moveList = command.moveList;
+        for (GenericMove move : moveList) {
+            int newMove = IntMove.convertMove(move, board);
+            board.makeMove(newMove);
+        }
+    }
 
-			// Run GC
-			Runtime.getRuntime().gc();
-		} else if (command.name.equalsIgnoreCase(Configuration.KEY_HashPawn)) {
-			// Set the new size of the pawn hash table
-			int megabyteValue;
-			try {
-				megabyteValue = Integer.parseInt(((Option) Configuration.configuration.get(Configuration.KEY_HashPawn)).getValue());;
-			} catch (NumberFormatException e) {
-				megabyteValue = Integer.parseInt(((Option) Configuration.configuration.get(Configuration.KEY_HashPawn)).defaultValue);
-				ChessLogger.getLogger().debug(e.getMessage());
-			}
-			ChessLogger.getLogger().debug("Using Pawn Table size of " + megabyteValue + " MB");
-			int numberOfEntries = megabyteValue * 1024 * 1024 / PawnTable.ENTRYSIZE;
-			pawnTable = new PawnTable(numberOfEntries);
+    public void visit(EnginePonderHitCommand command) {
+        assert command != null;
 
-			// Run GC
-			Runtime.getRuntime().gc();
-		}
-	}
+        ChessLogger.getLogger().debug("Received PonderHit command.");
+
+        if (!search.isStopped()) {
+            search.ponderhit();
+        } else {
+            ChessLogger.getLogger().debug("There is no search active.");
+        }
+    }
+
+    public void visit(EngineStartCalculatingCommand command) {
+        assert command != null;
+
+        ChessLogger.getLogger().debug("Received StartCalculating command.");
+
+        if (board != null) {
+            if (search.isStopped()) {
+                // Create a new search
+                search = new Search(new Evaluation(evaluationTable, pawnTable), board, transpositionTable, new InformationTimer(communication, transpositionTable), timeTable);
+
+                // Set all search parameters
+                if (command.getDepth() != null && command.getDepth() > 0) {
+                    search.setSearchDepth(command.getDepth());
+                }
+                if (command.getNodes() != null && command.getNodes() > 0) {
+                    search.setSearchNodes(command.getNodes());
+                }
+                if (command.getMoveTime() != null && command.getMoveTime() > 0) {
+                    search.setSearchTime(command.getMoveTime());
+                }
+                for (GenericColor side : GenericColor.values()) {
+                    if (command.getClock(side) != null && command.getClock(side) > 0) {
+                        search.setSearchClock(IntColor.valueOfColor(side), command.getClock(side));
+                    }
+                    if (command.getClockIncrement(side) != null && command.getClockIncrement(side) > 0) {
+                        search.setSearchClockIncrement(IntColor.valueOfColor(side), command.getClockIncrement(side));
+                    }
+                }
+                if (command.getMovesToGo() != null && command.getMovesToGo() > 0) {
+                    search.setSearchMovesToGo(command.getMovesToGo());
+                }
+                if (command.getInfinite()) {
+                    search.setSearchInfinite();
+                }
+                if (command.getPonder()) {
+                    search.setSearchPonder();
+                }
+                if (command.getSearchMoveList() != null) {
+                    search.setSearchMoveList(command.getSearchMoveList());
+                }
+
+                // Go...
+                search.start();
+                board = null;
+            } else {
+                ChessLogger.getLogger().debug("There is already a search running.");
+            }
+        } else {
+            ChessLogger.getLogger().debug("Please do a position command first.");
+        }
+    }
+
+    public void visit(EngineStopCalculatingCommand command) {
+        assert command != null;
+
+        ChessLogger.getLogger().debug("Received StopCalculating command.");
+
+        if (!search.isStopped()) {
+            // Stop the search
+            search.stop();
+        } else {
+            ChessLogger.getLogger().debug("There is no search active.");
+        }
+    }
+
+    public void visit(EngineSetOptionCommand command) {
+        assert command != null;
+
+        Configuration.setOption(command.name, command.value);
+
+        ChessLogger.getLogger().debug("Received SetOption command.");
+
+        if (command.name.equalsIgnoreCase(Configuration.KEY_ClearHash)) {
+            // Clear our hash table
+            transpositionTable.clear();
+        } else if (command.name.equalsIgnoreCase(Configuration.KEY_Hash)) {
+            // Set the new size of the hash table
+            int megabyteValue;
+            try {
+                megabyteValue = Integer.parseInt(((Option) Configuration.configuration.get(Configuration.KEY_Hash)).getValue());
+            } catch (NumberFormatException e) {
+                megabyteValue = Integer.parseInt(((Option) Configuration.configuration.get(Configuration.KEY_Hash)).defaultValue);;
+                ChessLogger.getLogger().debug(e.getMessage());
+            }
+            ChessLogger.getLogger().debug("Using Transposition Table size of " + megabyteValue + " MB");
+            int numberOfEntries = megabyteValue * 1024 * 1024 / TranspositionTable.ENTRYSIZE;
+            transpositionTable = new TranspositionTable(numberOfEntries);
+
+            // Run GC
+            Runtime.getRuntime().gc();
+        } else if (command.name.equalsIgnoreCase(Configuration.KEY_HashEvaluation)) {
+            // Set the new size of the evaluation hash table
+            int megabyteValue;
+            try {
+                megabyteValue = Integer.parseInt(((Option) Configuration.configuration.get(Configuration.KEY_HashEvaluation)).getValue());;
+            } catch (NumberFormatException e) {
+                megabyteValue = Integer.parseInt(((Option) Configuration.configuration.get(Configuration.KEY_HashEvaluation)).defaultValue);
+                ChessLogger.getLogger().debug(e.getMessage());
+            }
+            ChessLogger.getLogger().debug("Using Evaluation Table size of " + megabyteValue + " MB");
+            int numberOfEntries = megabyteValue * 1024 * 1024 / EvaluationTable.ENTRYSIZE;
+            evaluationTable = new EvaluationTable(numberOfEntries);
+
+            // Run GC
+            Runtime.getRuntime().gc();
+        } else if (command.name.equalsIgnoreCase(Configuration.KEY_HashPawn)) {
+            // Set the new size of the pawn hash table
+            int megabyteValue;
+            try {
+                megabyteValue = Integer.parseInt(((Option) Configuration.configuration.get(Configuration.KEY_HashPawn)).getValue());;
+            } catch (NumberFormatException e) {
+                megabyteValue = Integer.parseInt(((Option) Configuration.configuration.get(Configuration.KEY_HashPawn)).defaultValue);
+                ChessLogger.getLogger().debug(e.getMessage());
+            }
+            ChessLogger.getLogger().debug("Using Pawn Table size of " + megabyteValue + " MB");
+            int numberOfEntries = megabyteValue * 1024 * 1024 / PawnTable.ENTRYSIZE;
+            pawnTable = new PawnTable(numberOfEntries);
+
+            // Run GC
+            Runtime.getRuntime().gc();
+        }
+    }
 
 }

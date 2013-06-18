@@ -32,43 +32,43 @@ import com.fluxchess.board.PositionList;
  */
 public final class PawnTableEvaluation {
 
-	// Our pawn structure table. 8 + 2 -> 2 Sentinels for each side.
-	public final byte[][] pawnTable = new byte[IntColor.ARRAY_DIMENSION][10];
-	
-	private static final PawnTableEvaluation instance = new PawnTableEvaluation();
-	
-	private PawnTableEvaluation() {
-	}
+    // Our pawn structure table. 8 + 2 -> 2 Sentinels for each side.
+    public final byte[][] pawnTable = new byte[IntColor.ARRAY_DIMENSION][10];
 
-	public static PawnTableEvaluation getInstance() {
-		return instance;
-	}
-	
-	public void createPawnTable(int myColor, Hex88Board board) {
-		assert myColor != IntColor.NOCOLOR;
+    private static final PawnTableEvaluation instance = new PawnTableEvaluation();
 
-		// Zero our table
-		Arrays.fill(pawnTable[myColor], (byte) 0);
-		
-		// Initialize
-		byte[] myPawnTable = pawnTable[myColor];
-		PositionList myPawnList = board.pawnList[myColor];
+    private PawnTableEvaluation() {
+    }
 
-		// Evaluate each pawn
-		for (int i = 0; i < myPawnList.size; i++) {
-			int pawnPosition = myPawnList.position[i];
-			int pawnFile = IntPosition.getFile(pawnPosition);
-			int pawnRank = IntPosition.getRank(pawnPosition);
-			
-			// Fill pawn table
-			int tableFile = pawnFile + 1;
-			if (myPawnTable[tableFile] == 0
-					|| (myPawnTable[tableFile] > pawnRank && myColor == IntColor.WHITE)
-					|| (myPawnTable[tableFile] < pawnRank && myColor == IntColor.BLACK)) {
-				// Set the rank to the lowest pawn rank
-				myPawnTable[tableFile] = (byte) pawnRank;
-			}
-		}
-	}
+    public static PawnTableEvaluation getInstance() {
+        return instance;
+    }
+
+    public void createPawnTable(int myColor, Hex88Board board) {
+        assert myColor != IntColor.NOCOLOR;
+
+        // Zero our table
+        Arrays.fill(pawnTable[myColor], (byte) 0);
+
+        // Initialize
+        byte[] myPawnTable = pawnTable[myColor];
+        PositionList myPawnList = board.pawnList[myColor];
+
+        // Evaluate each pawn
+        for (int i = 0; i < myPawnList.size; i++) {
+            int pawnPosition = myPawnList.position[i];
+            int pawnFile = IntPosition.getFile(pawnPosition);
+            int pawnRank = IntPosition.getRank(pawnPosition);
+
+            // Fill pawn table
+            int tableFile = pawnFile + 1;
+            if (myPawnTable[tableFile] == 0
+                    || (myPawnTable[tableFile] > pawnRank && myColor == IntColor.WHITE)
+                    || (myPawnTable[tableFile] < pawnRank && myColor == IntColor.BLACK)) {
+                // Set the rank to the lowest pawn rank
+                myPawnTable[tableFile] = (byte) pawnRank;
+            }
+        }
+    }
 
 }
