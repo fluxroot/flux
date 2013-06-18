@@ -25,18 +25,18 @@ package com.fluxchess.evaluation;
  */
 public final class EVAL_BISHOP_MOBILITYFACTOR extends Parameter {
 
-	public EVAL_BISHOP_MOBILITYFACTOR() {
-		super("EVAL_BISHOP_MOBILITYFACTOR");
-	}
+    public EVAL_BISHOP_MOBILITYFACTOR() {
+        super("EVAL_BISHOP_MOBILITYFACTOR");
+    }
 
-	@Override
-	public void setValue(int value) {
-		BishopEvaluation.EVAL_BISHOP_MOBILITYFACTOR = value;
-	}
+    @Override
+    public void setValue(int value) {
+        BishopEvaluation.EVAL_BISHOP_MOBILITYFACTOR = value;
+    }
 
-	@Override
-	public int getValue() {
-		return BishopEvaluation.EVAL_BISHOP_MOBILITYFACTOR;
-	}
+    @Override
+    public int getValue() {
+        return BishopEvaluation.EVAL_BISHOP_MOBILITYFACTOR;
+    }
 
 }

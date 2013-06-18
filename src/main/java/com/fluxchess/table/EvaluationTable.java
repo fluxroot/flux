@@ -29,75 +29,75 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  */
 public final class EvaluationTable {
 
-	// Size of one evaluation entry
-	public static final int ENTRYSIZE = 28;
+    // Size of one evaluation entry
+    public static final int ENTRYSIZE = 28;
 
-	private final int size;
-	
-	private final EvaluationTableEntry[] entry;
-	
-	private final ReadWriteLock lock;
-	private final Lock readLock;
-	private final Lock writeLock;
-	
-	public EvaluationTable(int size) {
-		assert size >= 1;
+    private final int size;
 
-		this.size = size;
+    private final EvaluationTableEntry[] entry;
 
-		// Initialize entry
-		entry = new EvaluationTableEntry[size];
-		for (int i = 0; i < entry.length; i++) {
-			entry[i] = new EvaluationTableEntry();
-		}
-		
-		// Initialize locks
-		lock = new ReentrantReadWriteLock();
-		readLock = lock.readLock();
-		writeLock = lock.writeLock();
-	}
+    private final ReadWriteLock lock;
+    private final Lock readLock;
+    private final Lock writeLock;
 
-	/**
-	 * Puts a zobrist code and evaluation value into the table.
-	 * 
-	 * @param zobristCode the zobrist code.
-	 * @param value the evaluation value.
-	 */
-	public void put(long zobristCode, int value) {
-		int position = (int) (zobristCode % size);
-		
-		writeLock.lock();
-		try {
-			EvaluationTableEntry currentEntry = entry[position];
+    public EvaluationTable(int size) {
+        assert size >= 1;
 
-			currentEntry.zobristCode = zobristCode;
-			currentEntry.evaluation = value;
-		} finally {
-			writeLock.unlock();
-		}
-	}
+        this.size = size;
 
-	/**
-	 * Returns the evaluation table entry given the zobrist code.
-	 * 
-	 * @param zobristCode the zobrist code.
-	 * @return the evaluation table entry or null if there exists no entry.
-	 */
-	public EvaluationTableEntry get(long zobristCode) {
-		int position = (int) (zobristCode % size);
-		
-		readLock.lock();
-		try {
-			EvaluationTableEntry currentEntry = entry[position];
+        // Initialize entry
+        entry = new EvaluationTableEntry[size];
+        for (int i = 0; i < entry.length; i++) {
+            entry[i] = new EvaluationTableEntry();
+        }
 
-			if (currentEntry.zobristCode == zobristCode) {
-				return currentEntry;
-			} else {
-				return null;
-			}
-		} finally {
-			readLock.unlock();
-		}
-	}
-	
+        // Initialize locks
+        lock = new ReentrantReadWriteLock();
+        readLock = lock.readLock();
+        writeLock = lock.writeLock();
+    }
+
+    /**
+     * Puts a zobrist code and evaluation value into the table.
+     *
+     * @param zobristCode the zobrist code.
+     * @param value the evaluation value.
+     */
+    public void put(long zobristCode, int value) {
+        int position = (int) (zobristCode % size);
+
+        writeLock.lock();
+        try {
+            EvaluationTableEntry currentEntry = entry[position];
+
+            currentEntry.zobristCode = zobristCode;
+            currentEntry.evaluation = value;
+        } finally {
+            writeLock.unlock();
+        }
+    }
+
+    /**
+     * Returns the evaluation table entry given the zobrist code.
+     *
+     * @param zobristCode the zobrist code.
+     * @return the evaluation table entry or null if there exists no entry.
+     */
+    public EvaluationTableEntry get(long zobristCode) {
+        int position = (int) (zobristCode % size);
+
+        readLock.lock();
+        try {
+            EvaluationTableEntry currentEntry = entry[position];
+
+            if (currentEntry.zobristCode == zobristCode) {
+                return currentEntry;
+            } else {
+                return null;
+            }
+        } finally {
+            readLock.unlock();
+        }
+    }
+
 }

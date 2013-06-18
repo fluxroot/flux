@@ -32,34 +32,34 @@ import com.fluxchess.table.EvaluationTable;
  */
 public class EvaluationTableTest {
 
-	@Test
-	public void testEvaluationTable() {
-		EvaluationTable table = new EvaluationTable(1024);
-		
-		table.put(1, 1);
-		assertNotNull(table.get(1));
-		assertEquals(1, table.get(1).evaluation);
+    @Test
+    public void testEvaluationTable() {
+        EvaluationTable table = new EvaluationTable(1024);
 
-		table.put(2, 2);
-		assertNotNull(table.get(2));
-		assertEquals(2, table.get(2).evaluation);
-	}
+        table.put(1, 1);
+        assertNotNull(table.get(1));
+        assertEquals(1, table.get(1).evaluation);
 
-	@Test
-	public void testSize() {
-		System.out.println("Testing Evaluation Table size:");
-		int[] megabytes = { 4, 8, 16, 32, 64 };
-		for (int i : megabytes) {
-			int numberOfEntries = i * 1024 * 1024 / EvaluationTable.ENTRYSIZE;
+        table.put(2, 2);
+        assertNotNull(table.get(2));
+        assertEquals(2, table.get(2).evaluation);
+    }
 
-			System.gc();
-			long usedMemoryBefore = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
-			new EvaluationTable(numberOfEntries);
-			long usedMemoryAfter = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+    @Test
+    public void testSize() {
+        System.out.println("Testing Evaluation Table size:");
+        int[] megabytes = { 4, 8, 16, 32, 64 };
+        for (int i : megabytes) {
+            int numberOfEntries = i * 1024 * 1024 / EvaluationTable.ENTRYSIZE;
 
-			long hashAllocation = (usedMemoryAfter - usedMemoryBefore) / 1024 / 1024;
-			System.out.println("Evaluation Table size " + i + " = " + hashAllocation);
-		}
-	}
+            System.gc();
+            long usedMemoryBefore = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+            new EvaluationTable(numberOfEntries);
+            long usedMemoryAfter = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+
+            long hashAllocation = (usedMemoryAfter - usedMemoryBefore) / 1024 / 1024;
+            System.out.println("Evaluation Table size " + i + " = " + hashAllocation);
+        }
+    }
 
 }

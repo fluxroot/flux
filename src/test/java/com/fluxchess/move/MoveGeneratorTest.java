@@ -44,256 +44,256 @@ import com.fluxchess.table.KillerTable;
  */
 public class MoveGeneratorTest {
 
-	private TestPerftTable table = new TestPerftTable();
-	
-	@Test
-	public void testSpecialPerft() {
-		// Setup a new board from fen
-		GenericBoard board;
-		try {
-			board = new GenericBoard("1k6/8/8/5pP1/4K1P1/8/8/8 w - f6");
-			Hex88Board testBoard = new Hex88Board(board);
-			new MoveSee(testBoard);
-			table.increaseAge();
+    private TestPerftTable table = new TestPerftTable();
 
-//			testBoard.makeMove(IntMove.createMove(IntMove.NORMAL, IntPosition.d2, IntPosition.c1, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN));
-//			testBoard.makeMove(IntMove.createMove(IntMove.NORMAL, IntPosition.e7, IntPosition.d6, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN));
-//			testBoard.makeMove(IntMove.createMove(IntMove.NORMAL, IntPosition.e1, IntPosition.d1, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN));
-//			testBoard.makeMove(IntMove.createMove(IntMove.PAWNDOUBLE, IntPosition.c7, IntPosition.c5, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN));
-			int result = miniMax(testBoard, new MoveGenerator(testBoard, new KillerTable(), new HistoryTable()), 5, 5);
-			System.out.println(result);
-		} catch (IllegalNotationException e) {
-			fail();
-		}
-	}
+    @Test
+    public void testSpecialPerft() {
+        // Setup a new board from fen
+        GenericBoard board;
+        try {
+            board = new GenericBoard("1k6/8/8/5pP1/4K1P1/8/8/8 w - f6");
+            Hex88Board testBoard = new Hex88Board(board);
+            new MoveSee(testBoard);
+            table.increaseAge();
 
-	@Test
-	public void testPerft() {
-		for (int i = 1; i < 4; i++) {
-//		for (int i = 1; i < 7; i++) {
-			try {
-				BufferedReader file = null;
-				try {
-					file = new BufferedReader(new FileReader("perftsuite.epd"));
-				} catch (FileNotFoundException e) {
-					file = new BufferedReader(new FileReader("src/test/resources/perftsuite.epd"));
-				}
+//          testBoard.makeMove(IntMove.createMove(IntMove.NORMAL, IntPosition.d2, IntPosition.c1, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN));
+//          testBoard.makeMove(IntMove.createMove(IntMove.NORMAL, IntPosition.e7, IntPosition.d6, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN));
+//          testBoard.makeMove(IntMove.createMove(IntMove.NORMAL, IntPosition.e1, IntPosition.d1, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN));
+//          testBoard.makeMove(IntMove.createMove(IntMove.PAWNDOUBLE, IntPosition.c7, IntPosition.c5, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN));
+            int result = miniMax(testBoard, new MoveGenerator(testBoard, new KillerTable(), new HistoryTable()), 5, 5);
+            System.out.println(result);
+        } catch (IllegalNotationException e) {
+            fail();
+        }
+    }
 
-				String line = file.readLine();
-				while (line != null) {
-					String[] tokens = line.split(";");
-					
-					// Setup a new board from fen
-					GenericBoard board = new GenericBoard(tokens[0].trim());
+    @Test
+    public void testPerft() {
+        for (int i = 1; i < 4; i++) {
+//      for (int i = 1; i < 7; i++) {
+            try {
+                BufferedReader file = null;
+                try {
+                    file = new BufferedReader(new FileReader("perftsuite.epd"));
+                } catch (FileNotFoundException e) {
+                    file = new BufferedReader(new FileReader("src/test/resources/perftsuite.epd"));
+                }
 
-					if (tokens.length > i) {
-						String[] data = tokens[i].trim().split(" ");
-						int depth = Integer.parseInt(data[0].substring(1));
-						int nodesNumber = Integer.parseInt(data[1]);
+                String line = file.readLine();
+                while (line != null) {
+                    String[] tokens = line.split(";");
 
-						Hex88Board testBoard = new Hex88Board(board);
-						new MoveSee(testBoard);
-						table.increaseAge();
+                    // Setup a new board from fen
+                    GenericBoard board = new GenericBoard(tokens[0].trim());
 
-						System.out.print("Testing " + tokens[0].trim() + " depth " + depth + " with nodes number " + nodesNumber + ": ");
-						long startTime = System.currentTimeMillis();
-						int result = miniMax(testBoard, new MoveGenerator(testBoard, new KillerTable(), new HistoryTable()), depth, depth);
-						long endTime = System.currentTimeMillis();
-						System.out.println(endTime - startTime);
-						assertEquals(tokens[0].trim(), nodesNumber, result);
-					}
+                    if (tokens.length > i) {
+                        String[] data = tokens[i].trim().split(" ");
+                        int depth = Integer.parseInt(data[0].substring(1));
+                        int nodesNumber = Integer.parseInt(data[1]);
 
-					line = file.readLine();
-				}
-			} catch (IOException e) {
-				fail();
-			} catch (IllegalNotationException e) {
-				fail();
-			}
-		}
-	}
+                        Hex88Board testBoard = new Hex88Board(board);
+                        new MoveSee(testBoard);
+                        table.increaseAge();
 
-	private int miniMax(Hex88Board board, MoveGenerator moveGenerator, int depth, int maxDepth) {
-		if (depth == 0) {
-			return 1;
-		}
+                        System.out.print("Testing " + tokens[0].trim() + " depth " + depth + " with nodes number " + nodesNumber + ": ");
+                        long startTime = System.currentTimeMillis();
+                        int result = miniMax(testBoard, new MoveGenerator(testBoard, new KillerTable(), new HistoryTable()), depth, depth);
+                        long endTime = System.currentTimeMillis();
+                        System.out.println(endTime - startTime);
+                        assertEquals(tokens[0].trim(), nodesNumber, result);
+                    }
 
-		int totalNodes = table.get(board.zobristCode);
-		if (totalNodes > 0) {
-			return totalNodes;
-		}
-		
-		Attack attack = board.getAttack(board.activeColor);
-		moveGenerator.initializeMain(attack, 0, IntMove.NOMOVE);
+                    line = file.readLine();
+                }
+            } catch (IOException e) {
+                fail();
+            } catch (IllegalNotationException e) {
+                fail();
+            }
+        }
+    }
 
-		int nodes = 0;
-		int move = moveGenerator.getNextMove();
-		while (move != IntMove.NOMOVE) {
-			boolean isCheckingMove = board.isCheckingMove(move);
-			GenericBoard oldBoard = board.getBoard();
-			
-			int captureSquare = board.captureSquare;
-			board.makeMove(move);
-			boolean isCheckingMoveReal = board.getAttack(board.activeColor).isCheck();
-			assertEquals(oldBoard.toString() + ", " + IntMove.toGenericMove(move).toString(), isCheckingMoveReal, isCheckingMove);
-			nodes = miniMax(board, moveGenerator, depth - 1, maxDepth);
-			board.undoMove(move);
-			assert captureSquare == board.captureSquare;
-			
-//			if (depth == maxDepth) {
-//				System.out.println(IntMove.toGenericMove(move).toLongAlgebraicNotation() + ": " + nodes);
-//			}
-			totalNodes += nodes;
-			move = moveGenerator.getNextMove();
-		}
+    private int miniMax(Hex88Board board, MoveGenerator moveGenerator, int depth, int maxDepth) {
+        if (depth == 0) {
+            return 1;
+        }
 
-		moveGenerator.destroy();
+        int totalNodes = table.get(board.zobristCode);
+        if (totalNodes > 0) {
+            return totalNodes;
+        }
 
-		table.put(board.zobristCode, totalNodes);
-		
-		return totalNodes;
-	}
+        Attack attack = board.getAttack(board.activeColor);
+        moveGenerator.initializeMain(attack, 0, IntMove.NOMOVE);
 
-	@Test
-	public void testSpecialQuiescentCheckingMoves() {
-		// Setup a new board from fen
-		GenericBoard board;
-		try {
-			board = new GenericBoard("8/8/3K4/3Nn3/3nN3/4k3/8/8 b - - 0 1");
-			Hex88Board testBoard = new Hex88Board(board);
+        int nodes = 0;
+        int move = moveGenerator.getNextMove();
+        while (move != IntMove.NOMOVE) {
+            boolean isCheckingMove = board.isCheckingMove(move);
+            GenericBoard oldBoard = board.getBoard();
 
-			miniMaxQuiescentCheckingMoves(testBoard, new MoveGenerator(testBoard, new KillerTable(), new HistoryTable()), 3, 3);
-		} catch (IllegalNotationException e) {
-			fail();
-		}
-	}
+            int captureSquare = board.captureSquare;
+            board.makeMove(move);
+            boolean isCheckingMoveReal = board.getAttack(board.activeColor).isCheck();
+            assertEquals(oldBoard.toString() + ", " + IntMove.toGenericMove(move).toString(), isCheckingMoveReal, isCheckingMove);
+            nodes = miniMax(board, moveGenerator, depth - 1, maxDepth);
+            board.undoMove(move);
+            assert captureSquare == board.captureSquare;
 
-	@Test
-	public void testQuiescentCheckingMoves() {
-		for (int i = 1; i < 3; i++) {
-//		for (int i = 1; i < 7; i++) {
-			try {
-				BufferedReader file = null;
-				try {
-					file = new BufferedReader(new FileReader("perftsuite.epd"));
-				} catch (FileNotFoundException e) {
-					file = new BufferedReader(new FileReader("src/test/resources/perftsuite.epd"));
-				}
+//          if (depth == maxDepth) {
+//              System.out.println(IntMove.toGenericMove(move).toLongAlgebraicNotation() + ": " + nodes);
+//          }
+            totalNodes += nodes;
+            move = moveGenerator.getNextMove();
+        }
 
-				String line = file.readLine();
-				while (line != null) {
-					String[] tokens = line.split(";");
-					
-					// Setup a new board from fen
-					GenericBoard board = new GenericBoard(tokens[0].trim());
+        moveGenerator.destroy();
 
-					if (tokens.length > i) {
-						String[] data = tokens[i].trim().split(" ");
-						int depth = Integer.parseInt(data[0].substring(1));
-						int nodesNumber = Integer.parseInt(data[1]);
+        table.put(board.zobristCode, totalNodes);
 
-						Hex88Board testBoard = new Hex88Board(board);
-						new MoveSee(testBoard);
+        return totalNodes;
+    }
 
-						System.out.println("Testing " + tokens[0].trim() + " depth " + depth + " with nodes number " + nodesNumber + ":");
-						miniMaxQuiescentCheckingMoves(testBoard, new MoveGenerator(testBoard, new KillerTable(), new HistoryTable()), depth, depth);
-					}
+    @Test
+    public void testSpecialQuiescentCheckingMoves() {
+        // Setup a new board from fen
+        GenericBoard board;
+        try {
+            board = new GenericBoard("8/8/3K4/3Nn3/3nN3/4k3/8/8 b - - 0 1");
+            Hex88Board testBoard = new Hex88Board(board);
 
-					line = file.readLine();
-				}
-			} catch (IOException e) {
-				fail();
-			} catch (IllegalNotationException e) {
-				fail();
-			}
-		}
-	}
+            miniMaxQuiescentCheckingMoves(testBoard, new MoveGenerator(testBoard, new KillerTable(), new HistoryTable()), 3, 3);
+        } catch (IllegalNotationException e) {
+            fail();
+        }
+    }
 
-	private void miniMaxQuiescentCheckingMoves(Hex88Board board, MoveGenerator moveGenerator, int depth, int maxDepth) {
-		if (depth == 0) {
-			return;
-		}
+    @Test
+    public void testQuiescentCheckingMoves() {
+        for (int i = 1; i < 3; i++) {
+//      for (int i = 1; i < 7; i++) {
+            try {
+                BufferedReader file = null;
+                try {
+                    file = new BufferedReader(new FileReader("perftsuite.epd"));
+                } catch (FileNotFoundException e) {
+                    file = new BufferedReader(new FileReader("src/test/resources/perftsuite.epd"));
+                }
 
-		Attack attack = board.getAttack(board.activeColor);
+                String line = file.readLine();
+                while (line != null) {
+                    String[] tokens = line.split(";");
 
-		// Get quiescent move list
-		MoveList quiescentMoveList = new MoveList();
-		moveGenerator.initializeQuiescent(attack, true);
-		int move = moveGenerator.getNextMove();
-		while (move != IntMove.NOMOVE) {
-			quiescentMoveList.move[quiescentMoveList.tail++] = move;
-			move = moveGenerator.getNextMove();
-		}
-		moveGenerator.destroy();
+                    // Setup a new board from fen
+                    GenericBoard board = new GenericBoard(tokens[0].trim());
 
-		// Do main moves and count
-		MoveList mainMoveList = new MoveList();
-		moveGenerator.initializeMain(attack, 0, IntMove.NOMOVE);
-		move = moveGenerator.getNextMove();
-		while (move != IntMove.NOMOVE) {
-			if (!attack.isCheck()) {
-				if ((IntMove.getTarget(move) != IntChessman.NOPIECE && isGoodCapture(move, board)) || (IntMove.getTarget(move) == IntChessman.NOPIECE && board.isCheckingMove(move)) && MoveSee.seeMove(move, IntMove.getChessmanColor(move)) >= 0) {
-					board.makeMove(move);
-					miniMaxQuiescentCheckingMoves(board, moveGenerator, depth - 1, maxDepth);
-					board.undoMove(move);
-					mainMoveList.move[mainMoveList.tail++] = move;
-				}
-			} else {
-				board.makeMove(move);
-				miniMaxQuiescentCheckingMoves(board, moveGenerator, depth - 1, maxDepth);
-				board.undoMove(move);
-				mainMoveList.move[mainMoveList.tail++] = move;
-			}
-			move = moveGenerator.getNextMove();
-		}
-		moveGenerator.destroy();
+                    if (tokens.length > i) {
+                        String[] data = tokens[i].trim().split(" ");
+                        int depth = Integer.parseInt(data[0].substring(1));
+                        int nodesNumber = Integer.parseInt(data[1]);
 
-		assertEquals(printDifference(board, mainMoveList, quiescentMoveList), mainMoveList.getLength(), quiescentMoveList.getLength());
-		
-		return;
-	}
+                        Hex88Board testBoard = new Hex88Board(board);
+                        new MoveSee(testBoard);
 
-	private String printDifference(Hex88Board board, MoveList main, MoveList quiescent) {
-		String result = board.getBoard().toString() + "\n";
-		
-		new MoveRater(new HistoryTable()).rateFromMVVLVA(main);
-		new MoveRater(new HistoryTable()).rateFromMVVLVA(quiescent);
+                        System.out.println("Testing " + tokens[0].trim() + " depth " + depth + " with nodes number " + nodesNumber + ":");
+                        miniMaxQuiescentCheckingMoves(testBoard, new MoveGenerator(testBoard, new KillerTable(), new HistoryTable()), depth, depth);
+                    }
 
-		result += "     Main:";
-		for (int i = 0; i < main.tail; i++) {
-			result += " " + IntMove.toGenericMove(main.move[i]).toString();
-		}
-		result += "\n";
-		
-		result += "Quiescent:";
-		for (int i = 0; i < quiescent.tail; i++) {
-			result += " " + IntMove.toGenericMove(quiescent.move[i]).toString();
-		}
-		result += "\n";
-		
-		return result;
-	}
+                    line = file.readLine();
+                }
+            } catch (IOException e) {
+                fail();
+            } catch (IllegalNotationException e) {
+                fail();
+            }
+        }
+    }
 
-	private static boolean isGoodCapture(int move, Hex88Board board) {
-		if (IntMove.getType(move) == IntMove.PAWNPROMOTION) {
-			if (IntMove.getPromotion(move) == IntChessman.QUEEN) {
-				return true;
-			} else {
-				return false;
-			}
-		}
+    private void miniMaxQuiescentCheckingMoves(Hex88Board board, MoveGenerator moveGenerator, int depth, int maxDepth) {
+        if (depth == 0) {
+            return;
+        }
 
-		int chessman = IntMove.getChessman(move);
-		int target = IntMove.getTarget(move);
+        Attack attack = board.getAttack(board.activeColor);
 
-		assert chessman != IntChessman.NOPIECE;
-		assert target != IntChessman.NOPIECE;
-		
-		if (IntChessman.getValueFromChessman(chessman) <= IntChessman.getValueFromChessman(target)) {
-			return true;
-		}
-		
-		return MoveSee.seeMove(move, IntMove.getChessmanColor(move)) >= 0;
-	}
+        // Get quiescent move list
+        MoveList quiescentMoveList = new MoveList();
+        moveGenerator.initializeQuiescent(attack, true);
+        int move = moveGenerator.getNextMove();
+        while (move != IntMove.NOMOVE) {
+            quiescentMoveList.move[quiescentMoveList.tail++] = move;
+            move = moveGenerator.getNextMove();
+        }
+        moveGenerator.destroy();
+
+        // Do main moves and count
+        MoveList mainMoveList = new MoveList();
+        moveGenerator.initializeMain(attack, 0, IntMove.NOMOVE);
+        move = moveGenerator.getNextMove();
+        while (move != IntMove.NOMOVE) {
+            if (!attack.isCheck()) {
+                if ((IntMove.getTarget(move) != IntChessman.NOPIECE && isGoodCapture(move, board)) || (IntMove.getTarget(move) == IntChessman.NOPIECE && board.isCheckingMove(move)) && MoveSee.seeMove(move, IntMove.getChessmanColor(move)) >= 0) {
+                    board.makeMove(move);
+                    miniMaxQuiescentCheckingMoves(board, moveGenerator, depth - 1, maxDepth);
+                    board.undoMove(move);
+                    mainMoveList.move[mainMoveList.tail++] = move;
+                }
+            } else {
+                board.makeMove(move);
+                miniMaxQuiescentCheckingMoves(board, moveGenerator, depth - 1, maxDepth);
+                board.undoMove(move);
+                mainMoveList.move[mainMoveList.tail++] = move;
+            }
+            move = moveGenerator.getNextMove();
+        }
+        moveGenerator.destroy();
+
+        assertEquals(printDifference(board, mainMoveList, quiescentMoveList), mainMoveList.getLength(), quiescentMoveList.getLength());
+
+        return;
+    }
+
+    private String printDifference(Hex88Board board, MoveList main, MoveList quiescent) {
+        String result = board.getBoard().toString() + "\n";
+
+        new MoveRater(new HistoryTable()).rateFromMVVLVA(main);
+        new MoveRater(new HistoryTable()).rateFromMVVLVA(quiescent);
+
+        result += "     Main:";
+        for (int i = 0; i < main.tail; i++) {
+            result += " " + IntMove.toGenericMove(main.move[i]).toString();
+        }
+        result += "\n";
+
+        result += "Quiescent:";
+        for (int i = 0; i < quiescent.tail; i++) {
+            result += " " + IntMove.toGenericMove(quiescent.move[i]).toString();
+        }
+        result += "\n";
+
+        return result;
+    }
+
+    private static boolean isGoodCapture(int move, Hex88Board board) {
+        if (IntMove.getType(move) == IntMove.PAWNPROMOTION) {
+            if (IntMove.getPromotion(move) == IntChessman.QUEEN) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        int chessman = IntMove.getChessman(move);
+        int target = IntMove.getTarget(move);
+
+        assert chessman != IntChessman.NOPIECE;
+        assert target != IntChessman.NOPIECE;
+
+        if (IntChessman.getValueFromChessman(chessman) <= IntChessman.getValueFromChessman(target)) {
+            return true;
+        }
+
+        return MoveSee.seeMove(move, IntMove.getChessmanColor(move)) >= 0;
+    }
 
 }

@@ -25,18 +25,18 @@ package com.fluxchess.evaluation;
  */
 public final class EVAL_KNIGHT_MOBILITY_BASE extends Parameter {
 
-	public EVAL_KNIGHT_MOBILITY_BASE() {
-		super("EVAL_KNIGHT_MOBILITY_BASE");
-	}
+    public EVAL_KNIGHT_MOBILITY_BASE() {
+        super("EVAL_KNIGHT_MOBILITY_BASE");
+    }
 
-	@Override
-	public void setValue(int value) {
-		KnightEvaluation.EVAL_KNIGHT_MOBILITY_BASE = value;
-	}
+    @Override
+    public void setValue(int value) {
+        KnightEvaluation.EVAL_KNIGHT_MOBILITY_BASE = value;
+    }
 
-	@Override
-	public int getValue() {
-		return KnightEvaluation.EVAL_KNIGHT_MOBILITY_BASE;
-	}
+    @Override
+    public int getValue() {
+        return KnightEvaluation.EVAL_KNIGHT_MOBILITY_BASE;
+    }
 
 }

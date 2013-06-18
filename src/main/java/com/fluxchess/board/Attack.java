@@ -20,39 +20,39 @@ package com.fluxchess.board;
 
 /**
  * Attack
- * 
+ *
  * Notes: Ideas from Fruit
  *
  * @author Phokham Nonava
  */
 public final class Attack {
 
-	public static final int MAXATTACK = 16;
+    public static final int MAXATTACK = 16;
 
-	/**
-	 * Represents no attack
-	 */
-	public static final int NOATTACK = -3;
-	
-	public int count = NOATTACK;
-	public int[] delta = new int[MAXATTACK];
-	public int[] position = new int[MAXATTACK];
-	public int numberOfMoves = -1;
+    /**
+     * Represents no attack
+     */
+    public static final int NOATTACK = -3;
 
-	public Attack() {
-	}
+    public int count = NOATTACK;
+    public int[] delta = new int[MAXATTACK];
+    public int[] position = new int[MAXATTACK];
+    public int numberOfMoves = -1;
 
-	public Attack(Attack attack) {
-		assert attack != null;
-		
-		count = attack.count;
-		System.arraycopy(attack.delta, 0, delta, 0, MAXATTACK);
-		System.arraycopy(attack.position, 0, position, 0, MAXATTACK);
-		numberOfMoves = attack.numberOfMoves;
-	}
-	
-	public boolean isCheck() {
-		return count != 0;
-	}
+    public Attack() {
+    }
+
+    public Attack(Attack attack) {
+        assert attack != null;
+
+        count = attack.count;
+        System.arraycopy(attack.delta, 0, delta, 0, MAXATTACK);
+        System.arraycopy(attack.position, 0, position, 0, MAXATTACK);
+        numberOfMoves = attack.numberOfMoves;
+    }
+
+    public boolean isCheck() {
+        return count != 0;
+    }
 
 }

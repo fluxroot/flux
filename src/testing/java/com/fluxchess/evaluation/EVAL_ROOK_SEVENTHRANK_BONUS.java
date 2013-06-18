@@ -25,18 +25,18 @@ package com.fluxchess.evaluation;
  */
 public final class EVAL_ROOK_SEVENTHRANK_BONUS extends Parameter {
 
-	public EVAL_ROOK_SEVENTHRANK_BONUS() {
-		super("EVAL_ROOK_SEVENTHRANK_BONUS");
-	}
+    public EVAL_ROOK_SEVENTHRANK_BONUS() {
+        super("EVAL_ROOK_SEVENTHRANK_BONUS");
+    }
 
-	@Override
-	public void setValue(int value) {
-		RookEvaluation.EVAL_ROOK_SEVENTHRANK_BONUS = value;
-	}
+    @Override
+    public void setValue(int value) {
+        RookEvaluation.EVAL_ROOK_SEVENTHRANK_BONUS = value;
+    }
 
-	@Override
-	public int getValue() {
-		return RookEvaluation.EVAL_ROOK_SEVENTHRANK_BONUS;
-	}
+    @Override
+    public int getValue() {
+        return RookEvaluation.EVAL_ROOK_SEVENTHRANK_BONUS;
+    }
 
 }

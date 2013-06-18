@@ -32,10 +32,10 @@ import com.fluxchess.board.IntColor;
  */
 public class IntColorTest {
 
-	@Test
-	public void testIntColor() {
-		assertEquals(IntColor.valueOfColor(GenericColor.WHITE), IntColor.WHITE);
-		assertEquals(IntColor.valueOfIntColor(IntColor.WHITE), GenericColor.WHITE);
-	}
+    @Test
+    public void testIntColor() {
+        assertEquals(IntColor.valueOfColor(GenericColor.WHITE), IntColor.WHITE);
+        assertEquals(IntColor.valueOfIntColor(IntColor.WHITE), GenericColor.WHITE);
+    }
 
 }

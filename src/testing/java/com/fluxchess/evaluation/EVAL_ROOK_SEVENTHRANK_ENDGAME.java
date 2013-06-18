@@ -25,18 +25,18 @@ package com.fluxchess.evaluation;
  */
 public final class EVAL_ROOK_SEVENTHRANK_ENDGAME extends Parameter {
 
-	public EVAL_ROOK_SEVENTHRANK_ENDGAME() {
-		super("EVAL_ROOK_SEVENTHRANK_ENDGAME");
-	}
+    public EVAL_ROOK_SEVENTHRANK_ENDGAME() {
+        super("EVAL_ROOK_SEVENTHRANK_ENDGAME");
+    }
 
-	@Override
-	public void setValue(int value) {
-		RookEvaluation.EVAL_ROOK_SEVENTHRANK_ENDGAME = value;
-	}
+    @Override
+    public void setValue(int value) {
+        RookEvaluation.EVAL_ROOK_SEVENTHRANK_ENDGAME = value;
+    }
 
-	@Override
-	public int getValue() {
-		return RookEvaluation.EVAL_ROOK_SEVENTHRANK_ENDGAME;
-	}
+    @Override
+    public int getValue() {
+        return RookEvaluation.EVAL_ROOK_SEVENTHRANK_ENDGAME;
+    }
 
 }

@@ -25,18 +25,18 @@ package com.fluxchess.evaluation;
  */
 public final class EVAL_BISHOP_PAIR extends Parameter {
 
-	public EVAL_BISHOP_PAIR() {
-		super("EVAL_BISHOP_PAIR");
-	}
+    public EVAL_BISHOP_PAIR() {
+        super("EVAL_BISHOP_PAIR");
+    }
 
-	@Override
-	public void setValue(int value) {
-		BishopEvaluation.EVAL_BISHOP_PAIR = value;
-	}
+    @Override
+    public void setValue(int value) {
+        BishopEvaluation.EVAL_BISHOP_PAIR = value;
+    }
 
-	@Override
-	public int getValue() {
-		return BishopEvaluation.EVAL_BISHOP_PAIR;
-	}
+    @Override
+    public int getValue() {
+        return BishopEvaluation.EVAL_BISHOP_PAIR;
+    }
 
 }

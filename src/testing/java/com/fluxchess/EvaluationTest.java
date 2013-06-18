@@ -37,22 +37,22 @@ import com.fluxchess.table.PawnTable;
  */
 public class EvaluationTest {
 
-	@Test
-	public void testEvaluate() {
-		Evaluation evaluation = new Evaluation(new EvaluationTable(1024), new PawnTable(1024));
-		Hex88Board board = null;
+    @Test
+    public void testEvaluate() {
+        Evaluation evaluation = new Evaluation(new EvaluationTable(1024), new PawnTable(1024));
+        Hex88Board board = null;
 
-		try {
-			board = new Hex88Board(new GenericBoard("r6r/1bk2ppp/p2qp3/2b1Q3/Pp3P2/1B2P3/1P2N1PP/R1B3K1 w - -"));
-			new MoveSee(board);
-			int value1 = evaluation.evaluate(board);
-			board = new Hex88Board(new GenericBoard("r4q1r/1bk2ppp/p2bp3/4Q3/Pp3P2/1B2P3/1P2N1PP/R1B3K1 w - -"));
-			new MoveSee(board);
-			int value2 = evaluation.evaluate(board);
-			assertEquals(value1 + " > " + value2, true, value1 > value2);
-		} catch (IllegalNotationException e) {
-			e.printStackTrace();
-		}
-	}
+        try {
+            board = new Hex88Board(new GenericBoard("r6r/1bk2ppp/p2qp3/2b1Q3/Pp3P2/1B2P3/1P2N1PP/R1B3K1 w - -"));
+            new MoveSee(board);
+            int value1 = evaluation.evaluate(board);
+            board = new Hex88Board(new GenericBoard("r4q1r/1bk2ppp/p2bp3/4Q3/Pp3P2/1B2P3/1P2N1PP/R1B3K1 w - -"));
+            new MoveSee(board);
+            int value2 = evaluation.evaluate(board);
+            assertEquals(value1 + " > " + value2, true, value1 > value2);
+        } catch (IllegalNotationException e) {
+            e.printStackTrace();
+        }
+    }
 
 }

@@ -26,7 +26,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import jcpi.AbstractCommunication;
 import jcpi.AbstractEngine;
-import jcpi.ICommunication;
+import jcpi.IGui;
 import jcpi.commands.EngineAnalyzeCommand;
 import jcpi.commands.EngineInitializeRequestCommand;
 import jcpi.commands.EngineNewGameCommand;
@@ -35,6 +35,7 @@ import jcpi.commands.EngineStartCalculatingCommand;
 import jcpi.commands.GuiBestMoveCommand;
 import jcpi.commands.GuiInformationCommand;
 import jcpi.commands.GuiInitializeAnswerCommand;
+import jcpi.commands.GuiQuitCommand;
 import jcpi.commands.GuiReadyAnswerCommand;
 import jcpi.commands.IEngineCommand;
 import jcpi.commands.IGuiCommand;
@@ -44,80 +45,82 @@ import jcpi.data.IllegalNotationException;
 
 import org.junit.Test;
 
-import com.fluxchess.Flux;
-
 /**
  * SearchTest
  *
  * @author Phokham Nonava
  */
-public class SearchTest extends AbstractCommunication implements ICommunication {
+public class SearchTest extends AbstractCommunication implements IGui {
 
-	BlockingQueue<IEngineCommand> commandQueue = new LinkedBlockingQueue<IEngineCommand>();
-	boolean found = false;
-	
-	public SearchTest() {
-		try {
-			commandQueue.add(new EngineInitializeRequestCommand());
-			commandQueue.add(new EngineNewGameCommand());
-			commandQueue.add(new EngineAnalyzeCommand(new GenericBoard("5n2/B3K3/2p2Np1/4k3/7P/3bN1P1/2Prn1P1/1q6 w - -"), new ArrayList<GenericMove>()));
-			EngineStartCalculatingCommand startCommand = new EngineStartCalculatingCommand();
-			startCommand.setDepth(3);
-			commandQueue.add(startCommand);
-		} catch (IllegalNotationException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	@Test
-	public void testMate30() {
-		AbstractEngine engine = new Flux(this);
-		engine.run();
-		assertEquals(found, true);
-	}
-	
-	public void send(IGuiCommand command) {
-		command.accept(this);
-	}
+    BlockingQueue<IEngineCommand> commandQueue = new LinkedBlockingQueue<IEngineCommand>();
+    boolean found = false;
 
-	public IEngineCommand receive() {
-		IEngineCommand command = null;
-		try {
-			command = commandQueue.take();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		assert command != null;
-		
-		System.out.println(command);
+    public SearchTest() {
+        try {
+            commandQueue.add(new EngineInitializeRequestCommand());
+            commandQueue.add(new EngineNewGameCommand());
+            commandQueue.add(new EngineAnalyzeCommand(new GenericBoard("5n2/B3K3/2p2Np1/4k3/7P/3bN1P1/2Prn1P1/1q6 w - -"), new ArrayList<GenericMove>()));
+            EngineStartCalculatingCommand startCommand = new EngineStartCalculatingCommand();
+            startCommand.setDepth(3);
+            commandQueue.add(startCommand);
+        } catch (IllegalNotationException e) {
+            e.printStackTrace();
+        }
+    }
 
-		return command;
-	}
+    @Test
+    public void testMate30() {
+        AbstractEngine engine = new Flux(this);
+        engine.run();
+        assertEquals(found, true);
+    }
 
-	public void visit(GuiInitializeAnswerCommand command) {
-		System.out.println(command);
-	}
+    public void send(IGuiCommand command) {
+        command.accept(this);
+    }
 
-	public void visit(GuiReadyAnswerCommand command) {
-		System.out.println(command);
-	}
+    public IEngineCommand receive() {
+        IEngineCommand command = null;
+        try {
+            command = commandQueue.take();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        assert command != null;
 
-	public void visit(GuiBestMoveCommand command) {
-		commandQueue.add(new EngineQuitCommand());
-		System.out.println(command);
-	}
+        System.out.println(command);
 
-	public void visit(GuiInformationCommand command) {
-		if (command.getMate() != null) {
-			if (command.getMate() == 30) {
-				found = true;
-			}
-		}
-		System.out.println(command);
-	}
+        return command;
+    }
 
-	public String toString() {
-		return "FluxTesting Protocol";
-	}
+    public void visit(GuiInitializeAnswerCommand command) {
+        System.out.println(command);
+    }
+
+    public void visit(GuiReadyAnswerCommand command) {
+        System.out.println(command);
+    }
+
+    public void visit(GuiBestMoveCommand command) {
+        commandQueue.add(new EngineQuitCommand());
+        System.out.println(command);
+    }
+
+    public void visit(GuiInformationCommand command) {
+        if (command.getMate() != null) {
+            if (command.getMate() == 30) {
+                found = true;
+            }
+        }
+        System.out.println(command);
+    }
+
+    public void visit(GuiQuitCommand command) {
+        System.out.println(command);
+    }
+
+    public String toString() {
+        return "FluxTesting Protocol";
+    }
 
 }
