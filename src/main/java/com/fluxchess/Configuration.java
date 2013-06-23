@@ -21,7 +21,8 @@ package com.fluxchess;
 import java.util.Hashtable;
 import java.util.Properties;
 
-import jcpi.data.Option;
+import com.fluxchess.jcpi.data.Option;
+
 
 /**
  * Configuration
