@@ -19,11 +19,11 @@
 package com.fluxchess.board;
 
 import static org.junit.Assert.assertEquals;
-import jcpi.data.GenericColor;
 
 import org.junit.Test;
 
 import com.fluxchess.board.IntColor;
+import com.fluxchess.jcpi.data.GenericColor;
 
 /**
  * IntColorTest

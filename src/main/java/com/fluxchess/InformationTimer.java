@@ -20,11 +20,11 @@ package com.fluxchess;
 
 import java.util.List;
 
-import jcpi.AbstractCommunication;
-import jcpi.commands.GuiBestMoveCommand;
-import jcpi.commands.GuiInformationCommand;
-import jcpi.data.GenericMove;
 
+import com.fluxchess.jcpi.AbstractCommunication;
+import com.fluxchess.jcpi.commands.GuiBestMoveCommand;
+import com.fluxchess.jcpi.commands.GuiInformationCommand;
+import com.fluxchess.jcpi.data.GenericMove;
 import com.fluxchess.move.IntScore;
 import com.fluxchess.move.PrincipalVariation;
 import com.fluxchess.table.TranspositionTable;

@@ -20,7 +20,8 @@ package com.fluxchess.move;
 
 import java.util.List;
 
-import jcpi.data.GenericMove;
+import com.fluxchess.jcpi.data.GenericMove;
+
 
 /**
  * PrincipalVariation

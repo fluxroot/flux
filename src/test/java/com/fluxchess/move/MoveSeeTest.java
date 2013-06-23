@@ -20,8 +20,6 @@ package com.fluxchess.move;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-import jcpi.data.GenericBoard;
-import jcpi.data.IllegalNotationException;
 
 import org.junit.Test;
 
@@ -29,6 +27,8 @@ import com.fluxchess.board.Hex88Board;
 import com.fluxchess.board.IntChessman;
 import com.fluxchess.board.IntColor;
 import com.fluxchess.board.IntPosition;
+import com.fluxchess.jcpi.data.GenericBoard;
+import com.fluxchess.jcpi.data.IllegalNotationException;
 import com.fluxchess.move.IntMove;
 import com.fluxchess.move.MoveSee;
 
