@@ -19,11 +19,12 @@
 package com.fluxchess.board;
 
 import static org.junit.Assert.assertEquals;
-import jcpi.data.GenericFile;
-import jcpi.data.GenericPosition;
-import jcpi.data.GenericRank;
 
 import org.junit.Test;
+
+import com.fluxchess.jcpi.data.GenericFile;
+import com.fluxchess.jcpi.data.GenericPosition;
+import com.fluxchess.jcpi.data.GenericRank;
 
 /**
  * IntPositionTest

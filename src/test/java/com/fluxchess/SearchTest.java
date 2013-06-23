@@ -24,26 +24,27 @@ import java.util.ArrayList;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import jcpi.AbstractCommunication;
-import jcpi.AbstractEngine;
-import jcpi.IGui;
-import jcpi.commands.EngineAnalyzeCommand;
-import jcpi.commands.EngineInitializeRequestCommand;
-import jcpi.commands.EngineNewGameCommand;
-import jcpi.commands.EngineQuitCommand;
-import jcpi.commands.EngineStartCalculatingCommand;
-import jcpi.commands.GuiBestMoveCommand;
-import jcpi.commands.GuiInformationCommand;
-import jcpi.commands.GuiInitializeAnswerCommand;
-import jcpi.commands.GuiQuitCommand;
-import jcpi.commands.GuiReadyAnswerCommand;
-import jcpi.commands.IEngineCommand;
-import jcpi.commands.IGuiCommand;
-import jcpi.data.GenericBoard;
-import jcpi.data.GenericMove;
-import jcpi.data.IllegalNotationException;
 
 import org.junit.Test;
+
+import com.fluxchess.jcpi.AbstractCommunication;
+import com.fluxchess.jcpi.AbstractEngine;
+import com.fluxchess.jcpi.IGui;
+import com.fluxchess.jcpi.commands.EngineAnalyzeCommand;
+import com.fluxchess.jcpi.commands.EngineInitializeRequestCommand;
+import com.fluxchess.jcpi.commands.EngineNewGameCommand;
+import com.fluxchess.jcpi.commands.EngineQuitCommand;
+import com.fluxchess.jcpi.commands.EngineStartCalculatingCommand;
+import com.fluxchess.jcpi.commands.GuiBestMoveCommand;
+import com.fluxchess.jcpi.commands.GuiInformationCommand;
+import com.fluxchess.jcpi.commands.GuiInitializeAnswerCommand;
+import com.fluxchess.jcpi.commands.GuiQuitCommand;
+import com.fluxchess.jcpi.commands.GuiReadyAnswerCommand;
+import com.fluxchess.jcpi.commands.IEngineCommand;
+import com.fluxchess.jcpi.commands.IGuiCommand;
+import com.fluxchess.jcpi.data.GenericBoard;
+import com.fluxchess.jcpi.data.GenericMove;
+import com.fluxchess.jcpi.data.IllegalNotationException;
 
 /**
  * SearchTest

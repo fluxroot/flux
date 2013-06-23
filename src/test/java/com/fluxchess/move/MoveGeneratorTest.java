@@ -26,14 +26,14 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
-import jcpi.data.GenericBoard;
-import jcpi.data.IllegalNotationException;
 
 import org.junit.Test;
 
 import com.fluxchess.board.Attack;
 import com.fluxchess.board.Hex88Board;
 import com.fluxchess.board.IntChessman;
+import com.fluxchess.jcpi.data.GenericBoard;
+import com.fluxchess.jcpi.data.IllegalNotationException;
 import com.fluxchess.table.HistoryTable;
 import com.fluxchess.table.KillerTable;
 

@@ -18,8 +18,8 @@
 */
 package com.fluxchess;
 
-import jcpi.AbstractCommunication;
-import jcpi.commands.GuiInformationCommand;
+import com.fluxchess.jcpi.AbstractCommunication;
+import com.fluxchess.jcpi.commands.GuiInformationCommand;
 
 
 /**

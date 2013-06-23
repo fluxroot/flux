@@ -23,9 +23,9 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import jcpi.data.GenericMove;
 
 import com.fluxchess.board.Hex88Board;
+import com.fluxchess.jcpi.data.GenericMove;
 import com.fluxchess.move.IntMove;
 import com.fluxchess.move.IntScore;
 

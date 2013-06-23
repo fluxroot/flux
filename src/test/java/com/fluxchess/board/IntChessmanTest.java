@@ -21,12 +21,12 @@ package com.fluxchess.board;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import jcpi.data.GenericChessman;
 
 import org.junit.Test;
 
 import com.fluxchess.board.IntChessman;
 import com.fluxchess.board.IntColor;
+import com.fluxchess.jcpi.data.GenericChessman;
 
 /**
  * IntChessmanTest
