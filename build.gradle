@@ -1,96 +1,91 @@
 apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'pmd'
+apply plugin: 'findbugs'
+apply plugin: 'checkstyle'
 
-description = 'Flux Chess'
+description = 'Flux Chess Engine'
 
 group = 'com.fluxchess'
+
+if (!hasProperty('buildNumber')) {
+    ext.buildNumber = 'dev'
+}
+if (version.contains('-')) {
+    version += '+' + buildNumber
+}
+println "Building version ${version}"
+
+repositories {
+    mavenCentral()
+    maven {
+        url "http://maven.fluxchess.com/release"
+    }
+}
+
+configurations {
+    eclipselibs {
+        extendsFrom compile
+    }
+}
+
+task libs(type: Sync) {
+    from configurations.eclipselibs
+    into "$projectDir/lib"
+}
+
+tasks.withType(Pmd) {
+    pmd {
+        ignoreFailures = true
+    }
+}
+
+tasks.withType(FindBugs) {
+    findbugs {
+        ignoreFailures = true
+    }
+}
+
+tasks.withType(Checkstyle) {
+    checkstyle {
+        ignoreFailures = true
+    }
+}
+
+dependencies {
+    compile 'com.fluxchess:jcpi:0.3.+'
+
+    testCompile 'junit:junit:4.+'
+}
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
-repositories {
-	mavenCentral()
-}
-
-configurations {
-	eclipse {
-		extendsFrom compile
-	}
-}
-
-dependencies {
-	compile 'jcpi:jcpi:0.2.1' {
-		builtBy 'download'
-	}
-	testCompile 'junit:junit:4.+'
-}
-
 jar {
-	from {
-		configurations.compile.collect {it.isDirectory() ? it : zipTree(it)}
-	}
-	from sourceSets.main.allJava
+    from {
+        configurations.compile.collect {it.isDirectory() ? it : zipTree(it)}
+    }
+    from sourceSets.main.allJava
     manifest {
-        attributes 'Implementation-Title': group, 'Implementation-Version': version, 'Main-Class': 'com.fluxchess.Flux'
+        attributes 'Implementation-Title': project.group, 'Implementation-Version': project.version, 'Main-Class': 'com.fluxchess.flux.Flux'
     }
 }
 
-task jcpi {
-	def jcpisrc = 'http://cloud.github.com/downloads/fluxroot/jcpi/jcpi-0.2.1.zip'
-	File jcpizip = file('vendor/jcpi-0.2.1.zip')
-	File jcpijar = file('vendor/jcpi-0.2.1/jcpi-0.2.1.jar')
+task dist(type: Zip) {
+    def baseDir = "${project.name}-${project.version}"
 
-	inputs.file jcpizip
-	outputs.file jcpijar
-	doLast {
-		jcpizip.getParentFile().mkdirs()
-		downloadFile(jcpisrc, jcpizip)
-		copy {
-			from zipTree(jcpizip)
-			into 'vendor'
-		}
-	}
-}
-
-task download(dependsOn: 'jcpi') << {
-}
-
-task distJar(type: Zip) {
-	classifier = 'jar'
-	def baseDir = "${project.name}-${project.version}-$classifier"
-	
-	into ("$baseDir") {
-		from 'README.md'
-		from 'COPYING'
-		from 'src/dist/Flux.bat'
-		from ('src/dist/Flux') {
-			fileMode = 0755
-		}
-		from jar
-	}
-}
-
-task distExe(type: Zip) {
-	classifier = 'exe'
-	def baseDir = "${project.name}-${project.version}-$classifier"
-	
-	into ("$baseDir") {
-		from 'README.md'
-		from 'COPYING'
-		from "$buildDir/libs/${project.name}-${project.version}.exe"
-	}
-}
-
-artifacts {
-	archives distJar
-	archives distExe
+    into ("$baseDir") {
+        from 'README.md'
+        from 'COPYING'
+        from 'COPYING.LESSER'
+        from 'src/dist/Flux.bat'
+        from ('src/dist/Flux') {
+            fileMode = 0755
+        }
+        from jar
+    }
 }
 
 task wrapper(type: Wrapper) {
-	gradleVersion = '1.2'
-}
-
-def downloadFile(srcUrl, destUrl) {
-	def dest = new BufferedOutputStream(new FileOutputStream(destUrl))
-	dest << new URL(srcUrl).openStream()
-	dest.close()
+    gradleVersion = '1.6'
 }
