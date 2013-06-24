@@ -49,6 +49,7 @@ tasks.withType(FindBugs) {
 tasks.withType(Checkstyle) {
     checkstyle {
         ignoreFailures = true
+        showViolations = false
     }
 }
 
