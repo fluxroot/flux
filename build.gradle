@@ -80,7 +80,7 @@ jar {
     }
     from sourceSets.main.allJava
     manifest {
-        attributes 'Implementation-Title': project.group, 'Implementation-Version': project.version, 'Main-Class': 'com.fluxchess.flux.Flux'
+        attributes 'Implementation-Title': project.name, 'Implementation-Version': project.version, 'Main-Class': 'com.fluxchess.flux.Flux'
     }
 }
 
