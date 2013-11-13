@@ -26,9 +26,6 @@ import com.fluxchess.flux.table.EvaluationTable;
 import com.fluxchess.flux.table.EvaluationTableEntry;
 import com.fluxchess.flux.table.PawnTable;
 
-/**
- * Evaluation
- */
 public final class Evaluation {
 
   // Our total values
@@ -39,9 +36,6 @@ public final class Evaluation {
   private final EvaluationTable evaluationTable;
   private final PawnTable pawntable;
 
-  /**
-   * Creates a new Evaluation.
-   */
   public Evaluation(EvaluationTable evaluationTable, PawnTable pawnTable) {
     assert evaluationTable != null;
     assert pawnTable != null;

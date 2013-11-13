@@ -18,9 +18,6 @@
  */
 package com.fluxchess.evaluation;
 
-/**
- * Parameter
- */
 public abstract class Parameter {
 
     public final String name;

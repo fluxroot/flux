@@ -35,9 +35,6 @@ import com.fluxchess.move.MoveSee;
 import com.fluxchess.table.EvaluationTable;
 import com.fluxchess.table.PawnTable;
 
-/**
- * EvaluationOptimization
- */
 public final class EvaluationOptimization {
 
     private final Map<GenericBoard, Integer> solutions = new HashMap<GenericBoard, Integer>();

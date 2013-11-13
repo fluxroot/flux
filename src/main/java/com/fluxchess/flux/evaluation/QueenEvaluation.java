@@ -21,9 +21,6 @@ package com.fluxchess.flux.evaluation;
 import com.fluxchess.flux.board.*;
 import com.fluxchess.flux.move.MoveGenerator;
 
-/**
- * QueenEvaluation
- */
 public final class QueenEvaluation {
 
   public static int EVAL_QUEEN_MOBILITY_BASE = -13;

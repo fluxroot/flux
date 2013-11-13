@@ -20,40 +20,19 @@ package com.fluxchess.flux.move;
 
 import com.fluxchess.jcpi.models.GenericScore;
 
-/**
- * IntScore
- */
 public final class IntScore {
 
-  /**
-   * Represents no score
-   */
   public static final int NOSCORE = -9;
 
-  /**
-   * IntScore values
-   */
   public static final int EXACT = 0;
   public static final int ALPHA = 1;
   public static final int BETA = 2;
 
-  /**
-   * IntScore mask
-   */
   public static final int MASK = 0x3;
 
-  /**
-   * IntScore cannot be instantiated.
-   */
   private IntScore() {
   }
 
-  /**
-   * Returns the IntScore value of the GenericScore.
-   *
-   * @param value the GenericScore.
-   * @return the IntScore value.
-   */
   public static int valueOfScore(GenericScore value) {
     assert value != null;
 
@@ -72,12 +51,6 @@ public final class IntScore {
     throw new IllegalArgumentException();
   }
 
-  /**
-   * Returns the GenericScore of the IntScore value.
-   *
-   * @param value the IntScore value.
-   * @return the GenericScore.
-   */
   public static GenericScore valueOfIntScore(int value) {
     assert value != NOSCORE;
 

@@ -30,9 +30,6 @@ import com.fluxchess.move.MoveSee;
 import com.fluxchess.table.EvaluationTable;
 import com.fluxchess.table.PawnTable;
 
-/**
- * EvaluationTest
- */
 public class EvaluationTest {
 
     @Test

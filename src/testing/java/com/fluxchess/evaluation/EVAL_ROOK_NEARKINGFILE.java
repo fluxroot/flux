@@ -18,9 +18,6 @@
  */
 package com.fluxchess.evaluation;
 
-/**
- * EVAL_ROOK_NEARKINGFILE
- */
 public final class EVAL_ROOK_NEARKINGFILE extends Parameter {
 
     public EVAL_ROOK_NEARKINGFILE() {

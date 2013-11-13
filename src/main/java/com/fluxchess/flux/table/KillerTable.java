@@ -32,9 +32,6 @@ public final class KillerTable {
   private final int[] primaryKiller = new int[MAXSIZE];
   private final int[] secondaryKiller = new int[MAXSIZE];
 
-  /**
-   * Creates a new KillerTable.
-   */
   public KillerTable() {
     for (int i = 0; i < MAXSIZE; i++) {
       primaryKiller[i] = IntMove.NOMOVE;

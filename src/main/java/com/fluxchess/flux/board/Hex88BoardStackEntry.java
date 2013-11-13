@@ -18,9 +18,6 @@
  */
 package com.fluxchess.flux.board;
 
-/**
- * Hex88BoardStackEntry
- */
 public final class Hex88BoardStackEntry {
 
   public long zobristHistory = 0;

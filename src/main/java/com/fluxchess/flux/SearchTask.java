@@ -18,8 +18,5 @@
  */
 package com.fluxchess.flux;
 
-/**
- * SearchTask
- */
 public class SearchTask {
 }

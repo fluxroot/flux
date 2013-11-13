@@ -48,9 +48,6 @@ package com.fluxchess.flux;
 //import com.fluxchess.jcpi.data.GenericMove;
 //import com.fluxchess.jcpi.data.IllegalNotationException;
 //
-///**
-// * SearchTest
-// */
 //public class SearchTest extends AbstractCommunication implements IGui {
 //
 //    BlockingQueue<IEngineCommand> commandQueue = new LinkedBlockingQueue<IEngineCommand>();

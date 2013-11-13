@@ -23,9 +23,6 @@ import com.fluxchess.flux.board.IntChessman;
 import com.fluxchess.flux.board.IntColor;
 import com.fluxchess.flux.board.PositionList;
 
-/**
- * PositionValueEvaluation
- */
 public final class PositionValueEvaluation {
 
   private static final int[][] positionValueOpening = {

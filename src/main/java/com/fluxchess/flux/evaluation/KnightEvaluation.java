@@ -24,9 +24,6 @@ import com.fluxchess.flux.board.IntColor;
 import com.fluxchess.flux.board.PositionList;
 import com.fluxchess.flux.move.MoveGenerator;
 
-/**
- * KnightEvaluation
- */
 public final class KnightEvaluation {
 
   public static int EVAL_KNIGHT_MOBILITY_BASE = -4;

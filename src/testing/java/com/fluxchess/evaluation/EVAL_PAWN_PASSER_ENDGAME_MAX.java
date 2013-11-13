@@ -18,9 +18,6 @@
  */
 package com.fluxchess.evaluation;
 
-/**
- * EVAL_PAWN_PASSER_ENDGAME_MAX
- */
 public final class EVAL_PAWN_PASSER_ENDGAME_MAX extends Parameter {
 
     public EVAL_PAWN_PASSER_ENDGAME_MAX() {

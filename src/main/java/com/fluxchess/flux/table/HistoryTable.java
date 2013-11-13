@@ -24,18 +24,12 @@ import com.fluxchess.flux.board.IntColor;
 import com.fluxchess.flux.board.IntPosition;
 import com.fluxchess.flux.move.IntMove;
 
-/**
- * HistoryTable
- */
 public final class HistoryTable {
 
   public static final int MAX_HISTORYVALUE = 65536;
 
   private final int[][] historyTable = new int[IntChessman.PIECE_VALUE_SIZE][Hex88Board.BOARDSIZE];
 
-  /**
-   * Creates a new HistoryTable.
-   */
   public HistoryTable() {
   }
 

@@ -19,8 +19,6 @@
 package com.fluxchess.flux.board;
 
 /**
- * AttackVector
- * <p/>
  * Notes: Ideas from Mediocre Chess and Bruce Moreland
  */
 public final class AttackVector {

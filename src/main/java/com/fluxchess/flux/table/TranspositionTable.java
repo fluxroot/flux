@@ -28,9 +28,6 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-/**
- * TranspositionTable
- */
 public final class TranspositionTable {
 
   // Size of one transposition entry
@@ -51,11 +48,6 @@ public final class TranspositionTable {
   private final Lock readLock;
   private final Lock writeLock;
 
-  /**
-   * Creates a new TranspositionTable.
-   *
-   * @param size the size.
-   */
   public TranspositionTable(int size) {
     assert size >= 1;
 
@@ -76,9 +68,6 @@ public final class TranspositionTable {
     writeLock = lock.writeLock();
   }
 
-  /**
-   * Clears the Transposition Table.
-   */
   public void clear() {
     writeLock.lock();
     try {
@@ -93,9 +82,6 @@ public final class TranspositionTable {
     }
   }
 
-  /**
-   * Increase the age of the Transposition Table.
-   */
   public void increaseAge() {
     writeLock.lock();
     try {

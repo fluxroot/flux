@@ -21,9 +21,6 @@ package com.fluxchess.flux.evaluation;
 import com.fluxchess.flux.board.*;
 import com.fluxchess.flux.move.IntCastling;
 
-/**
- * KingEvaluation
- */
 public final class KingEvaluation {
 
   private static final byte MASK_ATTACKERS = 31;

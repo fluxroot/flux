@@ -18,9 +18,6 @@
  */
 package com.fluxchess.evaluation;
 
-/**
- * EVAL_BISHOP_PAIR
- */
 public final class EVAL_BISHOP_PAIR extends Parameter {
 
     public EVAL_BISHOP_PAIR() {

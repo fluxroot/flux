@@ -25,9 +25,6 @@ import com.fluxchess.flux.board.PositionList;
 
 import java.util.Arrays;
 
-/**
- * PawnTableEvaluation
- */
 public final class PawnTableEvaluation {
 
   // Our pawn structure table. 8 + 2 -> 2 Sentinels for each side.

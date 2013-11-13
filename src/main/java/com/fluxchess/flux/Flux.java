@@ -36,9 +36,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- * This is the main entry class.
- */
 public final class Flux extends AbstractEngine {
 
   private Hex88Board board = null;
@@ -48,11 +45,6 @@ public final class Flux extends AbstractEngine {
   private final int[] timeTable = new int[Search.MAX_HEIGHT + 1];
   private Search search;
 
-  /**
-   * Creates a new Flux.
-   *
-   * @param communication the AbstractCommunication.
-   */
   public Flux() {
     // Set the protocol
     ChessLogger.setProtocol(getProtocol());
@@ -79,11 +71,6 @@ public final class Flux extends AbstractEngine {
     search = new Search(new Evaluation(evaluationTable, pawnTable), new Hex88Board(new GenericBoard(GenericBoard.STANDARDSETUP)), transpositionTable, new InformationTimer(getProtocol(), transpositionTable), timeTable);
   }
 
-  /**
-   * The main function.
-   *
-   * @param args not used.
-   */
   public static void main(String[] args) {
     AbstractEngine engine = new Flux();
     engine.run();

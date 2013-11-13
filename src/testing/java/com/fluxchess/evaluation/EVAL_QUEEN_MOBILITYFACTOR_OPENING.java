@@ -18,9 +18,6 @@
  */
 package com.fluxchess.evaluation;
 
-/**
- * EVAL_QUEEN_MOBILITYFACTOR_OPENING
- */
 public final class EVAL_QUEEN_MOBILITYFACTOR_OPENING extends Parameter {
 
     public EVAL_QUEEN_MOBILITYFACTOR_OPENING() {

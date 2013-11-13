@@ -27,9 +27,6 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * IntMoveTest
- */
 public class IntMoveTest {
 
   @Test

@@ -28,9 +28,6 @@ import com.fluxchess.jcpi.models.GenericMove;
 
 import java.util.List;
 
-/**
- * InformationTimer
- */
 public final class InformationTimer {
 
   private final IProtocol protocol;
@@ -50,11 +47,6 @@ public final class InformationTimer {
   private GenericMove currentMove = null;
   private int currentMoveNumber = 0;
 
-  /**
-   * Creates a new InformationTimer
-   *
-   * @param protocol the protocol.
-   */
   public InformationTimer(IProtocol protocol, TranspositionTable transpositionTable) {
     assert protocol != null;
     assert transpositionTable != null;
@@ -63,18 +55,10 @@ public final class InformationTimer {
     this.transpositionTable = transpositionTable;
   }
 
-  /**
-   * Sets the search.
-   *
-   * @param search the search.
-   */
   public void setSearch(Search search) {
     this.search = search;
   }
 
-  /**
-   * Starts the InformationTimer.
-   */
   public void start() {
     if (search == null) throw new IllegalStateException();
 
@@ -83,18 +67,10 @@ public final class InformationTimer {
     currentTimeStart = totalTimeStart;
   }
 
-  /**
-   * Stops the InformationTimer.
-   */
   public void stop() {
     // Do nothing
   }
 
-  /**
-   * Sets the current depth.
-   *
-   * @param currentDepth the current depth.
-   */
   public void setCurrentDepth(int currentDepth) {
     assert currentDepth >= 0;
 
@@ -102,11 +78,6 @@ public final class InformationTimer {
     currentMaxDepth = currentDepth;
   }
 
-  /**
-   * Sets the current maximum reached depth.
-   *
-   * @param currentDepth the current depth.
-   */
   public void setCurrentMaxDepth(int currentDepth) {
     assert currentDepth >= 0;
 
@@ -115,22 +86,10 @@ public final class InformationTimer {
     }
   }
 
-  /**
-   * Sends the best move and ponder move.
-   *
-   * @param bestMove   the best move or null if there's no best move.
-   * @param ponderMove the ponder move or null if there's no ponder move.
-   */
   public void sendBestMove(GenericMove bestMove, GenericMove ponderMove) {
     protocol.send(new ProtocolBestMoveCommand(bestMove, ponderMove));
   }
 
-  /**
-   * Sends the current move and current move number.
-   *
-   * @param currentMove       the current move.
-   * @param currentMoveNumber the current move number.
-   */
   public void sendInformationMove(GenericMove currentMove, int currentMoveNumber) {
     assert currentMove != null;
     assert currentMoveNumber >= 0;
@@ -150,11 +109,6 @@ public final class InformationTimer {
     }
   }
 
-  /**
-   * Sends the refutations information.
-   *
-   * @param refutationList the current refutation move list.
-   */
   public void sendInformationRefutations(List<GenericMove> refutationList) {
     assert refutationList != null;
 
@@ -169,9 +123,6 @@ public final class InformationTimer {
     }
   }
 
-  /**
-   * Sends the current depth.
-   */
   public void sendInformationDepth() {
     // Safety guard: Reduce output pollution
     long currentTimeDelta = System.currentTimeMillis() - totalTimeStart;
@@ -185,9 +136,6 @@ public final class InformationTimer {
     }
   }
 
-  /**
-   * Sends the current status.
-   */
   public void sendInformationStatus() {
     long currentTimeDelta = System.currentTimeMillis() - currentTimeStart;
     if (currentTimeDelta >= 1000) {
@@ -212,9 +160,6 @@ public final class InformationTimer {
     }
   }
 
-  /**
-   * Sends the current status.
-   */
   public void sendInformationSummary() {
     ProtocolInformationCommand command = new ProtocolInformationCommand();
 
@@ -230,12 +175,6 @@ public final class InformationTimer {
     currentTimeStart = System.currentTimeMillis();
   }
 
-  /**
-   * Sends the centipawn information.
-   *
-   * @param currentCentipawns the current centipawn value.
-   * @param currentMoveList   the current move list/principal variation.
-   */
   public void sendInformationCentipawns(PrincipalVariation pv, int pvNumber) {
     assert pv != null;
     assert pvNumber >= 1;
@@ -264,12 +203,6 @@ public final class InformationTimer {
     }
   }
 
-  /**
-   * Sends the mate information.
-   *
-   * @param currentMateDepth the current mate depth.
-   * @param currentMoveList  the current move list/principal variation.
-   */
   public void sendInformationMate(PrincipalVariation pv, int currentMateDepth, int pvNumber) {
     assert pv != null;
     assert pvNumber >= 1;
@@ -298,11 +231,6 @@ public final class InformationTimer {
     }
   }
 
-  /**
-   * Returns the current nps.
-   *
-   * @return the current nps.
-   */
   public long getCurrentNps() {
     long currentNps = 0;
     long currentTimeDelta = System.currentTimeMillis() - totalTimeStart;

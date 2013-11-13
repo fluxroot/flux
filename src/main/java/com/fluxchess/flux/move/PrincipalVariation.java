@@ -22,10 +22,6 @@ import com.fluxchess.jcpi.models.GenericMove;
 
 import java.util.List;
 
-
-/**
- * PrincipalVariation
- */
 public final class PrincipalVariation implements Comparable<PrincipalVariation> {
 
   public final int moveNumber;
