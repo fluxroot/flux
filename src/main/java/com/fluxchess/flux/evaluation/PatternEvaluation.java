@@ -23,9 +23,6 @@ import com.fluxchess.flux.board.IntChessman;
 import com.fluxchess.flux.board.IntColor;
 import com.fluxchess.flux.board.IntPosition;
 
-/**
- * PatternEvaluation
- */
 public final class PatternEvaluation {
 
   private PatternEvaluation() {

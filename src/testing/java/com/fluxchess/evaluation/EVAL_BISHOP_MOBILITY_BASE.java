@@ -18,9 +18,6 @@
  */
 package com.fluxchess.evaluation;
 
-/**
- * EVAL_BISHOP_MOBILITY_BASE
- */
 public final class EVAL_BISHOP_MOBILITY_BASE extends Parameter {
 
     public EVAL_BISHOP_MOBILITY_BASE() {

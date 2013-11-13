@@ -18,9 +18,6 @@
  */
 package com.fluxchess.evaluation;
 
-/**
- * EVAL_QUEEN_MOBILITY_BASE
- */
 public final class EVAL_QUEEN_MOBILITY_BASE extends Parameter {
 
     public EVAL_QUEEN_MOBILITY_BASE() {

@@ -18,9 +18,6 @@
  */
 package com.fluxchess.evaluation;
 
-/**
- * EVAL_KNIGHT_MOBILITYFACTOR
- */
 public final class EVAL_KNIGHT_MOBILITYFACTOR extends Parameter {
 
     public EVAL_KNIGHT_MOBILITYFACTOR() {

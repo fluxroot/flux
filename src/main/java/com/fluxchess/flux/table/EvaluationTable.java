@@ -22,9 +22,6 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-/**
- * EvaluationTable
- */
 public final class EvaluationTable {
 
   // Size of one evaluation entry

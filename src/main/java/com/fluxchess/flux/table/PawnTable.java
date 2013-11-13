@@ -22,9 +22,6 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-/**
- * PawnTable
- */
 public final class PawnTable {
 
   public static final int ENTRYSIZE = 12;

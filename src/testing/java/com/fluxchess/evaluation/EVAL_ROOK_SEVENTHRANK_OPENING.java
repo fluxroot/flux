@@ -18,9 +18,6 @@
  */
 package com.fluxchess.evaluation;
 
-/**
- * EVAL_ROOK_SEVENTHRANK_OPENING
- */
 public final class EVAL_ROOK_SEVENTHRANK_OPENING extends Parameter {
 
     public EVAL_ROOK_SEVENTHRANK_OPENING() {

@@ -20,9 +20,6 @@ package com.fluxchess.flux.evaluation;
 
 import com.fluxchess.flux.board.*;
 
-/**
- * PawnStructureEvaluation
- */
 public final class PawnStructureEvaluation {
 
   private static final int EVAL_PAWN_DOUBLED_OPENING = 10;

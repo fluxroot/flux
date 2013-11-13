@@ -22,9 +22,6 @@ import com.fluxchess.flux.board.*;
 import com.fluxchess.flux.move.IntMove;
 import com.fluxchess.flux.move.MoveSee;
 
-/**
- * PawnPasserEvaluation
- */
 public final class PawnPasserEvaluation {
 
   private static final int EVAL_PAWN_PASSER_MAXBONUS = 6 * 6 * 6;

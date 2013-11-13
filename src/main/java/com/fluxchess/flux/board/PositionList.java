@@ -18,9 +18,6 @@
  */
 package com.fluxchess.flux.board;
 
-/**
- * PositionList
- */
 public final class PositionList {
 
   public static final int MAXSIZE = 64;

@@ -24,9 +24,6 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * KillerTableTest
- */
 public class KillerTableTest {
 
   @Test

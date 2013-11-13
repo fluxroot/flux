@@ -23,9 +23,6 @@ import com.fluxchess.flux.board.IntChessman;
 import com.fluxchess.flux.board.IntColor;
 import com.fluxchess.flux.board.IntPosition;
 
-/**
- * DrawEvaluation
- */
 public final class DrawEvaluation {
 
   // Draw values

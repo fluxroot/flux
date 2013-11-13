@@ -20,9 +20,6 @@ package com.fluxchess.flux.move;
 
 import com.fluxchess.flux.Search;
 
-/**
- * MoveList
- */
 public final class MoveList {
 
   private static final int MAXSIZE = 4096;

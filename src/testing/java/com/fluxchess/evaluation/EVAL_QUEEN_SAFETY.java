@@ -18,9 +18,6 @@
  */
 package com.fluxchess.evaluation;
 
-/**
- * EVAL_QUEEN_SAFETY
- */
 public final class EVAL_QUEEN_SAFETY extends Parameter {
 
     public EVAL_QUEEN_SAFETY() {

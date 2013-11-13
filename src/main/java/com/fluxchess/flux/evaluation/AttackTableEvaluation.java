@@ -26,9 +26,6 @@ import com.fluxchess.flux.move.MoveGenerator;
 
 import java.util.Arrays;
 
-/**
- * AttackTableEvaluation
- */
 public final class AttackTableEvaluation {
 
   public static final byte BIT_PAWN = 1 << 3;

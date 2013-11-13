@@ -21,9 +21,6 @@ package com.fluxchess.flux;
 import com.fluxchess.flux.move.IntMove;
 import com.fluxchess.flux.move.IntScore;
 
-/**
- * Result
- */
 public final class Result {
 
   public int bestMove = IntMove.NOMOVE;
@@ -34,9 +31,6 @@ public final class Result {
   public int moveNumber = 0;
   public int depth = 0;
 
-  /**
-   * Creates a new Result.
-   */
   public Result() {
   }
 

@@ -23,10 +23,6 @@ import com.fluxchess.jcpi.models.Option;
 import java.util.Hashtable;
 import java.util.Properties;
 
-
-/**
- * Configuration
- */
 public final class Configuration {
 
   public static final String author = "Phokham Nonava";

@@ -24,9 +24,6 @@ import com.fluxchess.flux.board.IntColor;
 import com.fluxchess.flux.board.PositionList;
 import com.fluxchess.flux.move.MoveGenerator;
 
-/**
- * BishopEvaluation
- */
 public final class BishopEvaluation {
 
   public static int EVAL_BISHOP_MOBILITY_BASE = -6;

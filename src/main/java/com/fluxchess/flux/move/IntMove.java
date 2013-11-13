@@ -43,19 +43,10 @@ import com.fluxchess.jcpi.models.GenericRank;
  */
 public final class IntMove {
 
-  /**
-   * Represents no move
-   */
   public static final int NOMOVE = -8;
 
-  /**
-   * Null move
-   */
   public static final int NULLMOVE;
 
-  /**
-   * Move values
-   */
   public static final int NORMAL = 0;
   public static final int PAWNDOUBLE = 1;
   public static final int PAWNPROMOTION = 2;
@@ -63,9 +54,6 @@ public final class IntMove {
   public static final int CASTLING = 4;
   public static final int NULL = 5;
 
-  /**
-   * IntMove array
-   */
   public static final int[] values = {
     NORMAL,
     PAWNDOUBLE,
@@ -75,14 +63,8 @@ public final class IntMove {
     NULL
   };
 
-  /**
-   * Move mask
-   */
   public static final int MASK = 0x7;
 
-  /**
-   * IntMove
-   */
   public static final int INTMOVE_MASK = 0xFFFFFFF;
   public static final int INTMOVE_SIZE = 28;
 
@@ -116,9 +98,6 @@ public final class IntMove {
     NULLMOVE = IntMove.createMove(IntMove.NULL, IntPosition.NOPOSITION, IntPosition.NOPOSITION, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
   }
 
-  /**
-   * IntMove cannot be instantiated.
-   */
   private IntMove() {
   }
 

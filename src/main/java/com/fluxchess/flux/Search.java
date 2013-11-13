@@ -30,24 +30,10 @@ import com.fluxchess.jcpi.models.GenericMove;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
-/**
- * Search
- */
 public final class Search implements Runnable {
 
-  /**
-   * The maximum number of plies.
-   */
   public static final int MAX_HEIGHT = 256;
-
-  /**
-   * The maximum number of depth.
-   */
   public static final int MAX_DEPTH = 64;
-
-  /**
-   * The maximum number of moves.
-   */
   public static final int MAX_MOVES = 4096;
 
   // Constants

@@ -21,9 +21,6 @@ package com.fluxchess.flux.evaluation;
 import com.fluxchess.flux.board.*;
 import com.fluxchess.flux.move.MoveGenerator;
 
-/**
- * RookEvaluation
- */
 public final class RookEvaluation {
 
   public static int EVAL_ROOK_MOBILITY_BASE = -7;

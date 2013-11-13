@@ -18,9 +18,6 @@
  */
 package com.fluxchess.evaluation;
 
-/**
- * EVAL_QUEEN_SEVENTHRANK_ENDGAME
- */
 public final class EVAL_QUEEN_SEVENTHRANK_ENDGAME extends Parameter {
 
     public EVAL_QUEEN_SEVENTHRANK_ENDGAME() {
