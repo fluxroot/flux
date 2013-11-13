@@ -24,8 +24,6 @@ import com.fluxchess.flux.board.*;
  * MoveSee
  * <p/>
  * Notes: Ideas from Fruit
- *
- * @author Phokham Nonava
  */
 public final class MoveSee {
 

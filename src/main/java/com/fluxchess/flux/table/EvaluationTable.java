@@ -24,8 +24,6 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * EvaluationTable
- *
- * @author Phokham Nonava
  */
 public final class EvaluationTable {
 

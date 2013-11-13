@@ -25,8 +25,6 @@ import static org.junit.Assert.assertEquals;
 
 /**
  * MoveRaterTest
- *
- * @author Phokham Nonava
  */
 public class MoveRaterTest {
 

@@ -23,8 +23,6 @@ import com.fluxchess.flux.move.MoveGenerator;
 
 /**
  * RookEvaluation
- *
- * @author Phokham Nonava
  */
 public final class RookEvaluation {
 

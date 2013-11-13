@@ -26,8 +26,6 @@ import com.fluxchess.flux.move.MoveGenerator;
 
 /**
  * BishopEvaluation
- *
- * @author Phokham Nonava
  */
 public final class BishopEvaluation {
 

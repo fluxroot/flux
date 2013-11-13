@@ -24,8 +24,6 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * PawnTable
- *
- * @author Phokham Nonava
  */
 public final class PawnTable {
 

@@ -25,8 +25,6 @@ import com.fluxchess.flux.board.PositionList;
 
 /**
  * PositionValueEvaluation
- *
- * @author Phokham Nonava
  */
 public final class PositionValueEvaluation {
 

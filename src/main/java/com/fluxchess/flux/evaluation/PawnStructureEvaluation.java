@@ -22,8 +22,6 @@ import com.fluxchess.flux.board.*;
 
 /**
  * PawnStructureEvaluation
- *
- * @author Phokham Nonava
  */
 public final class PawnStructureEvaluation {
 

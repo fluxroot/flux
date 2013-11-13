@@ -27,8 +27,6 @@ import java.util.Arrays;
 
 /**
  * PawnTableEvaluation
- *
- * @author Phokham Nonava
  */
 public final class PawnTableEvaluation {
 

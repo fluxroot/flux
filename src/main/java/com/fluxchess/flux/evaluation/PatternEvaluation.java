@@ -25,8 +25,6 @@ import com.fluxchess.flux.board.IntPosition;
 
 /**
  * PatternEvaluation
- *
- * @author Phokham Nonava
  */
 public final class PatternEvaluation {
 

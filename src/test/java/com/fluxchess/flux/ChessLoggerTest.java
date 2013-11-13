@@ -22,8 +22,6 @@ import org.junit.Test;
 
 /**
  * ChessLoggerTest
- *
- * @author Phokham Nonava
  */
 public class ChessLoggerTest {
 

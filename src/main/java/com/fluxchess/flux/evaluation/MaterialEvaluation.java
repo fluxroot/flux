@@ -23,8 +23,6 @@ import com.fluxchess.flux.board.IntColor;
 
 /**
  * MaterialEvaluation
- *
- * @author Phokham Nonava
  */
 public final class MaterialEvaluation {
 

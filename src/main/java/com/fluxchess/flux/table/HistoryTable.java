@@ -26,8 +26,6 @@ import com.fluxchess.flux.move.IntMove;
 
 /**
  * HistoryTable
- *
- * @author Phokham Nonava
  */
 public final class HistoryTable {
 

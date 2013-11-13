@@ -20,8 +20,6 @@ package com.fluxchess.flux;
 
 /**
  * SearchTask
- *
- * @author Phokham Nonava
  */
 public class SearchTask {
 }

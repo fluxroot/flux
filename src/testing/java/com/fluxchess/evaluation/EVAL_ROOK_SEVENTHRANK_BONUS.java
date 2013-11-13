@@ -20,8 +20,6 @@ package com.fluxchess.evaluation;
 
 /**
  * EVAL_ROOK_SEVENTHRANK_BONUS
- *
- * @author Phokham Nonava
  */
 public final class EVAL_ROOK_SEVENTHRANK_BONUS extends Parameter {
 

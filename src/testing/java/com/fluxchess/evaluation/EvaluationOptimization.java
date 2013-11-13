@@ -37,8 +37,6 @@ import com.fluxchess.table.PawnTable;
 
 /**
  * EvaluationOptimization
- *
- * @author Phokham Nonava
  */
 public final class EvaluationOptimization {
 

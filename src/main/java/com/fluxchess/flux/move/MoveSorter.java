@@ -22,8 +22,6 @@ package com.fluxchess.flux.move;
  * We do the sorting with an insertion sort algorithm.
  * <p/>
  * Notes: Ideas from http://www.cs.ubc.ca/~harrison/Java/sorting-demo.html
- *
- * @author Phokham Nonava
  */
 public final class MoveSorter {
 

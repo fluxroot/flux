@@ -24,8 +24,6 @@ import com.fluxchess.jcpi.commands.ProtocolInformationCommand;
 
 /**
  * ChessLogger
- *
- * @author Phokham Nonava
  */
 public final class ChessLogger {
 

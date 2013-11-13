@@ -20,8 +20,6 @@ package com.fluxchess.evaluation;
 
 /**
  * Parameter
- *
- * @author Phokham Nonava
  */
 public abstract class Parameter {
 

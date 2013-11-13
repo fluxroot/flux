@@ -50,8 +50,6 @@ package com.fluxchess.flux;
 //
 ///**
 // * SearchTest
-// *
-// * @author Phokham Nonava
 // */
 //public class SearchTest extends AbstractCommunication implements IGui {
 //
