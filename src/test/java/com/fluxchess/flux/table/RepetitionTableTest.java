@@ -18,12 +18,10 @@
 */
 package com.fluxchess.flux.table;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import org.junit.Test;
 
-import com.fluxchess.flux.table.RepetitionTable;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * RepetitionTableTest
@@ -32,37 +30,37 @@ import com.fluxchess.flux.table.RepetitionTable;
  */
 public class RepetitionTableTest {
 
-    @Test
-    public void testTable() {
-        RepetitionTable table = new RepetitionTable();
-        RepetitionTable table2 = new RepetitionTable();
+  @Test
+  public void testTable() {
+    RepetitionTable table = new RepetitionTable();
+    RepetitionTable table2 = new RepetitionTable();
 
-        // Put a first entry
-        table.put(1);
-        assertTrue(table.exists(1));
+    // Put a first entry
+    table.put(1);
+    assertTrue(table.exists(1));
 
-        // Put a secondy entry
-        table.put(1);
+    // Put a secondy entry
+    table.put(1);
 
-        // We should not find the entries in table 2
-        assertFalse(table2.exists(1));
+    // We should not find the entries in table 2
+    assertFalse(table2.exists(1));
 
-        // Copy the table
-        RepetitionTable table3 = new RepetitionTable(table);
+    // Copy the table
+    RepetitionTable table3 = new RepetitionTable(table);
 
-        // We should find the entries in table 3
-        assertTrue(table3.exists(1));
+    // We should find the entries in table 3
+    assertTrue(table3.exists(1));
 
-        // Remove one entry
-        table.remove(1);
-        assertTrue(table.exists(1));
+    // Remove one entry
+    table.remove(1);
+    assertTrue(table.exists(1));
 
-        // Remove the second entry
-        table.remove(1);
-        assertFalse(table.exists(1));
+    // Remove the second entry
+    table.remove(1);
+    assertFalse(table.exists(1));
 
-        // We should still find the entries in table 3
-        assertTrue(table3.exists(1));
-    }
+    // We should still find the entries in table 3
+    assertTrue(table3.exists(1));
+  }
 
 }

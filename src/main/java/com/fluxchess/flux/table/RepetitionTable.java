@@ -27,84 +27,84 @@ import com.fluxchess.flux.Search;
  */
 public final class RepetitionTable {
 
-    private static final int MAXSIZE = Search.MAX_MOVES;
+  private static final int MAXSIZE = Search.MAX_MOVES;
 
-    private long[] zobristCode = new long[MAXSIZE];
-    private int size = 0;
+  private long[] zobristCode = new long[MAXSIZE];
+  private int size = 0;
 
-    /**
-     * Creates a new RepetitionTable.
-     */
-    public RepetitionTable() {
+  /**
+   * Creates a new RepetitionTable.
+   */
+  public RepetitionTable() {
+  }
+
+  /**
+   * Creates a new RepetitionTable.
+   *
+   * @param table the repetition table to be copied.
+   */
+  public RepetitionTable(RepetitionTable table) {
+    assert table != null;
+
+    System.arraycopy(table.zobristCode, 0, zobristCode, 0, MAXSIZE);
+    size = table.size;
+  }
+
+  /**
+   * Puts a new zobrist code into the table.
+   *
+   * @param zobristCode the zobrist code.
+   */
+  public void put(long zobristCode) {
+    this.zobristCode[size++] = zobristCode;
+  }
+
+  /**
+   * Removes the zobrist code from the table.
+   *
+   * @param zobristCode the zobrist code.
+   */
+  public void remove(long zobristCode) {
+    int index = -1;
+
+    // Find the zobrist code from the end of the list
+    for (int i = size - 1; i >= 0; i--) {
+      if (this.zobristCode[i] == zobristCode) {
+        index = i;
+        break;
+      }
     }
 
-    /**
-     * Creates a new RepetitionTable.
-     *
-     * @param table the repetition table to be copied.
-     */
-    public RepetitionTable(RepetitionTable table) {
-        assert table != null;
+    // Remove and shift
+    if (index != -1) {
+      for (int i = index + 1; i < size; i++) {
+        this.zobristCode[index] = this.zobristCode[i];
+        index++;
+      }
 
-        System.arraycopy(table.zobristCode, 0, zobristCode, 0, MAXSIZE);
-        size = table.size;
+      size--;
+
+      return;
     }
 
-    /**
-     * Puts a new zobrist code into the table.
-     *
-     * @param zobristCode the zobrist code.
-     */
-    public void put(long zobristCode) {
-        this.zobristCode[size++] = zobristCode;
+    // We did not find the zobrist code
+    throw new IllegalArgumentException();
+  }
+
+  /**
+   * Returns whether or not the zobrist code exists in the table.
+   *
+   * @param zobristCode the zobrist code.
+   * @return true if the zobrist code exists in the table, false otherwise.
+   */
+  public boolean exists(long zobristCode) {
+    for (int i = size - 1; i >= 0; i--) {
+      if (this.zobristCode[i] == zobristCode) {
+        return true;
+      }
     }
 
-    /**
-     * Removes the zobrist code from the table.
-     *
-     * @param zobristCode the zobrist code.
-     */
-    public void remove(long zobristCode) {
-        int index = -1;
-
-        // Find the zobrist code from the end of the list
-        for (int i = size - 1; i >= 0; i--) {
-            if (this.zobristCode[i] == zobristCode) {
-                index = i;
-                break;
-            }
-        }
-
-        // Remove and shift
-        if (index != -1) {
-            for (int i = index + 1; i < size; i++) {
-                this.zobristCode[index] = this.zobristCode[i];
-                index++;
-            }
-
-            size--;
-
-            return;
-        }
-
-        // We did not find the zobrist code
-        throw new IllegalArgumentException();
-    }
-
-    /**
-     * Returns whether or not the zobrist code exists in the table.
-     *
-     * @param zobristCode the zobrist code.
-     * @return true if the zobrist code exists in the table, false otherwise.
-     */
-    public boolean exists(long zobristCode) {
-        for (int i = size - 1; i >= 0; i--) {
-            if (this.zobristCode[i] == zobristCode) {
-                return true;
-            }
-        }
-
-        return false;
-    }
+    return false;
+  }
 
 }
