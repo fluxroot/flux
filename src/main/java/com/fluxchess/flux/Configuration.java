@@ -21,7 +21,7 @@ package com.fluxchess.flux;
 import java.util.Hashtable;
 import java.util.Properties;
 
-import com.fluxchess.jcpi.data.Option;
+import com.fluxchess.jcpi.models.Option;
 
 
 /**

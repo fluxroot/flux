@@ -23,10 +23,10 @@ import com.fluxchess.flux.board.Hex88Board;
 import com.fluxchess.flux.board.IntChessman;
 import com.fluxchess.flux.board.IntColor;
 import com.fluxchess.flux.board.IntPosition;
-import com.fluxchess.jcpi.data.GenericFile;
-import com.fluxchess.jcpi.data.GenericMove;
-import com.fluxchess.jcpi.data.GenericPosition;
-import com.fluxchess.jcpi.data.GenericRank;
+import com.fluxchess.jcpi.models.GenericFile;
+import com.fluxchess.jcpi.models.GenericMove;
+import com.fluxchess.jcpi.models.GenericPosition;
+import com.fluxchess.jcpi.models.GenericRank;
 
 /**
  * This class represents a move as a int value. The fields are represented by

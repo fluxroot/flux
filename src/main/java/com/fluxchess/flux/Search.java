@@ -45,7 +45,7 @@ import com.fluxchess.flux.table.HistoryTable;
 import com.fluxchess.flux.table.KillerTable;
 import com.fluxchess.flux.table.TranspositionTable;
 import com.fluxchess.flux.table.TranspositionTableEntry;
-import com.fluxchess.jcpi.data.GenericMove;
+import com.fluxchess.jcpi.models.GenericMove;
 
 /**
  * Search

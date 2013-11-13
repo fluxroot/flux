@@ -20,7 +20,7 @@ package com.fluxchess.flux.move;
 
 import java.util.List;
 
-import com.fluxchess.jcpi.data.GenericMove;
+import com.fluxchess.jcpi.models.GenericMove;
 
 
 /**
