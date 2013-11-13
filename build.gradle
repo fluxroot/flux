@@ -75,6 +75,14 @@ dependencies {
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
+processResources {
+  filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [
+    version: project.version,
+    buildNumber: project.buildNumber,
+    revisionNumber: project.revisionNumber
+  ])
+}
+
 jar {
     from {
         configurations.compile.collect {it.isDirectory() ? it : zipTree(it)}
