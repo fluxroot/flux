@@ -25,13 +25,13 @@ import com.fluxchess.flux.Search;
 import com.fluxchess.flux.move.IntCastling;
 import com.fluxchess.flux.move.IntMove;
 import com.fluxchess.flux.table.RepetitionTable;
-import com.fluxchess.jcpi.data.GenericBoard;
-import com.fluxchess.jcpi.data.GenericCastling;
-import com.fluxchess.jcpi.data.GenericChessman;
-import com.fluxchess.jcpi.data.GenericColor;
-import com.fluxchess.jcpi.data.GenericFile;
-import com.fluxchess.jcpi.data.GenericPiece;
-import com.fluxchess.jcpi.data.GenericPosition;
+import com.fluxchess.jcpi.models.GenericBoard;
+import com.fluxchess.jcpi.models.GenericCastling;
+import com.fluxchess.jcpi.models.GenericChessman;
+import com.fluxchess.jcpi.models.GenericColor;
+import com.fluxchess.jcpi.models.GenericFile;
+import com.fluxchess.jcpi.models.GenericPiece;
+import com.fluxchess.jcpi.models.GenericPosition;
 
 /**
  * Hex88Board

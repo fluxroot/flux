@@ -26,7 +26,7 @@ import org.junit.Test;
 
 import com.fluxchess.flux.board.IntChessman;
 import com.fluxchess.flux.board.IntColor;
-import com.fluxchess.jcpi.data.GenericChessman;
+import com.fluxchess.jcpi.models.GenericChessman;
 
 /**
  * IntChessmanTest

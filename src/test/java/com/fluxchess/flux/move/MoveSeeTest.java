@@ -29,8 +29,8 @@ import com.fluxchess.flux.board.IntColor;
 import com.fluxchess.flux.board.IntPosition;
 import com.fluxchess.flux.move.IntMove;
 import com.fluxchess.flux.move.MoveSee;
-import com.fluxchess.jcpi.data.GenericBoard;
-import com.fluxchess.jcpi.data.IllegalNotationException;
+import com.fluxchess.jcpi.models.GenericBoard;
+import com.fluxchess.jcpi.models.IllegalNotationException;
 
 /**
  * MoveSeeTest

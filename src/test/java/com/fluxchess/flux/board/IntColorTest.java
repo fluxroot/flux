@@ -23,7 +23,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import com.fluxchess.flux.board.IntColor;
-import com.fluxchess.jcpi.data.GenericColor;
+import com.fluxchess.jcpi.models.GenericColor;
 
 /**
  * IntColorTest

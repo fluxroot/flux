@@ -67,7 +67,7 @@ tasks.withType(Checkstyle) {
 }
 
 dependencies {
-    compile 'com.fluxchess:jcpi:0.3.+'
+    compile 'com.fluxchess:jcpi:+'
 
     testCompile 'junit:junit:4.+'
 }

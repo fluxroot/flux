@@ -18,7 +18,7 @@
 */
 package com.fluxchess.flux.board;
 
-import com.fluxchess.jcpi.data.GenericChessman;
+import com.fluxchess.jcpi.models.GenericChessman;
 
 /**
  * This class represents a chessman as a int value. The fields are

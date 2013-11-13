@@ -30,7 +30,6 @@ import com.fluxchess.flux.move.IntMove;
 import com.fluxchess.flux.table.EvaluationTable;
 import com.fluxchess.flux.table.PawnTable;
 import com.fluxchess.flux.table.TranspositionTable;
-import com.fluxchess.jcpi.AbstractCommunication;
 import com.fluxchess.jcpi.AbstractEngine;
 import com.fluxchess.jcpi.commands.EngineAnalyzeCommand;
 import com.fluxchess.jcpi.commands.EngineDebugCommand;
@@ -41,14 +40,13 @@ import com.fluxchess.jcpi.commands.EngineReadyRequestCommand;
 import com.fluxchess.jcpi.commands.EngineSetOptionCommand;
 import com.fluxchess.jcpi.commands.EngineStartCalculatingCommand;
 import com.fluxchess.jcpi.commands.EngineStopCalculatingCommand;
-import com.fluxchess.jcpi.commands.GuiInformationCommand;
-import com.fluxchess.jcpi.commands.GuiInitializeAnswerCommand;
-import com.fluxchess.jcpi.commands.GuiReadyAnswerCommand;
-import com.fluxchess.jcpi.data.GenericBoard;
-import com.fluxchess.jcpi.data.GenericColor;
-import com.fluxchess.jcpi.data.GenericMove;
-import com.fluxchess.jcpi.data.Option;
-import com.fluxchess.jcpi.standardio.StandardIoCommunication;
+import com.fluxchess.jcpi.commands.ProtocolInformationCommand;
+import com.fluxchess.jcpi.commands.ProtocolInitializeAnswerCommand;
+import com.fluxchess.jcpi.commands.ProtocolReadyAnswerCommand;
+import com.fluxchess.jcpi.models.GenericBoard;
+import com.fluxchess.jcpi.models.GenericColor;
+import com.fluxchess.jcpi.models.GenericMove;
+import com.fluxchess.jcpi.models.Option;
 
 /**
  * This is the main entry class.
@@ -69,11 +67,9 @@ public final class Flux extends AbstractEngine {
      *
      * @param communication the AbstractCommunication.
      */
-    public Flux(AbstractCommunication communication) {
-        super(communication);
-
+    public Flux() {
         // Set the protocol
-        ChessLogger.setProtocol(communication);
+        ChessLogger.setProtocol(getProtocol());
 
         // Transposition Table
         int megabyteValue = Integer.parseInt(((Option) Configuration.configuration.get(Configuration.KEY_Hash)).defaultValue);;
@@ -94,7 +90,7 @@ public final class Flux extends AbstractEngine {
         Runtime.getRuntime().gc();
 
         // Create a new search
-        search = new Search(new Evaluation(evaluationTable, pawnTable), new Hex88Board(new GenericBoard(GenericBoard.STANDARDSETUP)), transpositionTable, new InformationTimer(communication, transpositionTable), timeTable);
+        search = new Search(new Evaluation(evaluationTable, pawnTable), new Hex88Board(new GenericBoard(GenericBoard.STANDARDSETUP)), transpositionTable, new InformationTimer(getProtocol(), transpositionTable), timeTable);
     }
 
     /**
@@ -103,11 +99,11 @@ public final class Flux extends AbstractEngine {
      * @param args not used.
      */
     public static void main(String[] args) {
-        AbstractEngine engine = new Flux(new StandardIoCommunication());
+        AbstractEngine engine = new Flux();
         engine.run();
     }
 
-    public void visit(EngineInitializeRequestCommand command) {
+  public void receive(EngineInitializeRequestCommand command) {
         assert command != null;
 
         ChessLogger.getLogger().debug("Received Protocol command.");
@@ -150,12 +146,12 @@ public final class Flux extends AbstractEngine {
         Runtime.getRuntime().gc();
 
         // Send the initialization commands
-        GuiInitializeAnswerCommand initializeCommand = new GuiInitializeAnswerCommand(Configuration.name, Configuration.author);
+        ProtocolInitializeAnswerCommand initializeCommand = new ProtocolInitializeAnswerCommand(Configuration.name, Configuration.author);
         for (Iterator<Option> iter = Configuration.configuration.values().iterator(); iter.hasNext();) {
             Option option = iter.next();
             initializeCommand.addOption(option);
         }
-        communication.send(initializeCommand);
+        getProtocol().send(initializeCommand);
     }
 
     protected void quit() {
@@ -165,21 +161,21 @@ public final class Flux extends AbstractEngine {
         new EngineStopCalculatingCommand().accept(this);
     }
 
-    public void visit(EngineReadyRequestCommand command) {
+    public void receive(EngineReadyRequestCommand command) {
         assert command != null;
 
         ChessLogger.getLogger().debug("Received ReadyRequest command.");
 
         // Send a pong back
-        communication.send(new GuiReadyAnswerCommand(command.token));
+        getProtocol().send(new ProtocolReadyAnswerCommand(command.token));
     }
 
-    public void visit(EngineDebugCommand command) {
+    public void receive(EngineDebugCommand command) {
         assert command != null;
 
         ChessLogger.getLogger().debug("Received Debug command.");
 
-        GuiInformationCommand infoCommand = new GuiInformationCommand();
+        ProtocolInformationCommand infoCommand = new ProtocolInformationCommand();
 
         boolean state = ChessLogger.getDebug();
         if (command.toggle) {
@@ -193,12 +189,12 @@ public final class Flux extends AbstractEngine {
         } else {
             infoCommand.setString("Turning off debugging mode");
         }
-        communication.send(infoCommand);
+        getProtocol().send(infoCommand);
 
         ChessLogger.setDebug(state);
     }
 
-    public void visit(EngineNewGameCommand command) {
+    public void receive(EngineNewGameCommand command) {
         assert command != null;
 
         ChessLogger.getLogger().debug("Received New command.");
@@ -213,7 +209,7 @@ public final class Flux extends AbstractEngine {
         Arrays.fill(timeTable, 0);
     }
 
-    public void visit(EngineAnalyzeCommand command) {
+    public void receive(EngineAnalyzeCommand command) {
         assert command != null;
 
         ChessLogger.getLogger().debug("Received Analyze command.");
@@ -233,7 +229,7 @@ public final class Flux extends AbstractEngine {
         }
     }
 
-    public void visit(EnginePonderHitCommand command) {
+    public void receive(EnginePonderHitCommand command) {
         assert command != null;
 
         ChessLogger.getLogger().debug("Received PonderHit command.");
@@ -245,7 +241,7 @@ public final class Flux extends AbstractEngine {
         }
     }
 
-    public void visit(EngineStartCalculatingCommand command) {
+    public void receive(EngineStartCalculatingCommand command) {
         assert command != null;
 
         ChessLogger.getLogger().debug("Received StartCalculating command.");
@@ -253,7 +249,7 @@ public final class Flux extends AbstractEngine {
         if (board != null) {
             if (search.isStopped()) {
                 // Create a new search
-                search = new Search(new Evaluation(evaluationTable, pawnTable), board, transpositionTable, new InformationTimer(communication, transpositionTable), timeTable);
+                search = new Search(new Evaluation(evaluationTable, pawnTable), board, transpositionTable, new InformationTimer(getProtocol(), transpositionTable), timeTable);
 
                 // Set all search parameters
                 if (command.getDepth() != null && command.getDepth() > 0) {
@@ -297,7 +293,7 @@ public final class Flux extends AbstractEngine {
         }
     }
 
-    public void visit(EngineStopCalculatingCommand command) {
+    public void receive(EngineStopCalculatingCommand command) {
         assert command != null;
 
         ChessLogger.getLogger().debug("Received StopCalculating command.");
@@ -310,7 +306,7 @@ public final class Flux extends AbstractEngine {
         }
     }
 
-    public void visit(EngineSetOptionCommand command) {
+    public void receive(EngineSetOptionCommand command) {
         assert command != null;
 
         Configuration.setOption(command.name, command.value);

@@ -39,8 +39,8 @@ import com.fluxchess.flux.move.MoveRater;
 import com.fluxchess.flux.move.MoveSee;
 import com.fluxchess.flux.table.HistoryTable;
 import com.fluxchess.flux.table.KillerTable;
-import com.fluxchess.jcpi.data.GenericBoard;
-import com.fluxchess.jcpi.data.IllegalNotationException;
+import com.fluxchess.jcpi.models.GenericBoard;
+import com.fluxchess.jcpi.models.IllegalNotationException;
 
 /**
  * MoveGeneratorTest

@@ -18,7 +18,7 @@
 */
 package com.fluxchess.flux.move;
 
-import com.fluxchess.jcpi.data.GenericScore;
+import com.fluxchess.jcpi.models.GenericScore;
 
 /**
  * IntScore

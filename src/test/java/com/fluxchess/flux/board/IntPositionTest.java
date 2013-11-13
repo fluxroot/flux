@@ -24,9 +24,9 @@ import org.junit.Test;
 
 import com.fluxchess.flux.board.IntColor;
 import com.fluxchess.flux.board.IntPosition;
-import com.fluxchess.jcpi.data.GenericFile;
-import com.fluxchess.jcpi.data.GenericPosition;
-import com.fluxchess.jcpi.data.GenericRank;
+import com.fluxchess.jcpi.models.GenericFile;
+import com.fluxchess.jcpi.models.GenericPosition;
+import com.fluxchess.jcpi.models.GenericRank;
 
 /**
  * IntPositionTest

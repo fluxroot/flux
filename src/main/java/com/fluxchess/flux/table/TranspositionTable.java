@@ -27,7 +27,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import com.fluxchess.flux.board.Hex88Board;
 import com.fluxchess.flux.move.IntMove;
 import com.fluxchess.flux.move.IntScore;
-import com.fluxchess.jcpi.data.GenericMove;
+import com.fluxchess.jcpi.models.GenericMove;
 
 /**
  * TranspositionTable
