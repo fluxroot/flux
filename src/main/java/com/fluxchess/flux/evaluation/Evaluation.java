@@ -28,8 +28,6 @@ import com.fluxchess.flux.table.PawnTable;
 
 /**
  * Evaluation
- *
- * @author Phokham Nonava
  */
 public final class Evaluation {
 

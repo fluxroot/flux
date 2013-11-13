@@ -30,8 +30,6 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * TranspositionTable
- *
- * @author Phokham Nonava
  */
 public final class TranspositionTable {
 

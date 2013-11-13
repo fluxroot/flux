@@ -26,8 +26,6 @@ import com.fluxchess.flux.move.MoveGenerator;
 
 /**
  * KnightEvaluation
- *
- * @author Phokham Nonava
  */
 public final class KnightEvaluation {
 

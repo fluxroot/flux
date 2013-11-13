@@ -23,8 +23,6 @@ import com.fluxchess.flux.move.IntCastling;
 
 /**
  * KingEvaluation
- *
- * @author Phokham Nonava
  */
 public final class KingEvaluation {
 

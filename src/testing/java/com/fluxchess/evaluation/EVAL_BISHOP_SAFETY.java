@@ -20,8 +20,6 @@ package com.fluxchess.evaluation;
 
 /**
  * EVAL_BISHOP_SAFETY
- *
- * @author Phokham Nonava
  */
 public final class EVAL_BISHOP_SAFETY extends Parameter {
 

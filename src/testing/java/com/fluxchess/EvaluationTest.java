@@ -32,8 +32,6 @@ import com.fluxchess.table.PawnTable;
 
 /**
  * EvaluationTest
- *
- * @author Phokham Nonava
  */
 public class EvaluationTest {
 

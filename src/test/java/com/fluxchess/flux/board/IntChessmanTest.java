@@ -25,8 +25,6 @@ import static org.junit.Assert.*;
 
 /**
  * IntChessmanTest
- *
- * @author Phokham Nonava
  */
 public class IntChessmanTest {
 

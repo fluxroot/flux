@@ -20,8 +20,6 @@ package com.fluxchess.flux.board;
 
 /**
  * ChessmanList
- *
- * @author Phokham Nonava
  */
 public final class ChessmanList {
 

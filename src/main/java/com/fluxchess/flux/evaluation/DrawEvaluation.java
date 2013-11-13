@@ -25,8 +25,6 @@ import com.fluxchess.flux.board.IntPosition;
 
 /**
  * DrawEvaluation
- *
- * @author Phokham Nonava
  */
 public final class DrawEvaluation {
 

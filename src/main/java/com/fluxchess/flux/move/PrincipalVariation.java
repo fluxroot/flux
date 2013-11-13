@@ -25,8 +25,6 @@ import java.util.List;
 
 /**
  * PrincipalVariation
- *
- * @author Phokham Nonava
  */
 public final class PrincipalVariation implements Comparable<PrincipalVariation> {
 

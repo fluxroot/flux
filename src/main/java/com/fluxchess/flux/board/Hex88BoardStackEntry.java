@@ -20,8 +20,6 @@ package com.fluxchess.flux.board;
 
 /**
  * Hex88BoardStackEntry
- *
- * @author Phokham Nonava
  */
 public final class Hex88BoardStackEntry {
 

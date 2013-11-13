@@ -24,8 +24,6 @@ import static org.junit.Assert.assertEquals;
 
 /**
  * MoveSorterTest
- *
- * @author Phokham Nonava
  */
 public class MoveSorterTest {
 

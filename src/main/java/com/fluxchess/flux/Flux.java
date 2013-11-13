@@ -38,8 +38,6 @@ import java.util.List;
 
 /**
  * This is the main entry class.
- *
- * @author Phokham Nonava
  */
 public final class Flux extends AbstractEngine {
 

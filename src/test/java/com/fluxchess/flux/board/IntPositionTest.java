@@ -27,8 +27,6 @@ import static org.junit.Assert.assertEquals;
 
 /**
  * IntPositionTest
- *
- * @author Phokham Nonava
  */
 public class IntPositionTest {
 

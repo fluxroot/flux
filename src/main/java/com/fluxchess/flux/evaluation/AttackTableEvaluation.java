@@ -28,8 +28,6 @@ import java.util.Arrays;
 
 /**
  * AttackTableEvaluation
- *
- * @author Phokham Nonava
  */
 public final class AttackTableEvaluation {
 

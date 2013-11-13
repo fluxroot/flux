@@ -30,8 +30,6 @@ import java.util.List;
 
 /**
  * InformationTimer
- *
- * @author Phokham Nonava
  */
 public final class InformationTimer {
 

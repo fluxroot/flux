@@ -24,8 +24,6 @@ import com.fluxchess.flux.move.MoveSee;
 
 /**
  * PawnPasserEvaluation
- *
- * @author Phokham Nonava
  */
 public final class PawnPasserEvaluation {
 

@@ -35,8 +35,6 @@ import com.fluxchess.table.KillerTable;
 
 /**
  * PerftPerformanceTesting
- *
- * @author Phokham Nonava
  */
 public class PerftPerformanceTesting {
 

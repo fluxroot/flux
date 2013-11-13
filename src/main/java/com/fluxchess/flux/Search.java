@@ -32,8 +32,6 @@ import java.util.concurrent.Semaphore;
 
 /**
  * Search
- *
- * @author Phokham Nonava
  */
 public final class Search implements Runnable {
 

@@ -20,8 +20,6 @@ package com.fluxchess.evaluation;
 
 /**
  * EVAL_KNIGHT_SAFETY
- *
- * @author Phokham Nonava
  */
 public final class EVAL_KNIGHT_SAFETY extends Parameter {
 

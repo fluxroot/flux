@@ -20,8 +20,6 @@ package com.fluxchess.evaluation;
 
 /**
  * EVAL_ROOK_SAFETY
- *
- * @author Phokham Nonava
  */
 public final class EVAL_ROOK_SAFETY extends Parameter {
 

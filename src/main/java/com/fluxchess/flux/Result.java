@@ -23,8 +23,6 @@ import com.fluxchess.flux.move.IntScore;
 
 /**
  * Result
- *
- * @author Phokham Nonava
  */
 public final class Result {
 

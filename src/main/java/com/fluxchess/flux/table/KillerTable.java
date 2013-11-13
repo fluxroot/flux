@@ -24,8 +24,6 @@ import com.fluxchess.flux.move.IntMove;
 /**
  * This table is used to store the Killer Moves. We use two slots to
  * differentiate primary and secondary killers.
- *
- * @author Phokham Nonava
  */
 public final class KillerTable {
 

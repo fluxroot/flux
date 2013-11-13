@@ -22,8 +22,6 @@ import com.fluxchess.flux.Search;
 
 /**
  * RepetitionTable
- *
- * @author Phokham Nonava
  */
 public final class RepetitionTable {
 

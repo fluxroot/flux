@@ -20,8 +20,6 @@ package com.fluxchess.evaluation;
 
 /**
  * EVAL_ROOK_OPENFILE
- *
- * @author Phokham Nonava
  */
 public final class EVAL_ROOK_OPENFILE extends Parameter {
 

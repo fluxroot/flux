@@ -20,8 +20,6 @@ package com.fluxchess.flux.move;
 
 /**
  * TestPerftTable
- *
- * @author Phokham Nonava
  */
 public final class TestPerftTable {
 

@@ -23,8 +23,6 @@ import com.fluxchess.flux.move.MoveGenerator;
 
 /**
  * QueenEvaluation
- *
- * @author Phokham Nonava
  */
 public final class QueenEvaluation {
 

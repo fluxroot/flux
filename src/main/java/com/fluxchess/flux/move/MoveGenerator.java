@@ -29,8 +29,6 @@ import com.fluxchess.flux.table.KillerTable;
  * <p/>
  * Notes: Ideas from Fruit. I specially like the Idea how to handle the state
  * list.
- *
- * @author Phokham Nonava
  */
 public final class MoveGenerator {
 

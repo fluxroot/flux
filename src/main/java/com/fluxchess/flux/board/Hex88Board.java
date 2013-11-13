@@ -28,8 +28,6 @@ import java.util.Random;
 
 /**
  * Hex88Board
- *
- * @author Phokham Nonava
  */
 public final class Hex88Board {
 
