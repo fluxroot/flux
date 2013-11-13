@@ -130,7 +130,7 @@ public final class Flux extends AbstractEngine {
     Runtime.getRuntime().gc();
 
     // Send the initialization commands
-    ProtocolInitializeAnswerCommand initializeCommand = new ProtocolInitializeAnswerCommand(Configuration.name, Configuration.author);
+    ProtocolInitializeAnswerCommand initializeCommand = new ProtocolInitializeAnswerCommand(VersionInfo.current().toString(), Configuration.author);
     for (Iterator<Option> iter = Configuration.configuration.values().iterator(); iter.hasNext(); ) {
       Option option = iter.next();
       initializeCommand.addOption(option);

@@ -28,7 +28,6 @@ import java.util.Properties;
 
 public final class Configuration {
 
-  public static final String name = "Flux 2.2.1";
   public static final String author = "Phokham Nonava";
 
   // Search
