@@ -25,39 +25,39 @@ package com.fluxchess.flux.move;
  */
 public final class TestPerftTable {
 
-    private final int size = 4194304;
-    private int currentAge = 0;
+  private final int size = 4194304;
+  private int currentAge = 0;
 
-    private long[] zobristCode;
-    private int[] nodeNumber;
-    private int[] age;
+  private long[] zobristCode;
+  private int[] nodeNumber;
+  private int[] age;
 
-    public TestPerftTable() {
-        zobristCode = new long[size];
-        nodeNumber = new int[size];
-        age = new int[size];
+  public TestPerftTable() {
+    zobristCode = new long[size];
+    nodeNumber = new int[size];
+    age = new int[size];
+  }
+
+  public void put(long newZobristCode, int newNodeNumber) {
+    int position = (int) (newZobristCode % size);
+
+    zobristCode[position] = newZobristCode;
+    nodeNumber[position] = newNodeNumber;
+    age[position] = currentAge;
+  }
+
+  public int get(long newZobristCode) {
+    int position = (int) (newZobristCode % size);
+
+    if (zobristCode[position] == newZobristCode && currentAge == age[position]) {
+      return nodeNumber[position];
+    } else {
+      return 0;
     }
+  }
 
-    public void put(long newZobristCode, int newNodeNumber) {
-        int position = (int) (newZobristCode % size);
-
-        zobristCode[position] = newZobristCode;
-        nodeNumber[position] = newNodeNumber;
-        age[position] = currentAge;
-    }
-
-    public int get(long newZobristCode) {
-        int position = (int) (newZobristCode % size);
-
-        if (zobristCode[position] == newZobristCode && currentAge == age[position]) {
-            return nodeNumber[position];
-        } else {
-            return 0;
-        }
-    }
-
-    public void increaseAge() {
-        currentAge++;
-    }
+  public void increaseAge() {
+    currentAge++;
+  }
 
 }

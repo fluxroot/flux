@@ -31,54 +31,54 @@ import com.fluxchess.flux.move.MoveGenerator;
  */
 public final class KnightEvaluation {
 
-    public static int EVAL_KNIGHT_MOBILITY_BASE = -4;
-    public static int EVAL_KNIGHT_MOBILITYFACTOR = 4;
-    public static int EVAL_KNIGHT_SAFETY = 10;
+  public static int EVAL_KNIGHT_MOBILITY_BASE = -4;
+  public static int EVAL_KNIGHT_MOBILITYFACTOR = 4;
+  public static int EVAL_KNIGHT_SAFETY = 10;
 
-    private KnightEvaluation() {
-    }
+  private KnightEvaluation() {
+  }
 
-    public static int evaluateKnight(int myColor, int enemyColor, Hex88Board board) {
-        assert myColor != IntColor.NOCOLOR;
-        assert enemyColor != IntColor.NOCOLOR;
-        assert board != null;
+  public static int evaluateKnight(int myColor, int enemyColor, Hex88Board board) {
+    assert myColor != IntColor.NOCOLOR;
+    assert enemyColor != IntColor.NOCOLOR;
+    assert board != null;
 
-        // Initialize
-        int total = 0;
-        byte[] enemyAttackTable = AttackTableEvaluation.getInstance().attackTable[enemyColor];
-        PositionList myKnightList = board.knightList[myColor];
+    // Initialize
+    int total = 0;
+    byte[] enemyAttackTable = AttackTableEvaluation.getInstance().attackTable[enemyColor];
+    PositionList myKnightList = board.knightList[myColor];
 
-        // Evaluate each knight
-        for (int i = 0; i < myKnightList.size; i++) {
-            int knightPosition = myKnightList.position[i];
+    // Evaluate each knight
+    for (int i = 0; i < myKnightList.size; i++) {
+      int knightPosition = myKnightList.position[i];
 
-            int allMobility = EVAL_KNIGHT_MOBILITY_BASE;
+      int allMobility = EVAL_KNIGHT_MOBILITY_BASE;
 
-            // Evaluate mobility
-            for (int delta : MoveGenerator.moveDeltaKnight) {
-                int targetPosition = knightPosition + delta;
-                if ((targetPosition & 0x88) == 0) {
-                    int target = board.board[targetPosition];
-                    if (target == IntChessman.NOPIECE) {
-                        allMobility++;
-                    } else {
-                        if (IntChessman.getColor(target) == enemyColor) {
-                            allMobility++;
-                        }
-                    }
-                }
+      // Evaluate mobility
+      for (int delta : MoveGenerator.moveDeltaKnight) {
+        int targetPosition = knightPosition + delta;
+        if ((targetPosition & 0x88) == 0) {
+          int target = board.board[targetPosition];
+          if (target == IntChessman.NOPIECE) {
+            allMobility++;
+          } else {
+            if (IntChessman.getColor(target) == enemyColor) {
+              allMobility++;
             }
-
-            // Evaluate mobility
-            total += EVAL_KNIGHT_MOBILITYFACTOR * allMobility;
-
-            // Evaluate safety
-            if ((enemyAttackTable[knightPosition] & AttackTableEvaluation.BIT_PAWN) == 0) {
-                total += EVAL_KNIGHT_SAFETY;
-            }
+          }
         }
+      }
 
-        return total;
+      // Evaluate mobility
+      total += EVAL_KNIGHT_MOBILITYFACTOR * allMobility;
+
+      // Evaluate safety
+      if ((enemyAttackTable[knightPosition] & AttackTableEvaluation.BIT_PAWN) == 0) {
+        total += EVAL_KNIGHT_SAFETY;
+      }
     }
+
+    return total;
+  }
 
 }

@@ -27,51 +27,51 @@ import com.fluxchess.flux.Search;
  */
 public final class MoveList {
 
-    private static final int MAXSIZE = 4096;
-    private static final int HISTORYSIZE = Search.MAX_HEIGHT + 1;
+  private static final int MAXSIZE = 4096;
+  private static final int HISTORYSIZE = Search.MAX_HEIGHT + 1;
 
-    public final int[] move = new int[MAXSIZE];
-    public final int[] value = new int[MAXSIZE];
-    public int head = 0;
-    public int index = 0;
-    public int tail = 0;
+  public final int[] move = new int[MAXSIZE];
+  public final int[] value = new int[MAXSIZE];
+  public int head = 0;
+  public int index = 0;
+  public int tail = 0;
 
-    private final int[] historyHead = new int[HISTORYSIZE];
-    private final int[] historyIndex = new int[HISTORYSIZE];
-    private final int[] historyTail = new int[HISTORYSIZE];
-    private int historyCount = 0;
+  private final int[] historyHead = new int[HISTORYSIZE];
+  private final int[] historyIndex = new int[HISTORYSIZE];
+  private final int[] historyTail = new int[HISTORYSIZE];
+  private int historyCount = 0;
 
-    public MoveList() {
-    }
+  public MoveList() {
+  }
 
-    public void newList() {
-        assert historyCount < HISTORYSIZE;
+  public void newList() {
+    assert historyCount < HISTORYSIZE;
 
-        historyHead[historyCount] = head;
-        historyIndex[historyCount] = index;
-        historyTail[historyCount] = tail;
-        historyCount++;
+    historyHead[historyCount] = head;
+    historyIndex[historyCount] = index;
+    historyTail[historyCount] = tail;
+    historyCount++;
 
-        head = tail;
-        index = tail;
-    }
+    head = tail;
+    index = tail;
+  }
 
-    public void deleteList() {
-        assert historyCount > 0;
+  public void deleteList() {
+    assert historyCount > 0;
 
-        historyCount--;
-        head = historyHead[historyCount];
-        index = historyIndex[historyCount];
-        tail = historyTail[historyCount];
-    }
+    historyCount--;
+    head = historyHead[historyCount];
+    index = historyIndex[historyCount];
+    tail = historyTail[historyCount];
+  }
 
-    public void resetList() {
-        tail = head;
-        index = head;
-    }
+  public void resetList() {
+    tail = head;
+    index = head;
+  }
 
-    public int getLength() {
-        return tail - head;
-    }
+  public int getLength() {
+    return tail - head;
+  }
 
 }

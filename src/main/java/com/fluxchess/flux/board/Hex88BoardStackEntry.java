@@ -25,32 +25,32 @@ package com.fluxchess.flux.board;
  */
 public final class Hex88BoardStackEntry {
 
-    public long zobristHistory = 0;
-    public long pawnZobristHistory = 0;
-    public int halfMoveClockHistory = 0;
-    public int enPassantHistory = 0;
-    public int captureSquareHistory = 0;
+  public long zobristHistory = 0;
+  public long pawnZobristHistory = 0;
+  public int halfMoveClockHistory = 0;
+  public int enPassantHistory = 0;
+  public int captureSquareHistory = 0;
 
-    public Hex88BoardStackEntry() {
-        clear();
-    }
+  public Hex88BoardStackEntry() {
+    clear();
+  }
 
-    public Hex88BoardStackEntry(Hex88BoardStackEntry entry) {
-        assert entry != null;
+  public Hex88BoardStackEntry(Hex88BoardStackEntry entry) {
+    assert entry != null;
 
-        zobristHistory = entry.zobristHistory;
-        pawnZobristHistory = entry.pawnZobristHistory;
-        halfMoveClockHistory = entry.halfMoveClockHistory;
-        enPassantHistory = entry.enPassantHistory;
-        captureSquareHistory = entry.captureSquareHistory;
-    }
+    zobristHistory = entry.zobristHistory;
+    pawnZobristHistory = entry.pawnZobristHistory;
+    halfMoveClockHistory = entry.halfMoveClockHistory;
+    enPassantHistory = entry.enPassantHistory;
+    captureSquareHistory = entry.captureSquareHistory;
+  }
 
-    public void clear() {
-        zobristHistory = 0;
-        pawnZobristHistory = 0;
-        halfMoveClockHistory = 0;
-        enPassantHistory = 0;
-        captureSquareHistory = 0;
-    }
+  public void clear() {
+    zobristHistory = 0;
+    pawnZobristHistory = 0;
+    halfMoveClockHistory = 0;
+    enPassantHistory = 0;
+    captureSquareHistory = 0;
+  }
 
 }

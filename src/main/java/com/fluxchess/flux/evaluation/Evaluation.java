@@ -33,116 +33,116 @@ import com.fluxchess.flux.table.PawnTable;
  */
 public final class Evaluation {
 
-    // Our total values
-    private static int[] material = new int[IntColor.ARRAY_DIMENSION];
-    private static int total = 0;
+  // Our total values
+  private static int[] material = new int[IntColor.ARRAY_DIMENSION];
+  private static int total = 0;
 
-    // The hash tables
-    private final EvaluationTable evaluationTable;
-    private final PawnTable pawntable;
+  // The hash tables
+  private final EvaluationTable evaluationTable;
+  private final PawnTable pawntable;
 
-    /**
-     * Creates a new Evaluation.
-     */
-    public Evaluation(EvaluationTable evaluationTable, PawnTable pawnTable) {
-        assert evaluationTable != null;
-        assert pawnTable != null;
+  /**
+   * Creates a new Evaluation.
+   */
+  public Evaluation(EvaluationTable evaluationTable, PawnTable pawnTable) {
+    assert evaluationTable != null;
+    assert pawnTable != null;
 
-        this.evaluationTable = evaluationTable;
-        this.pawntable = pawnTable;
+    this.evaluationTable = evaluationTable;
+    this.pawntable = pawnTable;
+  }
+
+  /**
+   * Evaluates the board.
+   *
+   * @param board the board.
+   * @return the evaluation value in centipawns.
+   */
+  public int evaluate(Hex88Board board) {
+    assert board != null;
+
+    // Check the evaluation table
+    if (Configuration.useEvaluationTable) {
+      EvaluationTableEntry entry = evaluationTable.get(board.zobristCode);
+      if (entry != null) {
+        return entry.evaluation;
+      }
     }
 
-    /**
-     * Evaluates the board.
-     *
-     * @param board the board.
-     * @return the evaluation value in centipawns.
-     */
-    public int evaluate(Hex88Board board) {
-        assert board != null;
+    // Initialize
+    int myColor = board.activeColor;
+    int enemyColor = IntColor.switchColor(myColor);
+    total = 0;
 
-        // Check the evaluation table
-        if (Configuration.useEvaluationTable) {
-            EvaluationTableEntry entry = evaluationTable.get(board.zobristCode);
-            if (entry != null) {
-                return entry.evaluation;
-            }
+    // Create tables
+    AttackTableEvaluation.getInstance().createAttackTable(myColor, board);
+    AttackTableEvaluation.getInstance().createAttackTable(enemyColor, board);
+    PawnTableEvaluation.getInstance().createPawnTable(myColor, board);
+    PawnTableEvaluation.getInstance().createPawnTable(enemyColor, board);
+
+    // Evaluate draw
+    int drawFactor = DrawEvaluation.evaluateDraw(board);
+    if (drawFactor > 0) {
+      // Evaluate material
+      material[myColor] = MaterialEvaluation.evaluateMaterial(myColor, board);
+      material[enemyColor] = MaterialEvaluation.evaluateMaterial(enemyColor, board);
+      total += material[myColor] - material[enemyColor];
+
+      // Evaluate position
+      total += PositionValueEvaluation.evaluatePositionValue(myColor, board) - PositionValueEvaluation.evaluatePositionValue(enemyColor, board);
+
+      // Evaluate knights
+      total += KnightEvaluation.evaluateKnight(myColor, enemyColor, board) - KnightEvaluation.evaluateKnight(enemyColor, myColor, board);
+
+      // Evaluate bishops
+      total += BishopEvaluation.evaluateBishop(myColor, enemyColor, board) - BishopEvaluation.evaluateBishop(enemyColor, myColor, board);
+
+      // Evaluate rooks
+      total += RookEvaluation.evaluateRook(myColor, enemyColor, board) - RookEvaluation.evaluateRook(enemyColor, myColor, board);
+
+      // Evaluate queens
+      total += QueenEvaluation.evaluateQueen(myColor, enemyColor, board) - QueenEvaluation.evaluateQueen(enemyColor, myColor, board);
+
+      // Evaluate kings
+      total += KingEvaluation.evaluateKing(myColor, enemyColor, board) - KingEvaluation.evaluateKing(enemyColor, myColor, board);
+
+      // Evaluate the pawn structures
+      long pawnZobristCode = board.pawnZobristCode;
+      int pawnStructureValue = 0;
+      if (Configuration.usePawnTable && pawntable.exists(pawnZobristCode)) {
+        pawnStructureValue = pawntable.getValue(pawnZobristCode);
+      } else {
+        pawnStructureValue = PawnStructureEvaluation.evaluatePawnStructure(myColor, enemyColor, board) - PawnStructureEvaluation.evaluatePawnStructure(enemyColor, myColor, board);
+        if (Configuration.usePawnTable) {
+          pawntable.put(pawnZobristCode, pawnStructureValue);
         }
+      }
+      total += pawnStructureValue;
 
-        // Initialize
-        int myColor = board.activeColor;
-        int enemyColor = IntColor.switchColor(myColor);
-        total = 0;
+      // Evaluate the pawn passer
+      total += PawnPasserEvaluation.evaluatePawnPasser(myColor, enemyColor, board) - PawnPasserEvaluation.evaluatePawnPasser(enemyColor, myColor, board);
 
-        // Create tables
-        AttackTableEvaluation.getInstance().createAttackTable(myColor, board);
-        AttackTableEvaluation.getInstance().createAttackTable(enemyColor, board);
-        PawnTableEvaluation.getInstance().createPawnTable(myColor, board);
-        PawnTableEvaluation.getInstance().createPawnTable(enemyColor, board);
-
-        // Evaluate draw
-        int drawFactor = DrawEvaluation.evaluateDraw(board);
-        if (drawFactor > 0) {
-            // Evaluate material
-            material[myColor] = MaterialEvaluation.evaluateMaterial(myColor, board);
-            material[enemyColor] = MaterialEvaluation.evaluateMaterial(enemyColor, board);
-            total += material[myColor] - material[enemyColor];
-
-            // Evaluate position
-            total += PositionValueEvaluation.evaluatePositionValue(myColor, board) - PositionValueEvaluation.evaluatePositionValue(enemyColor, board);
-
-            // Evaluate knights
-            total += KnightEvaluation.evaluateKnight(myColor, enemyColor, board) - KnightEvaluation.evaluateKnight(enemyColor, myColor, board);
-
-            // Evaluate bishops
-            total += BishopEvaluation.evaluateBishop(myColor, enemyColor, board) - BishopEvaluation.evaluateBishop(enemyColor, myColor, board);
-
-            // Evaluate rooks
-            total += RookEvaluation.evaluateRook(myColor, enemyColor, board) - RookEvaluation.evaluateRook(enemyColor, myColor, board);
-
-            // Evaluate queens
-            total += QueenEvaluation.evaluateQueen(myColor, enemyColor, board) - QueenEvaluation.evaluateQueen(enemyColor, myColor, board);
-
-            // Evaluate kings
-            total += KingEvaluation.evaluateKing(myColor, enemyColor, board) - KingEvaluation.evaluateKing(enemyColor, myColor, board);
-
-            // Evaluate the pawn structures
-            long pawnZobristCode = board.pawnZobristCode;
-            int pawnStructureValue = 0;
-            if (Configuration.usePawnTable && pawntable.exists(pawnZobristCode)) {
-                pawnStructureValue = pawntable.getValue(pawnZobristCode);
-            } else {
-                pawnStructureValue = PawnStructureEvaluation.evaluatePawnStructure(myColor, enemyColor, board) - PawnStructureEvaluation.evaluatePawnStructure(enemyColor, myColor, board);
-                if (Configuration.usePawnTable) {
-                    pawntable.put(pawnZobristCode, pawnStructureValue);
-                }
-            }
-            total += pawnStructureValue;
-
-            // Evaluate the pawn passer
-            total += PawnPasserEvaluation.evaluatePawnPasser(myColor, enemyColor, board) - PawnPasserEvaluation.evaluatePawnPasser(enemyColor, myColor, board);
-
-            // Evaluate known patterns
-            total += PatternEvaluation.evaluatePatterns(myColor, board) - PatternEvaluation.evaluatePatterns(enemyColor, board);
-        } else {
-            assert drawFactor == 0;
-        }
-
-        // Draw factor
-        total = (total * drawFactor) / DrawEvaluation.DRAW_FACTOR;
-
-        if (total < -Search.CHECKMATE_THRESHOLD) {
-            total = -Search.CHECKMATE_THRESHOLD;
-        } else if (total > Search.CHECKMATE_THRESHOLD) {
-            total = Search.CHECKMATE_THRESHOLD;
-        }
-
-        // Store the result and return
-        if (Configuration.useEvaluationTable) {
-            evaluationTable.put(board.zobristCode, total);
-        }
-
-        return total;
+      // Evaluate known patterns
+      total += PatternEvaluation.evaluatePatterns(myColor, board) - PatternEvaluation.evaluatePatterns(enemyColor, board);
+    } else {
+      assert drawFactor == 0;
     }
+
+    // Draw factor
+    total = (total * drawFactor) / DrawEvaluation.DRAW_FACTOR;
+
+    if (total < -Search.CHECKMATE_THRESHOLD) {
+      total = -Search.CHECKMATE_THRESHOLD;
+    } else if (total > Search.CHECKMATE_THRESHOLD) {
+      total = Search.CHECKMATE_THRESHOLD;
+    }
+
+    // Store the result and return
+    if (Configuration.useEvaluationTable) {
+      evaluationTable.put(board.zobristCode, total);
+    }
+
+    return total;
+  }
 
 }

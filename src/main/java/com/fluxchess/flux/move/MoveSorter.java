@@ -20,55 +20,55 @@ package com.fluxchess.flux.move;
 
 /**
  * We do the sorting with an insertion sort algorithm.
- *
+ * <p/>
  * Notes: Ideas from http://www.cs.ubc.ca/~harrison/Java/sorting-demo.html
  *
  * @author Phokham Nonava
  */
 public final class MoveSorter {
 
-    /**
-     * Creates a new MoveSorter.
-     */
-    public MoveSorter() {
-    }
+  /**
+   * Creates a new MoveSorter.
+   */
+  public MoveSorter() {
+  }
 
-    /**
-     * Sorts the MoveList using insertion sort.
-     *
-     * @param list the MoveList.
-     */
-    public static void sort(MoveList list) {
-        insertionsort(list, list.head, list.tail - 1);
-    }
+  /**
+   * Sorts the MoveList using insertion sort.
+   *
+   * @param list the MoveList.
+   */
+  public static void sort(MoveList list) {
+    insertionsort(list, list.head, list.tail - 1);
+  }
 
-    /**
-     * This is an implementation of the insertion sort.
-     *
-     * Note: Here insertionsort sorts the list in descending order!
-     *
-     * @param list the MoveList.
-     * @param left the left/lower index.
-     * @param right the right/higher index.
-     */
-    private static void insertionsort(MoveList list, int left, int right) {
-        int i;
-        int j;
-        int move;
-        int value;
+  /**
+   * This is an implementation of the insertion sort.
+   * <p/>
+   * Note: Here insertionsort sorts the list in descending order!
+   *
+   * @param list  the MoveList.
+   * @param left  the left/lower index.
+   * @param right the right/higher index.
+   */
+  private static void insertionsort(MoveList list, int left, int right) {
+    int i;
+    int j;
+    int move;
+    int value;
 
-        for (i = left + 1; i <= right; i++) {
-            move = list.move[i];
-            value = list.value[i];
-            j = i;
-            while ((j > left) && (list.value[j - 1] < value)) {
-                list.move[j] = list.move[j - 1];
-                list.value[j] = list.value[j - 1];
-                j--;
-            }
-            list.move[j] = move;
-            list.value[j] = value;
-        }
+    for (i = left + 1; i <= right; i++) {
+      move = list.move[i];
+      value = list.value[i];
+      j = i;
+      while ((j > left) && (list.value[j - 1] < value)) {
+        list.move[j] = list.move[j - 1];
+        list.value[j] = list.value[j - 1];
+        j--;
+      }
+      list.move[j] = move;
+      list.value[j] = value;
     }
+  }
 
 }
