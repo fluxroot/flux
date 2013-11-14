@@ -31,6 +31,7 @@ import com.fluxchess.jcpi.models.GenericBoard;
 import com.fluxchess.jcpi.models.GenericColor;
 import com.fluxchess.jcpi.models.GenericMove;
 import com.fluxchess.jcpi.models.Option;
+import com.fluxchess.jcpi.protocols.IProtocolHandler;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -45,7 +46,21 @@ public final class Flux extends AbstractEngine {
   private final int[] timeTable = new int[Search.MAX_HEIGHT + 1];
   private Search search;
 
+  public static void main(String[] args) {
+    new Flux().run();
+  }
+
   public Flux() {
+    initialize();
+  }
+
+  public Flux(IProtocolHandler handler) {
+    super(handler);
+
+    initialize();
+  }
+
+  private void initialize() {
     // Set the protocol
     ChessLogger.setProtocol(getProtocol());
 
@@ -69,11 +84,6 @@ public final class Flux extends AbstractEngine {
 
     // Create a new search
     search = new Search(new Evaluation(evaluationTable, pawnTable), new Hex88Board(new GenericBoard(GenericBoard.STANDARDSETUP)), transpositionTable, new InformationTimer(getProtocol(), transpositionTable), timeTable);
-  }
-
-  public static void main(String[] args) {
-    AbstractEngine engine = new Flux();
-    engine.run();
   }
 
   public void receive(EngineInitializeRequestCommand command) {

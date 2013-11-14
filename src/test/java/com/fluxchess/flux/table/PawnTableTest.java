@@ -19,11 +19,15 @@
 package com.fluxchess.flux.table;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class PawnTableTest {
+
+  private static final Logger LOG = LoggerFactory.getLogger(PawnTableTest.class);
 
   @Test
   public void testPawnTable() {
@@ -40,7 +44,7 @@ public class PawnTableTest {
 
   @Test
   public void testSize() {
-    System.out.println("Testing Pawn Table size:");
+    LOG.info("Testing Pawn Table size:");
     int[] megabytes = {4, 8, 16, 32, 64};
     for (int i : megabytes) {
       int numberOfEntries = i * 1024 * 1024 / PawnTable.ENTRYSIZE;
@@ -51,7 +55,7 @@ public class PawnTableTest {
       long usedMemoryAfter = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
 
       long hashAllocation = (usedMemoryAfter - usedMemoryBefore) / 1024 / 1024;
-      System.out.println("Pawn Table size " + i + " = " + hashAllocation);
+      LOG.info("Pawn Table size " + i + " = " + hashAllocation);
     }
   }
 

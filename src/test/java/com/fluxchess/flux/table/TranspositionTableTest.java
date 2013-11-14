@@ -26,10 +26,14 @@ import com.fluxchess.flux.move.IntMove;
 import com.fluxchess.flux.move.IntScore;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.*;
 
 public class TranspositionTableTest {
+
+  private static final Logger LOG = LoggerFactory.getLogger(TranspositionTableTest.class);
 
   @Test
   public void testTranspositionTable() {
@@ -83,7 +87,7 @@ public class TranspositionTableTest {
   @Ignore("Enable this method and increase the heap size if you want to test memory consumption")
 //  @Test
   public void testSize() {
-    System.out.println("Testing Transposition Table size:");
+    LOG.info("Testing Transposition Table size:");
     int[] megabytes = {4, 8, 16, 32, 64, 128, 256};
     for (int i : megabytes) {
       int numberOfEntries = i * 1024 * 1024 / TranspositionTable.ENTRYSIZE;
@@ -94,7 +98,7 @@ public class TranspositionTableTest {
       long usedMemoryAfter = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
 
       long hashAllocation = (usedMemoryAfter - usedMemoryBefore) / (1024 * 1024);
-      System.out.println("Transposition Table size " + i + " = " + hashAllocation);
+      LOG.info("Transposition Table size " + i + " = " + hashAllocation);
     }
   }
 
