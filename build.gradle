@@ -10,66 +10,55 @@ group = 'com.fluxchess'
 version = '2.3.0-alpha.1'
 
 if (!hasProperty('buildNumber')) {
-    ext.buildNumber = 'dev'
+  ext.buildNumber = 'dev'
 }
 if (version.contains('-')) {
-    if (hasProperty('branchName') && branchName == 'master') {
-        version += '.' + buildNumber
-    } else {
-        version += '.0'
-    }
+  if (hasProperty('branchName') && branchName == 'master') {
+    version += '.' + buildNumber
+  } else {
+    version += '.0'
+  }
 }
 
 if (!hasProperty('revisionNumber')) {
-    ext.revisionNumber = 'rev'
+  ext.revisionNumber = 'rev'
 }
 if (version.contains('-') && !(hasProperty('branchName') && branchName == 'master')) {
-    version += '+' + revisionNumber
+  version += '+' + revisionNumber
 }
 
 println "Building version ${version}"
 
 repositories {
-    mavenCentral()
-    maven {
-        url "http://maven.fluxchess.com/release"
-    }
-}
-
-configurations {
-    eclipselibs {
-        extendsFrom compile
-    }
-}
-
-task libs(type: Sync) {
-    from configurations.eclipselibs
-    into "$projectDir/lib"
+  mavenCentral()
+  maven {
+    url "http://maven.fluxchess.com/release"
+  }
 }
 
 tasks.withType(Pmd) {
-    pmd {
-        ignoreFailures = true
-    }
+  pmd {
+    ignoreFailures = true
+  }
 }
 
 tasks.withType(FindBugs) {
-    findbugs {
-        ignoreFailures = true
-    }
+  findbugs {
+    ignoreFailures = true
+  }
 }
 
 tasks.withType(Checkstyle) {
-    checkstyle {
-        ignoreFailures = true
-        showViolations = false
-    }
+  checkstyle {
+    ignoreFailures = true
+    showViolations = false
+  }
 }
 
 dependencies {
-    compile 'com.fluxchess:jcpi:+'
+  compile 'com.fluxchess:jcpi:+'
 
-    testCompile 'junit:junit:4.+'
+  testCompile 'junit:junit:4.+'
 }
 
 sourceCompatibility = 1.7
@@ -84,30 +73,62 @@ processResources {
 }
 
 jar {
-    from {
-        configurations.compile.collect {it.isDirectory() ? it : zipTree(it)}
-    }
-    from sourceSets.main.allJava
-    manifest {
-        attributes 'Implementation-Title': project.name, 'Implementation-Version': project.version, 'Main-Class': 'com.fluxchess.flux.Flux'
-    }
+  from {
+    configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+  }
+  manifest {
+    attributes 'Implementation-Title': project.name, 'Implementation-Version': project.version, 'Main-Class': 'com.fluxchess.flux.Flux'
+  }
+}
+
+task testsJar(type: Jar, dependsOn: testClasses) {
+  classifier = 'tests'
+  from sourceSets.test.output
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+  classifier = 'sources'
+  from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+  classifier = 'javadoc'
+  from javadoc.destinationDir
 }
 
 task dist(type: Zip) {
-    def baseDir = "${project.name}-${project.version}"
+  def baseDir = "${project.name}-${project.version}"
 
-    into ("$baseDir") {
-        from 'README.md'
-        from 'COPYING'
-        from 'COPYING.LESSER'
-        from 'src/dist/Flux.bat'
-        from ('src/dist/Flux') {
-            fileMode = 0755
-        }
-        from jar
+  into("$baseDir") {
+    from 'README.md'
+    from 'COPYING'
+    from 'COPYING.LESSER'
+
+    from jar
+    from testsJar
+    from sourcesJar
+    from javadocJar
+
+    from ('src/dist/Flux.cmd') {
+      filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [
+        version: project.version
+      ])
     }
+    from ('src/dist/Flux') {
+      fileMode = 0755
+      filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [
+        version: project.version
+      ])
+    }
+  }
+}
+
+artifacts {
+  archives testsJar
+  archives sourcesJar
+  archives javadocJar
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '1.6'
+  gradleVersion = '1.8'
 }
