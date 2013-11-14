@@ -130,9 +130,7 @@ public final class IntPosition {
   public static int getFile(int position) {
     assert position != NOPOSITION;
 
-    int file = position % 16;
-
-    return file;
+    return position % 16;
   }
 
   /**
@@ -144,9 +142,7 @@ public final class IntPosition {
   public static int getRank(int position) {
     assert position != NOPOSITION;
 
-    int rank = position >>> 4;
-
-    return rank;
+    return position >>> 4;
   }
 
   /**

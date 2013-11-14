@@ -514,11 +514,7 @@ public final class MoveGenerator {
 
   private boolean isGoodCapture(int move) {
     if (IntMove.getType(move) == IntMove.PAWNPROMOTION) {
-      if (IntMove.getPromotion(move) == IntChessman.QUEEN) {
-        return true;
-      } else {
-        return false;
-      }
+      return IntMove.getPromotion(move) == IntChessman.QUEEN;
     }
 
     int chessman = IntMove.getChessman(move);
