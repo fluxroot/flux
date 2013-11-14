@@ -76,7 +76,7 @@ public final class Configuration {
   private static final String TYPE_Spin = "spin";
   private static final String TYPE_Button = "button";
 
-  public static final Hashtable<String, Option> configuration = new Hashtable<String, Option>();
+  public static final Hashtable<String, Option> configuration = new Hashtable<>();
 
   static {
     configuration.put(KEY_Threads, new Option(KEY_Threads, TYPE_Spin, "1", "1", Integer.toString(Runtime.getRuntime().availableProcessors()), null));

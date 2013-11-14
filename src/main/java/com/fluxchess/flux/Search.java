@@ -101,7 +101,7 @@ public final class Search implements Runnable {
 
   // Search information
   private static final MoveList[] pvList = new MoveList[MAX_HEIGHT + 1];
-  private static final HashMap<Integer, PrincipalVariation> multiPvMap = new HashMap<Integer, PrincipalVariation>(MAX_MOVES);
+  private static final HashMap<Integer, PrincipalVariation> multiPvMap = new HashMap<>(MAX_MOVES);
   private Result bestResult = null;
   private final int[] timeTable;
 
@@ -761,7 +761,7 @@ public final class Search implements Runnable {
       }
 
       // Add pv to list
-      List<GenericMove> genericMoveList = new ArrayList<GenericMove>();
+      List<GenericMove> genericMoveList = new ArrayList<>();
       genericMoveList.add(IntMove.toGenericMove(move));
       for (int i = pvList[height + 1].head; i < pvList[height + 1].tail; i++) {
         genericMoveList.add(IntMove.toGenericMove(pvList[height + 1].move[i]));
@@ -794,7 +794,7 @@ public final class Search implements Runnable {
       if (showPvNumber > 1) {
         assert currentMoveNumber <= showPvNumber || lastMultiPv != null;
         if (currentMoveNumber <= showPvNumber || pv.compareTo(lastMultiPv) < 0) {
-          PriorityQueue<PrincipalVariation> tempPvList = new PriorityQueue<PrincipalVariation>(multiPvMap.values());
+          PriorityQueue<PrincipalVariation> tempPvList = new PriorityQueue<>(multiPvMap.values());
           for (int i = 1; i <= showPvNumber && !tempPvList.isEmpty(); i++) {
             lastMultiPv = tempPvList.remove();
             sendInformation(lastMultiPv, i);

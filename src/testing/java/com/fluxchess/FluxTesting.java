@@ -47,8 +47,8 @@ import com.fluxchess.Flux;
 
 public class FluxTesting extends AbstractCommunication implements ICommunication {
 
-    BlockingQueue<IEngineCommand> commandQueue = new LinkedBlockingQueue<IEngineCommand>();
-    List<GenericMove> moveList = new ArrayList<GenericMove>();
+    BlockingQueue<IEngineCommand> commandQueue = new LinkedBlockingQueue<>();
+    List<GenericMove> moveList = new ArrayList<>();
 
     public FluxTesting() {
         commandQueue.add(new EngineInitializeRequestCommand());
