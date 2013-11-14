@@ -50,7 +50,7 @@ package com.fluxchess.flux;
 //
 //public class SearchTest extends AbstractCommunication implements IGui {
 //
-//    BlockingQueue<IEngineCommand> commandQueue = new LinkedBlockingQueue<IEngineCommand>();
+//    BlockingQueue<IEngineCommand> commandQueue = new LinkedBlockingQueue<>();
 //    boolean found = false;
 //
 //    public SearchTest() {
