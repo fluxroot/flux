@@ -63,8 +63,8 @@ public final class Search implements Runnable {
   // Objects
   private final ChessLogger logger = ChessLogger.getLogger();
   private InformationTimer info;
-  private Thread thread = new Thread(this);
-  private Semaphore semaphore = new Semaphore(0);
+  private final Thread thread = new Thread(this);
+  private final Semaphore semaphore = new Semaphore(0);
 
   // Search control
   private Timer timer = null;
@@ -700,12 +700,7 @@ public final class Search implements Runnable {
     int currentMoveNumber = 0;
 
     // Initialize Single-Response Extension
-    boolean isSingleReply;
-    if (isCheck && rootMoveList.getLength() == 1) {
-      isSingleReply = true;
-    } else {
-      isSingleReply = false;
-    }
+    boolean isSingleReply = isCheck && rootMoveList.getLength() == 1;
 
     for (int j = rootMoveList.head; j < rootMoveList.tail; j++) {
       int move = rootMoveList.move[j];
@@ -1069,12 +1064,7 @@ public final class Search implements Runnable {
     moveGenerator.initializeMain(attack, height, transpositionMove);
 
     // Initialize Single-Response Extension
-    boolean isSingleReply;
-    if (isCheck && attack.numberOfMoves == 1) {
-      isSingleReply = true;
-    } else {
-      isSingleReply = false;
-    }
+    boolean isSingleReply = isCheck && attack.numberOfMoves == 1;
 
     int move = IntMove.NOMOVE;
     while ((move = moveGenerator.getNextMove()) != IntMove.NOMOVE) {

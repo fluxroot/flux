@@ -37,7 +37,7 @@ import static org.junit.Assert.fail;
 
 public class MoveGeneratorTest {
 
-  private TestPerftTable table = new TestPerftTable();
+  private final TestPerftTable table = new TestPerftTable();
 
   @Test
   public void testSpecialPerft() {
@@ -98,9 +98,7 @@ public class MoveGeneratorTest {
 
           line = file.readLine();
         }
-      } catch (IOException e) {
-        fail();
-      } catch (IllegalNotationException e) {
+      } catch (IOException | IllegalNotationException e) {
         fail();
       }
     }
@@ -194,9 +192,7 @@ public class MoveGeneratorTest {
 
           line = file.readLine();
         }
-      } catch (IOException e) {
-        fail();
-      } catch (IllegalNotationException e) {
+      } catch (IOException | IllegalNotationException e) {
         fail();
       }
     }
@@ -225,7 +221,7 @@ public class MoveGeneratorTest {
     move = moveGenerator.getNextMove();
     while (move != IntMove.NOMOVE) {
       if (!attack.isCheck()) {
-        if ((IntMove.getTarget(move) != IntChessman.NOPIECE && isGoodCapture(move, board)) || (IntMove.getTarget(move) == IntChessman.NOPIECE && board.isCheckingMove(move)) && MoveSee.seeMove(move, IntMove.getChessmanColor(move)) >= 0) {
+        if ((IntMove.getTarget(move) != IntChessman.NOPIECE && isGoodCapture(move)) || (IntMove.getTarget(move) == IntChessman.NOPIECE && board.isCheckingMove(move)) && MoveSee.seeMove(move, IntMove.getChessmanColor(move)) >= 0) {
           board.makeMove(move);
           miniMaxQuiescentCheckingMoves(board, moveGenerator, depth - 1, maxDepth);
           board.undoMove(move);
@@ -242,8 +238,6 @@ public class MoveGeneratorTest {
     moveGenerator.destroy();
 
     assertEquals(printDifference(board, mainMoveList, quiescentMoveList), mainMoveList.getLength(), quiescentMoveList.getLength());
-
-    return;
   }
 
   private String printDifference(Hex88Board board, MoveList main, MoveList quiescent) {
@@ -267,13 +261,9 @@ public class MoveGeneratorTest {
     return result;
   }
 
-  private static boolean isGoodCapture(int move, Hex88Board board) {
+  private static boolean isGoodCapture(int move) {
     if (IntMove.getType(move) == IntMove.PAWNPROMOTION) {
-      if (IntMove.getPromotion(move) == IntChessman.QUEEN) {
-        return true;
-      } else {
-        return false;
-      }
+      return IntMove.getPromotion(move) == IntChessman.QUEEN;
     }
 
     int chessman = IntMove.getChessman(move);

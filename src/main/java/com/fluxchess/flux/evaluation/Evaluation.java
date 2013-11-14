@@ -29,8 +29,7 @@ import com.fluxchess.flux.table.PawnTable;
 public final class Evaluation {
 
   // Our total values
-  private static int[] material = new int[IntColor.ARRAY_DIMENSION];
-  private static int total = 0;
+  private static final int[] material = new int[IntColor.ARRAY_DIMENSION];
 
   // The hash tables
   private final EvaluationTable evaluationTable;
@@ -64,7 +63,7 @@ public final class Evaluation {
     // Initialize
     int myColor = board.activeColor;
     int enemyColor = IntColor.switchColor(myColor);
-    total = 0;
+    int total = 0;
 
     // Create tables
     AttackTableEvaluation.getInstance().createAttackTable(myColor, board);

@@ -31,7 +31,6 @@ public final class EvaluationTable {
 
   private final EvaluationTableEntry[] entry;
 
-  private final ReadWriteLock lock;
   private final Lock readLock;
   private final Lock writeLock;
 
@@ -47,7 +46,7 @@ public final class EvaluationTable {
     }
 
     // Initialize locks
-    lock = new ReentrantReadWriteLock();
+    ReadWriteLock lock = new ReentrantReadWriteLock();
     readLock = lock.readLock();
     writeLock = lock.writeLock();
   }

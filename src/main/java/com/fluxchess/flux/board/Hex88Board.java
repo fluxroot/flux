@@ -742,11 +742,8 @@ public final class Hex88Board {
       int attacker = board[end];
       if (attacker != IntChessman.NOPIECE) {
         int attackerColor = IntChessman.getColor(attacker);
-        if (kingColor != attackerColor && canSliderPseudoAttack(attacker, end, myKingPosition)) {
-          return true;
-        } else {
-          return false;
-        }
+
+        return kingColor != attackerColor && canSliderPseudoAttack(attacker, end, myKingPosition);
       } else {
         end -= delta;
       }
@@ -1103,11 +1100,8 @@ public final class Hex88Board {
     while ((end & 0x88) == 0 && end != targetPosition && board[end] == IntChessman.NOPIECE) {
       end += attackDelta;
     }
-    if (end == targetPosition) {
-      return true;
-    }
 
-    return false;
+    return end == targetPosition;
   }
 
   public void makeMove(int move) {
@@ -1149,7 +1143,7 @@ public final class Hex88Board {
         makeMoveCastling(move);
         break;
       case IntMove.NULL:
-        makeMoveNull(move);
+        makeMoveNull();
         break;
       default:
         throw new IllegalArgumentException();
@@ -1642,7 +1636,7 @@ public final class Hex88Board {
     put(captureHistory[--captureHistorySize], targetPosition, false);
   }
 
-  private void makeMoveNull(int move) {
+  private void makeMoveNull() {
     // Update the capture square
     captureSquare = IntPosition.NOPOSITION;
 

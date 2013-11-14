@@ -31,7 +31,6 @@ public final class PawnTable {
   private final long[] zobristCode;
   private final int[] value;
 
-  private final ReadWriteLock lock;
   private final Lock readLock;
   private final Lock writeLock;
 
@@ -43,7 +42,7 @@ public final class PawnTable {
     value = new int[size];
 
     // Initialize locks
-    lock = new ReentrantReadWriteLock();
+    ReadWriteLock lock = new ReentrantReadWriteLock();
     readLock = lock.readLock();
     writeLock = lock.writeLock();
   }
@@ -77,11 +76,7 @@ public final class PawnTable {
 
     readLock.lock();
     try {
-      if (this.zobristCode[position] == zobristCode) {
-        return true;
-      } else {
-        return false;
-      }
+      return this.zobristCode[position] == zobristCode;
     } finally {
       readLock.unlock();
     }

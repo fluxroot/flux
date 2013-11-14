@@ -261,9 +261,7 @@ public final class IntChessman {
   public static int getColorOpposite(int piece) {
     assert piece != NOPIECE;
 
-    int color = ((piece & COLOR_MASK) ^ COLOR_MASK) >>> COLOR_SHIFT;
-
-    return color;
+    return ((piece & COLOR_MASK) ^ COLOR_MASK) >>> COLOR_SHIFT;
   }
 
   /**

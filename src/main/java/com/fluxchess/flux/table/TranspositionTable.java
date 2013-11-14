@@ -44,7 +44,6 @@ public final class TranspositionTable {
   // Number of slots used
   private int slotsUsed = 0;
 
-  private final ReadWriteLock lock;
   private final Lock readLock;
   private final Lock writeLock;
 
@@ -63,7 +62,7 @@ public final class TranspositionTable {
     slotsUsed = 0;
 
     // Initialize locks
-    lock = new ReentrantReadWriteLock();
+    ReadWriteLock lock = new ReentrantReadWriteLock();
     readLock = lock.readLock();
     writeLock = lock.writeLock();
   }
@@ -74,8 +73,8 @@ public final class TranspositionTable {
       currentAge = 0;
       slotsUsed = 0;
 
-      for (int i = 0; i < entry.length; i++) {
-        entry[i].clear();
+      for (TranspositionTableEntry anEntry : entry) {
+        anEntry.clear();
       }
     } finally {
       writeLock.unlock();

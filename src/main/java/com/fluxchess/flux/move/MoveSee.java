@@ -26,7 +26,7 @@ import com.fluxchess.flux.board.*;
 public final class MoveSee {
 
   private static Hex88Board board = null;
-  private static SeeList[] chessmanList = new SeeList[IntColor.ARRAY_DIMENSION];
+  private static final SeeList[] chessmanList = new SeeList[IntColor.ARRAY_DIMENSION];
 
   public MoveSee(Hex88Board newBoard) {
     board = newBoard;

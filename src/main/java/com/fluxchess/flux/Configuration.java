@@ -101,17 +101,9 @@ public final class Configuration {
       configuration.get(name).setValue(value);
 
       if (name.equals(KEY_UCIShowRefutations)) {
-        if (value.equalsIgnoreCase("true")) {
-          showRefutations = true;
-        } else {
-          showRefutations = false;
-        }
+        showRefutations = value.equalsIgnoreCase("true");
       } else if (name.equals(KEY_UCIAnalyseMode)) {
-        if (value.equalsIgnoreCase("true")) {
-          analyzeMode = true;
-        } else {
-          analyzeMode = false;
-        }
+        analyzeMode = value.equalsIgnoreCase("true");
       } else if (name.equals(KEY_MultiPv)) {
         try {
           showPvNumber = new Integer(value);
