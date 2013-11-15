@@ -473,7 +473,7 @@ public final class Search implements Runnable {
         moveResult.moveNumber = rootMoveList.getLength();
       } else {
         // Do the Alpha-Beta search
-        value = pool.invoke(new AlphaBetaRootTask(currentDepth, alpha, beta, 0, rootMoveList, isCheck, moveResult));
+        value = pool.invoke(new AlphaBetaRootTask(currentDepth, alpha, beta, 0, rootMoveList, isCheck, moveResult, new Hex88Board(board)));
       }
 
       //## BEGIN Aspiration Windows
@@ -494,7 +494,7 @@ public final class Search implements Runnable {
           Result moveResultAdjustment = new Result();
 
           // Do the Alpha-Beta search again
-          value = pool.invoke(new AlphaBetaRootTask(currentDepth, alpha, beta, 0, rootMoveList, isCheck, moveResultAdjustment));
+          value = pool.invoke(new AlphaBetaRootTask(currentDepth, alpha, beta, 0, rootMoveList, isCheck, moveResultAdjustment, new Hex88Board(board)));
 
           if (stopped && canStop) {
             break;

@@ -20,6 +20,7 @@ package com.fluxchess.flux.search;
 
 import com.fluxchess.flux.Configuration;
 import com.fluxchess.flux.board.Attack;
+import com.fluxchess.flux.board.Hex88Board;
 import com.fluxchess.flux.board.IntChessman;
 import com.fluxchess.flux.move.IntMove;
 import com.fluxchess.flux.move.IntScore;
@@ -37,14 +38,16 @@ public class QuiescentTask extends RecursiveTask<Integer> {
   private int height;
   private boolean pvNode;
   private boolean useTranspositionTable;
+  private final Hex88Board board;
 
-  public QuiescentTask(int checkingDepth, int alpha, int beta, int height, boolean pvNode, boolean useTranspositionTable) {
+  public QuiescentTask(int checkingDepth, int alpha, int beta, int height, boolean pvNode, boolean useTranspositionTable, Hex88Board board) {
     this.checkingDepth = checkingDepth;
     this.alpha = alpha;
     this.beta = beta;
     this.height = height;
     this.pvNode = pvNode;
     this.useTranspositionTable = useTranspositionTable;
+    this.board = board;
   }
 
   @Override
@@ -187,7 +190,7 @@ public class QuiescentTask extends RecursiveTask<Integer> {
       board.makeMove(move);
 
       // Recurse into Quiescent
-      int value = -new QuiescentTask(checkingDepth - 1, -beta, -alpha, height + 1, pvNode, false).invoke();
+      int value = -new QuiescentTask(checkingDepth - 1, -beta, -alpha, height + 1, pvNode, false, new Hex88Board(board)).invoke();
 
       // Undo move
       board.undoMove(move);

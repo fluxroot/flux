@@ -20,6 +20,7 @@ package com.fluxchess.flux.search;
 
 import com.fluxchess.flux.Configuration;
 import com.fluxchess.flux.board.Attack;
+import com.fluxchess.flux.board.Hex88Board;
 import com.fluxchess.flux.board.IntChessman;
 import com.fluxchess.flux.board.IntGamePhase;
 import com.fluxchess.flux.move.IntMove;
@@ -48,6 +49,7 @@ public class AlphaBetaTask extends RecursiveTask<Integer> {
   private int height;
   private boolean pvNode;
   private boolean doNull;
+  private final Hex88Board board;
 
   // Static initialization
   static {
@@ -58,13 +60,14 @@ public class AlphaBetaTask extends RecursiveTask<Integer> {
     }
   }
 
-  public AlphaBetaTask(int depth, int alpha, int beta, int height, boolean pvNode, boolean doNull) {
+  public AlphaBetaTask(int depth, int alpha, int beta, int height, boolean pvNode, boolean doNull, Hex88Board board) {
     this.depth = depth;
     this.alpha = alpha;
     this.beta = beta;
     this.height = height;
     this.pvNode = pvNode;
     this.doNull = doNull;
+    this.board = board;
   }
 
   @Override
@@ -72,7 +75,7 @@ public class AlphaBetaTask extends RecursiveTask<Integer> {
     // We are at a leaf/horizon. So calculate that value.
     if (depth <= 0) {
       // Descend into quiescent
-      return new QuiescentTask(0, alpha, beta, height, pvNode, true).invoke().intValue();
+      return new QuiescentTask(0, alpha, beta, height, pvNode, true, new Hex88Board(board)).invoke();
     }
 
     updateSearch(height);
@@ -162,7 +165,7 @@ public class AlphaBetaTask extends RecursiveTask<Integer> {
 
         // Make the null move
         board.makeMove(IntMove.NULLMOVE);
-        int value = -new AlphaBetaTask(newDepth, -beta, -beta + 1, height + 1, false, false).invoke();
+        int value = -new AlphaBetaTask(newDepth, -beta, -beta + 1, height + 1, false, false, new Hex88Board(board)).invoke();
         board.undoMove(IntMove.NULLMOVE);
 
         // Verify on beta exceeding
@@ -172,7 +175,7 @@ public class AlphaBetaTask extends RecursiveTask<Integer> {
               newDepth = depth - NULLMOVE_VERIFICATIONREDUCTION;
 
               // Verify
-              value = new AlphaBetaTask(newDepth, alpha, beta, height, true, false).invoke();
+              value = new AlphaBetaTask(newDepth, alpha, beta, height, true, false, new Hex88Board(board)).invoke();
 
               if (value >= beta) {
                 // Cut-off
@@ -225,7 +228,7 @@ public class AlphaBetaTask extends RecursiveTask<Integer> {
         beta = Search.CHECKMATE;
 
         for (int newDepth = 1; newDepth < depth; newDepth++) {
-          new AlphaBetaTask(newDepth, alpha, beta, height, true, false).invoke();
+          new AlphaBetaTask(newDepth, alpha, beta, height, true, false, new Hex88Board(board)).invoke();
 
           if (stopped && canStop) {
             return oldAlpha;
@@ -362,16 +365,16 @@ public class AlphaBetaTask extends RecursiveTask<Integer> {
       int value;
       if (!pvNode || bestValue == -Search.INFINITY) {
         // First move
-        value = -new AlphaBetaTask(newDepth, -beta, -alpha, height + 1, pvNode, true).invoke();
+        value = -new AlphaBetaTask(newDepth, -beta, -alpha, height + 1, pvNode, true, new Hex88Board(board)).invoke();
       } else {
         if (newDepth >= depth) {
-          value = -new AlphaBetaTask(depth - 1, -alpha - 1, -alpha, height + 1, false, true).invoke();
+          value = -new AlphaBetaTask(depth - 1, -alpha - 1, -alpha, height + 1, false, true, new Hex88Board(board)).invoke();
         } else {
-          value = -new AlphaBetaTask(newDepth, -alpha - 1, -alpha, height + 1, false, true).invoke();
+          value = -new AlphaBetaTask(newDepth, -alpha - 1, -alpha, height + 1, false, true, new Hex88Board(board)).invoke();
         }
         if (value > alpha && value < beta) {
           // Research again
-          value = -new AlphaBetaTask(newDepth, -beta, -alpha, height + 1, true, true).invoke();
+          value = -new AlphaBetaTask(newDepth, -beta, -alpha, height + 1, true, true, new Hex88Board(board)).invoke();
         }
       }
       //## ENDOF Principal Variation Search
@@ -381,7 +384,7 @@ public class AlphaBetaTask extends RecursiveTask<Integer> {
         if (reduced && value >= beta) {
           // Research with original depth
           newDepth++;
-          value = -new AlphaBetaTask(newDepth, -beta, -alpha, height + 1, pvNode, true).invoke();
+          value = -new AlphaBetaTask(newDepth, -beta, -alpha, height + 1, pvNode, true, new Hex88Board(board)).invoke();
         }
       }
       //## ENDOF Late Move Reduction Research

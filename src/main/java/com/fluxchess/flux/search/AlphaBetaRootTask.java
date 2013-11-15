@@ -19,6 +19,7 @@
 package com.fluxchess.flux.search;
 
 import com.fluxchess.flux.Configuration;
+import com.fluxchess.flux.board.Hex88Board;
 import com.fluxchess.flux.move.*;
 import com.fluxchess.flux.table.TranspositionTableEntry;
 import com.fluxchess.jcpi.models.GenericMove;
@@ -37,8 +38,9 @@ public class AlphaBetaRootTask extends RecursiveTask<Integer> {
   private MoveList rootMoveList;
   private boolean isCheck;
   private Result moveResult;
+  private final Hex88Board board;
 
-  public AlphaBetaRootTask(int depth, int alpha, int beta, int height, MoveList rootMoveList, boolean isCheck, Result moveResult) {
+  public AlphaBetaRootTask(int depth, int alpha, int beta, int height, MoveList rootMoveList, boolean isCheck, Result moveResult, Hex88Board board) {
     this.depth = depth;
     this.alpha = alpha;
     this.beta = beta;
@@ -46,6 +48,7 @@ public class AlphaBetaRootTask extends RecursiveTask<Integer> {
     this.rootMoveList = rootMoveList;
     this.isCheck = isCheck;
     this.moveResult = moveResult;
+    this.board = board;
   }
 
   @Override
@@ -89,12 +92,12 @@ public class AlphaBetaRootTask extends RecursiveTask<Integer> {
       int value;
       if (bestValue == -Search.INFINITY) {
         // First move
-        value = -new AlphaBetaTask(newDepth, -beta, -alpha, height + 1, true, true).invoke();
+        value = -new AlphaBetaTask(newDepth, -beta, -alpha, height + 1, true, true, new Hex88Board(board)).invoke();
       } else {
-        value = -new AlphaBetaTask(newDepth, -alpha - 1, -alpha, height + 1, false, true).invoke();
+        value = -new AlphaBetaTask(newDepth, -alpha - 1, -alpha, height + 1, false, true, new Hex88Board(board)).invoke();
         if (value > alpha && value < beta) {
           // Research again
-          value = -new AlphaBetaTask(newDepth, -beta, -alpha, height + 1, true, true).invoke();
+          value = -new AlphaBetaTask(newDepth, -beta, -alpha, height + 1, true, true, new Hex88Board(board)).invoke();
         }
       }
       //## ENDOF Principal Variation Search
