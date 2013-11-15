@@ -21,7 +21,10 @@ package com.fluxchess.flux.search;
 import com.fluxchess.flux.ChessLogger;
 import com.fluxchess.flux.Configuration;
 import com.fluxchess.flux.InformationTimer;
-import com.fluxchess.flux.board.*;
+import com.fluxchess.flux.board.Attack;
+import com.fluxchess.flux.board.Hex88Board;
+import com.fluxchess.flux.board.IntChessman;
+import com.fluxchess.flux.board.IntColor;
 import com.fluxchess.flux.move.*;
 import com.fluxchess.flux.table.*;
 import com.fluxchess.jcpi.models.GenericMove;
@@ -78,15 +81,15 @@ public final class Search implements Runnable {
 
   // Search logic
   private final MoveGenerator moveGenerator;
-  private static Hex88Board board;
+  private Hex88Board board;
   private final int myColor;
 
   // Search tables
   private final TranspositionTable transpositionTable;
   private final EvaluationTable evaluationTable;
   private final PawnTable pawnTable;
-  private final KillerTable killerTable;
-  private final HistoryTable historyTable;
+  private final KillerTable killerTable = new KillerTable();
+  private final HistoryTable historyTable = new HistoryTable();
 
   // Search information
   private static final MoveList[] pvList = new MoveList[MAX_HEIGHT + 1];
@@ -119,8 +122,6 @@ public final class Search implements Runnable {
     }
     this.evaluationTable = evaluationTable;
     this.pawnTable = pawnTable;
-    killerTable = new KillerTable();
-    historyTable = new HistoryTable();
 
     moveGenerator = new MoveGenerator(board, killerTable, historyTable);
     new MoveSee(board);
@@ -641,126 +642,6 @@ public final class Search implements Runnable {
     info.sendInformationSummary();
 
     return bestResult;
-  }
-
-  private void updateSearch(int height) {
-    assert transpositionTable.getPermillUsed() >= 0 && transpositionTable.getPermillUsed() <= 1000;
-
-    info.totalNodes++;
-    info.setCurrentMaxDepth(height);
-    info.sendInformationStatus();
-
-    if (searchNodes > 0 && searchNodes <= info.totalNodes) {
-      // Hard stop on number of nodes
-      stopped = true;
-    }
-
-    // Reset
-    pvList[height].resetList();
-  }
-
-  /**
-   * Returns the new possibly extended search depth.
-   *
-   * @param depth         the current depth.
-   * @param move          the current move.
-   * @param isSingleReply whether we are in check and have only one way out.
-   * @param mateThreat    whether we have a mate threat.
-   * @return the new possibly extended search depth.
-   */
-  private int getNewDepth(int depth, int move, boolean isSingleReply, boolean mateThreat) {
-    int newDepth = depth - 1;
-
-    assert (IntMove.getEnd(move) != board.captureSquare) || (IntMove.getTarget(move) != IntChessman.NOPIECE);
-
-    //## Recapture Extension
-    if (Configuration.useRecaptureExtension
-      && IntMove.getEnd(move) == board.captureSquare
-      && MoveSee.seeMove(move, IntMove.getChessmanColor(move)) > 0) {
-      newDepth++;
-    }
-
-    //## Check Extension
-    else if (Configuration.useCheckExtension
-      && board.isCheckingMove(move)) {
-      newDepth++;
-    }
-
-    //## Pawn Extension
-    else if (Configuration.usePawnExtension
-      && IntMove.getChessman(move) == IntChessman.PAWN
-      && IntPosition.getRelativeRank(IntMove.getEnd(move), board.activeColor) == IntPosition.rank7) {
-      newDepth++;
-    }
-
-    //## Single-Reply Extension
-    else if (Configuration.useSingleReplyExtension
-      && isSingleReply) {
-      newDepth++;
-    }
-
-    //## Mate Threat Extension
-    else if (Configuration.useMateThreatExtension
-      && mateThreat) {
-      newDepth++;
-    }
-
-    // Extend another ply if we enter a pawn endgame
-    if (board.materialCount[board.activeColor] == 0
-      && board.materialCount[IntColor.switchColor(board.activeColor)] == 1
-      && IntMove.getTarget(move) != IntChessman.NOPIECE
-      && IntMove.getTarget(move) != IntChessman.PAWN) {
-      newDepth++;
-    }
-
-    return newDepth;
-  }
-
-  private static boolean isDangerousMove(int move) {
-    int chessman = IntMove.getChessman(move);
-    int relativeRank = IntPosition.getRelativeRank(IntMove.getEnd(move), board.activeColor);
-    if (chessman == IntChessman.PAWN && relativeRank >= IntPosition.rank7) {
-      return true;
-    }
-
-    int target = IntMove.getTarget(move);
-    if (target == IntChessman.QUEEN) {
-      return true;
-    }
-
-    return false;
-  }
-
-  private static void addPv(MoveList destination, MoveList source, int move) {
-    assert destination != null;
-    assert source != null;
-    assert move != IntMove.NOMOVE;
-
-    destination.resetList();
-
-    destination.move[destination.tail++] = move;
-
-    for (int i = source.head; i < source.tail; i++) {
-      destination.move[destination.tail++] = source.move[i];
-    }
-  }
-
-  private static void addGoodMove(int move, int depth, int height) {
-    assert move != IntMove.NOMOVE;
-
-    if (IntMove.getTarget(move) != IntChessman.NOPIECE) {
-      return;
-    }
-
-    int type = IntMove.getType(move);
-    if (type == IntMove.PAWNPROMOTION || type == IntMove.NULL) {
-      return;
-    }
-
-    assert type != IntMove.ENPASSANT;
-
-    killerTable.add(move, height);
-    historyTable.add(move, depth);
   }
 
 }

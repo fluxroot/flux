@@ -30,7 +30,7 @@ import com.fluxchess.flux.table.*;
 
 import java.util.concurrent.RecursiveTask;
 
-public class QuiescentTask extends RecursiveTask<Integer> {
+class QuiescentTask extends AbstractSearchTask {
 
   private static final int FUTILITY_QUIESCENTMARGIN = IntChessman.VALUE_PAWN;
 

@@ -31,7 +31,7 @@ import com.fluxchess.flux.table.*;
 
 import java.util.concurrent.RecursiveTask;
 
-public class AlphaBetaTask extends RecursiveTask<Integer> {
+class AlphaBetaTask extends AbstractSearchTask {
 
   private static final int NULLMOVE_DEPTH = 2;
   private static final int NULLMOVE_REDUCTION;

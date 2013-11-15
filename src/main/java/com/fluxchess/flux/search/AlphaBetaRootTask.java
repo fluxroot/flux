@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.concurrent.RecursiveTask;
 
-public class AlphaBetaRootTask extends RecursiveTask<Integer> {
+class AlphaBetaRootTask extends AbstractSearchTask {
 
   private int depth;
   private int alpha;
