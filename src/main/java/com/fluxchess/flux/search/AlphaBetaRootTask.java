@@ -28,6 +28,7 @@ import com.fluxchess.jcpi.models.GenericMove;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.PriorityQueue;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 class AlphaBetaRootTask extends AbstractSearchTask {
 
@@ -38,6 +39,7 @@ class AlphaBetaRootTask extends AbstractSearchTask {
   private MoveList rootMoveList;
   private boolean isCheck;
   private Result moveResult;
+  private AtomicBoolean canStop;
   private final Hex88Board board;
   private final TranspositionTable transpositionTable;
   private final EvaluationTable evaluationTable;
@@ -54,6 +56,8 @@ class AlphaBetaRootTask extends AbstractSearchTask {
     MoveList rootMoveList,
     boolean isCheck,
     Result moveResult,
+    AtomicBoolean stopped,
+    AtomicBoolean canStop,
     Hex88Board board,
     TranspositionTable transpositionTable,
     EvaluationTable evaluationTable,
@@ -61,7 +65,7 @@ class AlphaBetaRootTask extends AbstractSearchTask {
     KillerTable killerTable,
     HistoryTable historyTable
   ) {
-    super(killerTable, historyTable);
+    super(stopped, killerTable, historyTable);
 
     this.depth = depth;
     this.alpha = alpha;
@@ -70,6 +74,7 @@ class AlphaBetaRootTask extends AbstractSearchTask {
     this.rootMoveList = rootMoveList;
     this.isCheck = isCheck;
     this.moveResult = moveResult;
+    this.canStop = canStop;
     this.board = board;
     this.transpositionTable = transpositionTable;
     this.evaluationTable = evaluationTable;
@@ -84,7 +89,7 @@ class AlphaBetaRootTask extends AbstractSearchTask {
     updateSearch(height);
 
     // Abort conditions
-    if ((stopped && canStop) || height == Search.MAX_HEIGHT) {
+    if ((stopped.get() && canStop.get()) || height == Search.MAX_HEIGHT) {
       return evaluation.evaluate(board);
     }
 
@@ -120,12 +125,12 @@ class AlphaBetaRootTask extends AbstractSearchTask {
       int value;
       if (bestValue == -Search.INFINITY) {
         // First move
-        value = -new AlphaBetaTask(newDepth, -beta, -alpha, height + 1, true, true, new Hex88Board(board), transpositionTable, evaluationTable, pawnTable, killerTable, historyTable).invoke();
+        value = -new AlphaBetaTask(newDepth, -beta, -alpha, height + 1, true, true, stopped, canStop, new Hex88Board(board), transpositionTable, evaluationTable, pawnTable, killerTable, historyTable).invoke();
       } else {
-        value = -new AlphaBetaTask(newDepth, -alpha - 1, -alpha, height + 1, false, true, new Hex88Board(board), transpositionTable, evaluationTable, pawnTable, killerTable, historyTable).invoke();
+        value = -new AlphaBetaTask(newDepth, -alpha - 1, -alpha, height + 1, false, true, stopped, canStop, new Hex88Board(board), transpositionTable, evaluationTable, pawnTable, killerTable, historyTable).invoke();
         if (value > alpha && value < beta) {
           // Research again
-          value = -new AlphaBetaTask(newDepth, -beta, -alpha, height + 1, true, true, new Hex88Board(board), transpositionTable, evaluationTable, pawnTable, killerTable, historyTable).invoke();
+          value = -new AlphaBetaTask(newDepth, -beta, -alpha, height + 1, true, true, stopped, canStop, new Hex88Board(board), transpositionTable, evaluationTable, pawnTable, killerTable, historyTable).invoke();
         }
       }
       //## ENDOF Principal Variation Search
@@ -133,7 +138,7 @@ class AlphaBetaRootTask extends AbstractSearchTask {
       // Undo move
       board.undoMove(move);
 
-      if (stopped && canStop) {
+      if (stopped.get() && canStop.get()) {
         break;
       }
 

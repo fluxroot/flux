@@ -28,6 +28,8 @@ import com.fluxchess.flux.move.IntScore;
 import com.fluxchess.flux.move.MoveGenerator;
 import com.fluxchess.flux.table.*;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 class QuiescentTask extends AbstractSearchTask {
 
   private static final int FUTILITY_QUIESCENTMARGIN = IntChessman.VALUE_PAWN;
@@ -38,6 +40,7 @@ class QuiescentTask extends AbstractSearchTask {
   private int height;
   private boolean pvNode;
   private boolean useTranspositionTable;
+  private final AtomicBoolean canStop;
   private final Hex88Board board;
   private final TranspositionTable transpositionTable;
   private final EvaluationTable evaluationTable;
@@ -53,6 +56,8 @@ class QuiescentTask extends AbstractSearchTask {
     int height,
     boolean pvNode,
     boolean useTranspositionTable,
+    AtomicBoolean stopped,
+    AtomicBoolean canStop,
     Hex88Board board,
     TranspositionTable transpositionTable,
     EvaluationTable evaluationTable,
@@ -60,7 +65,7 @@ class QuiescentTask extends AbstractSearchTask {
     KillerTable killerTable,
     HistoryTable historyTable
   ) {
-    super(killerTable, historyTable);
+    super(stopped, killerTable, historyTable);
 
     this.checkingDepth = checkingDepth;
     this.alpha = alpha;
@@ -68,6 +73,7 @@ class QuiescentTask extends AbstractSearchTask {
     this.height = height;
     this.pvNode = pvNode;
     this.useTranspositionTable = useTranspositionTable;
+    this.canStop = canStop;
     this.board = board;
     this.transpositionTable = transpositionTable;
     this.evaluationTable = evaluationTable;
@@ -82,7 +88,7 @@ class QuiescentTask extends AbstractSearchTask {
     updateSearch(height);
 
     // Abort conditions
-    if ((stopped && canStop) || height == Search.MAX_HEIGHT) {
+    if ((stopped.get() && canStop.get()) || height == Search.MAX_HEIGHT) {
       return evaluation.evaluate(board);
     }
 
@@ -217,12 +223,12 @@ class QuiescentTask extends AbstractSearchTask {
       board.makeMove(move);
 
       // Recurse into Quiescent
-      int value = -new QuiescentTask(checkingDepth - 1, -beta, -alpha, height + 1, pvNode, false, new Hex88Board(board), transpositionTable, evaluationTable, pawnTable, killerTable, historyTable).invoke();
+      int value = -new QuiescentTask(checkingDepth - 1, -beta, -alpha, height + 1, pvNode, false, stopped, canStop, new Hex88Board(board), transpositionTable, evaluationTable, pawnTable, killerTable, historyTable).invoke();
 
       // Undo move
       board.undoMove(move);
 
-      if (stopped && canStop) {
+      if (stopped.get() && canStop.get()) {
         break;
       }
 
@@ -257,7 +263,7 @@ class QuiescentTask extends AbstractSearchTask {
     }
 
     if (useTranspositionTable) {
-      if (!(stopped && canStop)) {
+      if (!(stopped.get() && canStop.get())) {
         transpositionTable.put(board.zobristCode, 0, bestValue, hashType, IntMove.NOMOVE, false, height);
       }
     }

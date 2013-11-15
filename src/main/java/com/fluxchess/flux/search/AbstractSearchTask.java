@@ -30,13 +30,16 @@ import com.fluxchess.flux.table.HistoryTable;
 import com.fluxchess.flux.table.KillerTable;
 
 import java.util.concurrent.RecursiveTask;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 abstract class AbstractSearchTask extends RecursiveTask<Integer> {
 
+  protected final AtomicBoolean stopped;
   protected final KillerTable killerTable;
   protected final HistoryTable historyTable;
 
-  protected AbstractSearchTask(KillerTable killerTable, HistoryTable historyTable) {
+  protected AbstractSearchTask(AtomicBoolean stopped, KillerTable killerTable, HistoryTable historyTable) {
+    this.stopped = stopped;
     this.killerTable = killerTable;
     this.historyTable = historyTable;
   }
@@ -50,7 +53,7 @@ abstract class AbstractSearchTask extends RecursiveTask<Integer> {
 
     if (searchNodes > 0 && searchNodes <= info.totalNodes) {
       // Hard stop on number of nodes
-      stopped = true;
+      stopped.set(true);
     }
 
     // Reset

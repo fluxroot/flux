@@ -32,6 +32,7 @@ import com.fluxchess.jcpi.models.GenericMove;
 import java.util.*;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public final class Search implements Runnable {
 
@@ -59,8 +60,8 @@ public final class Search implements Runnable {
 
   // Search control
   private Timer timer = null;
-  private boolean canStop = false;
-  private boolean stopped = true;
+  private final AtomicBoolean canStop = new AtomicBoolean(false);
+  private final AtomicBoolean stopped = new AtomicBoolean(true);
   private boolean stopFlag = false;
   private boolean doTimeManagement = true;
   private boolean analyzeMode = false;
@@ -138,8 +139,8 @@ public final class Search implements Runnable {
 
   public void run() {
     logger.debug("Analyzing fen " + board.getBoard().toString());
-    stopped = false;
-    canStop = false;
+    stopped.set(false);
+    canStop.set(false);
     bestResult = new Result();
 
     // Set the time managemnet
@@ -186,8 +187,8 @@ public final class Search implements Runnable {
   }
 
   public void stop() {
-    stopped = true;
-    canStop = true;
+    stopped.set(true);
+    canStop.set(true);
     try {
       // Wait for the thread to die
       thread.join();
@@ -211,17 +212,17 @@ public final class Search implements Runnable {
     // Check whether we have already a result
     assert bestResult != null;
     if (bestResult.bestMove != IntMove.NOMOVE) {
-      canStop = true;
+      canStop.set(true);
 
       // Check if we have a checkmate
       if (Math.abs(bestResult.resultValue) > CHECKMATE_THRESHOLD
         && bestResult.depth >= (CHECKMATE - Math.abs(bestResult.resultValue))) {
-        stopped = true;
+        stopped.set(true);
       }
 
       // Check if we have only one move to make
       else if (bestResult.moveNumber == 1) {
-        stopped = true;
+        stopped.set(true);
       }
     }
   }
@@ -470,11 +471,11 @@ public final class Search implements Runnable {
         moveResult.moveNumber = rootMoveList.getLength();
       } else {
         // Do the Alpha-Beta search
-        value = pool.invoke(new AlphaBetaRootTask(currentDepth, alpha, beta, 0, rootMoveList, isCheck, moveResult, new Hex88Board(board), transpositionTable, evaluationTable, pawnTable, killerTable, historyTable));
+        value = pool.invoke(new AlphaBetaRootTask(currentDepth, alpha, beta, 0, rootMoveList, isCheck, moveResult, stopped, canStop, new Hex88Board(board), transpositionTable, evaluationTable, pawnTable, killerTable, historyTable));
       }
 
       //## BEGIN Aspiration Windows
-      if (!(stopped && canStop) && Configuration.useAspirationWindows && showPvNumber <= 1 && currentDepth >= transpositionDepth) {
+      if (!(stopped.get() && canStop.get()) && Configuration.useAspirationWindows && showPvNumber <= 1 && currentDepth >= transpositionDepth) {
         int adjustmentIndex = 0;
         while (adjustmentIndex < ASPIRATIONWINDOW_ADJUSTMENT.length && (value <= alpha || value >= beta)) {
           int newAspirationWindow = ASPIRATIONWINDOW_ADJUSTMENT[adjustmentIndex];
@@ -491,9 +492,9 @@ public final class Search implements Runnable {
           Result moveResultAdjustment = new Result();
 
           // Do the Alpha-Beta search again
-          value = pool.invoke(new AlphaBetaRootTask(currentDepth, alpha, beta, 0, rootMoveList, isCheck, moveResultAdjustment, new Hex88Board(board), transpositionTable, evaluationTable, pawnTable, killerTable, historyTable));
+          value = pool.invoke(new AlphaBetaRootTask(currentDepth, alpha, beta, 0, rootMoveList, isCheck, moveResultAdjustment, stopped, canStop, new Hex88Board(board), transpositionTable, evaluationTable, pawnTable, killerTable, historyTable));
 
-          if (stopped && canStop) {
+          if (stopped.get() && canStop.get()) {
             break;
           }
 
@@ -632,9 +633,9 @@ public final class Search implements Runnable {
         break;
       }
 
-      canStop = true;
+      canStop.set(true);
 
-      if (stopped) {
+      if (stopped.get()) {
         break;
       }
     }

@@ -29,6 +29,8 @@ import com.fluxchess.flux.move.IntScore;
 import com.fluxchess.flux.move.MoveGenerator;
 import com.fluxchess.flux.table.*;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 class AlphaBetaTask extends AbstractSearchTask {
 
   private static final int NULLMOVE_DEPTH = 2;
@@ -49,6 +51,7 @@ class AlphaBetaTask extends AbstractSearchTask {
   private int height;
   private boolean pvNode;
   private boolean doNull;
+  private final AtomicBoolean canStop;
   private final Hex88Board board;
   private final TranspositionTable transpositionTable;
   private final EvaluationTable evaluationTable;
@@ -73,6 +76,8 @@ class AlphaBetaTask extends AbstractSearchTask {
     int height,
     boolean pvNode,
     boolean doNull,
+    AtomicBoolean stopped,
+    AtomicBoolean canStop,
     Hex88Board board,
     TranspositionTable transpositionTable,
     EvaluationTable evaluationTable,
@@ -80,7 +85,7 @@ class AlphaBetaTask extends AbstractSearchTask {
     KillerTable killerTable,
     HistoryTable historyTable
   ) {
-    super(killerTable, historyTable);
+    super(stopped, killerTable, historyTable);
 
     this.depth = depth;
     this.alpha = alpha;
@@ -88,6 +93,7 @@ class AlphaBetaTask extends AbstractSearchTask {
     this.height = height;
     this.pvNode = pvNode;
     this.doNull = doNull;
+    this.canStop = canStop;
     this.board = board;
     this.transpositionTable = transpositionTable;
     this.evaluationTable = evaluationTable;
@@ -102,13 +108,13 @@ class AlphaBetaTask extends AbstractSearchTask {
     // We are at a leaf/horizon. So calculate that value.
     if (depth <= 0) {
       // Descend into quiescent
-      return new QuiescentTask(0, alpha, beta, height, pvNode, true, new Hex88Board(board), transpositionTable, evaluationTable, pawnTable, killerTable, historyTable).invoke();
+      return new QuiescentTask(0, alpha, beta, height, pvNode, true, stopped, canStop, new Hex88Board(board), transpositionTable, evaluationTable, pawnTable, killerTable, historyTable).invoke();
     }
 
     updateSearch(height);
 
     // Abort conditions
-    if ((stopped && canStop) || height == Search.MAX_HEIGHT) {
+    if ((stopped.get() && canStop.get()) || height == Search.MAX_HEIGHT) {
       return evaluation.evaluate(board);
     }
 
@@ -192,7 +198,7 @@ class AlphaBetaTask extends AbstractSearchTask {
 
         // Make the null move
         board.makeMove(IntMove.NULLMOVE);
-        int value = -new AlphaBetaTask(newDepth, -beta, -beta + 1, height + 1, false, false, new Hex88Board(board), transpositionTable, evaluationTable, pawnTable, killerTable, historyTable).invoke();
+        int value = -new AlphaBetaTask(newDepth, -beta, -beta + 1, height + 1, false, false, stopped, canStop, new Hex88Board(board), transpositionTable, evaluationTable, pawnTable, killerTable, historyTable).invoke();
         board.undoMove(IntMove.NULLMOVE);
 
         // Verify on beta exceeding
@@ -202,7 +208,7 @@ class AlphaBetaTask extends AbstractSearchTask {
               newDepth = depth - NULLMOVE_VERIFICATIONREDUCTION;
 
               // Verify
-              value = new AlphaBetaTask(newDepth, alpha, beta, height, true, false, new Hex88Board(board), transpositionTable, evaluationTable, pawnTable, killerTable, historyTable).invoke();
+              value = new AlphaBetaTask(newDepth, alpha, beta, height, true, false, stopped, canStop, new Hex88Board(board), transpositionTable, evaluationTable, pawnTable, killerTable, historyTable).invoke();
 
               if (value >= beta) {
                 // Cut-off
@@ -224,7 +230,7 @@ class AlphaBetaTask extends AbstractSearchTask {
             value = Search.CHECKMATE_THRESHOLD;
           }
 
-          if (!(stopped && canStop)) {
+          if (!(stopped.get() && canStop.get())) {
             // Store the value into the transposition table
             transpositionTable.put(board.zobristCode, depth, value, IntScore.BETA, IntMove.NOMOVE, mateThreat, height);
           }
@@ -237,7 +243,7 @@ class AlphaBetaTask extends AbstractSearchTask {
 
     // Initialize
     int hashType = IntScore.ALPHA;
-    int bestValue = -INFINITY;
+    int bestValue = -Search.INFINITY;
     int bestMove = IntMove.NOMOVE;
     int searchedMoves = 0;
 
@@ -255,9 +261,9 @@ class AlphaBetaTask extends AbstractSearchTask {
         beta = Search.CHECKMATE;
 
         for (int newDepth = 1; newDepth < depth; newDepth++) {
-          new AlphaBetaTask(newDepth, alpha, beta, height, true, false, new Hex88Board(board), transpositionTable, evaluationTable, pawnTable, killerTable, historyTable).invoke();
+          new AlphaBetaTask(newDepth, alpha, beta, height, true, false, stopped, canStop, new Hex88Board(board), transpositionTable, evaluationTable, pawnTable, killerTable, historyTable).invoke();
 
-          if (stopped && canStop) {
+          if (stopped.get() && canStop.get()) {
             return oldAlpha;
           }
         }
@@ -392,16 +398,16 @@ class AlphaBetaTask extends AbstractSearchTask {
       int value;
       if (!pvNode || bestValue == -Search.INFINITY) {
         // First move
-        value = -new AlphaBetaTask(newDepth, -beta, -alpha, height + 1, pvNode, true, new Hex88Board(board), transpositionTable, evaluationTable, pawnTable, killerTable, historyTable).invoke();
+        value = -new AlphaBetaTask(newDepth, -beta, -alpha, height + 1, pvNode, true, stopped, canStop, new Hex88Board(board), transpositionTable, evaluationTable, pawnTable, killerTable, historyTable).invoke();
       } else {
         if (newDepth >= depth) {
-          value = -new AlphaBetaTask(depth - 1, -alpha - 1, -alpha, height + 1, false, true, new Hex88Board(board), transpositionTable, evaluationTable, pawnTable, killerTable, historyTable).invoke();
+          value = -new AlphaBetaTask(depth - 1, -alpha - 1, -alpha, height + 1, false, true, stopped, canStop, new Hex88Board(board), transpositionTable, evaluationTable, pawnTable, killerTable, historyTable).invoke();
         } else {
-          value = -new AlphaBetaTask(newDepth, -alpha - 1, -alpha, height + 1, false, true, new Hex88Board(board), transpositionTable, evaluationTable, pawnTable, killerTable, historyTable).invoke();
+          value = -new AlphaBetaTask(newDepth, -alpha - 1, -alpha, height + 1, false, true, stopped, canStop, new Hex88Board(board), transpositionTable, evaluationTable, pawnTable, killerTable, historyTable).invoke();
         }
         if (value > alpha && value < beta) {
           // Research again
-          value = -new AlphaBetaTask(newDepth, -beta, -alpha, height + 1, true, true, new Hex88Board(board), transpositionTable, evaluationTable, pawnTable, killerTable, historyTable).invoke();
+          value = -new AlphaBetaTask(newDepth, -beta, -alpha, height + 1, true, true, stopped, canStop, new Hex88Board(board), transpositionTable, evaluationTable, pawnTable, killerTable, historyTable).invoke();
         }
       }
       //## ENDOF Principal Variation Search
@@ -411,7 +417,7 @@ class AlphaBetaTask extends AbstractSearchTask {
         if (reduced && value >= beta) {
           // Research with original depth
           newDepth++;
-          value = -new AlphaBetaTask(newDepth, -beta, -alpha, height + 1, pvNode, true, new Hex88Board(board), transpositionTable, evaluationTable, pawnTable, killerTable, historyTable).invoke();
+          value = -new AlphaBetaTask(newDepth, -beta, -alpha, height + 1, pvNode, true, stopped, canStop, new Hex88Board(board), transpositionTable, evaluationTable, pawnTable, killerTable, historyTable).invoke();
         }
       }
       //## ENDOF Late Move Reduction Research
@@ -419,7 +425,7 @@ class AlphaBetaTask extends AbstractSearchTask {
       // Undo move
       board.undoMove(move);
 
-      if (stopped && canStop) {
+      if (stopped.get() && canStop.get()) {
         break;
       }
 
@@ -463,7 +469,7 @@ class AlphaBetaTask extends AbstractSearchTask {
       }
     }
 
-    if (!(stopped && canStop)) {
+    if (!(stopped.get() && canStop.get())) {
       if (bestMove != IntMove.NOMOVE) {
         addGoodMove(bestMove, depth, height);
       }
