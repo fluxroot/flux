@@ -29,8 +29,6 @@ import com.fluxchess.flux.move.IntScore;
 import com.fluxchess.flux.move.MoveGenerator;
 import com.fluxchess.flux.table.*;
 
-import java.util.concurrent.RecursiveTask;
-
 class AlphaBetaTask extends AbstractSearchTask {
 
   private static final int NULLMOVE_DEPTH = 2;
@@ -55,8 +53,6 @@ class AlphaBetaTask extends AbstractSearchTask {
   private final TranspositionTable transpositionTable;
   private final EvaluationTable evaluationTable;
   private final PawnTable pawnTable;
-  private final KillerTable killerTable;
-  private final HistoryTable historyTable;
 
   private final Evaluation evaluation;
   private final MoveGenerator moveGenerator;
@@ -84,6 +80,8 @@ class AlphaBetaTask extends AbstractSearchTask {
     KillerTable killerTable,
     HistoryTable historyTable
   ) {
+    super(killerTable, historyTable);
+
     this.depth = depth;
     this.alpha = alpha;
     this.beta = beta;
@@ -94,8 +92,6 @@ class AlphaBetaTask extends AbstractSearchTask {
     this.transpositionTable = transpositionTable;
     this.evaluationTable = evaluationTable;
     this.pawnTable = pawnTable;
-    this.killerTable = killerTable;
-    this.historyTable = historyTable;
 
     evaluation = new Evaluation(evaluationTable, pawnTable);
     moveGenerator = new MoveGenerator(board, killerTable, historyTable);
@@ -296,7 +292,7 @@ class AlphaBetaTask extends AbstractSearchTask {
       //## ENDOF Minor Promotion Pruning
 
       // Extension
-      int newDepth = getNewDepth(depth, move, isSingleReply, mateThreat);
+      int newDepth = getNewDepth(board, depth, move, isSingleReply, mateThreat);
 
       //## BEGIN Extended Futility Pruning
       // Notes: Ideas from http://supertech.lcs.mit.edu/~heinz/dt/node18.html
@@ -306,7 +302,7 @@ class AlphaBetaTask extends AbstractSearchTask {
           && newDepth == 1
           && !isCheck
           && (Configuration.useCheckExtension || !board.isCheckingMove(move))
-          && !isDangerousMove(move)) {
+          && !isDangerousMove(board, move)) {
           assert !board.isCheckingMove(move);
           assert IntMove.getType(move) != IntMove.PAWNPROMOTION : board.getBoard() + ", " + IntMove.toString(move);
 
@@ -341,7 +337,7 @@ class AlphaBetaTask extends AbstractSearchTask {
           && newDepth == 0
           && !isCheck
           && (Configuration.useCheckExtension || !board.isCheckingMove(move))
-          && !isDangerousMove(move)) {
+          && !isDangerousMove(board, move)) {
           assert !board.isCheckingMove(move);
           assert IntMove.getType(move) != IntMove.PAWNPROMOTION : board.getBoard() + ", " + IntMove.toString(move);
 
@@ -379,7 +375,7 @@ class AlphaBetaTask extends AbstractSearchTask {
           && !isCheck
           && (Configuration.useCheckExtension || !board.isCheckingMove(move))
           && IntMove.getTarget(move) == IntChessman.NOPIECE
-          && !isDangerousMove(move)) {
+          && !isDangerousMove(board, move)) {
           assert !board.isCheckingMove(move);
           assert IntMove.getType(move) != IntMove.PAWNPROMOTION : board.getBoard() + ", " + IntMove.toString(move);
 

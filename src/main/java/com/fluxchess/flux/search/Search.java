@@ -88,8 +88,8 @@ public final class Search implements Runnable {
   private final TranspositionTable transpositionTable;
   private final EvaluationTable evaluationTable;
   private final PawnTable pawnTable;
-  private final KillerTable killerTable = new KillerTable();
-  private final HistoryTable historyTable = new HistoryTable();
+  private final KillerTable killerTable;
+  private final HistoryTable historyTable;
 
   // Search information
   private static final MoveList[] pvList = new MoveList[MAX_HEIGHT + 1];
@@ -123,6 +123,8 @@ public final class Search implements Runnable {
     this.evaluationTable = evaluationTable;
     this.pawnTable = pawnTable;
 
+    killerTable = new KillerTable();
+    historyTable = new HistoryTable();
     moveGenerator = new MoveGenerator(board, killerTable, historyTable);
     new MoveSee(board);
 

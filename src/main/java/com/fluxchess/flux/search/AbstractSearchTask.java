@@ -19,16 +19,27 @@
 package com.fluxchess.flux.search;
 
 import com.fluxchess.flux.Configuration;
+import com.fluxchess.flux.board.Hex88Board;
 import com.fluxchess.flux.board.IntChessman;
 import com.fluxchess.flux.board.IntColor;
 import com.fluxchess.flux.board.IntPosition;
 import com.fluxchess.flux.move.IntMove;
 import com.fluxchess.flux.move.MoveList;
 import com.fluxchess.flux.move.MoveSee;
+import com.fluxchess.flux.table.HistoryTable;
+import com.fluxchess.flux.table.KillerTable;
 
 import java.util.concurrent.RecursiveTask;
 
 abstract class AbstractSearchTask extends RecursiveTask<Integer> {
+
+  protected final KillerTable killerTable;
+  protected final HistoryTable historyTable;
+
+  protected AbstractSearchTask(KillerTable killerTable, HistoryTable historyTable) {
+    this.killerTable = killerTable;
+    this.historyTable = historyTable;
+  }
 
   private void updateSearch(int height) {
     assert transpositionTable.getPermillUsed() >= 0 && transpositionTable.getPermillUsed() <= 1000;
@@ -46,7 +57,7 @@ abstract class AbstractSearchTask extends RecursiveTask<Integer> {
     pvList[height].resetList();
   }
 
-  private boolean isDangerousMove(int move) {
+  protected boolean isDangerousMove(Hex88Board board, int move) {
     int chessman = IntMove.getChessman(move);
     int relativeRank = IntPosition.getRelativeRank(IntMove.getEnd(move), board.activeColor);
     if (chessman == IntChessman.PAWN && relativeRank >= IntPosition.rank7) {
@@ -64,13 +75,14 @@ abstract class AbstractSearchTask extends RecursiveTask<Integer> {
   /**
    * Returns the new possibly extended search depth.
    *
+   * @param board         the current board.
    * @param depth         the current depth.
    * @param move          the current move.
    * @param isSingleReply whether we are in check and have only one way out.
    * @param mateThreat    whether we have a mate threat.
    * @return the new possibly extended search depth.
    */
-  private int getNewDepth(int depth, int move, boolean isSingleReply, boolean mateThreat) {
+  protected int getNewDepth(Hex88Board board, int depth, int move, boolean isSingleReply, boolean mateThreat) {
     int newDepth = depth - 1;
 
     assert (IntMove.getEnd(move) != board.captureSquare) || (IntMove.getTarget(move) != IntChessman.NOPIECE);
@@ -118,7 +130,7 @@ abstract class AbstractSearchTask extends RecursiveTask<Integer> {
     return newDepth;
   }
 
-  private static void addPv(MoveList destination, MoveList source, int move) {
+  private void addPv(MoveList destination, MoveList source, int move) {
     assert destination != null;
     assert source != null;
     assert move != IntMove.NOMOVE;
@@ -132,7 +144,7 @@ abstract class AbstractSearchTask extends RecursiveTask<Integer> {
     }
   }
 
-  private static void addGoodMove(int move, int depth, int height) {
+  protected void addGoodMove(int move, int depth, int height) {
     assert move != IntMove.NOMOVE;
 
     if (IntMove.getTarget(move) != IntChessman.NOPIECE) {

@@ -28,7 +28,6 @@ import com.fluxchess.jcpi.models.GenericMove;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.PriorityQueue;
-import java.util.concurrent.RecursiveTask;
 
 class AlphaBetaRootTask extends AbstractSearchTask {
 
@@ -43,8 +42,6 @@ class AlphaBetaRootTask extends AbstractSearchTask {
   private final TranspositionTable transpositionTable;
   private final EvaluationTable evaluationTable;
   private final PawnTable pawnTable;
-  private final KillerTable killerTable;
-  private final HistoryTable historyTable;
 
   private final Evaluation evaluation;
   private final MoveGenerator moveGenerator;
@@ -64,6 +61,8 @@ class AlphaBetaRootTask extends AbstractSearchTask {
     KillerTable killerTable,
     HistoryTable historyTable
   ) {
+    super(killerTable, historyTable);
+
     this.depth = depth;
     this.alpha = alpha;
     this.beta = beta;
@@ -75,8 +74,6 @@ class AlphaBetaRootTask extends AbstractSearchTask {
     this.transpositionTable = transpositionTable;
     this.evaluationTable = evaluationTable;
     this.pawnTable = pawnTable;
-    this.killerTable = killerTable;
-    this.historyTable = historyTable;
 
     evaluation = new Evaluation(evaluationTable, pawnTable);
     moveGenerator = new MoveGenerator(board, killerTable, historyTable);
@@ -114,7 +111,7 @@ class AlphaBetaRootTask extends AbstractSearchTask {
       info.sendInformationMove(IntMove.toGenericMove(move), currentMoveNumber);
 
       // Extension
-      int newDepth = getNewDepth(depth, move, isSingleReply, false);
+      int newDepth = getNewDepth(board, depth, move, isSingleReply, false);
 
       // Do move
       board.makeMove(move);

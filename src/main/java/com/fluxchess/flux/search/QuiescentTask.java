@@ -28,8 +28,6 @@ import com.fluxchess.flux.move.IntScore;
 import com.fluxchess.flux.move.MoveGenerator;
 import com.fluxchess.flux.table.*;
 
-import java.util.concurrent.RecursiveTask;
-
 class QuiescentTask extends AbstractSearchTask {
 
   private static final int FUTILITY_QUIESCENTMARGIN = IntChessman.VALUE_PAWN;
@@ -44,8 +42,6 @@ class QuiescentTask extends AbstractSearchTask {
   private final TranspositionTable transpositionTable;
   private final EvaluationTable evaluationTable;
   private final PawnTable pawnTable;
-  private final KillerTable killerTable;
-  private final HistoryTable historyTable;
 
   private final Evaluation evaluation;
   private final MoveGenerator moveGenerator;
@@ -64,6 +60,8 @@ class QuiescentTask extends AbstractSearchTask {
     KillerTable killerTable,
     HistoryTable historyTable
   ) {
+    super(killerTable, historyTable);
+
     this.checkingDepth = checkingDepth;
     this.alpha = alpha;
     this.beta = beta;
@@ -74,8 +72,6 @@ class QuiescentTask extends AbstractSearchTask {
     this.transpositionTable = transpositionTable;
     this.evaluationTable = evaluationTable;
     this.pawnTable = pawnTable;
-    this.killerTable = killerTable;
-    this.historyTable = historyTable;
 
     evaluation = new Evaluation(evaluationTable, pawnTable);
     moveGenerator = new MoveGenerator(board, killerTable, historyTable);
@@ -197,7 +193,7 @@ class QuiescentTask extends AbstractSearchTask {
         if (!pvNode
           && !isCheck
           && !board.isCheckingMove(move)
-          && !isDangerousMove(move)) {
+          && !isDangerousMove(board, move)) {
           assert IntMove.getTarget(move) != IntChessman.NOPIECE;
           assert IntMove.getType(move) != IntMove.PAWNPROMOTION : board.getBoard() + ", " + IntMove.toString(move);
 
