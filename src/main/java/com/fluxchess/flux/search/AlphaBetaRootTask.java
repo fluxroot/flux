@@ -159,11 +159,7 @@ class AlphaBetaRootTask extends AbstractSearchTask {
       }
 
       // Add pv to list
-      List<GenericMove> genericMoveList = new ArrayList<>();
-      genericMoveList.add(IntMove.toGenericMove(move));
-      for (int i = pvList[height + 1].head; i < pvList[height + 1].tail; i++) {
-        genericMoveList.add(IntMove.toGenericMove(pvList[height + 1].move[i]));
-      }
+      List<GenericMove> genericMoveList = transpositionTable.getMoveList(board, depth, new ArrayList<GenericMove>());
       PrincipalVariation pv = new PrincipalVariation(
         currentMoveNumber,
         value,
@@ -204,7 +200,6 @@ class AlphaBetaRootTask extends AbstractSearchTask {
       if (value > bestValue) {
         bestValue = value;
         bestMove = move;
-        addPv(pvList[height], pvList[height + 1], move);
 
         // Do we have a better value?
         if (value > alpha) {

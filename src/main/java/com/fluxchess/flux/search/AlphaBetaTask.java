@@ -268,10 +268,8 @@ class AlphaBetaTask extends AbstractSearchTask {
         alpha = oldAlpha;
         beta = oldBeta;
 
-        if (pvList[height].getLength() > 0) {
-          // Hopefully we have a transposition move now
-          transpositionMove = pvList[height].move[pvList[height].head];
-        }
+        // Hopefully we have a transposition move now
+        transpositionMove = transpositionTable.get(board.zobristCode).move;
       }
     }
     //## ENDOF Internal Iterative Deepening
@@ -433,7 +431,6 @@ class AlphaBetaTask extends AbstractSearchTask {
       if (value > bestValue) {
         bestValue = value;
         bestMove = move;
-        addPv(pvList[height], pvList[height + 1], move);
 
         // Do we have a better value?
         if (value > alpha) {

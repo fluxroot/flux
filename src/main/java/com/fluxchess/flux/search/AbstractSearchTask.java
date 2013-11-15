@@ -25,7 +25,6 @@ import com.fluxchess.flux.board.IntChessman;
 import com.fluxchess.flux.board.IntColor;
 import com.fluxchess.flux.board.IntPosition;
 import com.fluxchess.flux.move.IntMove;
-import com.fluxchess.flux.move.MoveList;
 import com.fluxchess.flux.move.MoveSee;
 import com.fluxchess.flux.table.HistoryTable;
 import com.fluxchess.flux.table.KillerTable;
@@ -49,7 +48,7 @@ abstract class AbstractSearchTask extends RecursiveTask<Integer> {
     this.historyTable = parameter.historyTable;
   }
 
-  private void updateSearch(int height) {
+  protected void updateSearch(int height) {
     info.incrementTotalNodes();
     info.setCurrentMaxDepth(height);
     info.sendInformationStatus();
@@ -58,9 +57,6 @@ abstract class AbstractSearchTask extends RecursiveTask<Integer> {
       // Hard stop on number of nodes
       stopped.set(true);
     }
-
-    // Reset
-    pvList[height].resetList();
   }
 
   protected boolean isDangerousMove(Hex88Board board, int move) {
@@ -134,20 +130,6 @@ abstract class AbstractSearchTask extends RecursiveTask<Integer> {
     }
 
     return newDepth;
-  }
-
-  private void addPv(MoveList destination, MoveList source, int move) {
-    assert destination != null;
-    assert source != null;
-    assert move != IntMove.NOMOVE;
-
-    destination.resetList();
-
-    destination.move[destination.tail++] = move;
-
-    for (int i = source.head; i < source.tail; i++) {
-      destination.move[destination.tail++] = source.move[i];
-    }
   }
 
   protected void addGoodMove(int move, int depth, int height) {

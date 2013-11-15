@@ -232,7 +232,6 @@ class QuiescentTask extends AbstractSearchTask {
       // Pruning
       if (value > bestValue) {
         bestValue = value;
-        addPv(pvList[height], pvList[height + 1], move);
 
         // Do we have a better value?
         if (value > alpha) {
