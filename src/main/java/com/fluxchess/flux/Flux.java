@@ -22,6 +22,7 @@ import com.fluxchess.flux.board.Hex88Board;
 import com.fluxchess.flux.board.IntColor;
 import com.fluxchess.flux.evaluation.Evaluation;
 import com.fluxchess.flux.move.IntMove;
+import com.fluxchess.flux.search.Search;
 import com.fluxchess.flux.table.EvaluationTable;
 import com.fluxchess.flux.table.PawnTable;
 import com.fluxchess.flux.table.TranspositionTable;
@@ -34,7 +35,6 @@ import com.fluxchess.jcpi.models.Option;
 import com.fluxchess.jcpi.protocols.IProtocolHandler;
 
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 public final class Flux extends AbstractEngine {
@@ -83,7 +83,7 @@ public final class Flux extends AbstractEngine {
     Runtime.getRuntime().gc();
 
     // Create a new search
-    search = new Search(new Evaluation(evaluationTable, pawnTable), new Hex88Board(new GenericBoard(GenericBoard.STANDARDSETUP)), transpositionTable, new InformationTimer(getProtocol(), transpositionTable), timeTable);
+    search = new Search(new Hex88Board(new GenericBoard(GenericBoard.STANDARDSETUP)), transpositionTable, evaluationTable, pawnTable, new InformationTimer(getProtocol(), transpositionTable), timeTable);
   }
 
   public void receive(EngineInitializeRequestCommand command) {
@@ -231,7 +231,7 @@ public final class Flux extends AbstractEngine {
     if (board != null) {
       if (search.isStopped()) {
         // Create a new search
-        search = new Search(new Evaluation(evaluationTable, pawnTable), board, transpositionTable, new InformationTimer(getProtocol(), transpositionTable), timeTable);
+        search = new Search(board, transpositionTable, evaluationTable, pawnTable, new InformationTimer(getProtocol(), transpositionTable), timeTable);
 
         // Set all search parameters
         if (command.getDepth() != null && command.getDepth() > 0) {
