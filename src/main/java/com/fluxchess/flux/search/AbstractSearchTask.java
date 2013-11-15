@@ -35,16 +35,18 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 abstract class AbstractSearchTask extends RecursiveTask<Integer> {
 
+  protected final Parameter parameter;
   protected final AtomicBoolean stopped;
   protected final InformationTimer info;
   protected final KillerTable killerTable;
   protected final HistoryTable historyTable;
 
-  protected AbstractSearchTask(AtomicBoolean stopped, InformationTimer informationTimer, KillerTable killerTable, HistoryTable historyTable) {
-    this.stopped = stopped;
-    this.info = informationTimer;
-    this.killerTable = killerTable;
-    this.historyTable = historyTable;
+  protected AbstractSearchTask(Parameter parameter) {
+    this.parameter = parameter;
+    this.stopped = parameter.stopped;
+    this.info = parameter.info;
+    this.killerTable = parameter.killerTable;
+    this.historyTable = parameter.historyTable;
   }
 
   private void updateSearch(int height) {
@@ -52,7 +54,7 @@ abstract class AbstractSearchTask extends RecursiveTask<Integer> {
     info.setCurrentMaxDepth(height);
     info.sendInformationStatus();
 
-    if (searchNodes > 0 && searchNodes <= info.getTotalNodes()) {
+    if (parameter.searchNodes > 0 && parameter.searchNodes <= info.getTotalNodes()) {
       // Hard stop on number of nodes
       stopped.set(true);
     }

@@ -94,7 +94,7 @@ public final class Search implements Runnable {
 
   // Search information
   private static final MoveList[] pvList = new MoveList[MAX_HEIGHT + 1];
-  private static final HashMap<Integer, PrincipalVariation> multiPvMap = new HashMap<>(MAX_MOVES);
+  private final HashMap<Integer, PrincipalVariation> multiPvMap = new HashMap<>(MAX_MOVES);
   private Result bestResult = null;
   private final int[] timeTable;
 
@@ -132,8 +132,6 @@ public final class Search implements Runnable {
     this.info = info;
 
     this.timeTable = timeTable;
-
-    multiPvMap.clear();
   }
 
   public void run() {
@@ -470,7 +468,21 @@ public final class Search implements Runnable {
         moveResult.moveNumber = rootMoveList.getLength();
       } else {
         // Do the Alpha-Beta search
-        value = pool.invoke(new AlphaBetaRootTask(currentDepth, alpha, beta, 0, rootMoveList, isCheck, moveResult, stopped, canStop, new Hex88Board(board), transpositionTable, evaluationTable, pawnTable, killerTable, historyTable));
+        Parameter parameter = new Parameter(
+          searchNodes,
+          showPvNumber,
+          analyzeMode,
+          multiPvMap,
+          stopped,
+          canStop,
+          info,
+          transpositionTable,
+          evaluationTable,
+          pawnTable,
+          killerTable,
+          historyTable
+        );
+        value = pool.invoke(new AlphaBetaRootTask(currentDepth, alpha, beta, 0, rootMoveList, isCheck, moveResult, new Hex88Board(board), parameter));
       }
 
       //## BEGIN Aspiration Windows
@@ -491,7 +503,21 @@ public final class Search implements Runnable {
           Result moveResultAdjustment = new Result();
 
           // Do the Alpha-Beta search again
-          value = pool.invoke(new AlphaBetaRootTask(currentDepth, alpha, beta, 0, rootMoveList, isCheck, moveResultAdjustment, stopped, canStop, new Hex88Board(board), transpositionTable, evaluationTable, pawnTable, killerTable, historyTable));
+          Parameter parameter = new Parameter(
+            searchNodes,
+            showPvNumber,
+            analyzeMode,
+            multiPvMap,
+            stopped,
+            canStop,
+            info,
+            transpositionTable,
+            evaluationTable,
+            pawnTable,
+            killerTable,
+            historyTable
+          );
+          value = pool.invoke(new AlphaBetaRootTask(currentDepth, alpha, beta, 0, rootMoveList, isCheck, moveResultAdjustment, new Hex88Board(board), parameter));
 
           if (stopped.get() && canStop.get()) {
             break;

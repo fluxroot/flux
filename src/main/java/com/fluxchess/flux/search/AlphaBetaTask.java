@@ -19,7 +19,6 @@
 package com.fluxchess.flux.search;
 
 import com.fluxchess.flux.Configuration;
-import com.fluxchess.flux.InformationTimer;
 import com.fluxchess.flux.board.Attack;
 import com.fluxchess.flux.board.Hex88Board;
 import com.fluxchess.flux.board.IntChessman;
@@ -28,7 +27,10 @@ import com.fluxchess.flux.evaluation.Evaluation;
 import com.fluxchess.flux.move.IntMove;
 import com.fluxchess.flux.move.IntScore;
 import com.fluxchess.flux.move.MoveGenerator;
-import com.fluxchess.flux.table.*;
+import com.fluxchess.flux.table.EvaluationTable;
+import com.fluxchess.flux.table.PawnTable;
+import com.fluxchess.flux.table.TranspositionTable;
+import com.fluxchess.flux.table.TranspositionTableEntry;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -77,17 +79,10 @@ class AlphaBetaTask extends AbstractSearchTask {
     int height,
     boolean pvNode,
     boolean doNull,
-    AtomicBoolean stopped,
-    AtomicBoolean canStop,
-    InformationTimer info,
     Hex88Board board,
-    TranspositionTable transpositionTable,
-    EvaluationTable evaluationTable,
-    PawnTable pawnTable,
-    KillerTable killerTable,
-    HistoryTable historyTable
+    Parameter parameter
   ) {
-    super(stopped, info, killerTable, historyTable);
+    super(parameter);
 
     this.depth = depth;
     this.alpha = alpha;
@@ -95,11 +90,11 @@ class AlphaBetaTask extends AbstractSearchTask {
     this.height = height;
     this.pvNode = pvNode;
     this.doNull = doNull;
-    this.canStop = canStop;
     this.board = board;
-    this.transpositionTable = transpositionTable;
-    this.evaluationTable = evaluationTable;
-    this.pawnTable = pawnTable;
+    this.canStop = parameter.canStop;
+    this.transpositionTable = parameter.transpositionTable;
+    this.evaluationTable = parameter.evaluationTable;
+    this.pawnTable = parameter.pawnTable;
 
     evaluation = new Evaluation(evaluationTable, pawnTable);
     moveGenerator = new MoveGenerator(board, killerTable, historyTable);
@@ -110,7 +105,7 @@ class AlphaBetaTask extends AbstractSearchTask {
     // We are at a leaf/horizon. So calculate that value.
     if (depth <= 0) {
       // Descend into quiescent
-      return new QuiescentTask(0, alpha, beta, height, pvNode, true, stopped, canStop, new Hex88Board(board), transpositionTable, evaluationTable, pawnTable, killerTable, historyTable).invoke();
+      return new QuiescentTask(0, alpha, beta, height, pvNode, true, new Hex88Board(board), parameter).invoke();
     }
 
     updateSearch(height);
@@ -200,7 +195,7 @@ class AlphaBetaTask extends AbstractSearchTask {
 
         // Make the null move
         board.makeMove(IntMove.NULLMOVE);
-        int value = -new AlphaBetaTask(newDepth, -beta, -beta + 1, height + 1, false, false, stopped, canStop, info, new Hex88Board(board), transpositionTable, evaluationTable, pawnTable, killerTable, historyTable).invoke();
+        int value = -new AlphaBetaTask(newDepth, -beta, -beta + 1, height + 1, false, false, new Hex88Board(board), parameter).invoke();
         board.undoMove(IntMove.NULLMOVE);
 
         // Verify on beta exceeding
@@ -210,7 +205,7 @@ class AlphaBetaTask extends AbstractSearchTask {
               newDepth = depth - NULLMOVE_VERIFICATIONREDUCTION;
 
               // Verify
-              value = new AlphaBetaTask(newDepth, alpha, beta, height, true, false, stopped, canStop, info, new Hex88Board(board), transpositionTable, evaluationTable, pawnTable, killerTable, historyTable).invoke();
+              value = new AlphaBetaTask(newDepth, alpha, beta, height, true, false, new Hex88Board(board), parameter).invoke();
 
               if (value >= beta) {
                 // Cut-off
@@ -263,7 +258,7 @@ class AlphaBetaTask extends AbstractSearchTask {
         beta = Search.CHECKMATE;
 
         for (int newDepth = 1; newDepth < depth; newDepth++) {
-          new AlphaBetaTask(newDepth, alpha, beta, height, true, false, stopped, canStop, info, new Hex88Board(board), transpositionTable, evaluationTable, pawnTable, killerTable, historyTable).invoke();
+          new AlphaBetaTask(newDepth, alpha, beta, height, true, false, new Hex88Board(board), parameter).invoke();
 
           if (stopped.get() && canStop.get()) {
             return oldAlpha;
@@ -291,7 +286,7 @@ class AlphaBetaTask extends AbstractSearchTask {
     while ((move = moveGenerator.getNextMove()) != IntMove.NOMOVE) {
       //## BEGIN Minor Promotion Pruning
       if (Configuration.useMinorPromotionPruning
-        && !analyzeMode
+        && !parameter.analyzeMode
         && IntMove.getType(move) == IntMove.PAWNPROMOTION
         && IntMove.getPromotion(move) != IntChessman.QUEEN) {
         assert IntMove.getPromotion(move) == IntChessman.ROOK || IntMove.getPromotion(move) == IntChessman.BISHOP || IntMove.getPromotion(move) == IntChessman.KNIGHT;
@@ -400,16 +395,16 @@ class AlphaBetaTask extends AbstractSearchTask {
       int value;
       if (!pvNode || bestValue == -Search.INFINITY) {
         // First move
-        value = -new AlphaBetaTask(newDepth, -beta, -alpha, height + 1, pvNode, true, stopped, canStop, info, new Hex88Board(board), transpositionTable, evaluationTable, pawnTable, killerTable, historyTable).invoke();
+        value = -new AlphaBetaTask(newDepth, -beta, -alpha, height + 1, pvNode, true, new Hex88Board(board), parameter).invoke();
       } else {
         if (newDepth >= depth) {
-          value = -new AlphaBetaTask(depth - 1, -alpha - 1, -alpha, height + 1, false, true, stopped, canStop, info, new Hex88Board(board), transpositionTable, evaluationTable, pawnTable, killerTable, historyTable).invoke();
+          value = -new AlphaBetaTask(depth - 1, -alpha - 1, -alpha, height + 1, false, true, new Hex88Board(board), parameter).invoke();
         } else {
-          value = -new AlphaBetaTask(newDepth, -alpha - 1, -alpha, height + 1, false, true, stopped, canStop, info, new Hex88Board(board), transpositionTable, evaluationTable, pawnTable, killerTable, historyTable).invoke();
+          value = -new AlphaBetaTask(newDepth, -alpha - 1, -alpha, height + 1, false, true, new Hex88Board(board), parameter).invoke();
         }
         if (value > alpha && value < beta) {
           // Research again
-          value = -new AlphaBetaTask(newDepth, -beta, -alpha, height + 1, true, true, stopped, canStop, info, new Hex88Board(board), transpositionTable, evaluationTable, pawnTable, killerTable, historyTable).invoke();
+          value = -new AlphaBetaTask(newDepth, -beta, -alpha, height + 1, true, true, new Hex88Board(board), parameter).invoke();
         }
       }
       //## ENDOF Principal Variation Search
@@ -419,7 +414,7 @@ class AlphaBetaTask extends AbstractSearchTask {
         if (reduced && value >= beta) {
           // Research with original depth
           newDepth++;
-          value = -new AlphaBetaTask(newDepth, -beta, -alpha, height + 1, pvNode, true, stopped, canStop, info, new Hex88Board(board), transpositionTable, evaluationTable, pawnTable, killerTable, historyTable).invoke();
+          value = -new AlphaBetaTask(newDepth, -beta, -alpha, height + 1, pvNode, true, new Hex88Board(board), parameter).invoke();
         }
       }
       //## ENDOF Late Move Reduction Research

@@ -19,7 +19,6 @@
 package com.fluxchess.flux.search;
 
 import com.fluxchess.flux.Configuration;
-import com.fluxchess.flux.InformationTimer;
 import com.fluxchess.flux.board.Attack;
 import com.fluxchess.flux.board.Hex88Board;
 import com.fluxchess.flux.board.IntChessman;
@@ -27,7 +26,10 @@ import com.fluxchess.flux.evaluation.Evaluation;
 import com.fluxchess.flux.move.IntMove;
 import com.fluxchess.flux.move.IntScore;
 import com.fluxchess.flux.move.MoveGenerator;
-import com.fluxchess.flux.table.*;
+import com.fluxchess.flux.table.EvaluationTable;
+import com.fluxchess.flux.table.PawnTable;
+import com.fluxchess.flux.table.TranspositionTable;
+import com.fluxchess.flux.table.TranspositionTableEntry;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -57,17 +59,10 @@ class QuiescentTask extends AbstractSearchTask {
     int height,
     boolean pvNode,
     boolean useTranspositionTable,
-    AtomicBoolean stopped,
-    AtomicBoolean canStop,
-    InformationTimer info,
     Hex88Board board,
-    TranspositionTable transpositionTable,
-    EvaluationTable evaluationTable,
-    PawnTable pawnTable,
-    KillerTable killerTable,
-    HistoryTable historyTable
+    Parameter parameter
   ) {
-    super(stopped, info, killerTable, historyTable);
+    super(parameter);
 
     this.checkingDepth = checkingDepth;
     this.alpha = alpha;
@@ -75,11 +70,11 @@ class QuiescentTask extends AbstractSearchTask {
     this.height = height;
     this.pvNode = pvNode;
     this.useTranspositionTable = useTranspositionTable;
-    this.canStop = canStop;
     this.board = board;
-    this.transpositionTable = transpositionTable;
-    this.evaluationTable = evaluationTable;
-    this.pawnTable = pawnTable;
+    this.canStop = parameter.canStop;
+    this.transpositionTable = parameter.transpositionTable;
+    this.evaluationTable = parameter.evaluationTable;
+    this.pawnTable = parameter.pawnTable;
 
     evaluation = new Evaluation(evaluationTable, pawnTable);
     moveGenerator = new MoveGenerator(board, killerTable, historyTable);
@@ -225,7 +220,7 @@ class QuiescentTask extends AbstractSearchTask {
       board.makeMove(move);
 
       // Recurse into Quiescent
-      int value = -new QuiescentTask(checkingDepth - 1, -beta, -alpha, height + 1, pvNode, false, stopped, canStop, info, new Hex88Board(board), transpositionTable, evaluationTable, pawnTable, killerTable, historyTable).invoke();
+      int value = -new QuiescentTask(checkingDepth - 1, -beta, -alpha, height + 1, pvNode, false, new Hex88Board(board), parameter).invoke();
 
       // Undo move
       board.undoMove(move);

@@ -19,11 +19,13 @@
 package com.fluxchess.flux.search;
 
 import com.fluxchess.flux.Configuration;
-import com.fluxchess.flux.InformationTimer;
 import com.fluxchess.flux.board.Hex88Board;
 import com.fluxchess.flux.evaluation.Evaluation;
 import com.fluxchess.flux.move.*;
-import com.fluxchess.flux.table.*;
+import com.fluxchess.flux.table.EvaluationTable;
+import com.fluxchess.flux.table.PawnTable;
+import com.fluxchess.flux.table.TranspositionTable;
+import com.fluxchess.flux.table.TranspositionTableEntry;
 import com.fluxchess.jcpi.models.GenericMove;
 
 import java.util.ArrayList;
@@ -57,17 +59,10 @@ class AlphaBetaRootTask extends AbstractSearchTask {
     MoveList rootMoveList,
     boolean isCheck,
     Result moveResult,
-    AtomicBoolean stopped,
-    AtomicBoolean canStop,
-    InformationTimer info,
     Hex88Board board,
-    TranspositionTable transpositionTable,
-    EvaluationTable evaluationTable,
-    PawnTable pawnTable,
-    KillerTable killerTable,
-    HistoryTable historyTable
+    Parameter parameter
   ) {
-    super(stopped, info, killerTable, historyTable);
+    super(parameter);
 
     this.depth = depth;
     this.alpha = alpha;
@@ -76,11 +71,11 @@ class AlphaBetaRootTask extends AbstractSearchTask {
     this.rootMoveList = rootMoveList;
     this.isCheck = isCheck;
     this.moveResult = moveResult;
-    this.canStop = canStop;
     this.board = board;
-    this.transpositionTable = transpositionTable;
-    this.evaluationTable = evaluationTable;
-    this.pawnTable = pawnTable;
+    this.canStop = parameter.canStop;
+    this.transpositionTable = parameter.transpositionTable;
+    this.evaluationTable = parameter.evaluationTable;
+    this.pawnTable = parameter.pawnTable;
 
     evaluation = new Evaluation(evaluationTable, pawnTable);
     moveGenerator = new MoveGenerator(board, killerTable, historyTable);
@@ -127,12 +122,12 @@ class AlphaBetaRootTask extends AbstractSearchTask {
       int value;
       if (bestValue == -Search.INFINITY) {
         // First move
-        value = -new AlphaBetaTask(newDepth, -beta, -alpha, height + 1, true, true, stopped, canStop, info, new Hex88Board(board), transpositionTable, evaluationTable, pawnTable, killerTable, historyTable).invoke();
+        value = -new AlphaBetaTask(newDepth, -beta, -alpha, height + 1, true, true, new Hex88Board(board), parameter).invoke();
       } else {
-        value = -new AlphaBetaTask(newDepth, -alpha - 1, -alpha, height + 1, false, true, stopped, canStop, info, new Hex88Board(board), transpositionTable, evaluationTable, pawnTable, killerTable, historyTable).invoke();
+        value = -new AlphaBetaTask(newDepth, -alpha - 1, -alpha, height + 1, false, true, new Hex88Board(board), parameter).invoke();
         if (value > alpha && value < beta) {
           // Research again
-          value = -new AlphaBetaTask(newDepth, -beta, -alpha, height + 1, true, true, stopped, canStop, info, new Hex88Board(board), transpositionTable, evaluationTable, pawnTable, killerTable, historyTable).invoke();
+          value = -new AlphaBetaTask(newDepth, -beta, -alpha, height + 1, true, true, new Hex88Board(board), parameter).invoke();
         }
       }
       //## ENDOF Principal Variation Search
@@ -181,7 +176,7 @@ class AlphaBetaRootTask extends AbstractSearchTask {
         info.getCurrentNps(),
         System.currentTimeMillis() - info.getTotalTimeStart(),
         info.getTotalNodes());
-      multiPvMap.put(move, pv);
+      parameter.multiPvMap.put(move, pv);
 
       // Save first pv
       if (currentMoveNumber == 1) {
@@ -194,11 +189,11 @@ class AlphaBetaRootTask extends AbstractSearchTask {
       }
 
       // Show multi pv
-      if (showPvNumber > 1) {
-        assert currentMoveNumber <= showPvNumber || lastMultiPv != null;
-        if (currentMoveNumber <= showPvNumber || pv.compareTo(lastMultiPv) < 0) {
-          PriorityQueue<PrincipalVariation> tempPvList = new PriorityQueue<>(multiPvMap.values());
-          for (int i = 1; i <= showPvNumber && !tempPvList.isEmpty(); i++) {
+      if (parameter.showPvNumber > 1) {
+        assert currentMoveNumber <= parameter.showPvNumber || lastMultiPv != null;
+        if (currentMoveNumber <= parameter.showPvNumber || pv.compareTo(lastMultiPv) < 0) {
+          PriorityQueue<PrincipalVariation> tempPvList = new PriorityQueue<>(parameter.multiPvMap.values());
+          for (int i = 1; i <= parameter.showPvNumber && !tempPvList.isEmpty(); i++) {
             lastMultiPv = tempPvList.remove();
             sendInformation(lastMultiPv, i);
           }
@@ -217,7 +212,7 @@ class AlphaBetaRootTask extends AbstractSearchTask {
           hashType = IntScore.EXACT;
           alpha = value;
 
-          if (depth > 1 && showPvNumber <= 1) {
+          if (depth > 1 && parameter.showPvNumber <= 1) {
             // Send pv information for depth > 1
             // Print the best move as soon as we get a new one
             // This is really an optimistic assumption
@@ -234,7 +229,7 @@ class AlphaBetaRootTask extends AbstractSearchTask {
         }
       }
 
-      if (showPvNumber > 1) {
+      if (parameter.showPvNumber > 1) {
         // Reset alpha to get the real value of the next move
         assert oldAlpha == -Search.CHECKMATE;
         alpha = oldAlpha;
@@ -245,14 +240,14 @@ class AlphaBetaRootTask extends AbstractSearchTask {
       transpositionTable.put(board.zobristCode, depth, bestValue, hashType, bestMove, false, height);
     }
 
-    if (depth == 1 && showPvNumber <= 1 && bestPv != null) {
+    if (depth == 1 && parameter.showPvNumber <= 1 && bestPv != null) {
       // Send pv information for depth 1
       // On depth 1 we have no move ordering available
       // To reduce the output we only print the best move here
       sendInformation(bestPv, 1);
     }
 
-    if (showPvNumber <= 1 && bestPv == null && firstPv != null) {
+    if (parameter.showPvNumber <= 1 && bestPv == null && firstPv != null) {
       // We have a fail low
       assert oldAlpha == alpha;
 
