@@ -31,6 +31,7 @@ import com.fluxchess.flux.table.TranspositionTableEntry;
 import com.fluxchess.jcpi.models.GenericMove;
 
 import java.util.*;
+import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.Semaphore;
 
 public final class Search implements Runnable {
@@ -55,6 +56,7 @@ public final class Search implements Runnable {
   private InformationTimer info;
   private final Thread thread = new Thread(this);
   private final Semaphore semaphore = new Semaphore(0);
+  private final ForkJoinPool pool = new ForkJoinPool(Configuration.numberOfThreads);
 
   // Search control
   private Timer timer = null;
@@ -471,7 +473,7 @@ public final class Search implements Runnable {
         moveResult.moveNumber = rootMoveList.getLength();
       } else {
         // Do the Alpha-Beta search
-        value = alphaBetaRoot(currentDepth, alpha, beta, 0, rootMoveList, isCheck, moveResult);
+        value = pool.invoke(new AlphaBetaRootTask(currentDepth, alpha, beta, 0, rootMoveList, isCheck, moveResult));
       }
 
       //## BEGIN Aspiration Windows
@@ -492,7 +494,7 @@ public final class Search implements Runnable {
           Result moveResultAdjustment = new Result();
 
           // Do the Alpha-Beta search again
-          value = alphaBetaRoot(currentDepth, alpha, beta, 0, rootMoveList, isCheck, moveResultAdjustment);
+          value = pool.invoke(new AlphaBetaRootTask(currentDepth, alpha, beta, 0, rootMoveList, isCheck, moveResultAdjustment));
 
           if (stopped && canStop) {
             break;

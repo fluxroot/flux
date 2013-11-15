@@ -89,12 +89,12 @@ public class AlphaBetaRootTask extends RecursiveTask<Integer> {
       int value;
       if (bestValue == -Search.INFINITY) {
         // First move
-        value = -alphaBeta(newDepth, -beta, -alpha, height + 1, true, true);
+        value = -new AlphaBetaTask(newDepth, -beta, -alpha, height + 1, true, true).invoke();
       } else {
-        value = -alphaBeta(newDepth, -alpha - 1, -alpha, height + 1, false, true);
+        value = -new AlphaBetaTask(newDepth, -alpha - 1, -alpha, height + 1, false, true).invoke();
         if (value > alpha && value < beta) {
           // Research again
-          value = -alphaBeta(newDepth, -beta, -alpha, height + 1, true, true);
+          value = -new AlphaBetaTask(newDepth, -beta, -alpha, height + 1, true, true).invoke();
         }
       }
       //## ENDOF Principal Variation Search

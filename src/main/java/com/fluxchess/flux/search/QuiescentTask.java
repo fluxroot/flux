@@ -187,7 +187,7 @@ public class QuiescentTask extends RecursiveTask<Integer> {
       board.makeMove(move);
 
       // Recurse into Quiescent
-      int value = -quiescent(checkingDepth - 1, -beta, -alpha, height + 1, pvNode, false);
+      int value = -new QuiescentTask(checkingDepth - 1, -beta, -alpha, height + 1, pvNode, false).invoke();
 
       // Undo move
       board.undoMove(move);

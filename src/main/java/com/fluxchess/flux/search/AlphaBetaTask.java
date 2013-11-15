@@ -72,7 +72,7 @@ public class AlphaBetaTask extends RecursiveTask<Integer> {
     // We are at a leaf/horizon. So calculate that value.
     if (depth <= 0) {
       // Descend into quiescent
-      return quiescent(0, alpha, beta, height, pvNode, true);
+      return new QuiescentTask(0, alpha, beta, height, pvNode, true).invoke().intValue();
     }
 
     updateSearch(height);
@@ -162,7 +162,7 @@ public class AlphaBetaTask extends RecursiveTask<Integer> {
 
         // Make the null move
         board.makeMove(IntMove.NULLMOVE);
-        int value = -alphaBeta(newDepth, -beta, -beta + 1, height + 1, false, false);
+        int value = -new AlphaBetaTask(newDepth, -beta, -beta + 1, height + 1, false, false).invoke();
         board.undoMove(IntMove.NULLMOVE);
 
         // Verify on beta exceeding
@@ -172,7 +172,7 @@ public class AlphaBetaTask extends RecursiveTask<Integer> {
               newDepth = depth - NULLMOVE_VERIFICATIONREDUCTION;
 
               // Verify
-              value = alphaBeta(newDepth, alpha, beta, height, true, false);
+              value = new AlphaBetaTask(newDepth, alpha, beta, height, true, false).invoke();
 
               if (value >= beta) {
                 // Cut-off
@@ -225,7 +225,7 @@ public class AlphaBetaTask extends RecursiveTask<Integer> {
         beta = Search.CHECKMATE;
 
         for (int newDepth = 1; newDepth < depth; newDepth++) {
-          alphaBeta(newDepth, alpha, beta, height, true, false);
+          new AlphaBetaTask(newDepth, alpha, beta, height, true, false).invoke();
 
           if (stopped && canStop) {
             return oldAlpha;
@@ -362,16 +362,16 @@ public class AlphaBetaTask extends RecursiveTask<Integer> {
       int value;
       if (!pvNode || bestValue == -Search.INFINITY) {
         // First move
-        value = -alphaBeta(newDepth, -beta, -alpha, height + 1, pvNode, true);
+        value = -new AlphaBetaTask(newDepth, -beta, -alpha, height + 1, pvNode, true).invoke();
       } else {
         if (newDepth >= depth) {
-          value = -alphaBeta(depth - 1, -alpha - 1, -alpha, height + 1, false, true);
+          value = -new AlphaBetaTask(depth - 1, -alpha - 1, -alpha, height + 1, false, true).invoke();
         } else {
-          value = -alphaBeta(newDepth, -alpha - 1, -alpha, height + 1, false, true);
+          value = -new AlphaBetaTask(newDepth, -alpha - 1, -alpha, height + 1, false, true).invoke();
         }
         if (value > alpha && value < beta) {
           // Research again
-          value = -alphaBeta(newDepth, -beta, -alpha, height + 1, true, true);
+          value = -new AlphaBetaTask(newDepth, -beta, -alpha, height + 1, true, true).invoke();
         }
       }
       //## ENDOF Principal Variation Search
@@ -381,7 +381,7 @@ public class AlphaBetaTask extends RecursiveTask<Integer> {
         if (reduced && value >= beta) {
           // Research with original depth
           newDepth++;
-          value = -alphaBeta(newDepth, -beta, -alpha, height + 1, pvNode, true);
+          value = -new AlphaBetaTask(newDepth, -beta, -alpha, height + 1, pvNode, true).invoke();
         }
       }
       //## ENDOF Late Move Reduction Research
