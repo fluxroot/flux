@@ -20,8 +20,9 @@ package com.fluxchess.flux.search;
 
 import com.fluxchess.flux.Configuration;
 import com.fluxchess.flux.board.Hex88Board;
+import com.fluxchess.flux.evaluation.Evaluation;
 import com.fluxchess.flux.move.*;
-import com.fluxchess.flux.table.TranspositionTableEntry;
+import com.fluxchess.flux.table.*;
 import com.fluxchess.jcpi.models.GenericMove;
 
 import java.util.ArrayList;
@@ -39,8 +40,30 @@ public class AlphaBetaRootTask extends RecursiveTask<Integer> {
   private boolean isCheck;
   private Result moveResult;
   private final Hex88Board board;
+  private final TranspositionTable transpositionTable;
+  private final EvaluationTable evaluationTable;
+  private final PawnTable pawnTable;
+  private final KillerTable killerTable;
+  private final HistoryTable historyTable;
 
-  public AlphaBetaRootTask(int depth, int alpha, int beta, int height, MoveList rootMoveList, boolean isCheck, Result moveResult, Hex88Board board) {
+  private final Evaluation evaluation;
+  private final MoveGenerator moveGenerator;
+
+  public AlphaBetaRootTask(
+    int depth,
+    int alpha,
+    int beta,
+    int height,
+    MoveList rootMoveList,
+    boolean isCheck,
+    Result moveResult,
+    Hex88Board board,
+    TranspositionTable transpositionTable,
+    EvaluationTable evaluationTable,
+    PawnTable pawnTable,
+    KillerTable killerTable,
+    HistoryTable historyTable
+  ) {
     this.depth = depth;
     this.alpha = alpha;
     this.beta = beta;
@@ -49,6 +72,14 @@ public class AlphaBetaRootTask extends RecursiveTask<Integer> {
     this.isCheck = isCheck;
     this.moveResult = moveResult;
     this.board = board;
+    this.transpositionTable = transpositionTable;
+    this.evaluationTable = evaluationTable;
+    this.pawnTable = pawnTable;
+    this.killerTable = killerTable;
+    this.historyTable = historyTable;
+
+    evaluation = new Evaluation(evaluationTable, pawnTable);
+    moveGenerator = new MoveGenerator(board, killerTable, historyTable);
   }
 
   @Override
@@ -92,12 +123,12 @@ public class AlphaBetaRootTask extends RecursiveTask<Integer> {
       int value;
       if (bestValue == -Search.INFINITY) {
         // First move
-        value = -new AlphaBetaTask(newDepth, -beta, -alpha, height + 1, true, true, new Hex88Board(board)).invoke();
+        value = -new AlphaBetaTask(newDepth, -beta, -alpha, height + 1, true, true, new Hex88Board(board), transpositionTable, evaluationTable, pawnTable, killerTable, historyTable).invoke();
       } else {
-        value = -new AlphaBetaTask(newDepth, -alpha - 1, -alpha, height + 1, false, true, new Hex88Board(board)).invoke();
+        value = -new AlphaBetaTask(newDepth, -alpha - 1, -alpha, height + 1, false, true, new Hex88Board(board), transpositionTable, evaluationTable, pawnTable, killerTable, historyTable).invoke();
         if (value > alpha && value < beta) {
           // Research again
-          value = -new AlphaBetaTask(newDepth, -beta, -alpha, height + 1, true, true, new Hex88Board(board)).invoke();
+          value = -new AlphaBetaTask(newDepth, -beta, -alpha, height + 1, true, true, new Hex88Board(board), transpositionTable, evaluationTable, pawnTable, killerTable, historyTable).invoke();
         }
       }
       //## ENDOF Principal Variation Search

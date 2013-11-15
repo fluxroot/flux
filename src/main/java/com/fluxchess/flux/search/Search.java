@@ -22,12 +22,8 @@ import com.fluxchess.flux.ChessLogger;
 import com.fluxchess.flux.Configuration;
 import com.fluxchess.flux.InformationTimer;
 import com.fluxchess.flux.board.*;
-import com.fluxchess.flux.evaluation.Evaluation;
 import com.fluxchess.flux.move.*;
-import com.fluxchess.flux.table.HistoryTable;
-import com.fluxchess.flux.table.KillerTable;
-import com.fluxchess.flux.table.TranspositionTable;
-import com.fluxchess.flux.table.TranspositionTableEntry;
+import com.fluxchess.flux.table.*;
 import com.fluxchess.jcpi.models.GenericMove;
 
 import java.util.*;
@@ -81,15 +77,16 @@ public final class Search implements Runnable {
   private int showPvNumber = 1;
 
   // Search logic
-  private MoveGenerator moveGenerator;
-  private Evaluation evaluation;
+  private final MoveGenerator moveGenerator;
   private static Hex88Board board;
   private final int myColor;
 
   // Search tables
-  private TranspositionTable transpositionTable;
-  private static KillerTable killerTable;
-  private static HistoryTable historyTable;
+  private final TranspositionTable transpositionTable;
+  private final EvaluationTable evaluationTable;
+  private final PawnTable pawnTable;
+  private final KillerTable killerTable;
+  private final HistoryTable historyTable;
 
   // Search information
   private static final MoveList[] pvList = new MoveList[MAX_HEIGHT + 1];
@@ -104,27 +101,29 @@ public final class Search implements Runnable {
     }
   }
 
-  public Search(Evaluation newEvaluation, Hex88Board newBoard, TranspositionTable newTranspositionTable, InformationTimer newInfo, int[] timeTable) {
-    assert newEvaluation != null;
-    assert newBoard != null;
-    assert newTranspositionTable != null;
+  public Search(Hex88Board board, TranspositionTable transpositionTable, EvaluationTable evaluationTable, PawnTable pawnTable, InformationTimer newInfo, int[] timeTable) {
+    assert board != null;
+    assert transpositionTable != null;
+    assert evaluationTable != null;
+    assert pawnTable != null;
     assert newInfo != null;
 
     analyzeMode = Configuration.analyzeMode;
 
-    evaluation = newEvaluation;
-    board = newBoard;
-    myColor = newBoard.activeColor;
+    this.board = board;
+    myColor = board.activeColor;
 
-    transpositionTable = newTranspositionTable;
+    this.transpositionTable = transpositionTable;
     if (analyzeMode) {
-      transpositionTable.increaseAge();
+      this.transpositionTable.increaseAge();
     }
+    this.evaluationTable = evaluationTable;
+    this.pawnTable = pawnTable;
     killerTable = new KillerTable();
     historyTable = new HistoryTable();
 
-    moveGenerator = new MoveGenerator(newBoard, killerTable, historyTable);
-    new MoveSee(newBoard);
+    moveGenerator = new MoveGenerator(board, killerTable, historyTable);
+    new MoveSee(board);
 
     info = newInfo;
     info.setSearch(this);
@@ -170,11 +169,6 @@ public final class Search implements Runnable {
     } else {
       info.sendBestMove(null, null);
     }
-
-    // Cleanup manually
-    transpositionTable = null;
-    info = null;
-    evaluation = null;
   }
 
   public void start() {
@@ -473,7 +467,7 @@ public final class Search implements Runnable {
         moveResult.moveNumber = rootMoveList.getLength();
       } else {
         // Do the Alpha-Beta search
-        value = pool.invoke(new AlphaBetaRootTask(currentDepth, alpha, beta, 0, rootMoveList, isCheck, moveResult, new Hex88Board(board)));
+        value = pool.invoke(new AlphaBetaRootTask(currentDepth, alpha, beta, 0, rootMoveList, isCheck, moveResult, new Hex88Board(board), transpositionTable, evaluationTable, pawnTable, killerTable, historyTable));
       }
 
       //## BEGIN Aspiration Windows
@@ -494,7 +488,7 @@ public final class Search implements Runnable {
           Result moveResultAdjustment = new Result();
 
           // Do the Alpha-Beta search again
-          value = pool.invoke(new AlphaBetaRootTask(currentDepth, alpha, beta, 0, rootMoveList, isCheck, moveResultAdjustment, new Hex88Board(board)));
+          value = pool.invoke(new AlphaBetaRootTask(currentDepth, alpha, beta, 0, rootMoveList, isCheck, moveResultAdjustment, new Hex88Board(board), transpositionTable, evaluationTable, pawnTable, killerTable, historyTable));
 
           if (stopped && canStop) {
             break;

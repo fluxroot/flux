@@ -22,9 +22,11 @@ import com.fluxchess.flux.Configuration;
 import com.fluxchess.flux.board.Attack;
 import com.fluxchess.flux.board.Hex88Board;
 import com.fluxchess.flux.board.IntChessman;
+import com.fluxchess.flux.evaluation.Evaluation;
 import com.fluxchess.flux.move.IntMove;
 import com.fluxchess.flux.move.IntScore;
-import com.fluxchess.flux.table.TranspositionTableEntry;
+import com.fluxchess.flux.move.MoveGenerator;
+import com.fluxchess.flux.table.*;
 
 import java.util.concurrent.RecursiveTask;
 
@@ -39,8 +41,29 @@ public class QuiescentTask extends RecursiveTask<Integer> {
   private boolean pvNode;
   private boolean useTranspositionTable;
   private final Hex88Board board;
+  private final TranspositionTable transpositionTable;
+  private final EvaluationTable evaluationTable;
+  private final PawnTable pawnTable;
+  private final KillerTable killerTable;
+  private final HistoryTable historyTable;
 
-  public QuiescentTask(int checkingDepth, int alpha, int beta, int height, boolean pvNode, boolean useTranspositionTable, Hex88Board board) {
+  private final Evaluation evaluation;
+  private final MoveGenerator moveGenerator;
+
+  public QuiescentTask(
+    int checkingDepth,
+    int alpha,
+    int beta,
+    int height,
+    boolean pvNode,
+    boolean useTranspositionTable,
+    Hex88Board board,
+    TranspositionTable transpositionTable,
+    EvaluationTable evaluationTable,
+    PawnTable pawnTable,
+    KillerTable killerTable,
+    HistoryTable historyTable
+  ) {
     this.checkingDepth = checkingDepth;
     this.alpha = alpha;
     this.beta = beta;
@@ -48,6 +71,14 @@ public class QuiescentTask extends RecursiveTask<Integer> {
     this.pvNode = pvNode;
     this.useTranspositionTable = useTranspositionTable;
     this.board = board;
+    this.transpositionTable = transpositionTable;
+    this.evaluationTable = evaluationTable;
+    this.pawnTable = pawnTable;
+    this.killerTable = killerTable;
+    this.historyTable = historyTable;
+
+    evaluation = new Evaluation(evaluationTable, pawnTable);
+    moveGenerator = new MoveGenerator(board, killerTable, historyTable);
   }
 
   @Override
@@ -190,7 +221,7 @@ public class QuiescentTask extends RecursiveTask<Integer> {
       board.makeMove(move);
 
       // Recurse into Quiescent
-      int value = -new QuiescentTask(checkingDepth - 1, -beta, -alpha, height + 1, pvNode, false, new Hex88Board(board)).invoke();
+      int value = -new QuiescentTask(checkingDepth - 1, -beta, -alpha, height + 1, pvNode, false, new Hex88Board(board), transpositionTable, evaluationTable, pawnTable, killerTable, historyTable).invoke();
 
       // Undo move
       board.undoMove(move);
