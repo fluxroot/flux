@@ -195,7 +195,7 @@ class AlphaBetaRootTask extends AbstractSearchTask {
           PriorityQueue<PrincipalVariation> tempPvList = new PriorityQueue<>(parameter.multiPvMap.values());
           for (int i = 1; i <= parameter.showPvNumber && !tempPvList.isEmpty(); i++) {
             lastMultiPv = tempPvList.remove();
-            sendInformation(lastMultiPv, i);
+            info.sendInformation(lastMultiPv, i);
           }
         }
       }
@@ -216,7 +216,7 @@ class AlphaBetaRootTask extends AbstractSearchTask {
             // Send pv information for depth > 1
             // Print the best move as soon as we get a new one
             // This is really an optimistic assumption
-            sendInformation(bestPv, 1);
+            info.sendInformation(bestPv, 1);
           }
 
           // Is the value higher than beta?
@@ -244,7 +244,7 @@ class AlphaBetaRootTask extends AbstractSearchTask {
       // Send pv information for depth 1
       // On depth 1 we have no move ordering available
       // To reduce the output we only print the best move here
-      sendInformation(bestPv, 1);
+      info.sendInformation(bestPv, 1);
     }
 
     if (parameter.showPvNumber <= 1 && bestPv == null && firstPv != null) {
@@ -263,7 +263,7 @@ class AlphaBetaRootTask extends AbstractSearchTask {
         info.getCurrentNps(),
         System.currentTimeMillis() - info.getTotalTimeStart(),
         info.getTotalNodes());
-      sendInformation(resultPv, 1);
+      info.sendInformation(resultPv, 1);
     }
 
     moveResult.bestMove = bestMove;

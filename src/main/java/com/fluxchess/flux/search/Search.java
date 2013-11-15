@@ -348,17 +348,6 @@ public final class Search implements Runnable {
     }
   }
 
-  private void sendInformation(PrincipalVariation pv, int pvNumber) {
-    if (Math.abs(pv.value) > CHECKMATE_THRESHOLD) {
-      // Calculate the mate distance
-      int mateDepth = CHECKMATE - Math.abs(pv.value);
-      info.sendInformationMate(pv, Integer.signum(pv.value) * (mateDepth + 1) / 2, pvNumber);
-      logger.debug("Mate value: " + pv.value + ", Mate depth: " + mateDepth);
-    } else {
-      info.sendInformationCentipawns(pv, pvNumber);
-    }
-  }
-
   private Result getBestMove() {
     //## BEGIN Root Move List
     MoveList rootMoveList = new MoveList();
@@ -460,7 +449,7 @@ public final class Search implements Runnable {
       if (currentDepth == initialDepth && initialDepth > 1) {
         value = transpositionValue;
         pvList[0].resetList();
-        sendInformation(pv, 1);
+        info.sendInformation(pv, 1);
 
         moveResult.bestMove = transpositionMove;
         moveResult.resultValue = transpositionValue;

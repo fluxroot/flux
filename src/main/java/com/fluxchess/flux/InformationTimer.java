@@ -20,6 +20,7 @@ package com.fluxchess.flux;
 
 import com.fluxchess.flux.move.IntScore;
 import com.fluxchess.flux.move.PrincipalVariation;
+import com.fluxchess.flux.search.Search;
 import com.fluxchess.flux.table.TranspositionTable;
 import com.fluxchess.jcpi.commands.IProtocol;
 import com.fluxchess.jcpi.commands.ProtocolBestMoveCommand;
@@ -147,6 +148,16 @@ public final class InformationTimer {
       }
     } finally {
       writeLock.unlock();
+    }
+  }
+
+  public void sendInformation(PrincipalVariation pv, int pvNumber) {
+    if (Math.abs(pv.value) > Search.CHECKMATE_THRESHOLD) {
+      // Calculate the mate distance
+      int mateDepth = Search.CHECKMATE - Math.abs(pv.value);
+      sendInformationMate(pv, Integer.signum(pv.value) * (mateDepth + 1) / 2, pvNumber);
+    } else {
+      sendInformationCentipawns(pv, pvNumber);
     }
   }
 
