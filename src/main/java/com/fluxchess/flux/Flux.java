@@ -22,6 +22,7 @@ import com.fluxchess.flux.board.Hex88Board;
 import com.fluxchess.flux.board.IntColor;
 import com.fluxchess.flux.evaluation.Evaluation;
 import com.fluxchess.flux.move.IntMove;
+import com.fluxchess.flux.search.Search;
 import com.fluxchess.flux.table.EvaluationTable;
 import com.fluxchess.flux.table.PawnTable;
 import com.fluxchess.flux.table.TranspositionTable;
@@ -34,7 +35,6 @@ import com.fluxchess.jcpi.models.Option;
 import com.fluxchess.jcpi.protocols.IProtocolHandler;
 
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 public final class Flux extends AbstractEngine {

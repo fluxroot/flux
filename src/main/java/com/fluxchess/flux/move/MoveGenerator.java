@@ -19,7 +19,7 @@
 package com.fluxchess.flux.move;
 
 import com.fluxchess.flux.Configuration;
-import com.fluxchess.flux.Search;
+import com.fluxchess.flux.search.Search;
 import com.fluxchess.flux.board.*;
 import com.fluxchess.flux.table.HistoryTable;
 import com.fluxchess.flux.table.KillerTable;

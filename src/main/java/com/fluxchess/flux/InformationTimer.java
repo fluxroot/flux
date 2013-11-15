@@ -20,6 +20,7 @@ package com.fluxchess.flux;
 
 import com.fluxchess.flux.move.IntScore;
 import com.fluxchess.flux.move.PrincipalVariation;
+import com.fluxchess.flux.search.Search;
 import com.fluxchess.flux.table.TranspositionTable;
 import com.fluxchess.jcpi.commands.IProtocol;
 import com.fluxchess.jcpi.commands.ProtocolBestMoveCommand;
