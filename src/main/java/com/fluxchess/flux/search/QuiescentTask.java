@@ -19,6 +19,7 @@
 package com.fluxchess.flux.search;
 
 import com.fluxchess.flux.Configuration;
+import com.fluxchess.flux.InformationTimer;
 import com.fluxchess.flux.board.Attack;
 import com.fluxchess.flux.board.Hex88Board;
 import com.fluxchess.flux.board.IntChessman;
@@ -58,6 +59,7 @@ class QuiescentTask extends AbstractSearchTask {
     boolean useTranspositionTable,
     AtomicBoolean stopped,
     AtomicBoolean canStop,
+    InformationTimer info,
     Hex88Board board,
     TranspositionTable transpositionTable,
     EvaluationTable evaluationTable,
@@ -65,7 +67,7 @@ class QuiescentTask extends AbstractSearchTask {
     KillerTable killerTable,
     HistoryTable historyTable
   ) {
-    super(stopped, killerTable, historyTable);
+    super(stopped, info, killerTable, historyTable);
 
     this.checkingDepth = checkingDepth;
     this.alpha = alpha;
@@ -223,7 +225,7 @@ class QuiescentTask extends AbstractSearchTask {
       board.makeMove(move);
 
       // Recurse into Quiescent
-      int value = -new QuiescentTask(checkingDepth - 1, -beta, -alpha, height + 1, pvNode, false, stopped, canStop, new Hex88Board(board), transpositionTable, evaluationTable, pawnTable, killerTable, historyTable).invoke();
+      int value = -new QuiescentTask(checkingDepth - 1, -beta, -alpha, height + 1, pvNode, false, stopped, canStop, info, new Hex88Board(board), transpositionTable, evaluationTable, pawnTable, killerTable, historyTable).invoke();
 
       // Undo move
       board.undoMove(move);

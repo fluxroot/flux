@@ -19,6 +19,7 @@
 package com.fluxchess.flux.search;
 
 import com.fluxchess.flux.Configuration;
+import com.fluxchess.flux.InformationTimer;
 import com.fluxchess.flux.board.Hex88Board;
 import com.fluxchess.flux.evaluation.Evaluation;
 import com.fluxchess.flux.move.*;
@@ -58,6 +59,7 @@ class AlphaBetaRootTask extends AbstractSearchTask {
     Result moveResult,
     AtomicBoolean stopped,
     AtomicBoolean canStop,
+    InformationTimer info,
     Hex88Board board,
     TranspositionTable transpositionTable,
     EvaluationTable evaluationTable,
@@ -65,7 +67,7 @@ class AlphaBetaRootTask extends AbstractSearchTask {
     KillerTable killerTable,
     HistoryTable historyTable
   ) {
-    super(stopped, killerTable, historyTable);
+    super(stopped, info, killerTable, historyTable);
 
     this.depth = depth;
     this.alpha = alpha;
@@ -125,12 +127,12 @@ class AlphaBetaRootTask extends AbstractSearchTask {
       int value;
       if (bestValue == -Search.INFINITY) {
         // First move
-        value = -new AlphaBetaTask(newDepth, -beta, -alpha, height + 1, true, true, stopped, canStop, new Hex88Board(board), transpositionTable, evaluationTable, pawnTable, killerTable, historyTable).invoke();
+        value = -new AlphaBetaTask(newDepth, -beta, -alpha, height + 1, true, true, stopped, canStop, info, new Hex88Board(board), transpositionTable, evaluationTable, pawnTable, killerTable, historyTable).invoke();
       } else {
-        value = -new AlphaBetaTask(newDepth, -alpha - 1, -alpha, height + 1, false, true, stopped, canStop, new Hex88Board(board), transpositionTable, evaluationTable, pawnTable, killerTable, historyTable).invoke();
+        value = -new AlphaBetaTask(newDepth, -alpha - 1, -alpha, height + 1, false, true, stopped, canStop, info, new Hex88Board(board), transpositionTable, evaluationTable, pawnTable, killerTable, historyTable).invoke();
         if (value > alpha && value < beta) {
           // Research again
-          value = -new AlphaBetaTask(newDepth, -beta, -alpha, height + 1, true, true, stopped, canStop, new Hex88Board(board), transpositionTable, evaluationTable, pawnTable, killerTable, historyTable).invoke();
+          value = -new AlphaBetaTask(newDepth, -beta, -alpha, height + 1, true, true, stopped, canStop, info, new Hex88Board(board), transpositionTable, evaluationTable, pawnTable, killerTable, historyTable).invoke();
         }
       }
       //## ENDOF Principal Variation Search
@@ -173,12 +175,12 @@ class AlphaBetaRootTask extends AbstractSearchTask {
         moveType,
         sortValue,
         genericMoveList,
-        info.currentDepth,
-        info.currentMaxDepth,
+        info.getCurrentDepth(),
+        info.getCurrentMaxDepth(),
         transpositionTable.getPermillUsed(),
         info.getCurrentNps(),
-        System.currentTimeMillis() - info.totalTimeStart,
-        info.totalNodes);
+        System.currentTimeMillis() - info.getTotalTimeStart(),
+        info.getTotalNodes());
       multiPvMap.put(move, pv);
 
       // Save first pv
@@ -239,7 +241,7 @@ class AlphaBetaRootTask extends AbstractSearchTask {
       }
     }
 
-    if (!(stopped && canStop)) {
+    if (!(stopped.get() && canStop.get())) {
       transpositionTable.put(board.zobristCode, depth, bestValue, hashType, bestMove, false, height);
     }
 
@@ -261,11 +263,11 @@ class AlphaBetaRootTask extends AbstractSearchTask {
         firstPv.sortValue,
         firstPv.pv,
         firstPv.depth,
-        info.currentMaxDepth,
+        info.getCurrentMaxDepth(),
         transpositionTable.getPermillUsed(),
         info.getCurrentNps(),
-        System.currentTimeMillis() - info.totalTimeStart,
-        info.totalNodes);
+        System.currentTimeMillis() - info.getTotalTimeStart(),
+        info.getTotalNodes());
       sendInformation(resultPv, 1);
     }
 

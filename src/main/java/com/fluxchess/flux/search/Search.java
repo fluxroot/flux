@@ -53,7 +53,7 @@ public final class Search implements Runnable {
 
   // Objects
   private final ChessLogger logger = ChessLogger.getLogger();
-  private InformationTimer info;
+  private final InformationTimer info;
   private final Thread thread = new Thread(this);
   private final Semaphore semaphore = new Semaphore(0);
   private final ForkJoinPool pool = new ForkJoinPool(Configuration.numberOfThreads);
@@ -105,12 +105,12 @@ public final class Search implements Runnable {
     }
   }
 
-  public Search(Hex88Board board, TranspositionTable transpositionTable, EvaluationTable evaluationTable, PawnTable pawnTable, InformationTimer newInfo, int[] timeTable) {
+  public Search(Hex88Board board, TranspositionTable transpositionTable, EvaluationTable evaluationTable, PawnTable pawnTable, InformationTimer info, int[] timeTable) {
     assert board != null;
     assert transpositionTable != null;
     assert evaluationTable != null;
     assert pawnTable != null;
-    assert newInfo != null;
+    assert info != null;
 
     analyzeMode = Configuration.analyzeMode;
 
@@ -129,8 +129,7 @@ public final class Search implements Runnable {
     moveGenerator = new MoveGenerator(board, killerTable, historyTable);
     new MoveSee(board);
 
-    info = newInfo;
-    info.setSearch(this);
+    this.info = info;
 
     this.timeTable = timeTable;
 
