@@ -89,9 +89,17 @@ task dist(type: Zip) {
     from 'Flux.ini'
     from 'polyglot.ini-Windows'
     from 'polyglot.ini-Linux'
-    from 'Flux.bat'
-    from('Flux') {
+
+    from ('src/dist/Flux.cmd') {
+      filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [
+        version: project.version
+      ])
+    }
+    from ('src/dist/Flux') {
       fileMode = 0755
+      filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [
+        version: project.version
+      ])
     }
   }
 }
