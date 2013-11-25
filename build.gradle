@@ -1,5 +1,8 @@
 apply plugin: 'java'
 apply plugin: 'maven'
+apply plugin: 'pmd'
+apply plugin: 'findbugs'
+apply plugin: 'checkstyle'
 
 description = 'Flux Chess Engine'
 
@@ -30,6 +33,25 @@ repositories {
   mavenCentral()
   maven {
     url "http://maven.fluxchess.com/release"
+  }
+}
+
+tasks.withType(Pmd) {
+  pmd {
+    ignoreFailures = true
+  }
+}
+
+tasks.withType(FindBugs) {
+  findbugs {
+    ignoreFailures = true
+  }
+}
+
+tasks.withType(Checkstyle) {
+  checkstyle {
+    ignoreFailures = true
+    showViolations = false
   }
 }
 
