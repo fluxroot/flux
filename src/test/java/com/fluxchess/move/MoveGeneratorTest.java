@@ -26,8 +26,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
-import jcpi.data.GenericBoard;
-import jcpi.data.IllegalNotationException;
+import com.fluxchess.jcpi.models.GenericBoard;
+import com.fluxchess.jcpi.models.IllegalNotationException;
 
 import org.junit.Test;
 

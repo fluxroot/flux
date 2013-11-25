@@ -20,13 +20,13 @@ package com.fluxchess.board;
 
 import java.util.Random;
 
-import jcpi.data.GenericBoard;
-import jcpi.data.GenericCastling;
-import jcpi.data.GenericChessman;
-import jcpi.data.GenericColor;
-import jcpi.data.GenericFile;
-import jcpi.data.GenericPiece;
-import jcpi.data.GenericPosition;
+import com.fluxchess.jcpi.models.GenericBoard;
+import com.fluxchess.jcpi.models.GenericCastling;
+import com.fluxchess.jcpi.models.GenericChessman;
+import com.fluxchess.jcpi.models.GenericColor;
+import com.fluxchess.jcpi.models.GenericFile;
+import com.fluxchess.jcpi.models.GenericPiece;
+import com.fluxchess.jcpi.models.GenericPosition;
 
 import com.fluxchess.ISearch;
 import com.fluxchess.evaluation.PositionValues;

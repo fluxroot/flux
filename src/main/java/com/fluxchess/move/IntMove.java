@@ -18,10 +18,10 @@
 */
 package com.fluxchess.move;
 
-import jcpi.data.GenericFile;
-import jcpi.data.GenericMove;
-import jcpi.data.GenericPosition;
-import jcpi.data.GenericRank;
+import com.fluxchess.jcpi.models.GenericFile;
+import com.fluxchess.jcpi.models.GenericMove;
+import com.fluxchess.jcpi.models.GenericPosition;
+import com.fluxchess.jcpi.models.GenericRank;
 
 import com.fluxchess.board.Hex88Board;
 import com.fluxchess.board.IntChessman;

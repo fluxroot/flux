@@ -20,7 +20,7 @@ package com.fluxchess.table;
 
 import java.util.List;
 
-import jcpi.data.GenericMove;
+import com.fluxchess.jcpi.models.GenericMove;
 
 import com.fluxchess.board.Hex88Board;
 import com.fluxchess.move.IntMove;

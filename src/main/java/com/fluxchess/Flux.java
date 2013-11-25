@@ -22,25 +22,24 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import jcpi.AbstractCommunication;
-import jcpi.AbstractEngine;
-import jcpi.commands.EngineAnalyzeCommand;
-import jcpi.commands.EngineDebugCommand;
-import jcpi.commands.EngineInitializeRequestCommand;
-import jcpi.commands.EngineNewGameCommand;
-import jcpi.commands.EnginePonderHitCommand;
-import jcpi.commands.EngineReadyRequestCommand;
-import jcpi.commands.EngineSetOptionCommand;
-import jcpi.commands.EngineStartCalculatingCommand;
-import jcpi.commands.EngineStopCalculatingCommand;
-import jcpi.commands.GuiInformationCommand;
-import jcpi.commands.GuiInitializeAnswerCommand;
-import jcpi.commands.GuiReadyAnswerCommand;
-import jcpi.data.GenericBoard;
-import jcpi.data.GenericColor;
-import jcpi.data.GenericMove;
-import jcpi.data.Option;
-import jcpi.standardio.StandardIoCommunication;
+import com.fluxchess.jcpi.protocols.IProtocolHandler;
+import com.fluxchess.jcpi.AbstractEngine;
+import com.fluxchess.jcpi.commands.EngineAnalyzeCommand;
+import com.fluxchess.jcpi.commands.EngineDebugCommand;
+import com.fluxchess.jcpi.commands.EngineInitializeRequestCommand;
+import com.fluxchess.jcpi.commands.EngineNewGameCommand;
+import com.fluxchess.jcpi.commands.EnginePonderHitCommand;
+import com.fluxchess.jcpi.commands.EngineReadyRequestCommand;
+import com.fluxchess.jcpi.commands.EngineSetOptionCommand;
+import com.fluxchess.jcpi.commands.EngineStartCalculatingCommand;
+import com.fluxchess.jcpi.commands.EngineStopCalculatingCommand;
+import com.fluxchess.jcpi.commands.ProtocolInformationCommand;
+import com.fluxchess.jcpi.commands.ProtocolInitializeAnswerCommand;
+import com.fluxchess.jcpi.commands.ProtocolReadyAnswerCommand;
+import com.fluxchess.jcpi.models.GenericBoard;
+import com.fluxchess.jcpi.models.GenericColor;
+import com.fluxchess.jcpi.models.GenericMove;
+import com.fluxchess.jcpi.models.Option;
 
 import com.fluxchess.board.Hex88Board;
 import com.fluxchess.board.IntColor;
@@ -66,14 +65,22 @@ public final class Flux extends AbstractEngine {
 
 	/**
 	 * Creates a new Flux.
-	 * 
+	 *
 	 * @param protocol the protocol.
 	 */
-	public Flux(AbstractCommunication communication) {
-		super(communication);
+  public Flux() {
+    initialize();
+  }
 
+  public Flux(IProtocolHandler handler) {
+    super(handler);
+
+    initialize();
+  }
+
+	private void initialize() {
 		// Set the protocol
-		ChessLogger.setProtocol(communication);
+		ChessLogger.setProtocol(getProtocol());
 
 		// Transposition Table
 		int megabyteValue = Integer.parseInt(((Option) Configuration.configuration.get(Configuration.KEY_Hash)).defaultValue);;
@@ -94,7 +101,7 @@ public final class Flux extends AbstractEngine {
 		Runtime.getRuntime().gc();
 
 		// Create a new search
-		this.search = new Search(new Evaluation(this.evaluationTable, this.pawnTable), new Hex88Board(new GenericBoard(GenericBoard.STANDARDSETUP)), this.transpositionTable, new InformationTimer(communication, this.transpositionTable), this.timeTable);
+		this.search = new Search(new Evaluation(this.evaluationTable, this.pawnTable), new Hex88Board(new GenericBoard(GenericBoard.STANDARDSETUP)), this.transpositionTable, new InformationTimer(getProtocol(), this.transpositionTable), this.timeTable);
 	}
 	
 	/**
@@ -103,11 +110,11 @@ public final class Flux extends AbstractEngine {
 	 * @param args not used.
 	 */
 	public static void main(String[] args) {
-		AbstractEngine engine = new Flux(new StandardIoCommunication());
+		AbstractEngine engine = new Flux();
 		engine.run();
 	}
 
-	public void visit(EngineInitializeRequestCommand command) {
+	public void receive(EngineInitializeRequestCommand command) {
 		if (command == null) throw new IllegalArgumentException();
 		
 		ChessLogger.getLogger().debug("Received Protocol command.");
@@ -150,12 +157,12 @@ public final class Flux extends AbstractEngine {
 		Runtime.getRuntime().gc();
 		
 		// Send the initialization commands
-		GuiInitializeAnswerCommand initializeCommand = new GuiInitializeAnswerCommand(Configuration.name, Configuration.author);
+		ProtocolInitializeAnswerCommand initializeCommand = new ProtocolInitializeAnswerCommand(Configuration.name, Configuration.author);
 		for (Iterator<Option> iter = Configuration.configuration.values().iterator(); iter.hasNext();) {
 			Option option = iter.next();
 			initializeCommand.addOption(option);
 		}
-		this.communication.send(initializeCommand);
+		getProtocol().send(initializeCommand);
 	}
 
 	protected void quit() {
@@ -165,31 +172,31 @@ public final class Flux extends AbstractEngine {
 		new EngineStopCalculatingCommand().accept(this);
 	}
 
-	public void visit(EngineReadyRequestCommand command) {
+	public void receive(EngineReadyRequestCommand command) {
 		if (command == null) throw new IllegalArgumentException();
 		
 		ChessLogger.getLogger().debug("Received ReadyRequest command.");
 
 		// Send a pong back
-		this.communication.send(new GuiReadyAnswerCommand(command.token));
+		getProtocol().send(new ProtocolReadyAnswerCommand(command.token));
 	}
 
-	public void visit(EngineDebugCommand command) {
+	public void receive(EngineDebugCommand command) {
 		if (command == null) throw new IllegalArgumentException();
 		
 		ChessLogger.getLogger().debug("Received Debug command.");
 
-		GuiInformationCommand infoCommand = new GuiInformationCommand();
+		ProtocolInformationCommand infoCommand = new ProtocolInformationCommand();
 		if (command.debug) {
 			infoCommand.setString("Turning on debugging mode");
 		} else {
 			infoCommand.setString("Turning off debugging mode");
 		}
-		communication.send(infoCommand);
+		getProtocol().send(infoCommand);
 		ChessLogger.setDebug(command.debug);
 	}
 
-	public void visit(EngineNewGameCommand command) {
+	public void receive(EngineNewGameCommand command) {
 		if (command == null) throw new IllegalArgumentException();
 		
 		ChessLogger.getLogger().debug("Received New command.");
@@ -204,7 +211,7 @@ public final class Flux extends AbstractEngine {
 		Arrays.fill(this.timeTable, 0);
 	}
 
-	public void visit(EngineAnalyzeCommand command) {
+	public void receive(EngineAnalyzeCommand command) {
 		if (command == null) throw new IllegalArgumentException();
 		
 		ChessLogger.getLogger().debug("Received Analyze command.");
@@ -224,7 +231,7 @@ public final class Flux extends AbstractEngine {
 		}
 	}
 
-	public void visit(EnginePonderHitCommand command) {
+	public void receive(EnginePonderHitCommand command) {
 		if (command == null) throw new IllegalArgumentException();
 		
 		ChessLogger.getLogger().debug("Received PonderHit command.");
@@ -236,7 +243,7 @@ public final class Flux extends AbstractEngine {
 		}
 	}
 
-	public void visit(EngineStartCalculatingCommand command) {
+	public void receive(EngineStartCalculatingCommand command) {
 		if (command == null) throw new IllegalArgumentException();
 		
 		ChessLogger.getLogger().debug("Received StartCalculating command.");
@@ -244,7 +251,7 @@ public final class Flux extends AbstractEngine {
 		if (this.board != null) {
 			if (this.search.isStopped()) {
 				// Create a new search
-				this.search = new Search(new Evaluation(this.evaluationTable, this.pawnTable), this.board, this.transpositionTable, new InformationTimer(this.communication, this.transpositionTable), this.timeTable);
+				this.search = new Search(new Evaluation(this.evaluationTable, this.pawnTable), this.board, this.transpositionTable, new InformationTimer(getProtocol(), this.transpositionTable), this.timeTable);
 
 				// Set all search parameters
 				if (command.getDepth() != null && command.getDepth() > 0) {
@@ -288,7 +295,7 @@ public final class Flux extends AbstractEngine {
 		}
 	}
 
-	public void visit(EngineStopCalculatingCommand command) {
+	public void receive(EngineStopCalculatingCommand command) {
 		if (command == null) throw new IllegalArgumentException();
 		
 		ChessLogger.getLogger().debug("Received StopCalculating command.");
@@ -301,7 +308,7 @@ public final class Flux extends AbstractEngine {
 		}
 	}
 
-	public void visit(EngineSetOptionCommand command) {
+	public void receive(EngineSetOptionCommand command) {
 		Configuration.setOption(command.name, command.value);
 
 		ChessLogger.getLogger().debug("Received SetOption command.");

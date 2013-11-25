@@ -26,7 +26,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Semaphore;
 
-import jcpi.data.GenericMove;
+import com.fluxchess.jcpi.models.GenericMove;
 
 import com.fluxchess.board.Attack;
 import com.fluxchess.board.Hex88Board;

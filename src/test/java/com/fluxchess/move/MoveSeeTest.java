@@ -20,8 +20,8 @@ package com.fluxchess.move;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-import jcpi.data.GenericBoard;
-import jcpi.data.IllegalNotationException;
+import com.fluxchess.jcpi.models.GenericBoard;
+import com.fluxchess.jcpi.models.IllegalNotationException;
 
 import org.junit.Test;
 

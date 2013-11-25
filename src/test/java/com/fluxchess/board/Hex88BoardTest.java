@@ -20,12 +20,12 @@ package com.fluxchess.board;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-import jcpi.data.GenericBoard;
-import jcpi.data.GenericFile;
-import jcpi.data.GenericPiece;
-import jcpi.data.GenericPosition;
-import jcpi.data.GenericRank;
-import jcpi.data.IllegalNotationException;
+import com.fluxchess.jcpi.models.GenericBoard;
+import com.fluxchess.jcpi.models.GenericFile;
+import com.fluxchess.jcpi.models.GenericPiece;
+import com.fluxchess.jcpi.models.GenericPosition;
+import com.fluxchess.jcpi.models.GenericRank;
+import com.fluxchess.jcpi.models.IllegalNotationException;
 
 import org.junit.Test;
 

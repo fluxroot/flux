@@ -20,7 +20,7 @@ package com.fluxchess;
 
 import java.util.List;
 
-import jcpi.data.GenericMove;
+import com.fluxchess.jcpi.models.GenericMove;
 
 /**
  * ISearch

@@ -20,9 +20,9 @@ package com.fluxchess.board;
 
 import java.util.Arrays;
 
-import jcpi.data.GenericFile;
-import jcpi.data.GenericPosition;
-import jcpi.data.GenericRank;
+import com.fluxchess.jcpi.models.GenericFile;
+import com.fluxchess.jcpi.models.GenericPosition;
+import com.fluxchess.jcpi.models.GenericRank;
 
 /**
  * IntPosition

@@ -19,7 +19,7 @@
 package com.fluxchess.evaluation;
 
 import static org.junit.Assert.assertEquals;
-import jcpi.data.GenericChessman;
+import com.fluxchess.jcpi.models.GenericChessman;
 
 import org.junit.Test;
 
