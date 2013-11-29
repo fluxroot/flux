@@ -108,9 +108,9 @@ task dist(type: Zip) {
     from sourcesJar
     from javadocJar
 
-    from 'Flux.ini'
-    from 'polyglot.ini-Windows'
-    from 'polyglot.ini-Linux'
+    from 'src/dist/Flux.ini'
+    from 'src/dist/polyglot.ini-Windows'
+    from 'src/dist/polyglot.ini-Linux'
 
     from ('src/dist/Flux.cmd') {
       filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [
