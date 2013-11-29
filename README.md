@@ -129,7 +129,7 @@ source, use the following steps.
 License
 -------
 Flux Chess is released under version 3 of the 
-[GPL](http://www.gnu.org/copyleft/gpl.html). 
+[LGPL](http://www.gnu.org/copyleft/lgpl.html).
 
 
 Acknowledgments
