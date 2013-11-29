@@ -16,19 +16,18 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Flux Chess.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.fluxchess;
+package com.fluxchess.flux.testing;
 
-import static org.junit.Assert.assertEquals;
-import jcpi.data.GenericBoard;
-import jcpi.data.IllegalNotationException;
-
+import com.fluxchess.flux.board.Hex88Board;
+import com.fluxchess.flux.evaluation.Evaluation;
+import com.fluxchess.flux.move.MoveSee;
+import com.fluxchess.flux.table.EvaluationTable;
+import com.fluxchess.flux.table.PawnTable;
+import com.fluxchess.jcpi.models.GenericBoard;
+import com.fluxchess.jcpi.models.IllegalNotationException;
 import org.junit.Test;
 
-import com.fluxchess.board.Hex88Board;
-import com.fluxchess.evaluation.Evaluation;
-import com.fluxchess.move.MoveSee;
-import com.fluxchess.table.EvaluationTable;
-import com.fluxchess.table.PawnTable;
+import static org.junit.Assert.assertEquals;
 
 public class EvaluationTest {
 
