@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.util.Hashtable;
 import java.util.Properties;
 
-import jcpi.data.Option;
+import com.fluxchess.jcpi.models.Option;
 
 /**
  * Configuration

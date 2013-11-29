@@ -18,8 +18,8 @@
 */
 package com.fluxchess;
 
-import jcpi.AbstractCommunication;
-import jcpi.commands.GuiInformationCommand;
+import com.fluxchess.jcpi.commands.IProtocol;
+import com.fluxchess.jcpi.commands.ProtocolInformationCommand;
 
 
 /**
@@ -32,7 +32,7 @@ public class ChessLogger {
 	// Singleton Pattern
 	private static final ChessLogger instance = new ChessLogger();
 	
-	private static AbstractCommunication protocol = null;
+	private static IProtocol protocol = null;
 	private static boolean debug = false;
 	
 	private ChessLogger() {
@@ -42,7 +42,7 @@ public class ChessLogger {
 		return instance;
 	}
 	
-	public static void setProtocol(AbstractCommunication newProtocol) {
+	public static void setProtocol(IProtocol newProtocol) {
 		protocol = newProtocol;
 	}
 	
@@ -52,7 +52,7 @@ public class ChessLogger {
 	
 	public void debug(String information) {
 		if (debug && protocol != null) {
-			GuiInformationCommand command = new GuiInformationCommand();
+			ProtocolInformationCommand command = new ProtocolInformationCommand();
 			command.setString(information);
 			protocol.send(command);
 		}

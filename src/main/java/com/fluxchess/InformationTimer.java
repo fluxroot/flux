@@ -20,10 +20,10 @@ package com.fluxchess;
 
 import java.util.List;
 
-import jcpi.AbstractCommunication;
-import jcpi.commands.GuiBestMoveCommand;
-import jcpi.commands.GuiInformationCommand;
-import jcpi.data.GenericMove;
+import com.fluxchess.jcpi.commands.IProtocol;
+import com.fluxchess.jcpi.commands.ProtocolBestMoveCommand;
+import com.fluxchess.jcpi.commands.ProtocolInformationCommand;
+import com.fluxchess.jcpi.models.GenericMove;
 
 import com.fluxchess.move.IntValue;
 import com.fluxchess.move.PrincipalVariation;
@@ -36,7 +36,7 @@ import com.fluxchess.table.TranspositionTable;
  */
 public final class InformationTimer {
 
-	private final AbstractCommunication protocol;
+	private final IProtocol protocol;
 	private final TranspositionTable transpositionTable;
 	private ISearch search = null;
 	
@@ -58,7 +58,7 @@ public final class InformationTimer {
 	 * 
 	 * @param protocol the protocol.
 	 */
-	public InformationTimer(AbstractCommunication protocol, TranspositionTable transpositionTable) {
+	public InformationTimer(IProtocol protocol, TranspositionTable transpositionTable) {
 		assert protocol != null;
 		assert transpositionTable != null;
 		
@@ -125,7 +125,7 @@ public final class InformationTimer {
 	 * @param ponderMove the ponder move or null if there's no ponder move.
 	 */
 	public void sendBestMove(GenericMove bestMove, GenericMove ponderMove) {
-		this.protocol.send(new GuiBestMoveCommand(bestMove, ponderMove));
+		this.protocol.send(new ProtocolBestMoveCommand(bestMove, ponderMove));
 	}
 
 	/**
@@ -144,7 +144,7 @@ public final class InformationTimer {
 		// Safety guard: Reduce output pollution
 		long currentTimeDelta = System.currentTimeMillis() - this.totalTimeStart;
 		if (currentTimeDelta >= 1000) {
-			GuiInformationCommand command = new GuiInformationCommand();
+			ProtocolInformationCommand command = new ProtocolInformationCommand();
 
 			command.setCurrentMove(this.currentMove);
 			command.setCurrentMoveNumber(this.currentMoveNumber);
@@ -164,7 +164,7 @@ public final class InformationTimer {
 		// Safety guard: Reduce output pollution
 		long currentTimeDelta = System.currentTimeMillis() - this.totalTimeStart;
 		if (currentTimeDelta >= 1000) {
-			GuiInformationCommand command = new GuiInformationCommand();
+			ProtocolInformationCommand command = new ProtocolInformationCommand();
 
 			command.setRefutationList(refutationList);
 
@@ -179,7 +179,7 @@ public final class InformationTimer {
 		// Safety guard: Reduce output pollution
 		long currentTimeDelta = System.currentTimeMillis() - this.totalTimeStart;
 		if (currentTimeDelta >= 1000) {
-			GuiInformationCommand command = new GuiInformationCommand();
+			ProtocolInformationCommand command = new ProtocolInformationCommand();
 
 			command.setDepth(this.currentDepth);
 			command.setMaxDepth(this.currentMaxDepth);
@@ -195,7 +195,7 @@ public final class InformationTimer {
 		long currentTimeDelta = System.currentTimeMillis() - this.currentTimeStart;
 		if (currentTimeDelta >= 1000) {
 			// Only output after a delay of 1 second
-			GuiInformationCommand command = new GuiInformationCommand();
+			ProtocolInformationCommand command = new ProtocolInformationCommand();
 
 			command.setDepth(this.currentDepth);
 			command.setMaxDepth(this.currentMaxDepth);
@@ -219,7 +219,7 @@ public final class InformationTimer {
 	 * Sends the current status.
 	 */
 	public void sendInformationSummary() {
-		GuiInformationCommand command = new GuiInformationCommand();
+		ProtocolInformationCommand command = new ProtocolInformationCommand();
 
 		command.setDepth(this.currentDepth);
 		command.setMaxDepth(this.currentMaxDepth);
@@ -235,7 +235,7 @@ public final class InformationTimer {
 
 	/**
 	 * Sends the centipawn information.
-	 * 
+	 *
 	 * @param currentCentipawns the current centipawn value.
 	 * @param currentMoveList the current move list/principal variation.
 	 */
@@ -244,7 +244,7 @@ public final class InformationTimer {
 		assert pvNumber >= 1;
 
 		if (pvNumber <= Configuration.showPvNumber) {
-			GuiInformationCommand command = new GuiInformationCommand();
+			ProtocolInformationCommand command = new ProtocolInformationCommand();
 
 			command.setDepth(pv.depth);
 			command.setMaxDepth(pv.maxDepth);
@@ -269,7 +269,7 @@ public final class InformationTimer {
 
 	/**
 	 * Sends the mate information.
-	 * 
+	 *
 	 * @param currentMateDepth the current mate depth.
 	 * @param currentMoveList the current move list/principal variation.
 	 */
@@ -278,7 +278,7 @@ public final class InformationTimer {
 		assert pvNumber >= 1;
 
 		if (pvNumber <= Configuration.showPvNumber) {
-			GuiInformationCommand command = new GuiInformationCommand();
+			ProtocolInformationCommand command = new ProtocolInformationCommand();
 
 			command.setDepth(pv.depth);
 			command.setMaxDepth(pv.maxDepth);

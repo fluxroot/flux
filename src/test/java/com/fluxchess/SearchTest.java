@@ -24,23 +24,22 @@ import java.util.ArrayList;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import jcpi.AbstractCommunication;
-import jcpi.AbstractEngine;
-import jcpi.ICommunication;
-import jcpi.commands.EngineAnalyzeCommand;
-import jcpi.commands.EngineInitializeRequestCommand;
-import jcpi.commands.EngineNewGameCommand;
-import jcpi.commands.EngineQuitCommand;
-import jcpi.commands.EngineStartCalculatingCommand;
-import jcpi.commands.GuiBestMoveCommand;
-import jcpi.commands.GuiInformationCommand;
-import jcpi.commands.GuiInitializeAnswerCommand;
-import jcpi.commands.GuiReadyAnswerCommand;
-import jcpi.commands.IEngineCommand;
-import jcpi.commands.IGuiCommand;
-import jcpi.data.GenericBoard;
-import jcpi.data.GenericMove;
-import jcpi.data.IllegalNotationException;
+import com.fluxchess.jcpi.protocols.IProtocolHandler;
+import com.fluxchess.jcpi.AbstractEngine;
+import com.fluxchess.jcpi.commands.EngineAnalyzeCommand;
+import com.fluxchess.jcpi.commands.EngineInitializeRequestCommand;
+import com.fluxchess.jcpi.commands.EngineNewGameCommand;
+import com.fluxchess.jcpi.commands.EngineQuitCommand;
+import com.fluxchess.jcpi.commands.EngineStartCalculatingCommand;
+import com.fluxchess.jcpi.commands.ProtocolBestMoveCommand;
+import com.fluxchess.jcpi.commands.ProtocolInformationCommand;
+import com.fluxchess.jcpi.commands.ProtocolInitializeAnswerCommand;
+import com.fluxchess.jcpi.commands.ProtocolReadyAnswerCommand;
+import com.fluxchess.jcpi.commands.IEngineCommand;
+import com.fluxchess.jcpi.commands.IProtocolCommand;
+import com.fluxchess.jcpi.models.GenericBoard;
+import com.fluxchess.jcpi.models.GenericMove;
+import com.fluxchess.jcpi.models.IllegalNotationException;
 
 import org.junit.Test;
 
@@ -51,7 +50,7 @@ import com.fluxchess.Flux;
  *
  * @author Phokham Nonava
  */
-public class SearchTest extends AbstractCommunication implements ICommunication {
+public class SearchTest implements IProtocolHandler {
 
 	BlockingQueue<IEngineCommand> commandQueue = new LinkedBlockingQueue<IEngineCommand>();
 	boolean found = false;
@@ -76,10 +75,6 @@ public class SearchTest extends AbstractCommunication implements ICommunication 
 		assertEquals(this.found, true);
 	}
 	
-	public void send(IGuiCommand command) {
-		command.accept(this);
-	}
-
 	public IEngineCommand receive() {
 		IEngineCommand command = null;
 		try {
@@ -94,20 +89,20 @@ public class SearchTest extends AbstractCommunication implements ICommunication 
 		return command;
 	}
 
-	public void visit(GuiInitializeAnswerCommand command) {
+	public void send(ProtocolInitializeAnswerCommand command) {
 		System.out.println(command);
 	}
 
-	public void visit(GuiReadyAnswerCommand command) {
+	public void send(ProtocolReadyAnswerCommand command) {
 		System.out.println(command);
 	}
 
-	public void visit(GuiBestMoveCommand command) {
+	public void send(ProtocolBestMoveCommand command) {
 		this.commandQueue.add(new EngineQuitCommand());
 		System.out.println(command);
 	}
 
-	public void visit(GuiInformationCommand command) {
+	public void send(ProtocolInformationCommand command) {
 		if (command.getMate() != null) {
 			if (command.getMate() == 30) {
 				this.found = true;
