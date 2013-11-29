@@ -1,5 +1,5 @@
-Flux Chess 2.2.1 UCI
-====================
+Flux Chess UCI
+==============
 
 Copyright 2007-2012 Phokham Nonava <pn@nonava.com>  
 http://www.fluxchess.com/
@@ -71,7 +71,7 @@ have a look at PolyGlot.
 
 Installation
 ------------
-Just untar the tar file anywhere you like and add the Flux.bat (Windows) 
+Just unzip the zip file anywhere you like and add the Flux.bat (Windows)
 or Flux (Linux) as a new engine in your GUI. Make sure you select UCI as 
 the protocol type. If you want to use the XBoard protocol there's a 
 minimal PolyGlot INI file called polyglot.ini- Windows or 
@@ -123,7 +123,7 @@ source, use the following steps.
 `./gradlew build`
 
 ### Grab him
-`cp build/distributions/Flux-2.2.1.tgz <very important engine directory>`
+`cp build/distributions/Flux-<version>.zip <very important engine directory>`
 
 
 License
