@@ -1,1 +1,1 @@
-java -Xmx1024 -jar flux-@version@.jar
+java -Xmx1024m -jar flux-@version@.jar
