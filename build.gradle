@@ -1,100 +1,137 @@
-/*
-** Copyright 2007-2012 Phokham Nonava
-**
-** This file is part of Flux Chess.
-**
-** Flux Chess is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
-** (at your option) any later version.
-**
-** Flux Chess is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-** GNU General Public License for more details.
-**
-** You should have received a copy of the GNU General Public License
-** along with Flux Chess.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'pmd'
+apply plugin: 'findbugs'
+apply plugin: 'checkstyle'
 
-description = 'Flux Chess'
+description = 'Flux Chess Engine'
 
 group = 'com.fluxchess'
+version = '2.2.2'
+
+if (!hasProperty('buildNumber')) {
+  ext.buildNumber = 'dev'
+}
+if (version.contains('-')) {
+  if (hasProperty('branchName') && branchName == 'master') {
+    version += '.' + buildNumber
+  } else {
+    version += '.0'
+  }
+}
+
+if (!hasProperty('revisionNumber')) {
+  ext.revisionNumber = 'rev'
+}
+if (version.contains('-') && !(hasProperty('branchName') && branchName == 'master')) {
+  version += '+' + revisionNumber
+}
+
+println "Building version ${version}"
+
+repositories {
+  mavenCentral()
+  maven {
+    url "http://maven.fluxchess.com/release"
+  }
+}
+
+tasks.withType(Pmd) {
+  pmd {
+    ignoreFailures = true
+  }
+}
+
+tasks.withType(FindBugs) {
+  findbugs {
+    ignoreFailures = true
+  }
+}
+
+tasks.withType(Checkstyle) {
+  checkstyle {
+    ignoreFailures = true
+    showViolations = false
+  }
+}
+
+dependencies {
+  compile 'com.fluxchess:jcpi:1.1.+'
+
+  testCompile 'junit:junit:4.+'
+}
 
 sourceCompatibility = 1.6
 targetCompatibility = 1.6
 
-repositories {
-	mavenCentral()
-}
-
-def jcpisrc = 'http://cloud.github.com/downloads/fluxroot/jcpi/jcpi-0.2.1.zip'
-File jcpizip = file('lib/jcpi-0.2.1.zip')
-File jcpijar = file('lib/jcpi-0.2.1/jcpi-0.2.1.jar')
-
-dependencies {
-	compile files(jcpijar) {
-		builtBy 'download'
-	}
-	testCompile group: 'junit', name: 'junit', version: '4.+'
+processResources {
+  filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [
+    version: project.version,
+    buildNumber: project.buildNumber,
+    revisionNumber: project.revisionNumber
+  ])
 }
 
 jar {
-	from {
-		configurations.compile.collect {it.isDirectory() ? it : zipTree(it)}
-	}
-	from sourceSets.main.allJava
-    manifest {
-        attributes 'Implementation-Title': group, 'Implementation-Version': version, 'Main-Class': 'com.fluxchess.Flux'
+  from {
+    configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+  }
+  manifest {
+    attributes 'Implementation-Title': project.name, 'Implementation-Version': project.version, 'Main-Class': 'com.fluxchess.Flux'
+  }
+}
+
+task testsJar(type: Jar, dependsOn: testClasses) {
+  classifier = 'tests'
+  from sourceSets.test.output
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+  classifier = 'sources'
+  from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+  classifier = 'javadoc'
+  from javadoc.destinationDir
+}
+
+task dist(type: Zip) {
+  def baseDir = "${project.name}-${project.version}"
+
+  into("$baseDir") {
+    from 'README.md'
+    from 'COPYING'
+
+    from jar
+    from testsJar
+    from sourcesJar
+    from javadocJar
+
+    from 'Flux.ini'
+    from 'polyglot.ini-Windows'
+    from 'polyglot.ini-Linux'
+
+    from ('src/dist/Flux.cmd') {
+      filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [
+        version: project.version
+      ])
     }
-}
-
-task jcpi {
-	inputs.file jcpizip
-	outputs.file jcpijar
-	doLast {
-		jcpizip.getParentFile().mkdirs()
-		downloadFile(jcpisrc, jcpizip)
-		copy {
-			from zipTree(jcpizip)
-			into 'lib'
-		}
-	}
-}
-
-task download(dependsOn: 'jcpi') << {
-}
-
-task tar(type: Tar) {
-	def baseDir = "${project.name}-${project.version}"
-	compression = Compression.GZIP
-	
-	into ("$baseDir") {
-		from 'README.md'
-		from 'COPYING'
-		from 'Flux.ini'
-		from 'polyglot.ini-Windows'
-		from 'polyglot.ini-Linux'
-		from 'Flux.bat'
-		from ('Flux') {
-			fileMode = 0755
-		}
-		from jar
-	}
+    from ('src/dist/Flux') {
+      fileMode = 0755
+      filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [
+        version: project.version
+      ])
+    }
+  }
 }
 
 artifacts {
-	archives tar
+  archives testsJar
+  archives sourcesJar
+  archives javadocJar
 }
 
 task wrapper(type: Wrapper) {
-	gradleVersion = '1.0-rc-3'
-}
-
-def downloadFile(srcUrl, destUrl) {
-	def dest = new BufferedOutputStream(new FileOutputStream(destUrl))
-	dest << new URL(srcUrl).openStream()
-	dest.close()
+  gradleVersion = '1.8'
 }
