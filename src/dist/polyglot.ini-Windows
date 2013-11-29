@@ -1,6 +1,6 @@
 [PolyGlot]
 
-EngineCommand = Flux.bat
+EngineCommand = Flux.cmd
 
 [Engine]
 
