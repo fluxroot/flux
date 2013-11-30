@@ -18,34 +18,17 @@
  */
 package com.fluxchess.flux;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.PriorityQueue;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.Semaphore;
-
-import com.fluxchess.jcpi.models.GenericMove;
-
-import com.fluxchess.flux.board.Attack;
-import com.fluxchess.flux.board.Hex88Board;
-import com.fluxchess.flux.board.IntChessman;
-import com.fluxchess.flux.board.IntColor;
-import com.fluxchess.flux.board.IntGamePhase;
-import com.fluxchess.flux.board.IntPosition;
-import com.fluxchess.flux.evaluation.IEvaluation;
-import com.fluxchess.flux.move.IntMove;
-import com.fluxchess.flux.move.IntValue;
-import com.fluxchess.flux.move.MoveGenerator;
-import com.fluxchess.flux.move.MoveList;
-import com.fluxchess.flux.move.MoveSee;
-import com.fluxchess.flux.move.MoveSorter;
-import com.fluxchess.flux.move.PrincipalVariation;
+import com.fluxchess.flux.board.*;
+import com.fluxchess.flux.evaluation.Evaluation;
+import com.fluxchess.flux.move.*;
 import com.fluxchess.flux.table.HistoryTable;
 import com.fluxchess.flux.table.KillerTable;
 import com.fluxchess.flux.table.TranspositionTable;
 import com.fluxchess.flux.table.TranspositionTableEntry;
+import com.fluxchess.jcpi.models.GenericMove;
+
+import java.util.*;
+import java.util.concurrent.Semaphore;
 
 /**
  * Search
@@ -107,7 +90,7 @@ public final class Search implements ISearch, Runnable {
 	private int showPvNumber = 1;
 	
 	// Search logic
-	private IEvaluation evaluation;
+	private Evaluation evaluation;
 	private static Hex88Board board;
 	private final int myColor;
 	
@@ -140,7 +123,7 @@ public final class Search implements ISearch, Runnable {
 		}
 	}
 
-	public Search(IEvaluation newEvaluation, Hex88Board newBoard, TranspositionTable newTranspositionTable, InformationTimer newInfo, int[] timeTable) {
+	public Search(Evaluation newEvaluation, Hex88Board newBoard, TranspositionTable newTranspositionTable, InformationTimer newInfo, int[] timeTable) {
 		assert newEvaluation != null;
 		assert newBoard != null;
 		assert newTranspositionTable != null;

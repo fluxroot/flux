@@ -18,16 +18,15 @@
  */
 package com.fluxchess.flux.evaluation;
 
-import static org.junit.Assert.assertEquals;
-import com.fluxchess.jcpi.models.GenericBoard;
-import com.fluxchess.jcpi.models.IllegalNotationException;
-
-import org.junit.Test;
-
 import com.fluxchess.flux.board.Hex88Board;
 import com.fluxchess.flux.move.MoveSee;
 import com.fluxchess.flux.table.EvaluationTable;
 import com.fluxchess.flux.table.PawnTable;
+import com.fluxchess.jcpi.models.GenericBoard;
+import com.fluxchess.jcpi.models.IllegalNotationException;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * EvaluationTest
@@ -38,7 +37,7 @@ public class EvaluationTest {
 
 	@Test
 	public void testEvaluate() {
-		IEvaluation evaluation = new Evaluation(new EvaluationTable(1024), new PawnTable(1024));
+		Evaluation evaluation = new Evaluation(new EvaluationTable(1024), new PawnTable(1024));
 		Hex88Board board = null;
 
 		try {
