@@ -16,22 +16,21 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Flux Chess.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.fluxchess;
+package com.fluxchess.flux.testing;
+
+import com.fluxchess.flux.board.Attack;
+import com.fluxchess.flux.board.Hex88Board;
+import com.fluxchess.flux.move.IntMove;
+import com.fluxchess.flux.move.MoveGenerator;
+import com.fluxchess.flux.move.MoveSee;
+import com.fluxchess.flux.table.HistoryTable;
+import com.fluxchess.flux.table.KillerTable;
+import com.fluxchess.jcpi.models.GenericBoard;
+import com.fluxchess.jcpi.models.IllegalNotationException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-
-import jcpi.data.GenericBoard;
-import jcpi.data.IllegalNotationException;
-
-import com.fluxchess.board.Attack;
-import com.fluxchess.board.Hex88Board;
-import com.fluxchess.move.IntMove;
-import com.fluxchess.move.MoveGenerator;
-import com.fluxchess.move.MoveSee;
-import com.fluxchess.table.HistoryTable;
-import com.fluxchess.table.KillerTable;
 
 public class PerftPerformanceTesting {
 
