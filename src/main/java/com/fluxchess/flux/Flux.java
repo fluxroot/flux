@@ -18,29 +18,6 @@
  */
 package com.fluxchess.flux;
 
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-
-import com.fluxchess.jcpi.protocols.IProtocolHandler;
-import com.fluxchess.jcpi.AbstractEngine;
-import com.fluxchess.jcpi.commands.EngineAnalyzeCommand;
-import com.fluxchess.jcpi.commands.EngineDebugCommand;
-import com.fluxchess.jcpi.commands.EngineInitializeRequestCommand;
-import com.fluxchess.jcpi.commands.EngineNewGameCommand;
-import com.fluxchess.jcpi.commands.EnginePonderHitCommand;
-import com.fluxchess.jcpi.commands.EngineReadyRequestCommand;
-import com.fluxchess.jcpi.commands.EngineSetOptionCommand;
-import com.fluxchess.jcpi.commands.EngineStartCalculatingCommand;
-import com.fluxchess.jcpi.commands.EngineStopCalculatingCommand;
-import com.fluxchess.jcpi.commands.ProtocolInformationCommand;
-import com.fluxchess.jcpi.commands.ProtocolInitializeAnswerCommand;
-import com.fluxchess.jcpi.commands.ProtocolReadyAnswerCommand;
-import com.fluxchess.jcpi.models.GenericBoard;
-import com.fluxchess.jcpi.models.GenericColor;
-import com.fluxchess.jcpi.models.GenericMove;
-import com.fluxchess.jcpi.models.Option;
-
 import com.fluxchess.flux.board.Hex88Board;
 import com.fluxchess.flux.board.IntColor;
 import com.fluxchess.flux.evaluation.Evaluation;
@@ -48,6 +25,17 @@ import com.fluxchess.flux.move.IntMove;
 import com.fluxchess.flux.table.EvaluationTable;
 import com.fluxchess.flux.table.PawnTable;
 import com.fluxchess.flux.table.TranspositionTable;
+import com.fluxchess.jcpi.AbstractEngine;
+import com.fluxchess.jcpi.commands.*;
+import com.fluxchess.jcpi.models.GenericBoard;
+import com.fluxchess.jcpi.models.GenericColor;
+import com.fluxchess.jcpi.models.GenericMove;
+import com.fluxchess.jcpi.models.Option;
+import com.fluxchess.jcpi.protocols.IProtocolHandler;
+
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * This is the main entry class.
@@ -60,8 +48,8 @@ public final class Flux extends AbstractEngine {
 	private TranspositionTable transpositionTable;
 	private EvaluationTable evaluationTable;
 	private PawnTable pawnTable;
-	private final int[] timeTable = new int[ISearch.MAX_HEIGHT + 1];
-	private ISearch search;
+	private final int[] timeTable = new int[Search.MAX_HEIGHT + 1];
+	private Search search;
 
 	/**
 	 * Creates a new Flux.

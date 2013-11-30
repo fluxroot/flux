@@ -18,21 +18,14 @@
  */
 package com.fluxchess.flux.board;
 
-import java.util.Random;
-
-import com.fluxchess.jcpi.models.GenericBoard;
-import com.fluxchess.jcpi.models.GenericCastling;
-import com.fluxchess.jcpi.models.GenericChessman;
-import com.fluxchess.jcpi.models.GenericColor;
-import com.fluxchess.jcpi.models.GenericFile;
-import com.fluxchess.jcpi.models.GenericPiece;
-import com.fluxchess.jcpi.models.GenericPosition;
-
-import com.fluxchess.flux.ISearch;
+import com.fluxchess.flux.Search;
 import com.fluxchess.flux.evaluation.PositionValues;
 import com.fluxchess.flux.move.IntCastling;
 import com.fluxchess.flux.move.IntMove;
 import com.fluxchess.flux.table.RepetitionTable;
+import com.fluxchess.jcpi.models.*;
+
+import java.util.Random;
 
 /**
  * Hex88Board
@@ -47,7 +40,7 @@ public final class Hex88Board {
 	public static final int BOARDSIZE = 128;
 	
 	// The size of the history stack
-	private static final int STACKSIZE = ISearch.MAX_MOVES;
+	private static final int STACKSIZE = Search.MAX_MOVES;
 
 	// Game phase thresholds
 	public static final int GAMEPHASE_OPENING_VALUE =

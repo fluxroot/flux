@@ -18,7 +18,7 @@
  */
 package com.fluxchess.flux.table;
 
-import com.fluxchess.flux.ISearch;
+import com.fluxchess.flux.Search;
 
 /**
  * RepetitionTable
@@ -27,7 +27,7 @@ import com.fluxchess.flux.ISearch;
  */
 public final class RepetitionTable {
 
-	private static final int MAXSIZE = ISearch.MAX_MOVES;
+	private static final int MAXSIZE = Search.MAX_MOVES;
 
 	private static long[] zobristCode;
 	private int size = 0;

@@ -18,16 +18,15 @@
  */
 package com.fluxchess.flux;
 
-import java.util.List;
-
+import com.fluxchess.flux.move.IntValue;
+import com.fluxchess.flux.move.PrincipalVariation;
+import com.fluxchess.flux.table.TranspositionTable;
 import com.fluxchess.jcpi.commands.IProtocol;
 import com.fluxchess.jcpi.commands.ProtocolBestMoveCommand;
 import com.fluxchess.jcpi.commands.ProtocolInformationCommand;
 import com.fluxchess.jcpi.models.GenericMove;
 
-import com.fluxchess.flux.move.IntValue;
-import com.fluxchess.flux.move.PrincipalVariation;
-import com.fluxchess.flux.table.TranspositionTable;
+import java.util.List;
 
 /**
  * InformationTimer
@@ -38,7 +37,7 @@ public final class InformationTimer {
 
 	private final IProtocol protocol;
 	private final TranspositionTable transpositionTable;
-	private ISearch search = null;
+	private Search search = null;
 	
 	// InfoCommand values
 	public int currentDepth = 0;
@@ -71,7 +70,7 @@ public final class InformationTimer {
 	 * 
 	 * @param search the search.
 	 */
-	public void setSearch(ISearch search) {
+	public void setSearch(Search search) {
 		this.search = search;
 	}
 

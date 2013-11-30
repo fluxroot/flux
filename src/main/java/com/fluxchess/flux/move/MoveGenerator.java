@@ -19,14 +19,8 @@
 package com.fluxchess.flux.move;
 
 import com.fluxchess.flux.Configuration;
-import com.fluxchess.flux.ISearch;
-import com.fluxchess.flux.board.Attack;
-import com.fluxchess.flux.board.AttackVector;
-import com.fluxchess.flux.board.Hex88Board;
-import com.fluxchess.flux.board.IntChessman;
-import com.fluxchess.flux.board.IntColor;
-import com.fluxchess.flux.board.IntPosition;
-import com.fluxchess.flux.board.PositionList;
+import com.fluxchess.flux.Search;
+import com.fluxchess.flux.board.*;
 import com.fluxchess.flux.table.HistoryTable;
 import com.fluxchess.flux.table.KillerTable;
 
@@ -48,7 +42,7 @@ public final class MoveGenerator {
 	public static final int[] moveDeltaQueen = { +16, +17, +1, -15, -16, -17, -1, +15 };
 	public static final int[] moveDeltaKing = { +16, +17, +1, -15, -16, -17, -1, +15 };
 
-	private static final int HISTORYSIZE = ISearch.MAX_HEIGHT + 1;
+	private static final int HISTORYSIZE = Search.MAX_HEIGHT + 1;
 	private static final int STATELISTSIZE = 256;
 
 	// States

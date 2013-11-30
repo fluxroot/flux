@@ -35,9 +35,24 @@ import java.util.concurrent.Semaphore;
  * 
  * @author Phokham Nonava
  */
-public final class Search implements ISearch, Runnable {
+public final class Search implements Runnable {
 
-	// Constants
+    /**
+     * The maximum number of plies.
+     */
+    public static final int MAX_HEIGHT = 256;
+
+    /**
+     * The maximum number of depth.
+     */
+    public static final int MAX_DEPTH = 64;
+
+    /**
+     * The maximum number of moves.
+     */
+    public static final int MAX_MOVES = 4096;
+
+    // Constants
 	public static final int INFINITY = 200000;
 	public static final int DRAW = 0;
 	public static final int CHECKMATE = 100000;
