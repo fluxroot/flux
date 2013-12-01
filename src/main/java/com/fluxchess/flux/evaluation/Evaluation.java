@@ -33,8 +33,6 @@ import java.util.Arrays;
 
 /**
  * Evaluation
- *
- * @author Phokham Nonava
  */
 public final class Evaluation {
 

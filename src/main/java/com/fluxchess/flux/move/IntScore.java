@@ -23,8 +23,6 @@ import com.fluxchess.jcpi.models.GenericScore;
 
 /**
  * IntScore
- *
- * @author Phokham Nonava
  */
 public class IntScore {
 

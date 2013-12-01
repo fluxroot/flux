@@ -32,8 +32,6 @@ import java.io.InputStreamReader;
 
 /**
  * EvaluationTesting
- *
- * @author Phokham Nonava
  */
 public class EvaluationTesting {
 

@@ -31,8 +31,6 @@ import static org.junit.Assert.fail;
 
 /**
  * MoveSeeTest
- *
- * @author Phokham Nonava
  */
 public class MoveSeeTest {
 

@@ -22,8 +22,6 @@ import com.fluxchess.flux.Search;
 
 /**
  * EvaluationTableEntry
- *
- * @author Phokham Nonava
  */
 public final class EvaluationTableEntry {
 

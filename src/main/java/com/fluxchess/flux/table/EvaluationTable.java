@@ -20,8 +20,6 @@ package com.fluxchess.flux.table;
 
 /**
  * EvaluationTable
- *
- * @author Phokham Nonava
  */
 public final class EvaluationTable {
 

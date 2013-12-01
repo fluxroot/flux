@@ -20,8 +20,6 @@ package com.fluxchess.flux.move;
 
 /**
  * SeeList
- *
- * @author Phokham Nonava
  */
 public final class SeeList {
 

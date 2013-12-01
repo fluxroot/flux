@@ -22,8 +22,6 @@ import com.fluxchess.jcpi.models.GenericColor;
 
 /**
  * IntColor
- *
- * @author Phokham Nonava
  */
 public final class IntColor {
 

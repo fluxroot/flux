@@ -32,8 +32,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * FluxTesting
- *
- * @author Phokham Nonava
  */
 public class FluxTesting implements IProtocolHandler {
 

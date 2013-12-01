@@ -27,8 +27,6 @@ import static org.junit.Assert.fail;
 
 /**
  * Hex88BoardTest
- *
- * @author Phokham Nonava
  */
 public class Hex88BoardTest {
 

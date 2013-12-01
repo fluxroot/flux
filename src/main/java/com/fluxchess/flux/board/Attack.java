@@ -22,8 +22,6 @@ package com.fluxchess.flux.board;
  * Attack
  * <p/>
  * Notes: Ideas from Fruit
- *
- * @author Phokham Nonava
  */
 public final class Attack {
 

@@ -25,8 +25,6 @@ import static org.junit.Assert.assertTrue;
 
 /**
  * PawnTableTest
- *
- * @author Phokham Nonava
  */
 public class PawnTableTest {
 

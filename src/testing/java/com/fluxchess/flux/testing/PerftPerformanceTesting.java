@@ -34,8 +34,6 @@ import java.io.InputStreamReader;
 
 /**
  * PerftPerformanceTesting
- *
- * @author Phokham Nonava
  */
 public class PerftPerformanceTesting {
 

@@ -23,8 +23,6 @@ import com.fluxchess.flux.table.HistoryTable;
 
 /**
  * MoveRater
- *
- * @author Phokham Nonava
  */
 public final class MoveRater {
 

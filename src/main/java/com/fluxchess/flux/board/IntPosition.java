@@ -26,8 +26,6 @@ import java.util.Arrays;
 
 /**
  * IntPosition
- *
- * @author Phokham Nonava
  */
 public final class IntPosition {
 

@@ -30,8 +30,6 @@ import static org.junit.Assert.assertEquals;
 
 /**
  * EvaluationTest
- *
- * @author Phokham Nonava
  */
 public class EvaluationTest {
 

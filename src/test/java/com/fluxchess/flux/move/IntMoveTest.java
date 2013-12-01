@@ -29,8 +29,6 @@ import static org.junit.Assert.assertEquals;
 
 /**
  * IntMoveTest
- *
- * @author Phokham Nonava
  */
 public class IntMoveTest {
 

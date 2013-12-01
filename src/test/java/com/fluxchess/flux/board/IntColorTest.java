@@ -25,8 +25,6 @@ import static org.junit.Assert.assertEquals;
 
 /**
  * IntColorTest
- *
- * @author Phokham Nonava
  */
 public class IntColorTest {
 

@@ -25,8 +25,6 @@ import static org.junit.Assert.assertTrue;
 
 /**
  * RepetitionTableTest
- *
- * @author Phokham Nonava
  */
 public class RepetitionTableTest {
 

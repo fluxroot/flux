@@ -28,8 +28,6 @@ import java.util.Properties;
 
 /**
  * Configuration
- *
- * @author Phokham Nonava
  */
 public final class Configuration {
 

@@ -37,8 +37,6 @@ import static org.junit.Assert.fail;
 
 /**
  * MoveGeneratorTest
- *
- * @author Phokham Nonava
  */
 public class MoveGeneratorTest {
 

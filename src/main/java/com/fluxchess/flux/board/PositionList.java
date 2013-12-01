@@ -20,8 +20,6 @@ package com.fluxchess.flux.board;
 
 /**
  * PositionList
- *
- * @author Phokham Nonava
  */
 public final class PositionList {
 

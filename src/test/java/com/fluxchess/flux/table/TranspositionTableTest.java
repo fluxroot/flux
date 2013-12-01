@@ -31,8 +31,6 @@ import static org.junit.Assert.*;
 
 /**
  * TranspositionTableTest
- *
- * @author Phokham Nonava
  */
 public class TranspositionTableTest {
 

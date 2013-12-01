@@ -24,8 +24,6 @@ import com.fluxchess.flux.move.IntScore;
 
 /**
  * TranspositionTableEntry
- *
- * @author Phokham Nonava
  */
 public final class TranspositionTableEntry {
 

@@ -27,8 +27,6 @@ import java.util.List;
 
 /**
  * TranspositionTable
- *
- * @author Phokham Nonava
  */
 public final class TranspositionTable {
 

@@ -23,8 +23,6 @@ import com.fluxchess.flux.board.IntGamePhase;
 
 /**
  * PositionValues
- *
- * @author Phokham Nonava
  */
 public final class PositionValues {
 

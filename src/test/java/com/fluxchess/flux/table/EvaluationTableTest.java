@@ -25,8 +25,6 @@ import static org.junit.Assert.assertNotNull;
 
 /**
  * EvaluationTableTest
- *
- * @author Phokham Nonava
  */
 public class EvaluationTableTest {
 

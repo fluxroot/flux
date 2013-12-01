@@ -22,8 +22,6 @@ import com.fluxchess.flux.Search;
 
 /**
  * MoveList
- *
- * @author Phokham Nonava
  */
 public final class MoveList {
 

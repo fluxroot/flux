@@ -34,8 +34,6 @@ import static org.junit.Assert.assertEquals;
 
 /**
  * SearchTest
- *
- * @author Phokham Nonava
  */
 public class SearchTest implements IProtocolHandler {
 
