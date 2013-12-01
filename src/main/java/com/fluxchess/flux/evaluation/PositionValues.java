@@ -21,9 +21,6 @@ package com.fluxchess.flux.evaluation;
 import com.fluxchess.flux.board.IntColor;
 import com.fluxchess.flux.board.IntGamePhase;
 
-/**
- * PositionValues
- */
 public final class PositionValues {
 
   private static final int[][] positionValueOpening = {
@@ -224,9 +221,6 @@ public final class PositionValues {
     }
   };
 
-  /**
-   * Creates a new PositionValues.
-   */
   public PositionValues() {
   }
 

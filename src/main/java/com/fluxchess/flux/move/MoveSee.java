@@ -21,8 +21,6 @@ package com.fluxchess.flux.move;
 import com.fluxchess.flux.board.*;
 
 /**
- * MoveSee
- * <p/>
  * Notes: Ideas from Fruit
  */
 public final class MoveSee {

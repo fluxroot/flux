@@ -22,9 +22,6 @@ import com.fluxchess.flux.Search;
 import com.fluxchess.flux.move.IntMove;
 import com.fluxchess.flux.move.IntScore;
 
-/**
- * TranspositionTableEntry
- */
 public final class TranspositionTableEntry {
 
   public long zobristCode = 0;

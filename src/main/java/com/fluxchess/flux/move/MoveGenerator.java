@@ -25,8 +25,6 @@ import com.fluxchess.flux.table.HistoryTable;
 import com.fluxchess.flux.table.KillerTable;
 
 /**
- * MoveGenerator
- * <p/>
  * Notes: Ideas from Fruit. I specially like the Idea how to handle the state
  * list.
  */
@@ -115,11 +113,6 @@ public final class MoveGenerator {
     stateList[position++] = GEN_END;
   }
 
-  /**
-   * Creates a new MoveGenerator.
-   *
-   * @param newBoard the board.
-   */
   public MoveGenerator(Hex88Board newBoard, KillerTable newKillerTable, HistoryTable historyTable) {
     assert newBoard != null;
     assert newKillerTable != null;
@@ -489,12 +482,6 @@ public final class MoveGenerator {
     return false;
   }
 
-  /**
-   * Returns whether the move is legal.
-   *
-   * @param move the move.
-   * @return true if the move is legal, false otherwise.
-   */
   private static boolean isLegal(int move) {
     // Slow test for en passant
     if (IntMove.getType(move) == IntMove.ENPASSANT) {
@@ -547,12 +534,6 @@ public final class MoveGenerator {
     return MoveSee.seeMove(move, IntMove.getChessmanColor(move)) >= 0;
   }
 
-  /**
-   * Generates the pseudo legal move list.
-   *
-   * @param color the color of the player.
-   * @return the pseudo legal move list.
-   */
   private static void generateNonCaptures() {
     assert board != null;
     assert moveList != null;

@@ -25,9 +25,6 @@ import com.fluxchess.jcpi.models.GenericMove;
 
 import java.util.List;
 
-/**
- * TranspositionTable
- */
 public final class TranspositionTable {
 
   // Size of one transposition entry
@@ -44,11 +41,6 @@ public final class TranspositionTable {
   // Number of slots used
   private int slotsUsed = 0;
 
-  /**
-   * Creates a new TranspositionTable.
-   *
-   * @param newSize the size.
-   */
   public TranspositionTable(int newSize) {
     assert newSize >= 1;
 
@@ -64,9 +56,6 @@ public final class TranspositionTable {
     this.slotsUsed = 0;
   }
 
-  /**
-   * Clears the Transposition Table.
-   */
   public void clear() {
     this.currentAge = 0;
     this.slotsUsed = 0;
@@ -76,9 +65,6 @@ public final class TranspositionTable {
     }
   }
 
-  /**
-   * Increase the age of the Transposition Table.
-   */
   public void increaseAge() {
     this.currentAge++;
     this.slotsUsed = 0;

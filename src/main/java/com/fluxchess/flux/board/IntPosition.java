@@ -24,19 +24,10 @@ import com.fluxchess.jcpi.models.GenericRank;
 
 import java.util.Arrays;
 
-/**
- * IntPosition
- */
 public final class IntPosition {
 
-  /**
-   * Represents no position
-   */
   public static final int NOPOSITION = -6;
 
-  /**
-   * IntPosition values
-   */
   public static final int a1 = 0;   public static final int a2 = 16;
   public static final int b1 = 1;   public static final int b2 = 17;
   public static final int c1 = 2;   public static final int c2 = 18;
@@ -73,9 +64,6 @@ public final class IntPosition {
   public static final int g7 = 102; public static final int g8 = 118;
   public static final int h7 = 103; public static final int h8 = 119;
 
-  /**
-   * IntPosition array
-   */
   public static final int[] values = {
     a1, b1, c1, d1, e1, f1, g1, h1,
     a2, b2, c2, d2, e2, f2, g2, h2,
@@ -87,9 +75,6 @@ public final class IntPosition {
     a8, b8, c8, d8, e8, f8, g8, h8
   };
 
-  /**
-   * File values
-   */
   public static final int fileA = 0;
   public static final int fileB = 1;
   public static final int fileC = 2;
@@ -99,9 +84,6 @@ public final class IntPosition {
   public static final int fileG = 6;
   public static final int fileH = 7;
 
-  /**
-   * Rank values
-   */
   public static final int rank1 = 0;
   public static final int rank2 = 1;
   public static final int rank3 = 2;
@@ -111,31 +93,16 @@ public final class IntPosition {
   public static final int rank7 = 6;
   public static final int rank8 = 7;
 
-  /**
-   * Castling positions
-   */
   public static final int WHITE_CASTLING_KINGSIDE = g1;
   public static final int WHITE_CASTLING_QUEENSIDE = c1;
   public static final int BLACK_CASTLING_KINGSIDE = g8;
   public static final int BLACK_CASTLING_QUEENSIDE = c8;
 
-  /**
-   * Position mask
-   */
   public static final int MASK = 0x7F;
 
-  /**
-   * IntPosition cannot be instantiated.
-   */
   private IntPosition() {
   }
 
-  /**
-   * Returns the IntPosition value of the GenericPosition.
-   *
-   * @param position the GenericPosition.
-   * @return the IntPosition value.
-   */
   public static int valueOfPosition(GenericPosition position) {
     assert position != null;
 
@@ -145,12 +112,6 @@ public final class IntPosition {
     return rank * 16 + file;
   }
 
-  /**
-   * Returns the GenericPosition of the IntPosition value.
-   *
-   * @param position the position value.
-   * @return the GenericPosition.
-   */
   public static GenericPosition valueOfIntPosition(int position) {
     assert (position & 0x88) == 0;
 

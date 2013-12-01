@@ -21,19 +21,10 @@ package com.fluxchess.flux.move;
 import com.fluxchess.flux.board.IntChessman;
 import com.fluxchess.flux.table.HistoryTable;
 
-/**
- * MoveRater
- */
 public final class MoveRater {
 
   private static HistoryTable historyTable;
 
-  /**
-   * Creates a new MoveRater.
-   *
-   * @param newBoard        the board.
-   * @param newHistoryTable the history table.
-   */
   public MoveRater(HistoryTable newHistoryTable) {
     historyTable = newHistoryTable;
   }

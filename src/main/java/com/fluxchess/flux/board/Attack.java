@@ -19,17 +19,12 @@
 package com.fluxchess.flux.board;
 
 /**
- * Attack
- * <p/>
  * Notes: Ideas from Fruit
  */
 public final class Attack {
 
   public static final int MAXATTACK = 16;
 
-  /**
-   * Represents no attack
-   */
   public static final int NOATTACK = -3;
 
   public int count = NOATTACK;

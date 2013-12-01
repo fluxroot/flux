@@ -27,9 +27,6 @@ import com.fluxchess.jcpi.models.*;
 
 import java.util.Random;
 
-/**
- * Hex88Board
- */
 public final class Hex88Board {
 
   /**
@@ -149,12 +146,6 @@ public final class Hex88Board {
     }
   }
 
-  /**
-   * Creates a new board.
-   *
-   * @param newBoard the board to setup our own board.
-   * @throws SquareNotEmptyException if a square is not empty.
-   */
   public Hex88Board(GenericBoard newBoard) {
     // Initialize repetition table
     repetitionTable = new RepetitionTable();
@@ -441,11 +432,6 @@ public final class Hex88Board {
     return piece;
   }
 
-  /**
-   * Returns the GenericBoard.
-   *
-   * @return the GenericBoard.
-   */
   public GenericBoard getBoard() {
     GenericBoard newBoard = new GenericBoard();
 
@@ -544,20 +530,10 @@ public final class Hex88Board {
     return newBoard;
   }
 
-  /**
-   * Returns the full move number.
-   *
-   * @return the full move number.
-   */
   public int getFullMoveNumber() {
     return this.halfMoveNumber / 2;
   }
 
-  /**
-   * Sets the full move number.
-   *
-   * @param fullMoveNumber the full move number.
-   */
   private void setFullMoveNumber(int fullMoveNumber) {
     assert fullMoveNumber > 0;
 
@@ -567,11 +543,6 @@ public final class Hex88Board {
     }
   }
 
-  /**
-   * Returns the game phase.
-   *
-   * @return the game phase.
-   */
   public int getGamePhase() {
     if (materialValue[IntColor.WHITE] >= GAMEPHASE_OPENING_VALUE && materialValue[IntColor.BLACK] >= GAMEPHASE_OPENING_VALUE) {
       return IntGamePhase.OPENING;
@@ -1065,11 +1036,6 @@ public final class Hex88Board {
     return false;
   }
 
-  /**
-   * Makes the move.
-   *
-   * @param move the move.
-   */
   public void makeMove(int move) {
     // Get current stack entry
     Hex88BoardStackEntry currentStackEntry = stack[this.stackSize];
@@ -1133,11 +1099,6 @@ public final class Hex88Board {
     attackHistory[this.attackHistorySize][IntColor.BLACK].count = Attack.NOATTACK;
   }
 
-  /**
-   * Undo the move.
-   *
-   * @param move the IntMove.
-   */
   public void undoMove(int move) {
     int type = IntMove.getType(move);
 

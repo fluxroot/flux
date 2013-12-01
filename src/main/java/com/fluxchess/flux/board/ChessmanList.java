@@ -18,9 +18,6 @@
  */
 package com.fluxchess.flux.board;
 
-/**
- * ChessmanList
- */
 public final class ChessmanList {
 
   private static final int MAXSIZE = 16;

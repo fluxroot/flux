@@ -32,9 +32,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * SearchTest
- */
 public class SearchTest implements IProtocolHandler {
 
   BlockingQueue<IEngineCommand> commandQueue = new LinkedBlockingQueue<IEngineCommand>();

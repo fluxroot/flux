@@ -20,52 +20,25 @@ package com.fluxchess.flux.board;
 
 import com.fluxchess.jcpi.models.GenericColor;
 
-/**
- * IntColor
- */
 public final class IntColor {
 
-  /**
-   * Represents no color
-   */
   public static final int NOCOLOR = -4;
 
-  /**
-   * IntColor values
-   */
   public static final int WHITE = 0;
   public static final int BLACK = 1;
 
-  /**
-   * IntColor constants
-   */
   public static final int ARRAY_DIMENSION = 2;
 
-  /**
-   * IntColor array
-   */
   public static final int[] values = {
     WHITE,
     BLACK
   };
 
-  /**
-   * IntColor mask
-   */
   public static final int MASK = 0x1;
 
-  /**
-   * IntColor cannot be instantiated.
-   */
   private IntColor() {
   }
 
-  /**
-   * Returns the IntColor value of the GenericColor.
-   *
-   * @param color the GenericColor.
-   * @return the IntColor value.
-   */
   public static int valueOfColor(GenericColor color) {
     assert color != null;
 
@@ -82,12 +55,6 @@ public final class IntColor {
     throw new IllegalArgumentException();
   }
 
-  /**
-   * Returns the GenericColor of the color value.
-   *
-   * @param color the color value.
-   * @return the GenericColor.
-   */
   public static GenericColor valueOfIntColor(int color) {
     assert color != NOCOLOR;
 
@@ -101,12 +68,6 @@ public final class IntColor {
     }
   }
 
-  /**
-   * Returns the opposite color.
-   *
-   * @param color the color.
-   * @return the opposite color.
-   */
   public static int switchColor(int color) {
     assert color != NOCOLOR && (color == WHITE || color == BLACK);
 

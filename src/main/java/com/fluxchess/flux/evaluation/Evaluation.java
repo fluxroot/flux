@@ -31,9 +31,6 @@ import com.fluxchess.flux.table.PawnTable;
 
 import java.util.Arrays;
 
-/**
- * Evaluation
- */
 public final class Evaluation {
 
   // Our evaluation constants
@@ -133,9 +130,6 @@ public final class Evaluation {
   private final EvaluationTable evaluationTable;
   private final PawnTable pawnHashtable;
 
-  /**
-   * Creates a new Evaluation.
-   */
   public Evaluation(EvaluationTable newEvaluationTable, PawnTable newPawnTable) {
     this.evaluationTable = newEvaluationTable;
     this.pawnHashtable = newPawnTable;

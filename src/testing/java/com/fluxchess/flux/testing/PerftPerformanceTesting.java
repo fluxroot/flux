@@ -32,9 +32,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-/**
- * PerftPerformanceTesting
- */
 public class PerftPerformanceTesting {
 
   private static long miniMax(Hex88Board board, MoveGenerator generator, int depth, int maxDepth) {

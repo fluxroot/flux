@@ -25,9 +25,6 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-/**
- * Hex88BoardTest
- */
 public class Hex88BoardTest {
 
   @Test

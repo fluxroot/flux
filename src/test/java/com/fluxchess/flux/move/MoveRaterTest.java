@@ -23,9 +23,6 @@ import com.fluxchess.flux.table.HistoryTable;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * MoveRaterTest
- */
 public class MoveRaterTest {
 
   //	@Test

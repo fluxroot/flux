@@ -26,9 +26,6 @@ import java.io.IOException;
 import java.util.Hashtable;
 import java.util.Properties;
 
-/**
- * Configuration
- */
 public final class Configuration {
 
   public static final String name = "Flux 2.2.1";

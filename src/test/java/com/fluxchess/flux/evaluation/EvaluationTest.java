@@ -28,9 +28,6 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * EvaluationTest
- */
 public class EvaluationTest {
 
   @Test

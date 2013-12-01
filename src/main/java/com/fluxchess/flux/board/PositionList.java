@@ -18,9 +18,6 @@
  */
 package com.fluxchess.flux.board;
 
-/**
- * PositionList
- */
 public final class PositionList {
 
   public final int MAXSIZE;

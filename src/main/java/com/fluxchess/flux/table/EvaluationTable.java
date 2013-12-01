@@ -18,9 +18,6 @@
  */
 package com.fluxchess.flux.table;
 
-/**
- * EvaluationTable
- */
 public final class EvaluationTable {
 
   // Size of one evaluation entry

@@ -30,9 +30,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-/**
- * EvaluationTesting
- */
 public class EvaluationTesting {
 
   public static void main(String[] args) {

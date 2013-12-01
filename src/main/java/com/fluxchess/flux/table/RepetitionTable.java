@@ -20,9 +20,6 @@ package com.fluxchess.flux.table;
 
 import com.fluxchess.flux.Search;
 
-/**
- * RepetitionTable
- */
 public final class RepetitionTable {
 
   private static final int MAXSIZE = Search.MAX_MOVES;
@@ -30,9 +27,6 @@ public final class RepetitionTable {
   private static long[] zobristCode;
   private int size = 0;
 
-  /**
-   * Creates a new RepetitionTable.
-   */
   public RepetitionTable() {
     zobristCode = new long[MAXSIZE];
   }

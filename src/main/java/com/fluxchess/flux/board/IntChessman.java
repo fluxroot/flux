@@ -30,14 +30,8 @@ import com.fluxchess.jcpi.models.GenericChessman;
  */
 public final class IntChessman {
 
-  /**
-   * Represents no piece
-   */
   public static final int NOPIECE = 4;
 
-  /**
-   * Chessman values
-   */
   public static final int PAWN = 1;
   public static final int KNIGHT = 2;
   public static final int KING = 3;
@@ -45,16 +39,10 @@ public final class IntChessman {
   public static final int ROOK = 6;
   public static final int QUEEN = 7;
 
-  /**
-   * Bit operations
-   */
   public static final int BIT_SLIDING = 4;
   public static final int BIT_DIAGONAL_SLIDING = 1;
   public static final int BIT_STRAIGHT_SLIDING = 2;
 
-  /**
-   * Chessman array
-   */
   public static final int CHESSMAN_VALUE_SIZE = 8;
   public static final int[] values = {
     PAWN,
@@ -65,14 +53,8 @@ public final class IntChessman {
     KING
   };
 
-  /**
-   * Chessman mask
-   */
   public static final int MASK = 0x7;
 
-  /**
-   * Chessman
-   */
   public static final int INTCHESSMAN_MASK = 0x7FF;
   public static final int INTCHESSMAN_SIZE = 11;
 
@@ -82,9 +64,6 @@ public final class IntChessman {
   private static final int COLOR_SHIFT = 3;
   private static final int COLOR_MASK = IntColor.MASK << COLOR_SHIFT;
 
-  /**
-   * Piece values
-   */
   public static final int WHITE_PAWN = (PAWN << CHESSMAN_SHIFT) | (IntColor.WHITE << COLOR_SHIFT);
   public static final int WHITE_KNIGHT = (KNIGHT << CHESSMAN_SHIFT) | (IntColor.WHITE << COLOR_SHIFT);
   public static final int WHITE_BISHOP = (BISHOP << CHESSMAN_SHIFT) | (IntColor.WHITE << COLOR_SHIFT);
@@ -113,16 +92,10 @@ public final class IntChessman {
     BLACK_KING
   };
 
-  /**
-   * Piece
-   */
   public static final int PIECE_MASK = 0xF;
   public static final int PIECE_SIZE = 4;
   public static final int PIECE_VALUE_SIZE = 16;
 
-  /**
-   * Values
-   */
   public static final int VALUE_PAWN = 100;
   public static final int VALUE_KNIGHT = 325;
   public static final int VALUE_BISHOP = 325;
@@ -130,9 +103,6 @@ public final class IntChessman {
   public static final int VALUE_QUEEN = 975;
   public static final int VALUE_KING = 20000;
 
-  /**
-   * IntChessman cannot be instantiated.
-   */
   private IntChessman() {
   }
 
