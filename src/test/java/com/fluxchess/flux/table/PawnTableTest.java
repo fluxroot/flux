@@ -18,10 +18,10 @@
  */
 package com.fluxchess.flux.table;
 
+import org.junit.Test;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-
-import org.junit.Test;
 
 /**
  * PawnTableTest
@@ -30,36 +30,36 @@ import org.junit.Test;
  */
 public class PawnTableTest {
 
-	@Test
-	public void testPawnTable() {
-		PawnTable table = new PawnTable(1024);
-		
-		table.put(1, 1, 1);
-		assertTrue(table.exists(1));
-		assertEquals(1, table.getOpening(1));
-		assertEquals(1, table.getEndgame(1));
+  @Test
+  public void testPawnTable() {
+    PawnTable table = new PawnTable(1024);
 
-		table.put(2, 2, 2);
-		assertTrue(table.exists(2));
-		assertEquals(2, table.getOpening(2));
-		assertEquals(2, table.getEndgame(2));
-	}
+    table.put(1, 1, 1);
+    assertTrue(table.exists(1));
+    assertEquals(1, table.getOpening(1));
+    assertEquals(1, table.getEndgame(1));
 
-	@Test
-	public void testSize() {
-		System.out.println("Testing Pawn Table size:");
-		int[] megabytes = { 4, 8, 16, 32, 64 };
-		for (int i : megabytes) {
-			int numberOfEntries = i * 1024 * 1024 / PawnTable.ENTRYSIZE;
+    table.put(2, 2, 2);
+    assertTrue(table.exists(2));
+    assertEquals(2, table.getOpening(2));
+    assertEquals(2, table.getEndgame(2));
+  }
 
-			System.gc();
-			long usedMemoryBefore = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
-			new PawnTable(numberOfEntries);
-			long usedMemoryAfter = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+  @Test
+  public void testSize() {
+    System.out.println("Testing Pawn Table size:");
+    int[] megabytes = {4, 8, 16, 32, 64};
+    for (int i : megabytes) {
+      int numberOfEntries = i * 1024 * 1024 / PawnTable.ENTRYSIZE;
 
-			long hashAllocation = (usedMemoryAfter - usedMemoryBefore) / 1024 / 1024;
-			System.out.println("Pawn Table size " + i + " = " + hashAllocation);
-		}
-	}
+      System.gc();
+      long usedMemoryBefore = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+      new PawnTable(numberOfEntries);
+      long usedMemoryAfter = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+
+      long hashAllocation = (usedMemoryAfter - usedMemoryBefore) / 1024 / 1024;
+      System.out.println("Pawn Table size " + i + " = " + hashAllocation);
+    }
+  }
 
 }

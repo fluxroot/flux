@@ -29,41 +29,41 @@ import com.fluxchess.jcpi.commands.ProtocolInformationCommand;
  */
 public class ChessLogger {
 
-	// Singleton Pattern
-	private static final ChessLogger instance = new ChessLogger();
-	
-	private static IProtocol protocol = null;
-	private static boolean debug = false;
-	
-	private ChessLogger() {
-	}
-	
-	public static ChessLogger getLogger() {
-		return instance;
-	}
-	
-	public static void setProtocol(IProtocol newProtocol) {
-		protocol = newProtocol;
-	}
-	
-	public static void setDebug(boolean mode) {
-		debug = mode;
-	}
-	
-	public void debug(String information) {
-		if (debug && protocol != null) {
-			ProtocolInformationCommand command = new ProtocolInformationCommand();
-			command.setString(information);
-			protocol.send(command);
-		}
-	}
-	
-	public static void showTrace() {
-		try {
-			throw new Exception();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
+  // Singleton Pattern
+  private static final ChessLogger instance = new ChessLogger();
+
+  private static IProtocol protocol = null;
+  private static boolean debug = false;
+
+  private ChessLogger() {
+  }
+
+  public static ChessLogger getLogger() {
+    return instance;
+  }
+
+  public static void setProtocol(IProtocol newProtocol) {
+    protocol = newProtocol;
+  }
+
+  public static void setDebug(boolean mode) {
+    debug = mode;
+  }
+
+  public void debug(String information) {
+    if (debug && protocol != null) {
+      ProtocolInformationCommand command = new ProtocolInformationCommand();
+      command.setString(information);
+      protocol.send(command);
+    }
+  }
+
+  public static void showTrace() {
+    try {
+      throw new Exception();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
 }

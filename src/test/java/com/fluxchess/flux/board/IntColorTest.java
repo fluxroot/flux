@@ -18,10 +18,10 @@
  */
 package com.fluxchess.flux.board;
 
-import static org.junit.Assert.assertEquals;
 import com.fluxchess.jcpi.models.GenericColor;
-
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * IntColorTest
@@ -30,10 +30,10 @@ import org.junit.Test;
  */
 public class IntColorTest {
 
-	@Test
-	public void testIntColor() {
-		assertEquals(IntColor.valueOfColor(GenericColor.WHITE), IntColor.WHITE);
-		assertEquals(IntColor.valueOfIntColor(IntColor.WHITE), GenericColor.WHITE);
-	}
+  @Test
+  public void testIntColor() {
+    assertEquals(IntColor.valueOfColor(GenericColor.WHITE), IntColor.WHITE);
+    assertEquals(IntColor.valueOfIntColor(IntColor.WHITE), GenericColor.WHITE);
+  }
 
 }

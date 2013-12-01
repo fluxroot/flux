@@ -27,51 +27,51 @@ import com.fluxchess.flux.Search;
  */
 public final class MoveList {
 
-	private static final int MAXSIZE = 4096;
-	private static final int HISTORYSIZE = Search.MAX_HEIGHT + 1;
+  private static final int MAXSIZE = 4096;
+  private static final int HISTORYSIZE = Search.MAX_HEIGHT + 1;
 
-	public final int[] move = new int[MAXSIZE];
-	public final int[] value = new int[MAXSIZE];
-	public int head = 0;
-	public int index = 0;
-	public int tail = 0;
+  public final int[] move = new int[MAXSIZE];
+  public final int[] value = new int[MAXSIZE];
+  public int head = 0;
+  public int index = 0;
+  public int tail = 0;
 
-	private final int[] historyHead = new int[HISTORYSIZE];
-	private final int[] historyIndex = new int[HISTORYSIZE];
-	private final int[] historyTail = new int[HISTORYSIZE];
-	private int historyCount = 0;
+  private final int[] historyHead = new int[HISTORYSIZE];
+  private final int[] historyIndex = new int[HISTORYSIZE];
+  private final int[] historyTail = new int[HISTORYSIZE];
+  private int historyCount = 0;
 
-	public MoveList() {
-	}
+  public MoveList() {
+  }
 
-	public void newList() {
-		assert this.historyCount < HISTORYSIZE;
+  public void newList() {
+    assert this.historyCount < HISTORYSIZE;
 
-		this.historyHead[this.historyCount] = this.head;
-		this.historyIndex[this.historyCount] = this.index;
-		this.historyTail[this.historyCount] = this.tail;
-		this.historyCount++;
+    this.historyHead[this.historyCount] = this.head;
+    this.historyIndex[this.historyCount] = this.index;
+    this.historyTail[this.historyCount] = this.tail;
+    this.historyCount++;
 
-		this.head = this.tail;
-		this.index = this.tail;
-	}
+    this.head = this.tail;
+    this.index = this.tail;
+  }
 
-	public void deleteList() {
-		assert this.historyCount > 0;
+  public void deleteList() {
+    assert this.historyCount > 0;
 
-		this.historyCount--;
-		this.head = this.historyHead[this.historyCount];
-		this.index = this.historyIndex[this.historyCount];
-		this.tail = this.historyTail[this.historyCount];
-	}
+    this.historyCount--;
+    this.head = this.historyHead[this.historyCount];
+    this.index = this.historyIndex[this.historyCount];
+    this.tail = this.historyTail[this.historyCount];
+  }
 
-	public void resetList() {
-		this.tail = this.head;
-		this.index = this.head;
-	}
+  public void resetList() {
+    this.tail = this.head;
+    this.index = this.head;
+  }
 
-	public int getLength() {
-		return this.tail - this.head;
-	}
+  public int getLength() {
+    return this.tail - this.head;
+  }
 
 }

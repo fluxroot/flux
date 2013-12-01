@@ -27,15 +27,15 @@ import com.fluxchess.flux.Search;
  */
 public final class EvaluationTableEntry {
 
-	public long zobristCode = 0;
-	public int evaluation = -Search.INFINITY;
+  public long zobristCode = 0;
+  public int evaluation = -Search.INFINITY;
 
-	public EvaluationTableEntry() {
-	}
+  public EvaluationTableEntry() {
+  }
 
-	public void clear() {
-		this.zobristCode = 0;
-		this.evaluation = -Search.INFINITY;
-	}
+  public void clear() {
+    this.zobristCode = 0;
+    this.evaluation = -Search.INFINITY;
+  }
 
 }

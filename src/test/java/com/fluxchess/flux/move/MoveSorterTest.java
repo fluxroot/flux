@@ -18,9 +18,9 @@
  */
 package com.fluxchess.flux.move;
 
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * MoveSorterTest
@@ -29,86 +29,86 @@ import org.junit.Test;
  */
 public class MoveSorterTest {
 
-	@Test
-	public void testSort() {
-		MoveList list = new MoveList();
-		
-		list.move[list.tail] = 10;
-		list.value[list.tail] = list.move[list.tail];
-		list.tail++;
-		list.move[list.tail] = 9;
-		list.value[list.tail] = list.move[list.tail];
-		list.tail++;
-		list.move[list.tail] = 8;
-		list.value[list.tail] = list.move[list.tail];
-		list.tail++;
-		list.move[list.tail] = 7;
-		list.value[list.tail] = list.move[list.tail];
-		list.tail++;
-		list.move[list.tail] = 6;
-		list.value[list.tail] = list.move[list.tail];
-		list.tail++;
-		list.move[list.tail] = 5;
-		list.value[list.tail] = list.move[list.tail];
-		list.tail++;
-		list.move[list.tail] = 4;
-		list.value[list.tail] = list.move[list.tail];
-		list.tail++;
-		list.move[list.tail] = 3;
-		list.value[list.tail] = list.move[list.tail];
-		list.tail++;
-		list.move[list.tail] = 2;
-		list.value[list.tail] = list.move[list.tail];
-		list.tail++;
-		list.move[list.tail] = 1;
-		list.value[list.tail] = list.move[list.tail];
-		list.tail++;
+  @Test
+  public void testSort() {
+    MoveList list = new MoveList();
 
-		MoveSorter.sort(list);
-		
-		for (int i = 0; i < 10; i++) {
-			assertEquals(10 - i, list.move[i]);
-			assertEquals(10 - i, list.value[i]);
-		}
+    list.move[list.tail] = 10;
+    list.value[list.tail] = list.move[list.tail];
+    list.tail++;
+    list.move[list.tail] = 9;
+    list.value[list.tail] = list.move[list.tail];
+    list.tail++;
+    list.move[list.tail] = 8;
+    list.value[list.tail] = list.move[list.tail];
+    list.tail++;
+    list.move[list.tail] = 7;
+    list.value[list.tail] = list.move[list.tail];
+    list.tail++;
+    list.move[list.tail] = 6;
+    list.value[list.tail] = list.move[list.tail];
+    list.tail++;
+    list.move[list.tail] = 5;
+    list.value[list.tail] = list.move[list.tail];
+    list.tail++;
+    list.move[list.tail] = 4;
+    list.value[list.tail] = list.move[list.tail];
+    list.tail++;
+    list.move[list.tail] = 3;
+    list.value[list.tail] = list.move[list.tail];
+    list.tail++;
+    list.move[list.tail] = 2;
+    list.value[list.tail] = list.move[list.tail];
+    list.tail++;
+    list.move[list.tail] = 1;
+    list.value[list.tail] = list.move[list.tail];
+    list.tail++;
 
-		list = new MoveList();
-		list.move[list.tail] = 3;
-		list.value[list.tail] = list.move[list.tail];
-		list.tail++;
-		list.move[list.tail] = 4;
-		list.value[list.tail] = list.move[list.tail];
-		list.tail++;
-		list.move[list.tail] = 6;
-		list.value[list.tail] = list.move[list.tail];
-		list.tail++;
-		list.move[list.tail] = 1;
-		list.value[list.tail] = list.move[list.tail];
-		list.tail++;
-		list.move[list.tail] = 10;
-		list.value[list.tail] = list.move[list.tail];
-		list.tail++;
-		list.move[list.tail] = 9;
-		list.value[list.tail] = list.move[list.tail];
-		list.tail++;
-		list.move[list.tail] = 2;
-		list.value[list.tail] = list.move[list.tail];
-		list.tail++;
-		list.move[list.tail] = 8;
-		list.value[list.tail] = list.move[list.tail];
-		list.tail++;
-		list.move[list.tail] = 5;
-		list.value[list.tail] = list.move[list.tail];
-		list.tail++;
-		list.move[list.tail] = 7;
-		list.value[list.tail] = list.move[list.tail];
-		list.tail++;
+    MoveSorter.sort(list);
 
-		MoveSorter.sort(list);
-		
-		for (int i = 0; i < 10; i++) {
-			assertEquals(10 - i, list.move[i]);
-			assertEquals(10 - i, list.value[i]);
-		}
-	}
+    for (int i = 0; i < 10; i++) {
+      assertEquals(10 - i, list.move[i]);
+      assertEquals(10 - i, list.value[i]);
+    }
+
+    list = new MoveList();
+    list.move[list.tail] = 3;
+    list.value[list.tail] = list.move[list.tail];
+    list.tail++;
+    list.move[list.tail] = 4;
+    list.value[list.tail] = list.move[list.tail];
+    list.tail++;
+    list.move[list.tail] = 6;
+    list.value[list.tail] = list.move[list.tail];
+    list.tail++;
+    list.move[list.tail] = 1;
+    list.value[list.tail] = list.move[list.tail];
+    list.tail++;
+    list.move[list.tail] = 10;
+    list.value[list.tail] = list.move[list.tail];
+    list.tail++;
+    list.move[list.tail] = 9;
+    list.value[list.tail] = list.move[list.tail];
+    list.tail++;
+    list.move[list.tail] = 2;
+    list.value[list.tail] = list.move[list.tail];
+    list.tail++;
+    list.move[list.tail] = 8;
+    list.value[list.tail] = list.move[list.tail];
+    list.tail++;
+    list.move[list.tail] = 5;
+    list.value[list.tail] = list.move[list.tail];
+    list.tail++;
+    list.move[list.tail] = 7;
+    list.value[list.tail] = list.move[list.tail];
+    list.tail++;
+
+    MoveSorter.sort(list);
+
+    for (int i = 0; i < 10; i++) {
+      assertEquals(10 - i, list.move[i]);
+      assertEquals(10 - i, list.value[i]);
+    }
+  }
 
 }

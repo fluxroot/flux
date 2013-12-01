@@ -20,8 +20,6 @@ package com.fluxchess.flux;
 
 import org.junit.Test;
 
-import com.fluxchess.flux.ChessLogger;
-
 /**
  * ChessLoggerTest
  *
@@ -29,9 +27,9 @@ import com.fluxchess.flux.ChessLogger;
  */
 public class ChessLoggerTest {
 
-	@Test
-	public void testShowTrace() {
-		ChessLogger.showTrace();
-	}
+  @Test
+  public void testShowTrace() {
+    ChessLogger.showTrace();
+  }
 
 }

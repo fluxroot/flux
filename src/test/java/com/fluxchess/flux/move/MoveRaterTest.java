@@ -18,10 +18,10 @@
  */
 package com.fluxchess.flux.move;
 
-import static org.junit.Assert.assertEquals;
-
 import com.fluxchess.flux.board.IntChessman;
 import com.fluxchess.flux.table.HistoryTable;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * MoveRaterTest
@@ -30,55 +30,55 @@ import com.fluxchess.flux.table.HistoryTable;
  */
 public class MoveRaterTest {
 
-//	@Test
-	public void testRate() {
-		MoveRater rater = new MoveRater(new HistoryTable());
+  //	@Test
+  public void testRate() {
+    MoveRater rater = new MoveRater(new HistoryTable());
 
-		MoveList list = new MoveList();
+    MoveList list = new MoveList();
 
-		// Pawn -> Rook
-		int move1 = IntMove.createMove(IntMove.NORMAL, 16, 0, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
-		list.move[list.tail++] = move1;
+    // Pawn -> Rook
+    int move1 = IntMove.createMove(IntMove.NORMAL, 16, 0, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
+    list.move[list.tail++] = move1;
 
-		// Knight -> Rook
-		int move2 = IntMove.createMove(IntMove.NORMAL, 1, 0, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
-		list.move[list.tail++] = move2;
+    // Knight -> Rook
+    int move2 = IntMove.createMove(IntMove.NORMAL, 1, 0, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
+    list.move[list.tail++] = move2;
 
-		// Pawn -> Knight
-		int move3 = IntMove.createMove(IntMove.NORMAL, 16, 1, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
-		list.move[list.tail++] = move3;
+    // Pawn -> Knight
+    int move3 = IntMove.createMove(IntMove.NORMAL, 16, 1, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
+    list.move[list.tail++] = move3;
 
-		// Rook -> Knight
-		int move4 = IntMove.createMove(IntMove.NORMAL, 0, 1, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
-		list.move[list.tail++] = move4;
+    // Rook -> Knight
+    int move4 = IntMove.createMove(IntMove.NORMAL, 0, 1, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
+    list.move[list.tail++] = move4;
 
-		// Rook -> Rook
-		int move5 = IntMove.createMove(IntMove.NORMAL, 0, 7, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
-		list.move[list.tail++] = move5;
+    // Rook -> Rook
+    int move5 = IntMove.createMove(IntMove.NORMAL, 0, 7, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
+    list.move[list.tail++] = move5;
 
-		// King -> Empty
-		int move6 = IntMove.createMove(IntMove.NORMAL, 4, 32, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
-		list.move[list.tail++] = move6;
+    // King -> Empty
+    int move6 = IntMove.createMove(IntMove.NORMAL, 4, 32, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
+    list.move[list.tail++] = move6;
 
-		// Pawn -> Pawn
-		int move7 = IntMove.createMove(IntMove.NORMAL, 16, 17, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
-		list.move[list.tail++] = move7;
+    // Pawn -> Pawn
+    int move7 = IntMove.createMove(IntMove.NORMAL, 16, 17, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
+    list.move[list.tail++] = move7;
 
-		// Pawn -> Empty
-		int move8 = IntMove.createMove(IntMove.NORMAL, 16, 32, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
-		list.move[list.tail++] = move8;
+    // Pawn -> Empty
+    int move8 = IntMove.createMove(IntMove.NORMAL, 16, 32, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
+    list.move[list.tail++] = move8;
 
-		rater.rateFromMVVLVA(list);
-		MoveSorter.sort(list);
+    rater.rateFromMVVLVA(list);
+    MoveSorter.sort(list);
 
-		assertEquals(move1, list.move[0]);
-		assertEquals(move2, list.move[1]);
-		assertEquals(move5, list.move[2]);
-		assertEquals(move3, list.move[3]);
-		assertEquals(move4, list.move[4]);
-		assertEquals(move7, list.move[5]);
-		assertEquals(move8, list.move[6]);
-		assertEquals(move6, list.move[7]);
-	}
+    assertEquals(move1, list.move[0]);
+    assertEquals(move2, list.move[1]);
+    assertEquals(move5, list.move[2]);
+    assertEquals(move3, list.move[3]);
+    assertEquals(move4, list.move[4]);
+    assertEquals(move7, list.move[5]);
+    assertEquals(move8, list.move[6]);
+    assertEquals(move6, list.move[7]);
+  }
 
 }
