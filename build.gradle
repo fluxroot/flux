@@ -74,6 +74,9 @@ dependencies {
   compile 'com.fluxchess:jcpi:1.1.+'
 
   testCompile 'junit:junit:4.+'
+  testCompile 'org.slf4j:slf4j-api:1.7.+'
+  testCompile 'org.slf4j:slf4j-log4j12:1.7.+'
+  testCompile 'log4j:log4j:1.2.+'
 }
 
 sourceCompatibility = 1.6
@@ -117,6 +120,7 @@ task dist(type: Zip) {
   into("$baseDir") {
     from 'README.md'
     from 'COPYING'
+    from 'COPYING.LESSER'
 
     from jar
     from testsJar
@@ -127,12 +131,12 @@ task dist(type: Zip) {
     from 'src/dist/polyglot.ini-Windows'
     from 'src/dist/polyglot.ini-Linux'
 
-    from ('src/dist/Flux.cmd') {
+    from('src/dist/Flux.cmd') {
       filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [
         version: project.version
       ])
     }
-    from ('src/dist/Flux') {
+    from('src/dist/Flux') {
       fileMode = 0755
       filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [
         version: project.version

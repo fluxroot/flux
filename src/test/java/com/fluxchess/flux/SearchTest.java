@@ -18,100 +18,87 @@
  */
 package com.fluxchess.flux;
 
-import static org.junit.Assert.assertEquals;
+import com.fluxchess.jcpi.AbstractEngine;
+import com.fluxchess.jcpi.commands.*;
+import com.fluxchess.jcpi.models.GenericBoard;
+import com.fluxchess.jcpi.models.GenericMove;
+import com.fluxchess.jcpi.models.IllegalNotationException;
+import com.fluxchess.jcpi.protocols.IProtocolHandler;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import com.fluxchess.jcpi.protocols.IProtocolHandler;
-import com.fluxchess.jcpi.AbstractEngine;
-import com.fluxchess.jcpi.commands.EngineAnalyzeCommand;
-import com.fluxchess.jcpi.commands.EngineInitializeRequestCommand;
-import com.fluxchess.jcpi.commands.EngineNewGameCommand;
-import com.fluxchess.jcpi.commands.EngineQuitCommand;
-import com.fluxchess.jcpi.commands.EngineStartCalculatingCommand;
-import com.fluxchess.jcpi.commands.ProtocolBestMoveCommand;
-import com.fluxchess.jcpi.commands.ProtocolInformationCommand;
-import com.fluxchess.jcpi.commands.ProtocolInitializeAnswerCommand;
-import com.fluxchess.jcpi.commands.ProtocolReadyAnswerCommand;
-import com.fluxchess.jcpi.commands.IEngineCommand;
-import com.fluxchess.jcpi.models.GenericBoard;
-import com.fluxchess.jcpi.models.GenericMove;
-import com.fluxchess.jcpi.models.IllegalNotationException;
+import static org.junit.Assert.assertEquals;
 
-import org.junit.Test;
-
-import com.fluxchess.flux.Flux;
-
-/**
- * SearchTest
- *
- * @author Phokham Nonava
- */
 public class SearchTest implements IProtocolHandler {
 
-	BlockingQueue<IEngineCommand> commandQueue = new LinkedBlockingQueue<IEngineCommand>();
-	boolean found = false;
-	
-	public SearchTest() {
-		try {
-			this.commandQueue.add(new EngineInitializeRequestCommand());
-			this.commandQueue.add(new EngineNewGameCommand());
-			this.commandQueue.add(new EngineAnalyzeCommand(new GenericBoard("5n2/B3K3/2p2Np1/4k3/7P/3bN1P1/2Prn1P1/1q6 w - -"), new ArrayList<GenericMove>()));
-			EngineStartCalculatingCommand startCommand = new EngineStartCalculatingCommand();
-			startCommand.setDepth(3);
-			this.commandQueue.add(startCommand);
-		} catch (IllegalNotationException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	@Test
-	public void testMate30() {
-		AbstractEngine engine = new Flux(this);
-		engine.run();
-		assertEquals(this.found, true);
-	}
-	
-	public IEngineCommand receive() {
-		IEngineCommand command = null;
-		try {
-			command = this.commandQueue.take();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		assert command != null;
-		
-		System.out.println(command);
+  private static final Logger LOG = LoggerFactory.getLogger(SearchTest.class);
 
-		return command;
-	}
+  BlockingQueue<IEngineCommand> commandQueue = new LinkedBlockingQueue<IEngineCommand>();
+  boolean found = false;
 
-	public void send(ProtocolInitializeAnswerCommand command) {
-		System.out.println(command);
-	}
+  public SearchTest() {
+    try {
+      this.commandQueue.add(new EngineInitializeRequestCommand());
+      this.commandQueue.add(new EngineNewGameCommand());
+      this.commandQueue.add(new EngineAnalyzeCommand(new GenericBoard("5n2/B3K3/2p2Np1/4k3/7P/3bN1P1/2Prn1P1/1q6 w - -"), new ArrayList<GenericMove>()));
+      EngineStartCalculatingCommand startCommand = new EngineStartCalculatingCommand();
+      startCommand.setDepth(3);
+      this.commandQueue.add(startCommand);
+    } catch (IllegalNotationException e) {
+      e.printStackTrace();
+    }
+  }
 
-	public void send(ProtocolReadyAnswerCommand command) {
-		System.out.println(command);
-	}
+  @Test
+  public void testMate30() {
+    AbstractEngine engine = new Flux(this);
+    engine.run();
+    assertEquals(this.found, true);
+  }
 
-	public void send(ProtocolBestMoveCommand command) {
-		this.commandQueue.add(new EngineQuitCommand());
-		System.out.println(command);
-	}
+  public IEngineCommand receive() {
+    IEngineCommand command = null;
+    try {
+      command = this.commandQueue.take();
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+    assert command != null;
 
-	public void send(ProtocolInformationCommand command) {
-		if (command.getMate() != null) {
-			if (command.getMate() == 30) {
-				this.found = true;
-			}
-		}
-		System.out.println(command);
-	}
+    LOG.info(command.toString());
 
-	public String toString() {
-		return "FluxTesting Protocol";
-	}
+    return command;
+  }
+
+  public void send(ProtocolInitializeAnswerCommand command) {
+    LOG.info(command.toString());
+  }
+
+  public void send(ProtocolReadyAnswerCommand command) {
+    LOG.info(command.toString());
+  }
+
+  public void send(ProtocolBestMoveCommand command) {
+    this.commandQueue.add(new EngineQuitCommand());
+    LOG.info(command.toString());
+  }
+
+  public void send(ProtocolInformationCommand command) {
+    if (command.getMate() != null) {
+      if (command.getMate() == 30) {
+        this.found = true;
+      }
+    }
+    LOG.info(command.toString());
+  }
+
+  public String toString() {
+    return "FluxTesting Protocol";
+  }
 
 }

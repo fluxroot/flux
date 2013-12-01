@@ -20,18 +20,11 @@ package com.fluxchess.flux;
 
 import org.junit.Test;
 
-import com.fluxchess.flux.ChessLogger;
-
-/**
- * ChessLoggerTest
- *
- * @author Phokham Nonava
- */
 public class ChessLoggerTest {
 
-	@Test
-	public void testShowTrace() {
-		ChessLogger.showTrace();
-	}
+  @Test
+  public void testShowTrace() {
+    ChessLogger.showTrace();
+  }
 
 }

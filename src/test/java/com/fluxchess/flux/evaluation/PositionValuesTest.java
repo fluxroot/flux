@@ -18,36 +18,30 @@
  */
 package com.fluxchess.flux.evaluation;
 
-import static org.junit.Assert.assertEquals;
-import com.fluxchess.jcpi.models.GenericChessman;
-
-import org.junit.Test;
-
 import com.fluxchess.flux.board.Hex88Board;
 import com.fluxchess.flux.board.IntChessman;
 import com.fluxchess.flux.board.IntColor;
 import com.fluxchess.flux.board.IntGamePhase;
+import com.fluxchess.jcpi.models.GenericChessman;
+import org.junit.Test;
 
-/**
- * PositionValuesTest
- *
- * @author Phokham Nonava
- */
+import static org.junit.Assert.assertEquals;
+
 public class PositionValuesTest {
 
-	@Test
-	public void testGetPositionValue() {
-		for (int phase : IntGamePhase.values) {
-			for (GenericChessman chessman : GenericChessman.values()) {
-				for (int position = 0; position < Hex88Board.BOARDSIZE; position++) {
-					if ((position & 0x88) == 0) {
-						assertEquals(PositionValues.getPositionValue(phase, IntChessman.valueOfChessman(chessman), IntColor.WHITE, position), PositionValues.getPositionValue(phase, IntChessman.valueOfChessman(chessman), IntColor.BLACK, 119 - position));
-					} else {
-						position += 7;
-					}
-				}
-			}
-		}
-	}
+  @Test
+  public void testGetPositionValue() {
+    for (int phase : IntGamePhase.values) {
+      for (GenericChessman chessman : GenericChessman.values()) {
+        for (int position = 0; position < Hex88Board.BOARDSIZE; position++) {
+          if ((position & 0x88) == 0) {
+            assertEquals(PositionValues.getPositionValue(phase, IntChessman.valueOfChessman(chessman), IntColor.WHITE, position), PositionValues.getPositionValue(phase, IntChessman.valueOfChessman(chessman), IntColor.BLACK, 119 - position));
+          } else {
+            position += 7;
+          }
+        }
+      }
+    }
+  }
 
 }

@@ -20,57 +20,52 @@ package com.fluxchess.flux.table;
 
 import com.fluxchess.flux.Search;
 import com.fluxchess.flux.move.IntMove;
-import com.fluxchess.flux.move.IntValue;
+import com.fluxchess.flux.move.IntScore;
 
-/**
- * TranspositionTableEntry
- *
- * @author Phokham Nonava
- */
 public final class TranspositionTableEntry {
 
-	public long zobristCode = 0;
-	public int age = -1;
-	public int depth = -1;
-	private int value = -Search.INFINITY;
-	public int type = IntValue.NOVALUE;
-	public int move = IntMove.NOMOVE;
-	public boolean mateThreat = false;
+  public long zobristCode = 0;
+  public int age = -1;
+  public int depth = -1;
+  private int value = -Search.INFINITY;
+  public int type = IntScore.NOSCORE;
+  public int move = IntMove.NOMOVE;
+  public boolean mateThreat = false;
 
-	public TranspositionTableEntry() {
-	}
+  public TranspositionTableEntry() {
+  }
 
-	public void clear() {
-		this.zobristCode = 0;
-		this.age = -1;
-		this.depth = -1;
-		this.value = -Search.INFINITY;
-		this.type = IntValue.NOVALUE;
-		this.move = IntMove.NOMOVE;
-		this.mateThreat = false;
-	}
+  public void clear() {
+    this.zobristCode = 0;
+    this.age = -1;
+    this.depth = -1;
+    this.value = -Search.INFINITY;
+    this.type = IntScore.NOSCORE;
+    this.move = IntMove.NOMOVE;
+    this.mateThreat = false;
+  }
 
-	public int getValue(int height) {
-		int value = this.value;
-		if (value < -Search.CHECKMATE_THRESHOLD) {
-			value += height;
-		} else if (value > Search.CHECKMATE_THRESHOLD) {
-			value -= height;
-		}
-		
-		return value;
-	}
+  public int getValue(int height) {
+    int value = this.value;
+    if (value < -Search.CHECKMATE_THRESHOLD) {
+      value += height;
+    } else if (value > Search.CHECKMATE_THRESHOLD) {
+      value -= height;
+    }
 
-	public void setValue(int value, int height) {
-		// Normalize mate values
-		if (value < -Search.CHECKMATE_THRESHOLD) {
-			value -= height;
-		} else if (value > Search.CHECKMATE_THRESHOLD) {
-			value += height;
-		}
-		assert value <= Search.CHECKMATE || value >= -Search.CHECKMATE;
-		
-		this.value = value;
-	}
+    return value;
+  }
+
+  public void setValue(int value, int height) {
+    // Normalize mate values
+    if (value < -Search.CHECKMATE_THRESHOLD) {
+      value -= height;
+    } else if (value > Search.CHECKMATE_THRESHOLD) {
+      value += height;
+    }
+    assert value <= Search.CHECKMATE || value >= -Search.CHECKMATE;
+
+    this.value = value;
+  }
 
 }

@@ -18,21 +18,16 @@
  */
 package com.fluxchess.flux.move;
 
-/**
- * SeeList
- *
- * @author Phokham Nonava
- */
 public final class SeeList {
 
-	private static final int MAXSIZE = 16;
+  private static final int MAXSIZE = 16;
 
-	public final int[] chessman = new int[MAXSIZE];
-	public final int[] position = new int[MAXSIZE];
-	public int head = 0;
-	public int size = 0;
+  public final int[] chessman = new int[MAXSIZE];
+  public final int[] position = new int[MAXSIZE];
+  public int head = 0;
+  public int size = 0;
 
-	public SeeList() {
-	}
+  public SeeList() {
+  }
 
 }

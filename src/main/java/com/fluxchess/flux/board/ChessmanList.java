@@ -18,20 +18,15 @@
  */
 package com.fluxchess.flux.board;
 
-/**
- * ChessmanList
- *
- * @author Phokham Nonava
- */
 public final class ChessmanList {
 
-	private static final int MAXSIZE = 16;
+  private static final int MAXSIZE = 16;
 
-	public final int[] chessman = new int[MAXSIZE];
-	public int head = 0;
-	public int size = 0;
+  public final int[] chessman = new int[MAXSIZE];
+  public int head = 0;
+  public int size = 0;
 
-	public ChessmanList() {
-	}
+  public ChessmanList() {
+  }
 
 }

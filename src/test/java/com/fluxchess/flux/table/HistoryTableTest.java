@@ -18,31 +18,25 @@
  */
 package com.fluxchess.flux.table;
 
-import static org.junit.Assert.assertEquals;
-
-import org.junit.Test;
-
 import com.fluxchess.flux.board.IntChessman;
 import com.fluxchess.flux.move.IntMove;
+import org.junit.Test;
 
-/**
- * HistoryTableTest
- *
- * @author Phokham Nonava
- */
+import static org.junit.Assert.assertEquals;
+
 public class HistoryTableTest {
 
-	@Test
-	public void testHistoryTable() {
-		HistoryTable table = new HistoryTable();
-		
-		int move1 = IntMove.createMove(IntMove.NORMAL, 16, 32, IntChessman.PAWN, IntChessman.NOPIECE, IntChessman.NOPIECE);
-		table.add(move1, 1);
-		assertEquals(1, table.get(move1));
+  @Test
+  public void testHistoryTable() {
+    HistoryTable table = new HistoryTable();
 
-		int move2 = IntMove.createMove(IntMove.NORMAL, 16, 32, IntChessman.PAWN, IntChessman.NOPIECE, IntChessman.NOPIECE);
-		table.add(move2, 1);
-		assertEquals(2, table.get(move2));
-	}
+    int move1 = IntMove.createMove(IntMove.NORMAL, 16, 32, IntChessman.PAWN, IntChessman.NOPIECE, IntChessman.NOPIECE);
+    table.add(move1, 1);
+    assertEquals(1, table.get(move1));
+
+    int move2 = IntMove.createMove(IntMove.NORMAL, 16, 32, IntChessman.PAWN, IntChessman.NOPIECE, IntChessman.NOPIECE);
+    table.add(move2, 1);
+    assertEquals(2, table.get(move2));
+  }
 
 }

@@ -18,21 +18,19 @@
  */
 package com.fluxchess.flux;
 
-/**
- * SearchStackEntry
- *
- * @author Phokham Nonava
- */
-public final class SearchStackEntry {
+import org.junit.Test;
 
-	public int totalNodes;
+import static org.junit.Assert.assertEquals;
 
-	public SearchStackEntry() {
-		clear();
-	}
+public class VersionInfoTest {
 
-	public void clear() {
-		this.totalNodes = 0;
-	}
+  @Test
+  public void testVersionInfo() {
+    VersionInfo versionInfo = VersionInfo.current();
+
+    assertEquals("0.1.0-alpha.1", versionInfo.getVersion());
+    assertEquals("dev", versionInfo.getBuildNumber());
+    assertEquals("rev", versionInfo.getRevisionNumber());
+  }
 
 }

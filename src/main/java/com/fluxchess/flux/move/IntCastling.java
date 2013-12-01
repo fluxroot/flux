@@ -18,30 +18,16 @@
  */
 package com.fluxchess.flux.move;
 
-/**
- * IntCastling
- *
- * @author Phokham Nonava
- */
 public final class IntCastling {
 
-	/**
-	 * IntCastling values
-	 */
-	public static final int WHITE_KINGSIDE = 1 << 0;
-	public static final int WHITE_QUEENSIDE = 1 << 1;
-	public static final int BLACK_KINGSIDE = 1 << 2;
-	public static final int BLACK_QUEENSIDE = 1 << 3;
+  public static final int WHITE_KINGSIDE = 1 << 0;
+  public static final int WHITE_QUEENSIDE = 1 << 1;
+  public static final int BLACK_KINGSIDE = 1 << 2;
+  public static final int BLACK_QUEENSIDE = 1 << 3;
 
-	/**
-	 * IntCastling constants
-	 */
-	public static final int ARRAY_DIMENSION = 16;
+  public static final int ARRAY_DIMENSION = 16;
 
-	/**
-	 * IntCastling cannot be instantiated.
-	 */
-	private IntCastling() {
-	}
+  private IntCastling() {
+  }
 
 }
