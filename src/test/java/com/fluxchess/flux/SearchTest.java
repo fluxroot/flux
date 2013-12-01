@@ -25,6 +25,8 @@ import com.fluxchess.jcpi.models.GenericMove;
 import com.fluxchess.jcpi.models.IllegalNotationException;
 import com.fluxchess.jcpi.protocols.IProtocolHandler;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.concurrent.BlockingQueue;
@@ -33,6 +35,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 import static org.junit.Assert.assertEquals;
 
 public class SearchTest implements IProtocolHandler {
+
+  private static final Logger LOG = LoggerFactory.getLogger(SearchTest.class);
 
   BlockingQueue<IEngineCommand> commandQueue = new LinkedBlockingQueue<IEngineCommand>();
   boolean found = false;
@@ -66,22 +70,22 @@ public class SearchTest implements IProtocolHandler {
     }
     assert command != null;
 
-    System.out.println(command);
+    LOG.info(command.toString());
 
     return command;
   }
 
   public void send(ProtocolInitializeAnswerCommand command) {
-    System.out.println(command);
+    LOG.info(command.toString());
   }
 
   public void send(ProtocolReadyAnswerCommand command) {
-    System.out.println(command);
+    LOG.info(command.toString());
   }
 
   public void send(ProtocolBestMoveCommand command) {
     this.commandQueue.add(new EngineQuitCommand());
-    System.out.println(command);
+    LOG.info(command.toString());
   }
 
   public void send(ProtocolInformationCommand command) {
@@ -90,7 +94,7 @@ public class SearchTest implements IProtocolHandler {
         this.found = true;
       }
     }
-    System.out.println(command);
+    LOG.info(command.toString());
   }
 
   public String toString() {
