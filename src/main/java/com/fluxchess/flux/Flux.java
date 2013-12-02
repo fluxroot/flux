@@ -46,6 +46,10 @@ public final class Flux extends AbstractEngine {
   private final int[] timeTable = new int[Search.MAX_HEIGHT + 1];
   private Search search;
 
+  public static void main(String[] args) {
+    new Flux().run();
+  }
+
   public Flux() {
     initialize();
   }
@@ -80,11 +84,6 @@ public final class Flux extends AbstractEngine {
 
     // Create a new search
     search = new Search(new Evaluation(evaluationTable, pawnTable), new Hex88Board(new GenericBoard(GenericBoard.STANDARDSETUP)), transpositionTable, new InformationTimer(getProtocol(), transpositionTable), timeTable);
-  }
-
-  public static void main(String[] args) {
-    AbstractEngine engine = new Flux();
-    engine.run();
   }
 
   public void receive(EngineInitializeRequestCommand command) {
