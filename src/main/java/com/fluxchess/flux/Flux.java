@@ -280,6 +280,8 @@ public final class Flux extends AbstractEngine {
   }
 
   public void receive(EngineSetOptionCommand command) {
+    if (command == null) throw new IllegalArgumentException();
+
     Configuration.setOption(command.name, command.value);
 
     ChessLogger.getLogger().debug("Received SetOption command.");
