@@ -118,7 +118,11 @@ task dist(type: Zip) {
   def baseDir = "${project.name}-${project.version}"
 
   into("$baseDir") {
-    from 'README.md'
+    from('README.md') {
+      filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [
+        version: project.version
+      ])
+    }
     from 'COPYING'
     from 'COPYING.LESSER'
 
@@ -127,12 +131,12 @@ task dist(type: Zip) {
     from sourcesJar
     from javadocJar
 
-    from ('src/dist/Flux.cmd') {
+    from('src/dist/Flux.cmd') {
       filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [
         version: project.version
       ])
     }
-    from ('src/dist/Flux') {
+    from('src/dist/Flux') {
       fileMode = 0755
       filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [
         version: project.version

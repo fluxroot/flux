@@ -34,7 +34,6 @@ public final class InformationTimer {
   private final TranspositionTable transpositionTable;
   private Search search = null;
 
-  // GuiInformationCommand values
   public int currentDepth = 0;
   public int currentMaxDepth = 0;
   public long totalTimeStart = 0;
@@ -43,7 +42,6 @@ public final class InformationTimer {
   // Used for output status
   private long currentTimeStart = 0;
 
-  // Additional GuiInformationCommand values
   private GenericMove currentMove = null;
   private int currentMoveNumber = 0;
 
