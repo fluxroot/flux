@@ -116,6 +116,33 @@ public class IntPositionTest {
     for (int position : fileH) {
       assertEquals(IntPosition.fileH, IntPosition.getFile(position));
     }
+
+    int[] darkSquares = {
+      IntPosition.a1, IntPosition.c1, IntPosition.e1, IntPosition.g1,
+      IntPosition.b2, IntPosition.d2, IntPosition.f2, IntPosition.h2,
+      IntPosition.a3, IntPosition.c3, IntPosition.e3, IntPosition.g3,
+      IntPosition.b4, IntPosition.d4, IntPosition.f4, IntPosition.h4,
+      IntPosition.a5, IntPosition.c5, IntPosition.e5, IntPosition.g5,
+      IntPosition.b6, IntPosition.d6, IntPosition.f6, IntPosition.h6,
+      IntPosition.a7, IntPosition.c7, IntPosition.e7, IntPosition.g7,
+      IntPosition.b8, IntPosition.d8, IntPosition.f8, IntPosition.h8
+    };
+    int[] lightSquares = {
+      IntPosition.b1, IntPosition.d1, IntPosition.f1, IntPosition.h1,
+      IntPosition.a2, IntPosition.c2, IntPosition.e2, IntPosition.g2,
+      IntPosition.b3, IntPosition.d3, IntPosition.f3, IntPosition.h3,
+      IntPosition.a4, IntPosition.c4, IntPosition.e4, IntPosition.g4,
+      IntPosition.b5, IntPosition.d5, IntPosition.f5, IntPosition.h5,
+      IntPosition.a6, IntPosition.c6, IntPosition.e6, IntPosition.g6,
+      IntPosition.b7, IntPosition.d7, IntPosition.f7, IntPosition.h7,
+      IntPosition.a8, IntPosition.c8, IntPosition.e8, IntPosition.g8
+    };
+    for (int position : darkSquares) {
+      assertEquals(IntColor.BLACK, IntPosition.getFieldColor(position));
+    }
+    for (int position : lightSquares) {
+      assertEquals(IntColor.WHITE, IntPosition.getFieldColor(position));
+    }
   }
 
 }

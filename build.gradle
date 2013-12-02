@@ -118,7 +118,11 @@ task dist(type: Zip) {
   def baseDir = "${project.name}-${project.version}"
 
   into("$baseDir") {
-    from 'README.md'
+    from('README.md') {
+      filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [
+        version: project.version
+      ])
+    }
     from 'COPYING'
     from 'COPYING.LESSER'
 
