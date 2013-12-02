@@ -33,14 +33,14 @@ public final class Hex88BoardStackEntry {
   }
 
   public void clear() {
-    this.zobristHistory = 0;
-    this.pawnZobristHistory = 0;
-    this.halfMoveClockHistory = 0;
-    this.enPassantHistory = 0;
-    this.captureSquareHistory = 0;
+    zobristHistory = 0;
+    pawnZobristHistory = 0;
+    halfMoveClockHistory = 0;
+    enPassantHistory = 0;
+    captureSquareHistory = 0;
     for (int color : IntColor.values) {
-      this.positionValueOpening[color] = 0;
-      this.positionValueEndgame[color] = 0;
+      positionValueOpening[color] = 0;
+      positionValueEndgame[color] = 0;
     }
   }
 

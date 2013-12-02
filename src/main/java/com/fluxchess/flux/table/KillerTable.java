@@ -29,8 +29,8 @@ public final class KillerTable {
 
   private static final int MAXSIZE = Search.MAX_HEIGHT + 1;
 
-  private static final int[] primaryKiller = new int[MAXSIZE];
-  private static final int[] secondaryKiller = new int[MAXSIZE];
+  private final int[] primaryKiller = new int[MAXSIZE];
+  private final int[] secondaryKiller = new int[MAXSIZE];
 
   public KillerTable() {
     for (int i = 0; i < MAXSIZE; i++) {

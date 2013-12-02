@@ -61,8 +61,6 @@ public final class MoveGenerator {
     public int secondaryKillerMove = IntMove.NOMOVE;
   }
 
-  ;
-
   // Board
   private static Hex88Board board;
 
@@ -113,13 +111,13 @@ public final class MoveGenerator {
     stateList[position++] = GEN_END;
   }
 
-  public MoveGenerator(Hex88Board newBoard, KillerTable newKillerTable, HistoryTable historyTable) {
-    assert newBoard != null;
-    assert newKillerTable != null;
+  public MoveGenerator(Hex88Board board, KillerTable killerTable, HistoryTable historyTable) {
+    assert board != null;
+    assert killerTable != null;
     assert historyTable != null;
 
-    board = newBoard;
-    killerTable = newKillerTable;
+    this.board = board;
+    this.killerTable = killerTable;
     moveRater = new MoveRater(historyTable);
 
     moveList = new MoveList();
@@ -514,11 +512,7 @@ public final class MoveGenerator {
 
   private static boolean isGoodCapture(int move) {
     if (IntMove.getType(move) == IntMove.PAWNPROMOTION) {
-      if (IntMove.getPromotion(move) == IntChessman.QUEEN) {
-        return true;
-      } else {
-        return false;
-      }
+      return IntMove.getPromotion(move) == IntChessman.QUEEN;
     }
 
     int chessman = IntMove.getChessman(move);

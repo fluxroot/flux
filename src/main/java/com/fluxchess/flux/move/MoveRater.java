@@ -23,10 +23,10 @@ import com.fluxchess.flux.table.HistoryTable;
 
 public final class MoveRater {
 
-  private static HistoryTable historyTable;
+  private final HistoryTable historyTable;
 
-  public MoveRater(HistoryTable newHistoryTable) {
-    historyTable = newHistoryTable;
+  public MoveRater(HistoryTable historyTable) {
+    this.historyTable = historyTable;
   }
 
   public void rateEvasion(MoveList moveList, int transpositionMove, int primaryKillerMove, int secondaryKillerMove) {

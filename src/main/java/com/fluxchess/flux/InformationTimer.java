@@ -60,11 +60,11 @@ public final class InformationTimer {
   }
 
   public void start() {
-    if (this.search == null) throw new IllegalStateException();
+    if (search == null) throw new IllegalStateException();
 
     // Set the current time
-    this.totalTimeStart = System.currentTimeMillis();
-    this.currentTimeStart = this.totalTimeStart;
+    totalTimeStart = System.currentTimeMillis();
+    currentTimeStart = totalTimeStart;
   }
 
   public void stop() {
@@ -75,19 +75,19 @@ public final class InformationTimer {
     assert currentDepth >= 0;
 
     this.currentDepth = currentDepth;
-    this.currentMaxDepth = currentDepth;
+    currentMaxDepth = currentDepth;
   }
 
   public void setCurrentMaxDepth(int currentDepth) {
     assert currentDepth >= 0;
 
-    if (currentDepth > this.currentMaxDepth) {
-      this.currentMaxDepth = currentDepth;
+    if (currentDepth > currentMaxDepth) {
+      currentMaxDepth = currentDepth;
     }
   }
 
   public void sendBestMove(GenericMove bestMove, GenericMove ponderMove) {
-    this.protocol.send(new ProtocolBestMoveCommand(bestMove, ponderMove));
+    protocol.send(new ProtocolBestMoveCommand(bestMove, ponderMove));
   }
 
   public void sendInformationMove(GenericMove currentMove, int currentMoveNumber) {
@@ -98,14 +98,14 @@ public final class InformationTimer {
     this.currentMoveNumber = currentMoveNumber;
 
     // Safety guard: Reduce output pollution
-    long currentTimeDelta = System.currentTimeMillis() - this.totalTimeStart;
+    long currentTimeDelta = System.currentTimeMillis() - totalTimeStart;
     if (currentTimeDelta >= 1000) {
       ProtocolInformationCommand command = new ProtocolInformationCommand();
 
-      command.setCurrentMove(this.currentMove);
-      command.setCurrentMoveNumber(this.currentMoveNumber);
+      command.setCurrentMove(currentMove);
+      command.setCurrentMoveNumber(currentMoveNumber);
 
-      this.protocol.send(command);
+      protocol.send(command);
     }
   }
 
@@ -113,66 +113,66 @@ public final class InformationTimer {
     assert refutationList != null;
 
     // Safety guard: Reduce output pollution
-    long currentTimeDelta = System.currentTimeMillis() - this.totalTimeStart;
+    long currentTimeDelta = System.currentTimeMillis() - totalTimeStart;
     if (currentTimeDelta >= 1000) {
       ProtocolInformationCommand command = new ProtocolInformationCommand();
 
       command.setRefutationList(refutationList);
 
-      this.protocol.send(command);
+      protocol.send(command);
     }
   }
 
   public void sendInformationDepth() {
     // Safety guard: Reduce output pollution
-    long currentTimeDelta = System.currentTimeMillis() - this.totalTimeStart;
+    long currentTimeDelta = System.currentTimeMillis() - totalTimeStart;
     if (currentTimeDelta >= 1000) {
       ProtocolInformationCommand command = new ProtocolInformationCommand();
 
-      command.setDepth(this.currentDepth);
-      command.setMaxDepth(this.currentMaxDepth);
+      command.setDepth(currentDepth);
+      command.setMaxDepth(currentMaxDepth);
 
-      this.protocol.send(command);
+      protocol.send(command);
     }
   }
 
   public void sendInformationStatus() {
-    long currentTimeDelta = System.currentTimeMillis() - this.currentTimeStart;
+    long currentTimeDelta = System.currentTimeMillis() - currentTimeStart;
     if (currentTimeDelta >= 1000) {
       // Only output after a delay of 1 second
       ProtocolInformationCommand command = new ProtocolInformationCommand();
 
-      command.setDepth(this.currentDepth);
-      command.setMaxDepth(this.currentMaxDepth);
-      command.setHash(this.transpositionTable.getPermillUsed());
+      command.setDepth(currentDepth);
+      command.setMaxDepth(currentMaxDepth);
+      command.setHash(transpositionTable.getPermillUsed());
       command.setNps(getCurrentNps());
-      command.setTime(System.currentTimeMillis() - this.totalTimeStart);
-      command.setNodes(this.totalNodes);
+      command.setTime(System.currentTimeMillis() - totalTimeStart);
+      command.setNodes(totalNodes);
 
-      if (this.currentMove != null) {
-        command.setCurrentMove(this.currentMove);
-        command.setCurrentMoveNumber(this.currentMoveNumber);
+      if (currentMove != null) {
+        command.setCurrentMove(currentMove);
+        command.setCurrentMoveNumber(currentMoveNumber);
       }
 
-      this.protocol.send(command);
+      protocol.send(command);
 
-      this.currentTimeStart = System.currentTimeMillis();
+      currentTimeStart = System.currentTimeMillis();
     }
   }
 
   public void sendInformationSummary() {
     ProtocolInformationCommand command = new ProtocolInformationCommand();
 
-    command.setDepth(this.currentDepth);
-    command.setMaxDepth(this.currentMaxDepth);
-    command.setHash(this.transpositionTable.getPermillUsed());
+    command.setDepth(currentDepth);
+    command.setMaxDepth(currentMaxDepth);
+    command.setHash(transpositionTable.getPermillUsed());
     command.setNps(getCurrentNps());
-    command.setTime(System.currentTimeMillis() - this.totalTimeStart);
-    command.setNodes(this.totalNodes);
+    command.setTime(System.currentTimeMillis() - totalTimeStart);
+    command.setNodes(totalNodes);
 
-    this.protocol.send(command);
+    protocol.send(command);
 
-    this.currentTimeStart = System.currentTimeMillis();
+    currentTimeStart = System.currentTimeMillis();
   }
 
   public void sendInformationCentipawns(PrincipalVariation pv, int pvNumber) {
@@ -197,9 +197,9 @@ public final class InformationTimer {
         command.setPvNumber(pvNumber);
       }
 
-      this.protocol.send(command);
+      protocol.send(command);
 
-      this.currentTimeStart = System.currentTimeMillis();
+      currentTimeStart = System.currentTimeMillis();
     }
   }
 
@@ -225,17 +225,17 @@ public final class InformationTimer {
         command.setPvNumber(pvNumber);
       }
 
-      this.protocol.send(command);
+      protocol.send(command);
 
-      this.currentTimeStart = System.currentTimeMillis();
+      currentTimeStart = System.currentTimeMillis();
     }
   }
 
   public long getCurrentNps() {
     long currentNps = 0;
-    long currentTimeDelta = System.currentTimeMillis() - this.totalTimeStart;
+    long currentTimeDelta = System.currentTimeMillis() - totalTimeStart;
     if (currentTimeDelta >= 1000) {
-      currentNps = (this.totalNodes * 1000) / currentTimeDelta;
+      currentNps = (totalNodes * 1000) / currentTimeDelta;
     }
 
     return currentNps;

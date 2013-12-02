@@ -27,43 +27,43 @@ public final class EvaluationTable {
 
   private final EvaluationTableEntry[] entry;
 
-  public EvaluationTable(int newSize) {
-    assert newSize >= 1;
+  public EvaluationTable(int size) {
+    assert size >= 1;
 
-    this.size = newSize;
+    this.size = size;
 
     // Initialize entry
-    this.entry = new EvaluationTableEntry[newSize];
-    for (int i = 0; i < this.entry.length; i++) {
-      this.entry[i] = new EvaluationTableEntry();
+    entry = new EvaluationTableEntry[size];
+    for (int i = 0; i < entry.length; i++) {
+      entry[i] = new EvaluationTableEntry();
     }
   }
 
   /**
    * Puts a zobrist code and evaluation value into the table.
    *
-   * @param newZobristCode the zobrist code.
-   * @param newEvaluation  the evaluation value.
+   * @param zobristCode the zobrist code.
+   * @param evaluation  the evaluation value.
    */
-  public void put(long newZobristCode, int newEvaluation) {
-    int position = (int) (newZobristCode % this.size);
-    EvaluationTableEntry currentEntry = this.entry[position];
+  public void put(long zobristCode, int evaluation) {
+    int position = (int) (zobristCode % size);
+    EvaluationTableEntry currentEntry = entry[position];
 
-    currentEntry.zobristCode = newZobristCode;
-    currentEntry.evaluation = newEvaluation;
+    currentEntry.zobristCode = zobristCode;
+    currentEntry.evaluation = evaluation;
   }
 
   /**
    * Returns the evaluation table entry given the zobrist code.
    *
-   * @param newZobristCode the zobrist code.
+   * @param zobristCode the zobrist code.
    * @return the evaluation table entry or null if there exists no entry.
    */
-  public EvaluationTableEntry get(long newZobristCode) {
-    int position = (int) (newZobristCode % this.size);
-    EvaluationTableEntry currentEntry = this.entry[position];
+  public EvaluationTableEntry get(long zobristCode) {
+    int position = (int) (zobristCode % size);
+    EvaluationTableEntry currentEntry = entry[position];
 
-    if (currentEntry.zobristCode == newZobristCode) {
+    if (currentEntry.zobristCode == zobristCode) {
       return currentEntry;
     } else {
       return null;

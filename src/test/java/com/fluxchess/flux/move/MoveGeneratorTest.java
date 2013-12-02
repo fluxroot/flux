@@ -37,7 +37,7 @@ import static org.junit.Assert.fail;
 
 public class MoveGeneratorTest {
 
-  private TestPerftTable table = new TestPerftTable();
+  private final TestPerftTable table = new TestPerftTable();
 
   @Test
   public void testSpecialPerft() {
@@ -47,7 +47,7 @@ public class MoveGeneratorTest {
       board = new GenericBoard("1k6/8/8/5pP1/4K1P1/8/8/8 w - f6");
       Hex88Board testBoard = new Hex88Board(board);
       new MoveSee(testBoard);
-      this.table.increaseAge();
+      table.increaseAge();
 
 //			testBoard.makeMove(IntMove.createMove(IntMove.NORMAL, IntPosition.d2, IntPosition.c1, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN));
 //			testBoard.makeMove(IntMove.createMove(IntMove.NORMAL, IntPosition.e7, IntPosition.d6, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN));
@@ -86,7 +86,7 @@ public class MoveGeneratorTest {
 
             Hex88Board testBoard = new Hex88Board(board);
             new MoveSee(testBoard);
-            this.table.increaseAge();
+            table.increaseAge();
 
             System.out.print("Testing " + tokens[0].trim() + " depth " + depth + " with nodes number " + nodesNumber + ": ");
             long startTime = System.currentTimeMillis();
@@ -111,7 +111,7 @@ public class MoveGeneratorTest {
       return 1;
     }
 
-    int totalNodes = this.table.get(board.zobristCode);
+    int totalNodes = table.get(board.zobristCode);
     if (totalNodes > 0) {
       return totalNodes;
     }
@@ -142,7 +142,7 @@ public class MoveGeneratorTest {
 
     MoveGenerator.destroy();
 
-    this.table.put(board.zobristCode, totalNodes);
+    table.put(board.zobristCode, totalNodes);
 
     return totalNodes;
   }
@@ -244,8 +244,6 @@ public class MoveGeneratorTest {
     MoveGenerator.destroy();
 
     assertEquals(printDifference(board, mainMoveList, quiescentMoveList), mainMoveList.getLength(), quiescentMoveList.getLength());
-
-    return;
   }
 
   private String printDifference(Hex88Board board, MoveList main, MoveList quiescent) {
@@ -271,11 +269,7 @@ public class MoveGeneratorTest {
 
   private static boolean isGoodCapture(int move, Hex88Board board) {
     if (IntMove.getType(move) == IntMove.PAWNPROMOTION) {
-      if (IntMove.getPromotion(move) == IntChessman.QUEEN) {
-        return true;
-      } else {
-        return false;
-      }
+      return IntMove.getPromotion(move) == IntChessman.QUEEN;
     }
 
     int chessman = IntMove.getChessman(move);

@@ -25,7 +25,7 @@ package com.fluxchess.flux.move;
  */
 public final class MoveSorter {
 
-  public MoveSorter() {
+  private MoveSorter() {
   }
 
   /**

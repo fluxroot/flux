@@ -109,30 +109,30 @@ public final class Evaluation {
   private static final int PHASE_INTERVAL = Hex88Board.GAMEPHASE_OPENING_VALUE - Hex88Board.GAMEPHASE_ENDGAME_VALUE;
   private static final int TOTAL_OPENING = 0;
   private static final int TOTAL_ENDGAME = 1;
-  private static int[][] totalPawn = new int[IntColor.ARRAY_DIMENSION][2];
-  private static int[][] totalKnight = new int[IntColor.ARRAY_DIMENSION][2];
-  private static int[][] totalBishop = new int[IntColor.ARRAY_DIMENSION][2];
-  private static int[][] totalRook = new int[IntColor.ARRAY_DIMENSION][2];
-  private static int[][] totalQueen = new int[IntColor.ARRAY_DIMENSION][2];
-  private static int[][] totalKing = new int[IntColor.ARRAY_DIMENSION][2];
-  private static int[][] totalPawnStructure = new int[IntColor.ARRAY_DIMENSION][2];
-  private static int[][] totalPawnPasser = new int[IntColor.ARRAY_DIMENSION][2];
-  private static int[][] totalPatterns = new int[IntColor.ARRAY_DIMENSION][2];
+  private static final int[][] totalPawn = new int[IntColor.ARRAY_DIMENSION][2];
+  private static final int[][] totalKnight = new int[IntColor.ARRAY_DIMENSION][2];
+  private static final int[][] totalBishop = new int[IntColor.ARRAY_DIMENSION][2];
+  private static final int[][] totalRook = new int[IntColor.ARRAY_DIMENSION][2];
+  private static final int[][] totalQueen = new int[IntColor.ARRAY_DIMENSION][2];
+  private static final int[][] totalKing = new int[IntColor.ARRAY_DIMENSION][2];
+  private static final int[][] totalPawnStructure = new int[IntColor.ARRAY_DIMENSION][2];
+  private static final int[][] totalPawnPasser = new int[IntColor.ARRAY_DIMENSION][2];
+  private static final int[][] totalPatterns = new int[IntColor.ARRAY_DIMENSION][2];
   private static int totalOpening = 0;
   private static int totalEndgame = 0;
   private static int total = 0;
 
   // Draw values
   private static final int DRAW_FACTOR = 16;
-  private static int[] drawFactor = new int[IntColor.ARRAY_DIMENSION];
+  private static final int[] drawFactor = new int[IntColor.ARRAY_DIMENSION];
 
   // The hash tables
   private final EvaluationTable evaluationTable;
   private final PawnTable pawnHashtable;
 
-  public Evaluation(EvaluationTable newEvaluationTable, PawnTable newPawnTable) {
-    this.evaluationTable = newEvaluationTable;
-    this.pawnHashtable = newPawnTable;
+  public Evaluation(EvaluationTable evaluationTable, PawnTable pawnTable) {
+    this.evaluationTable = evaluationTable;
+    this.pawnHashtable = pawnTable;
   }
 
   /**
@@ -150,12 +150,12 @@ public final class Evaluation {
       IntColor.valueOfIntColor(myColor).toString(),
       IntColor.valueOfIntColor(enemyColor).toString());
     System.out.printf("%20s: Opening %5d (%5d:%5d) Endgame %5d (%5d:%5d)\n", "Total Material",
-      Hex88Board.materialValue[myColor] - Hex88Board.materialValue[enemyColor],
-      Hex88Board.materialValue[myColor],
-      Hex88Board.materialValue[enemyColor],
-      Hex88Board.materialValue[myColor] - Hex88Board.materialValue[enemyColor],
-      Hex88Board.materialValue[myColor],
-      Hex88Board.materialValue[enemyColor]);
+      Hex88Board.materialValueAll[myColor] - Hex88Board.materialValueAll[enemyColor],
+      Hex88Board.materialValueAll[myColor],
+      Hex88Board.materialValueAll[enemyColor],
+      Hex88Board.materialValueAll[myColor] - Hex88Board.materialValueAll[enemyColor],
+      Hex88Board.materialValueAll[myColor],
+      Hex88Board.materialValueAll[enemyColor]);
     System.out.printf("%20s: Opening %5d (%5d:%5d) Endgame %5d (%5d:%5d)\n", "Total Position",
       Hex88Board.positionValueOpening[myColor] - Hex88Board.positionValueOpening[enemyColor],
       Hex88Board.positionValueOpening[myColor],
@@ -243,7 +243,7 @@ public final class Evaluation {
 
     // Check the evaluation table
     if (Configuration.useEvaluationTable) {
-      EvaluationTableEntry entry = this.evaluationTable.get(board.zobristCode);
+      EvaluationTableEntry entry = evaluationTable.get(board.zobristCode);
       if (entry != null) {
         return entry.evaluation;
       }
@@ -340,16 +340,16 @@ public final class Evaluation {
     long pawnZobristCode = board.pawnZobristCode;
     int pawnStructureOpening = 0;
     int pawnStructureEndgame = 0;
-    if (Configuration.usePawnTable && this.pawnHashtable.exists(pawnZobristCode)) {
-      pawnStructureOpening = this.pawnHashtable.getOpening(pawnZobristCode);
-      pawnStructureEndgame = this.pawnHashtable.getEndgame(pawnZobristCode);
+    if (Configuration.usePawnTable && pawnHashtable.exists(pawnZobristCode)) {
+      pawnStructureOpening = pawnHashtable.getOpening(pawnZobristCode);
+      pawnStructureEndgame = pawnHashtable.getEndgame(pawnZobristCode);
     } else {
       evaluatePawnStructure(myColor, enemyColor, board);
       evaluatePawnStructure(enemyColor, myColor, board);
       pawnStructureOpening = totalPawnStructure[myColor][TOTAL_OPENING] - totalPawnStructure[enemyColor][TOTAL_OPENING];
       pawnStructureEndgame = totalPawnStructure[myColor][TOTAL_ENDGAME] - totalPawnStructure[enemyColor][TOTAL_ENDGAME];
       if (Configuration.usePawnTable) {
-        this.pawnHashtable.put(pawnZobristCode, pawnStructureOpening, pawnStructureEndgame);
+        pawnHashtable.put(pawnZobristCode, pawnStructureOpening, pawnStructureEndgame);
       }
     }
     totalOpening += pawnStructureOpening;
@@ -395,14 +395,14 @@ public final class Evaluation {
 
     // Store the result and return
     if (Configuration.useEvaluationTable) {
-      this.evaluationTable.put(board.zobristCode, total);
+      evaluationTable.put(board.zobristCode, total);
     }
 
     return total;
   }
 
   private static int evaluateMaterial(int myColor, int enemyColor) {
-    int myMaterialValue = Hex88Board.materialValue[myColor];
+    int myMaterialValue = Hex88Board.materialValueAll[myColor];
 
     // Correct material value based on Larry Kaufman's paper
     // TODO: Check this one

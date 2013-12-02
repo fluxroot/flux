@@ -28,15 +28,15 @@ public final class Attack {
   public static final int NOATTACK = -3;
 
   public int count = NOATTACK;
-  public int[] delta = new int[MAXATTACK];
-  public int[] position = new int[MAXATTACK];
+  public final int[] delta = new int[MAXATTACK];
+  public final int[] position = new int[MAXATTACK];
   public int numberOfMoves = -1;
 
   public Attack() {
   }
 
   public boolean isCheck() {
-    return this.count != 0;
+    return count != 0;
   }
 
 }

@@ -18,7 +18,7 @@
  */
 package com.fluxchess.flux.board;
 
-public class IntGamePhase {
+public final class IntGamePhase {
 
   public static final int NOGAMEPHASE = -5;
 
