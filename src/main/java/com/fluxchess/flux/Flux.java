@@ -61,17 +61,17 @@ public final class Flux extends AbstractEngine {
     ChessLogger.setProtocol(getProtocol());
 
     // Transposition Table
-    int megabyteValue = Integer.parseInt(((Option) Configuration.configuration.get(Configuration.KEY_Hash)).defaultValue);
+    int megabyteValue = Integer.parseInt(Configuration.configuration.get(Configuration.KEY_Hash).defaultValue);
     int numberOfEntries = megabyteValue * 1024 * 1024 / TranspositionTable.ENTRYSIZE;
     this.transpositionTable = new TranspositionTable(numberOfEntries);
 
     // Evaluation Table
-    megabyteValue = Integer.parseInt(((Option) Configuration.configuration.get(Configuration.KEY_HashEvaluation)).defaultValue);
+    megabyteValue = Integer.parseInt(Configuration.configuration.get(Configuration.KEY_HashEvaluation).defaultValue);
     numberOfEntries = megabyteValue * 1024 * 1024 / EvaluationTable.ENTRYSIZE;
     this.evaluationTable = new EvaluationTable(numberOfEntries);
 
     // Pawn Table
-    megabyteValue = Integer.parseInt(((Option) Configuration.configuration.get(Configuration.KEY_HashPawn)).defaultValue);
+    megabyteValue = Integer.parseInt(Configuration.configuration.get(Configuration.KEY_HashPawn).defaultValue);
     numberOfEntries = megabyteValue * 1024 * 1024 / PawnTable.ENTRYSIZE;
     this.pawnTable = new PawnTable(numberOfEntries);
 
@@ -101,27 +101,27 @@ public final class Flux extends AbstractEngine {
     // Transposition Table
     int megabyteValue;
     try {
-      megabyteValue = Integer.parseInt(((Option) Configuration.configuration.get(Configuration.KEY_Hash)).getValue());
+      megabyteValue = Integer.parseInt(Configuration.configuration.get(Configuration.KEY_Hash).getValue());
     } catch (NumberFormatException e) {
-      megabyteValue = Integer.parseInt(((Option) Configuration.configuration.get(Configuration.KEY_Hash)).defaultValue);
+      megabyteValue = Integer.parseInt(Configuration.configuration.get(Configuration.KEY_Hash).defaultValue);
     }
     int numberOfEntries = megabyteValue * 1024 * 1024 / TranspositionTable.ENTRYSIZE;
     this.transpositionTable = new TranspositionTable(numberOfEntries);
 
     // Evaluation Table
     try {
-      megabyteValue = Integer.parseInt(((Option) Configuration.configuration.get(Configuration.KEY_HashEvaluation)).getValue());
+      megabyteValue = Integer.parseInt(Configuration.configuration.get(Configuration.KEY_HashEvaluation).getValue());
     } catch (NumberFormatException e) {
-      megabyteValue = Integer.parseInt(((Option) Configuration.configuration.get(Configuration.KEY_HashEvaluation)).defaultValue);
+      megabyteValue = Integer.parseInt(Configuration.configuration.get(Configuration.KEY_HashEvaluation).defaultValue);
     }
     numberOfEntries = megabyteValue * 1024 * 1024 / EvaluationTable.ENTRYSIZE;
     this.evaluationTable = new EvaluationTable(numberOfEntries);
 
     // Pawn Table
     try {
-      megabyteValue = Integer.parseInt(((Option) Configuration.configuration.get(Configuration.KEY_HashPawn)).getValue());
+      megabyteValue = Integer.parseInt(Configuration.configuration.get(Configuration.KEY_HashPawn).getValue());
     } catch (NumberFormatException e) {
-      megabyteValue = Integer.parseInt(((Option) Configuration.configuration.get(Configuration.KEY_HashPawn)).defaultValue);
+      megabyteValue = Integer.parseInt(Configuration.configuration.get(Configuration.KEY_HashPawn).defaultValue);
     }
     numberOfEntries = megabyteValue * 1024 * 1024 / PawnTable.ENTRYSIZE;
     this.pawnTable = new PawnTable(numberOfEntries);
@@ -131,8 +131,7 @@ public final class Flux extends AbstractEngine {
 
     // Send the initialization commands
     ProtocolInitializeAnswerCommand initializeCommand = new ProtocolInitializeAnswerCommand(VersionInfo.current().toString(), Configuration.author);
-    for (Iterator<Option> iter = Configuration.configuration.values().iterator(); iter.hasNext(); ) {
-      Option option = iter.next();
+    for (Option option : Configuration.configuration.values()) {
       initializeCommand.addOption(option);
     }
     getProtocol().send(initializeCommand);
@@ -293,9 +292,9 @@ public final class Flux extends AbstractEngine {
       // Set the new size of the hash table
       int megabyteValue;
       try {
-        megabyteValue = Integer.parseInt(((Option) Configuration.configuration.get(Configuration.KEY_Hash)).getValue());
+        megabyteValue = Integer.parseInt(Configuration.configuration.get(Configuration.KEY_Hash).getValue());
       } catch (NumberFormatException e) {
-        megabyteValue = Integer.parseInt(((Option) Configuration.configuration.get(Configuration.KEY_Hash)).defaultValue);
+        megabyteValue = Integer.parseInt(Configuration.configuration.get(Configuration.KEY_Hash).defaultValue);
         ChessLogger.getLogger().debug(e.getMessage());
       }
       ChessLogger.getLogger().debug("Using Transposition Table size of " + megabyteValue + " MB");
@@ -308,9 +307,9 @@ public final class Flux extends AbstractEngine {
       // Set the new size of the evaluation hash table
       int megabyteValue;
       try {
-        megabyteValue = Integer.parseInt(((Option) Configuration.configuration.get(Configuration.KEY_HashEvaluation)).getValue());
+        megabyteValue = Integer.parseInt(Configuration.configuration.get(Configuration.KEY_HashEvaluation).getValue());
       } catch (NumberFormatException e) {
-        megabyteValue = Integer.parseInt(((Option) Configuration.configuration.get(Configuration.KEY_HashEvaluation)).defaultValue);
+        megabyteValue = Integer.parseInt(Configuration.configuration.get(Configuration.KEY_HashEvaluation).defaultValue);
         ChessLogger.getLogger().debug(e.getMessage());
       }
       ChessLogger.getLogger().debug("Using Evaluation Table size of " + megabyteValue + " MB");
@@ -323,9 +322,9 @@ public final class Flux extends AbstractEngine {
       // Set the new size of the pawn hash table
       int megabyteValue;
       try {
-        megabyteValue = Integer.parseInt(((Option) Configuration.configuration.get(Configuration.KEY_HashPawn)).getValue());
+        megabyteValue = Integer.parseInt(Configuration.configuration.get(Configuration.KEY_HashPawn).getValue());
       } catch (NumberFormatException e) {
-        megabyteValue = Integer.parseInt(((Option) Configuration.configuration.get(Configuration.KEY_HashPawn)).defaultValue);
+        megabyteValue = Integer.parseInt(Configuration.configuration.get(Configuration.KEY_HashPawn).defaultValue);
         ChessLogger.getLogger().debug(e.getMessage());
       }
       ChessLogger.getLogger().debug("Using Pawn Table size of " + megabyteValue + " MB");

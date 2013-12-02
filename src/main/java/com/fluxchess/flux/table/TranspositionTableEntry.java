@@ -32,9 +32,6 @@ public final class TranspositionTableEntry {
   public int move = IntMove.NOMOVE;
   public boolean mateThreat = false;
 
-  public TranspositionTableEntry() {
-  }
-
   public void clear() {
     this.zobristCode = 0;
     this.age = -1;

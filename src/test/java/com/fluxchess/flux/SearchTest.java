@@ -38,7 +38,7 @@ public class SearchTest implements IProtocolHandler {
 
   private static final Logger LOG = LoggerFactory.getLogger(SearchTest.class);
 
-  BlockingQueue<IEngineCommand> commandQueue = new LinkedBlockingQueue<IEngineCommand>();
+  final BlockingQueue<IEngineCommand> commandQueue = new LinkedBlockingQueue<IEngineCommand>();
   boolean found = false;
 
   public SearchTest() {

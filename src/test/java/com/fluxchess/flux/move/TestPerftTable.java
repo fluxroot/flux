@@ -23,9 +23,9 @@ public final class TestPerftTable {
   private final int size = 4194304;
   private int currentAge = 0;
 
-  private long[] zobristCode;
-  private int[] nodeNumber;
-  private int[] age;
+  private final long[] zobristCode;
+  private final int[] nodeNumber;
+  private final int[] age;
 
   public TestPerftTable() {
     this.zobristCode = new long[this.size];

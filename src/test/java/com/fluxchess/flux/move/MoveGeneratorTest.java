@@ -37,7 +37,7 @@ import static org.junit.Assert.fail;
 
 public class MoveGeneratorTest {
 
-  private TestPerftTable table = new TestPerftTable();
+  private final TestPerftTable table = new TestPerftTable();
 
   @Test
   public void testSpecialPerft() {
@@ -244,8 +244,6 @@ public class MoveGeneratorTest {
     MoveGenerator.destroy();
 
     assertEquals(printDifference(board, mainMoveList, quiescentMoveList), mainMoveList.getLength(), quiescentMoveList.getLength());
-
-    return;
   }
 
   private String printDifference(Hex88Board board, MoveList main, MoveList quiescent) {
@@ -271,11 +269,7 @@ public class MoveGeneratorTest {
 
   private static boolean isGoodCapture(int move, Hex88Board board) {
     if (IntMove.getType(move) == IntMove.PAWNPROMOTION) {
-      if (IntMove.getPromotion(move) == IntChessman.QUEEN) {
-        return true;
-      } else {
-        return false;
-      }
+      return IntMove.getPromotion(move) == IntChessman.QUEEN;
     }
 
     int chessman = IntMove.getChessman(move);

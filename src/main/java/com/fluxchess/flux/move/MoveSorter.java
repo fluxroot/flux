@@ -25,9 +25,6 @@ package com.fluxchess.flux.move;
  */
 public final class MoveSorter {
 
-  public MoveSorter() {
-  }
-
   /**
    * Sorts the MoveList using insertion sort.
    *

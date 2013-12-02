@@ -109,22 +109,22 @@ public final class Evaluation {
   private static final int PHASE_INTERVAL = Hex88Board.GAMEPHASE_OPENING_VALUE - Hex88Board.GAMEPHASE_ENDGAME_VALUE;
   private static final int TOTAL_OPENING = 0;
   private static final int TOTAL_ENDGAME = 1;
-  private static int[][] totalPawn = new int[IntColor.ARRAY_DIMENSION][2];
-  private static int[][] totalKnight = new int[IntColor.ARRAY_DIMENSION][2];
-  private static int[][] totalBishop = new int[IntColor.ARRAY_DIMENSION][2];
-  private static int[][] totalRook = new int[IntColor.ARRAY_DIMENSION][2];
-  private static int[][] totalQueen = new int[IntColor.ARRAY_DIMENSION][2];
-  private static int[][] totalKing = new int[IntColor.ARRAY_DIMENSION][2];
-  private static int[][] totalPawnStructure = new int[IntColor.ARRAY_DIMENSION][2];
-  private static int[][] totalPawnPasser = new int[IntColor.ARRAY_DIMENSION][2];
-  private static int[][] totalPatterns = new int[IntColor.ARRAY_DIMENSION][2];
+  private static final int[][] totalPawn = new int[IntColor.ARRAY_DIMENSION][2];
+  private static final int[][] totalKnight = new int[IntColor.ARRAY_DIMENSION][2];
+  private static final int[][] totalBishop = new int[IntColor.ARRAY_DIMENSION][2];
+  private static final int[][] totalRook = new int[IntColor.ARRAY_DIMENSION][2];
+  private static final int[][] totalQueen = new int[IntColor.ARRAY_DIMENSION][2];
+  private static final int[][] totalKing = new int[IntColor.ARRAY_DIMENSION][2];
+  private static final int[][] totalPawnStructure = new int[IntColor.ARRAY_DIMENSION][2];
+  private static final int[][] totalPawnPasser = new int[IntColor.ARRAY_DIMENSION][2];
+  private static final int[][] totalPatterns = new int[IntColor.ARRAY_DIMENSION][2];
   private static int totalOpening = 0;
   private static int totalEndgame = 0;
   private static int total = 0;
 
   // Draw values
   private static final int DRAW_FACTOR = 16;
-  private static int[] drawFactor = new int[IntColor.ARRAY_DIMENSION];
+  private static final int[] drawFactor = new int[IntColor.ARRAY_DIMENSION];
 
   // The hash tables
   private final EvaluationTable evaluationTable;
