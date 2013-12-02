@@ -27,7 +27,4 @@ public final class SeeList {
   public int head = 0;
   public int size = 0;
 
-  public SeeList() {
-  }
-
 }

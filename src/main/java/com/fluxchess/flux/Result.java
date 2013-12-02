@@ -31,7 +31,4 @@ public final class Result {
   public int moveNumber = 0;
   public int depth = 0;
 
-  public Result() {
-  }
-
 }

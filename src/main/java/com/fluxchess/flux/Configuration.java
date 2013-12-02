@@ -90,9 +90,6 @@ public final class Configuration {
     configuration.put(KEY_UCIAnalyseMode, new Option(KEY_UCIAnalyseMode, TYPE_Check, "false", null, null, null));
   }
 
-  public Configuration() {
-  }
-
   public static void setOption(String name, String value) {
     assert name != null;
 

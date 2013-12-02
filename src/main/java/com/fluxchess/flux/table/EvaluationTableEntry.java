@@ -25,9 +25,6 @@ public final class EvaluationTableEntry {
   public long zobristCode = 0;
   public int evaluation = -Search.INFINITY;
 
-  public EvaluationTableEntry() {
-  }
-
   public void clear() {
     zobristCode = 0;
     evaluation = -Search.INFINITY;
