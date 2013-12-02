@@ -18,7 +18,6 @@
  */
 package com.fluxchess.flux.move;
 
-
 import com.fluxchess.flux.board.Hex88Board;
 import com.fluxchess.flux.board.IntChessman;
 import com.fluxchess.flux.board.IntColor;

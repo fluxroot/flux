@@ -1,7 +1,7 @@
 Flux Chess UCI
 ==============
 
-Copyright 2007-2012 Phokham Nonava <pn@nonava.com>  
+Copyright 2007-2013 Phokham Nonava <pn@nonava.com>  
 http://www.fluxchess.com/
 
 
@@ -123,7 +123,7 @@ source, use the following steps.
 `./gradlew build`
 
 ### Grab him
-`cp build/distributions/Flux-$version$.zip <very important engine directory>`
+`cp build/distributions/flux-@version@.zip <very important engine directory>`
 
 
 License
