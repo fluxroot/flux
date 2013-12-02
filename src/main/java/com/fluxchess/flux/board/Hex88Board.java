@@ -1073,7 +1073,7 @@ public final class Hex88Board {
         makeMoveCastling(move);
         break;
       case IntMove.NULL:
-        makeMoveNull(move);
+        makeMoveNull();
         break;
       default:
         throw new IllegalArgumentException();
@@ -1570,7 +1570,7 @@ public final class Hex88Board {
     put(captureHistory[--captureHistorySize], targetPosition, false);
   }
 
-  private void makeMoveNull(int move) {
+  private void makeMoveNull() {
     // Update the capture square
     captureSquare = IntPosition.NOPOSITION;
 
