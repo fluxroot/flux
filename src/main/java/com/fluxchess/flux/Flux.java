@@ -158,13 +158,22 @@ public final class Flux extends AbstractEngine {
     ChessLogger.getLogger().debug("Received Debug command.");
 
     ProtocolInformationCommand infoCommand = new ProtocolInformationCommand();
-    if (command.debug) {
+
+    boolean state = ChessLogger.getDebug();
+    if (command.toggle) {
+      state = !state;
+    } else {
+      state = command.debug;
+    }
+
+    if (state) {
       infoCommand.setString("Turning on debugging mode");
     } else {
       infoCommand.setString("Turning off debugging mode");
     }
     getProtocol().send(infoCommand);
-    ChessLogger.setDebug(command.debug);
+
+    ChessLogger.setDebug(state);
   }
 
   public void receive(EngineNewGameCommand command) {
