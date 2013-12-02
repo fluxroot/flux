@@ -63,23 +63,23 @@ public final class Flux extends AbstractEngine {
     // Transposition Table
     int megabyteValue = Integer.parseInt(Configuration.configuration.get(Configuration.KEY_Hash).defaultValue);
     int numberOfEntries = megabyteValue * 1024 * 1024 / TranspositionTable.ENTRYSIZE;
-    this.transpositionTable = new TranspositionTable(numberOfEntries);
+    transpositionTable = new TranspositionTable(numberOfEntries);
 
     // Evaluation Table
     megabyteValue = Integer.parseInt(Configuration.configuration.get(Configuration.KEY_HashEvaluation).defaultValue);
     numberOfEntries = megabyteValue * 1024 * 1024 / EvaluationTable.ENTRYSIZE;
-    this.evaluationTable = new EvaluationTable(numberOfEntries);
+    evaluationTable = new EvaluationTable(numberOfEntries);
 
     // Pawn Table
     megabyteValue = Integer.parseInt(Configuration.configuration.get(Configuration.KEY_HashPawn).defaultValue);
     numberOfEntries = megabyteValue * 1024 * 1024 / PawnTable.ENTRYSIZE;
-    this.pawnTable = new PawnTable(numberOfEntries);
+    pawnTable = new PawnTable(numberOfEntries);
 
     // Run GC
     Runtime.getRuntime().gc();
 
     // Create a new search
-    this.search = new Search(new Evaluation(this.evaluationTable, this.pawnTable), new Hex88Board(new GenericBoard(GenericBoard.STANDARDSETUP)), this.transpositionTable, new InformationTimer(getProtocol(), this.transpositionTable), this.timeTable);
+    search = new Search(new Evaluation(evaluationTable, pawnTable), new Hex88Board(new GenericBoard(GenericBoard.STANDARDSETUP)), transpositionTable, new InformationTimer(getProtocol(), transpositionTable), timeTable);
   }
 
   public static void main(String[] args) {
@@ -106,7 +106,7 @@ public final class Flux extends AbstractEngine {
       megabyteValue = Integer.parseInt(Configuration.configuration.get(Configuration.KEY_Hash).defaultValue);
     }
     int numberOfEntries = megabyteValue * 1024 * 1024 / TranspositionTable.ENTRYSIZE;
-    this.transpositionTable = new TranspositionTable(numberOfEntries);
+    transpositionTable = new TranspositionTable(numberOfEntries);
 
     // Evaluation Table
     try {
@@ -115,7 +115,7 @@ public final class Flux extends AbstractEngine {
       megabyteValue = Integer.parseInt(Configuration.configuration.get(Configuration.KEY_HashEvaluation).defaultValue);
     }
     numberOfEntries = megabyteValue * 1024 * 1024 / EvaluationTable.ENTRYSIZE;
-    this.evaluationTable = new EvaluationTable(numberOfEntries);
+    evaluationTable = new EvaluationTable(numberOfEntries);
 
     // Pawn Table
     try {
@@ -124,7 +124,7 @@ public final class Flux extends AbstractEngine {
       megabyteValue = Integer.parseInt(Configuration.configuration.get(Configuration.KEY_HashPawn).defaultValue);
     }
     numberOfEntries = megabyteValue * 1024 * 1024 / PawnTable.ENTRYSIZE;
-    this.pawnTable = new PawnTable(numberOfEntries);
+    pawnTable = new PawnTable(numberOfEntries);
 
     // Run GC
     Runtime.getRuntime().gc();
@@ -177,10 +177,10 @@ public final class Flux extends AbstractEngine {
     new EngineStopCalculatingCommand().accept(this);
 
     // Clear the hash table
-    this.transpositionTable.clear();
+    transpositionTable.clear();
 
     // Clear time table
-    Arrays.fill(this.timeTable, 0);
+    Arrays.fill(timeTable, 0);
   }
 
   public void receive(EngineAnalyzeCommand command) {
@@ -188,18 +188,18 @@ public final class Flux extends AbstractEngine {
 
     ChessLogger.getLogger().debug("Received Analyze command.");
 
-    if (!this.search.isStopped()) {
-      this.search.stop();
+    if (!search.isStopped()) {
+      search.stop();
     }
 
     // Create a new board
-    this.board = new Hex88Board(command.board);
+    board = new Hex88Board(command.board);
 
     // Make all moves
     List<GenericMove> moveList = command.moveList;
     for (GenericMove move : moveList) {
-      int newMove = IntMove.convertMove(move, this.board);
-      this.board.makeMove(newMove);
+      int newMove = IntMove.convertMove(move, board);
+      board.makeMove(newMove);
     }
   }
 
@@ -208,8 +208,8 @@ public final class Flux extends AbstractEngine {
 
     ChessLogger.getLogger().debug("Received PonderHit command.");
 
-    if (!this.search.isStopped()) {
-      this.search.ponderhit();
+    if (!search.isStopped()) {
+      search.ponderhit();
     } else {
       ChessLogger.getLogger().debug("There is no search active.");
     }
@@ -220,45 +220,45 @@ public final class Flux extends AbstractEngine {
 
     ChessLogger.getLogger().debug("Received StartCalculating command.");
 
-    if (this.board != null) {
-      if (this.search.isStopped()) {
+    if (board != null) {
+      if (search.isStopped()) {
         // Create a new search
-        this.search = new Search(new Evaluation(this.evaluationTable, this.pawnTable), this.board, this.transpositionTable, new InformationTimer(getProtocol(), this.transpositionTable), this.timeTable);
+        search = new Search(new Evaluation(evaluationTable, pawnTable), board, transpositionTable, new InformationTimer(getProtocol(), transpositionTable), timeTable);
 
         // Set all search parameters
         if (command.getDepth() != null && command.getDepth() > 0) {
-          this.search.setSearchDepth(command.getDepth());
+          search.setSearchDepth(command.getDepth());
         }
         if (command.getNodes() != null && command.getNodes() > 0) {
-          this.search.setSearchNodes(command.getNodes());
+          search.setSearchNodes(command.getNodes());
         }
         if (command.getMoveTime() != null && command.getMoveTime() > 0) {
-          this.search.setSearchTime(command.getMoveTime());
+          search.setSearchTime(command.getMoveTime());
         }
         for (GenericColor side : GenericColor.values()) {
           if (command.getClock(side) != null && command.getClock(side) > 0) {
-            this.search.setSearchClock(IntColor.valueOfColor(side), command.getClock(side));
+            search.setSearchClock(IntColor.valueOfColor(side), command.getClock(side));
           }
           if (command.getClockIncrement(side) != null && command.getClockIncrement(side) > 0) {
-            this.search.setSearchClockIncrement(IntColor.valueOfColor(side), command.getClockIncrement(side));
+            search.setSearchClockIncrement(IntColor.valueOfColor(side), command.getClockIncrement(side));
           }
         }
         if (command.getMovesToGo() != null && command.getMovesToGo() > 0) {
-          this.search.setSearchMovesToGo(command.getMovesToGo());
+          search.setSearchMovesToGo(command.getMovesToGo());
         }
         if (command.getInfinite()) {
-          this.search.setSearchInfinite();
+          search.setSearchInfinite();
         }
         if (command.getPonder()) {
-          this.search.setSearchPonder();
+          search.setSearchPonder();
         }
         if (command.getSearchMoveList() != null) {
-          this.search.setSearchMoveList(command.getSearchMoveList());
+          search.setSearchMoveList(command.getSearchMoveList());
         }
 
         // Go...
-        this.search.start();
-        this.board = null;
+        search.start();
+        board = null;
       } else {
         ChessLogger.getLogger().debug("There is already a search running.");
       }
@@ -272,9 +272,9 @@ public final class Flux extends AbstractEngine {
 
     ChessLogger.getLogger().debug("Received StopCalculating command.");
 
-    if (!this.search.isStopped()) {
+    if (!search.isStopped()) {
       // Stop the search
-      this.search.stop();
+      search.stop();
     } else {
       ChessLogger.getLogger().debug("There is no search active.");
     }
@@ -287,7 +287,7 @@ public final class Flux extends AbstractEngine {
 
     if (command.name.equalsIgnoreCase(Configuration.KEY_ClearHash)) {
       // Clear our hash table
-      this.transpositionTable.clear();
+      transpositionTable.clear();
     } else if (command.name.equalsIgnoreCase(Configuration.KEY_Hash)) {
       // Set the new size of the hash table
       int megabyteValue;
@@ -299,7 +299,7 @@ public final class Flux extends AbstractEngine {
       }
       ChessLogger.getLogger().debug("Using Transposition Table size of " + megabyteValue + " MB");
       int numberOfEntries = megabyteValue * 1024 * 1024 / TranspositionTable.ENTRYSIZE;
-      this.transpositionTable = new TranspositionTable(numberOfEntries);
+      transpositionTable = new TranspositionTable(numberOfEntries);
 
       // Run GC
       Runtime.getRuntime().gc();
@@ -314,7 +314,7 @@ public final class Flux extends AbstractEngine {
       }
       ChessLogger.getLogger().debug("Using Evaluation Table size of " + megabyteValue + " MB");
       int numberOfEntries = megabyteValue * 1024 * 1024 / EvaluationTable.ENTRYSIZE;
-      this.evaluationTable = new EvaluationTable(numberOfEntries);
+      evaluationTable = new EvaluationTable(numberOfEntries);
 
       // Run GC
       Runtime.getRuntime().gc();
@@ -329,7 +329,7 @@ public final class Flux extends AbstractEngine {
       }
       ChessLogger.getLogger().debug("Using Pawn Table size of " + megabyteValue + " MB");
       int numberOfEntries = megabyteValue * 1024 * 1024 / PawnTable.ENTRYSIZE;
-      this.pawnTable = new PawnTable(numberOfEntries);
+      pawnTable = new PawnTable(numberOfEntries);
 
       // Run GC
       Runtime.getRuntime().gc();

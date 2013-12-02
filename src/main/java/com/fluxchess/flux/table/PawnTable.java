@@ -28,53 +28,53 @@ public final class PawnTable {
   private final int[] opening;
   private final int[] endgame;
 
-  public PawnTable(int newSize) {
-    assert newSize >= 1;
+  public PawnTable(int size) {
+    assert size >= 1;
 
-    this.size = newSize;
-    this.zobristCode = new long[this.size];
-    this.opening = new int[this.size];
-    this.endgame = new int[this.size];
+    this.size = size;
+    zobristCode = new long[size];
+    opening = new int[size];
+    endgame = new int[size];
   }
 
   /**
    * Puts a zobrist code and opening and endgame value into the table.
    *
-   * @param newZobristCode the zobrist code.
-   * @param newOpening     the opening value.
-   * @param newEndgame     the endgame value.
+   * @param zobristCode the zobrist code.
+   * @param opening     the opening value.
+   * @param endgame     the endgame value.
    */
-  public void put(long newZobristCode, int newOpening, int newEndgame) {
-    int position = (int) (newZobristCode % this.size);
+  public void put(long zobristCode, int opening, int endgame) {
+    int position = (int) (zobristCode % size);
 
-    this.zobristCode[position] = newZobristCode;
-    this.opening[position] = newOpening;
-    this.endgame[position] = newEndgame;
+    this.zobristCode[position] = zobristCode;
+    this.opening[position] = opening;
+    this.endgame[position] = endgame;
   }
 
   /**
    * Returns whether or not this zobrist code exists in the table.
    *
-   * @param newZobristCode the zobrist code.
+   * @param zobristCode the zobrist code.
    * @return true if the zobrist code exists in the table, false otherwise.
    */
-  public boolean exists(long newZobristCode) {
-    int position = (int) (newZobristCode % this.size);
+  public boolean exists(long zobristCode) {
+    int position = (int) (zobristCode % size);
 
-    return this.zobristCode[position] == newZobristCode;
+    return this.zobristCode[position] == zobristCode;
   }
 
   /**
    * Returns the opening given the zobrist code.
    *
-   * @param newZobristCode the zobrist code.
+   * @param zobristCode the zobrist code.
    * @return the opening value.
    */
-  public int getOpening(long newZobristCode) {
-    int position = (int) (newZobristCode % this.size);
+  public int getOpening(long zobristCode) {
+    int position = (int) (zobristCode % size);
 
-    if (this.zobristCode[position] == newZobristCode) {
-      return this.opening[position];
+    if (this.zobristCode[position] == zobristCode) {
+      return opening[position];
     }
 
     throw new IllegalArgumentException();
@@ -83,14 +83,14 @@ public final class PawnTable {
   /**
    * Returns the endgame given the zobrist code.
    *
-   * @param newZobristCode the zobrist code.
+   * @param zobristCode the zobrist code.
    * @return the endgame value.
    */
-  public int getEndgame(long newZobristCode) {
-    int position = (int) (newZobristCode % this.size);
+  public int getEndgame(long zobristCode) {
+    int position = (int) (zobristCode % size);
 
-    if (this.zobristCode[position] == newZobristCode) {
-      return this.endgame[position];
+    if (this.zobristCode[position] == zobristCode) {
+      return endgame[position];
     }
 
     throw new IllegalArgumentException();

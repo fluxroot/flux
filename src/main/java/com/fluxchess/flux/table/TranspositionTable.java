@@ -41,24 +41,24 @@ public final class TranspositionTable {
   // Number of slots used
   private int slotsUsed = 0;
 
-  public TranspositionTable(int newSize) {
-    assert newSize >= 1;
+  public TranspositionTable(int size) {
+    assert size >= 1;
 
-    this.size = newSize;
+    this.size = size;
 
     // Initialize entry
-    this.entry = new TranspositionTableEntry[newSize];
-    for (int i = 0; i < this.entry.length; i++) {
-      this.entry[i] = new TranspositionTableEntry();
+    entry = new TranspositionTableEntry[size];
+    for (int i = 0; i < entry.length; i++) {
+      entry[i] = new TranspositionTableEntry();
     }
 
-    this.currentAge = 0;
-    this.slotsUsed = 0;
+    currentAge = 0;
+    slotsUsed = 0;
   }
 
   public void clear() {
-    this.currentAge = 0;
-    this.slotsUsed = 0;
+    currentAge = 0;
+    slotsUsed = 0;
 
     for (TranspositionTableEntry anEntry : entry) {
       anEntry.clear();
@@ -66,8 +66,8 @@ public final class TranspositionTable {
   }
 
   public void increaseAge() {
-    this.currentAge++;
-    this.slotsUsed = 0;
+    currentAge++;
+    slotsUsed = 0;
   }
 
   /**
@@ -84,15 +84,15 @@ public final class TranspositionTable {
     assert type != IntScore.NOSCORE;
     assert height >= 0;
 
-    int position = (int) (zobristCode % this.size);
-    TranspositionTableEntry currentEntry = this.entry[position];
+    int position = (int) (zobristCode % size);
+    TranspositionTableEntry currentEntry = entry[position];
 
     //## BEGIN "always replace" Scheme
-    if (currentEntry.zobristCode == 0 || currentEntry.age != this.currentAge) {
+    if (currentEntry.zobristCode == 0 || currentEntry.age != currentAge) {
       // This is a new entry
-      this.slotsUsed++;
+      slotsUsed++;
       currentEntry.zobristCode = zobristCode;
-      currentEntry.age = this.currentAge;
+      currentEntry.age = currentAge;
       currentEntry.depth = depth;
       currentEntry.setValue(value, height);
       currentEntry.type = type;
@@ -126,10 +126,10 @@ public final class TranspositionTable {
    * @return the transposition table entry or null if there exists no entry.
    */
   public TranspositionTableEntry get(long zobristCode) {
-    int position = (int) (zobristCode % this.size);
-    TranspositionTableEntry currentEntry = this.entry[position];
+    int position = (int) (zobristCode % size);
+    TranspositionTableEntry currentEntry = entry[position];
 
-    if (currentEntry.zobristCode == zobristCode && currentEntry.age == this.currentAge) {
+    if (currentEntry.zobristCode == zobristCode && currentEntry.age == currentAge) {
       return currentEntry;
     } else {
       return null;
@@ -172,7 +172,7 @@ public final class TranspositionTable {
    * @return the permill of slots used.
    */
   public int getPermillUsed() {
-    return (int) ((1000L * (long) this.slotsUsed) / (long) this.size);
+    return (int) ((1000L * (long) slotsUsed) / (long) size);
   }
 
 }

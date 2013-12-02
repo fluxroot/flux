@@ -47,7 +47,7 @@ public class MoveGeneratorTest {
       board = new GenericBoard("1k6/8/8/5pP1/4K1P1/8/8/8 w - f6");
       Hex88Board testBoard = new Hex88Board(board);
       new MoveSee(testBoard);
-      this.table.increaseAge();
+      table.increaseAge();
 
 //			testBoard.makeMove(IntMove.createMove(IntMove.NORMAL, IntPosition.d2, IntPosition.c1, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN));
 //			testBoard.makeMove(IntMove.createMove(IntMove.NORMAL, IntPosition.e7, IntPosition.d6, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN));
@@ -86,7 +86,7 @@ public class MoveGeneratorTest {
 
             Hex88Board testBoard = new Hex88Board(board);
             new MoveSee(testBoard);
-            this.table.increaseAge();
+            table.increaseAge();
 
             System.out.print("Testing " + tokens[0].trim() + " depth " + depth + " with nodes number " + nodesNumber + ": ");
             long startTime = System.currentTimeMillis();
@@ -111,7 +111,7 @@ public class MoveGeneratorTest {
       return 1;
     }
 
-    int totalNodes = this.table.get(board.zobristCode);
+    int totalNodes = table.get(board.zobristCode);
     if (totalNodes > 0) {
       return totalNodes;
     }
@@ -142,7 +142,7 @@ public class MoveGeneratorTest {
 
     MoveGenerator.destroy();
 
-    this.table.put(board.zobristCode, totalNodes);
+    table.put(board.zobristCode, totalNodes);
 
     return totalNodes;
   }

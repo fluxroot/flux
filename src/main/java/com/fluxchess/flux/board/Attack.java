@@ -36,7 +36,7 @@ public final class Attack {
   }
 
   public boolean isCheck() {
-    return this.count != 0;
+    return count != 0;
   }
 
 }

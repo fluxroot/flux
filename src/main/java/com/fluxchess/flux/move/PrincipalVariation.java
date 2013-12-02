@@ -52,15 +52,15 @@ public final class PrincipalVariation implements Comparable<PrincipalVariation> 
 
   public int compareTo(PrincipalVariation o) {
     int result;
-    if (this.depth > o.depth) {
+    if (depth > o.depth) {
       result = -1;
-    } else if (this.depth == o.depth) {
-      if (this.sortValue > o.sortValue) {
+    } else if (depth == o.depth) {
+      if (sortValue > o.sortValue) {
         result = -1;
-      } else if (this.sortValue == o.sortValue) {
-        if (this.moveNumber < o.moveNumber) {
+      } else if (sortValue == o.sortValue) {
+        if (moveNumber < o.moveNumber) {
           result = -1;
-        } else if (this.moveNumber == o.moveNumber) {
+        } else if (moveNumber == o.moveNumber) {
           result = 0;
         } else {
           result = 1;

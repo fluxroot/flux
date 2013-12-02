@@ -123,15 +123,15 @@ public final class Search implements Runnable {
     assert newTranspositionTable != null;
     assert newInfo != null;
 
-    this.analyzeMode = Configuration.analyzeMode;
+    analyzeMode = Configuration.analyzeMode;
 
-    this.evaluation = newEvaluation;
+    evaluation = newEvaluation;
     board = newBoard;
-    this.myColor = newBoard.activeColor;
+    myColor = newBoard.activeColor;
 
-    this.transpositionTable = newTranspositionTable;
-    if (this.analyzeMode) {
-      this.transpositionTable.increaseAge();
+    transpositionTable = newTranspositionTable;
+    if (analyzeMode) {
+      transpositionTable.increaseAge();
     }
     killerTable = new KillerTable();
     historyTable = new HistoryTable();
@@ -139,8 +139,8 @@ public final class Search implements Runnable {
     new MoveGenerator(newBoard, killerTable, historyTable);
     new MoveSee(newBoard);
 
-    this.info = newInfo;
-    this.info.setSearch(this);
+    info = newInfo;
+    info.setSearch(this);
 
     this.timeTable = timeTable;
 
@@ -148,141 +148,141 @@ public final class Search implements Runnable {
   }
 
   public void run() {
-    this.logger.debug("Analyzing fen " + board.getBoard().toString());
-    this.stopped = false;
-    this.canStop = false;
-    this.bestResult = new Result();
+    logger.debug("Analyzing fen " + board.getBoard().toString());
+    stopped = false;
+    canStop = false;
+    bestResult = new Result();
 
     // Set the time managemnet
-    if (this.doTimeManagement) {
+    if (doTimeManagement) {
       setTimeManagement();
-      this.searchTimeStart = System.currentTimeMillis();
+      searchTimeStart = System.currentTimeMillis();
     }
-    if (this.searchTime > 0) {
+    if (searchTime > 0) {
       startTimer();
     }
 
     // Go...
-    this.semaphore.release();
-    this.info.start();
+    semaphore.release();
+    info.start();
     Result moveResult = getBestMove();
-    this.info.stop();
+    info.stop();
 
     // Cancel the timer
-    if (this.timer != null) {
-      this.timer.cancel();
+    if (timer != null) {
+      timer.cancel();
     }
 
     // Send the result
     if (moveResult.bestMove != IntMove.NOMOVE) {
       if (moveResult.ponderMove != IntMove.NOMOVE) {
-        this.info.sendBestMove(IntMove.toGenericMove(moveResult.bestMove), IntMove.toGenericMove(moveResult.ponderMove));
+        info.sendBestMove(IntMove.toGenericMove(moveResult.bestMove), IntMove.toGenericMove(moveResult.ponderMove));
       } else {
-        this.info.sendBestMove(IntMove.toGenericMove(moveResult.bestMove), null);
+        info.sendBestMove(IntMove.toGenericMove(moveResult.bestMove), null);
       }
     } else {
-      this.info.sendBestMove(null, null);
+      info.sendBestMove(null, null);
     }
 
     // Cleanup manually
-    this.transpositionTable = null;
-    this.info = null;
-    this.evaluation = null;
+    transpositionTable = null;
+    info = null;
+    evaluation = null;
   }
 
   public void start() {
-    this.thread.start();
+    thread.start();
     try {
       // Wait for initialization
-      this.semaphore.acquire();
+      semaphore.acquire();
     } catch (InterruptedException e) {
-      this.logger.debug(e.getMessage());
+      logger.debug(e.getMessage());
       // Do nothing
     }
   }
 
   public void stop() {
-    this.stopped = true;
-    this.canStop = true;
+    stopped = true;
+    canStop = true;
     try {
       // Wait for the thread to die
-      this.thread.join();
+      thread.join();
     } catch (InterruptedException e) {
-      this.logger.debug(e.getMessage());
+      logger.debug(e.getMessage());
       // Do nothing
     }
   }
 
   public void ponderhit() {
     // Enable time management
-    this.doTimeManagement = true;
+    doTimeManagement = true;
 
     // Set time management parameters
     setTimeManagement();
-    this.searchTimeStart = System.currentTimeMillis();
+    searchTimeStart = System.currentTimeMillis();
 
     // Start our hard stop timer
     startTimer();
 
     // Check whether we have already a result
-    assert this.bestResult != null;
-    if (this.bestResult.bestMove != IntMove.NOMOVE) {
-      this.canStop = true;
+    assert bestResult != null;
+    if (bestResult.bestMove != IntMove.NOMOVE) {
+      canStop = true;
 
       // Check if we have a checkmate
-      if (Math.abs(this.bestResult.resultValue) > CHECKMATE_THRESHOLD
-        && this.bestResult.depth >= (CHECKMATE - Math.abs(this.bestResult.resultValue))) {
-        this.stopped = true;
+      if (Math.abs(bestResult.resultValue) > CHECKMATE_THRESHOLD
+        && bestResult.depth >= (CHECKMATE - Math.abs(bestResult.resultValue))) {
+        stopped = true;
       }
 
       // Check if we have only one move to make
-      else if (this.bestResult.moveNumber == 1) {
-        this.stopped = true;
+      else if (bestResult.moveNumber == 1) {
+        stopped = true;
       }
     }
   }
 
   public boolean isStopped() {
-    return !this.thread.isAlive();
+    return !thread.isAlive();
   }
 
   public void setSearchDepth(int searchDepth) {
     assert searchDepth > 0;
 
     this.searchDepth = searchDepth;
-    if (this.searchDepth > MAX_DEPTH) {
-      this.searchDepth = MAX_DEPTH;
+    if (searchDepth > MAX_DEPTH) {
+      searchDepth = MAX_DEPTH;
     }
-    this.doTimeManagement = false;
+    doTimeManagement = false;
   }
 
   public void setSearchNodes(long searchNodes) {
     assert searchNodes > 0;
 
     this.searchNodes = searchNodes;
-    this.searchDepth = MAX_DEPTH;
-    this.doTimeManagement = false;
+    searchDepth = MAX_DEPTH;
+    doTimeManagement = false;
   }
 
   public void setSearchTime(long searchTime) {
     assert searchTime > 0;
 
     this.searchTime = searchTime;
-    this.searchTimeHard = this.searchTime;
-    this.searchDepth = MAX_DEPTH;
-    this.doTimeManagement = false;
+    searchTimeHard = searchTime;
+    searchDepth = MAX_DEPTH;
+    doTimeManagement = false;
   }
 
   public void setSearchClock(int side, long timeLeft) {
     assert timeLeft > 0;
 
-    this.searchClock[side] = timeLeft;
+    searchClock[side] = timeLeft;
   }
 
   public void setSearchClockIncrement(int side, long timeIncrement) {
     assert timeIncrement > 0;
 
-    this.searchClockIncrement[side] = timeIncrement;
+    searchClockIncrement[side] = timeIncrement;
   }
 
   public void setSearchMovesToGo(int searchMovesToGo) {
@@ -292,77 +292,77 @@ public final class Search implements Runnable {
   }
 
   public void setSearchInfinite() {
-    this.searchDepth = MAX_DEPTH;
-    this.doTimeManagement = false;
-    this.analyzeMode = true;
+    searchDepth = MAX_DEPTH;
+    doTimeManagement = false;
+    analyzeMode = true;
   }
 
   public void setSearchPonder() {
-    this.searchDepth = MAX_DEPTH;
-    this.doTimeManagement = false;
+    searchDepth = MAX_DEPTH;
+    doTimeManagement = false;
   }
 
   public void setSearchMoveList(List<GenericMove> moveList) {
     for (GenericMove move : moveList) {
-      this.searchMoveList.move[this.searchMoveList.tail++] = IntMove.convertMove(move, board);
+      searchMoveList.move[searchMoveList.tail++] = IntMove.convertMove(move, board);
     }
   }
 
   private void startTimer() {
     // Only start timer if we have a hard time limit
-    if (this.searchTimeHard > 0) {
-      this.timer = new Timer(true);
-      this.timer.schedule(new TimerTask() {
+    if (searchTimeHard > 0) {
+      timer = new Timer(true);
+      timer.schedule(new TimerTask() {
         public void run() {
           stop();
         }
-      }, this.searchTimeHard);
+      }, searchTimeHard);
     }
   }
 
   private void setTimeManagement() {
     // Dynamic time allocation
-    this.searchDepth = MAX_DEPTH;
+    searchDepth = MAX_DEPTH;
 
-    if (this.searchClock[this.myColor] > 0) {
+    if (searchClock[myColor] > 0) {
       // We received a time control.
 
       // Check the moves to go
-      if (this.searchMovesToGo < 1 || this.searchMovesToGo > 40) {
-        this.searchMovesToGo = 40;
+      if (searchMovesToGo < 1 || searchMovesToGo > 40) {
+        searchMovesToGo = 40;
       }
 
       // Check the increment
-      if (this.searchClockIncrement[this.myColor] < 1) {
-        this.searchClockIncrement[this.myColor] = 0;
+      if (searchClockIncrement[myColor] < 1) {
+        searchClockIncrement[myColor] = 0;
       }
 
       // Set the maximum search time
-      long maxSearchTime = (long) (this.searchClock[this.myColor] * 0.95) - 1000L;
+      long maxSearchTime = (long) (searchClock[myColor] * 0.95) - 1000L;
       if (maxSearchTime < 0) {
         maxSearchTime = 0;
       }
 
       // Set the search time
-      this.searchTime = (maxSearchTime + (this.searchMovesToGo - 1) * this.searchClockIncrement[this.myColor]) / this.searchMovesToGo;
-      if (this.searchTime > maxSearchTime) {
-        this.searchTime = maxSearchTime;
+      searchTime = (maxSearchTime + (searchMovesToGo - 1) * searchClockIncrement[myColor]) / searchMovesToGo;
+      if (searchTime > maxSearchTime) {
+        searchTime = maxSearchTime;
       }
 
       // Set the hard limit search time
-      this.searchTimeHard = (maxSearchTime + (this.searchMovesToGo - 1) * this.searchClockIncrement[this.myColor]) / 8;
-      if (this.searchTimeHard < this.searchTime) {
-        this.searchTimeHard = this.searchTime;
+      searchTimeHard = (maxSearchTime + (searchMovesToGo - 1) * searchClockIncrement[myColor]) / 8;
+      if (searchTimeHard < searchTime) {
+        searchTimeHard = searchTime;
       }
-      if (this.searchTimeHard > maxSearchTime) {
-        this.searchTimeHard = maxSearchTime;
+      if (searchTimeHard > maxSearchTime) {
+        searchTimeHard = maxSearchTime;
       }
     } else {
       // We received no time control. Search for 2 seconds.
-      this.searchTime = 2000L;
+      searchTime = 2000L;
 
       // Stop hard after +50% of the allocated time
-      this.searchTimeHard = this.searchTime + this.searchTime / 2;
+      searchTimeHard = searchTime + searchTime / 2;
     }
   }
 
@@ -370,10 +370,10 @@ public final class Search implements Runnable {
     if (Math.abs(pv.value) > CHECKMATE_THRESHOLD) {
       // Calculate the mate distance
       int mateDepth = CHECKMATE - Math.abs(pv.value);
-      this.info.sendInformationMate(pv, Integer.signum(pv.value) * (mateDepth + 1) / 2, pvNumber);
+      info.sendInformationMate(pv, Integer.signum(pv.value) * (mateDepth + 1) / 2, pvNumber);
       logger.debug("Mate value: " + pv.value + ", Mate depth: " + mateDepth);
     } else {
-      this.info.sendInformationCentipawns(pv, pvNumber);
+      info.sendInformationCentipawns(pv, pvNumber);
     }
   }
 
@@ -387,9 +387,9 @@ public final class Search implements Runnable {
     int transpositionValue = 0;
     int transpositionType = IntScore.NOSCORE;
     if (Configuration.useTranspositionTable) {
-      TranspositionTableEntry entry = this.transpositionTable.get(board.zobristCode);
+      TranspositionTableEntry entry = transpositionTable.get(board.zobristCode);
       if (entry != null) {
-        List<GenericMove> moveList = this.transpositionTable.getMoveList(board, entry.depth, new ArrayList<GenericMove>());
+        List<GenericMove> moveList = transpositionTable.getMoveList(board, entry.depth, new ArrayList<GenericMove>());
         if (moveList.size() != 0) {
           pv = new PrincipalVariation(
             1,
@@ -415,7 +415,7 @@ public final class Search implements Runnable {
     Attack attack = board.getAttack(board.activeColor);
     boolean isCheck = attack.isCheck();
 
-    if (this.searchMoveList.getLength() == 0) {
+    if (searchMoveList.getLength() == 0) {
       MoveGenerator.initializeMain(attack, 0, transpositionMove);
 
       int move = IntMove.NOMOVE;
@@ -425,21 +425,21 @@ public final class Search implements Runnable {
 
       MoveGenerator.destroy();
     } else {
-      for (int i = this.searchMoveList.head; i < this.searchMoveList.tail; i++) {
-        rootMoveList.move[rootMoveList.tail++] = this.searchMoveList.move[i];
+      for (int i = searchMoveList.head; i < searchMoveList.tail; i++) {
+        rootMoveList.move[rootMoveList.tail++] = searchMoveList.move[i];
       }
     }
 
     // Check if we cannot move
     if (rootMoveList.getLength() == 0) {
       // This position is a checkmate or stalemate
-      return this.bestResult;
+      return bestResult;
     }
 
     // Adjust pv number
-    this.showPvNumber = Configuration.showPvNumber;
+    showPvNumber = Configuration.showPvNumber;
     if (Configuration.showPvNumber > rootMoveList.getLength()) {
-      this.showPvNumber = rootMoveList.getLength();
+      showPvNumber = rootMoveList.getLength();
     }
     //## ENDOF Root Move List
 
@@ -448,25 +448,25 @@ public final class Search implements Runnable {
 
     int initialDepth = 1;
     int equalResults = 0;
-    if (!this.analyzeMode
+    if (!analyzeMode
       && transpositionDepth > 1
       && transpositionType == IntScore.EXACT
       && Math.abs(transpositionValue) < CHECKMATE_THRESHOLD
       && pv != null) {
-      this.bestResult.bestMove = transpositionMove;
-      this.bestResult.resultValue = transpositionValue;
-      this.bestResult.value = transpositionType;
-      this.bestResult.time = 0;
-      this.bestResult.moveNumber = rootMoveList.getLength();
+      bestResult.bestMove = transpositionMove;
+      bestResult.resultValue = transpositionValue;
+      bestResult.value = transpositionType;
+      bestResult.time = 0;
+      bestResult.moveNumber = rootMoveList.getLength();
 
       initialDepth = transpositionDepth;
       equalResults = transpositionDepth - 2;
     }
 
     //## BEGIN Iterative Deepening
-    for (int currentDepth = initialDepth; currentDepth <= this.searchDepth; currentDepth++) {
-      this.info.setCurrentDepth(currentDepth);
-      this.info.sendInformationDepth();
+    for (int currentDepth = initialDepth; currentDepth <= searchDepth; currentDepth++) {
+      info.setCurrentDepth(currentDepth);
+      info.sendInformationDepth();
 
       // Create a new result
       Result moveResult = new Result();
@@ -492,7 +492,7 @@ public final class Search implements Runnable {
       //## BEGIN Aspiration Windows
       // Notes: Ideas from Ed Schröder. We open the aspiration window
       // twice, as the first adjustment should be wide enough.
-      if (!(this.stopped && this.canStop) && Configuration.useAspirationWindows && this.showPvNumber <= 1 && currentDepth >= transpositionDepth) {
+      if (!(stopped && canStop) && Configuration.useAspirationWindows && showPvNumber <= 1 && currentDepth >= transpositionDepth) {
         // First adjustment
         if (value <= alpha || value >= beta) {
           if (value <= alpha) {
@@ -512,7 +512,7 @@ public final class Search implements Runnable {
           // Do the Alpha-Beta search again
           value = alphaBetaRoot(currentDepth, alpha, beta, 0, rootMoveList, isCheck, moveResult);
 
-          if (!(this.stopped && this.canStop)) {
+          if (!(stopped && canStop)) {
             // Second adjustment
             // Open window to full width
             if (value <= alpha || value >= beta) {
@@ -555,19 +555,19 @@ public final class Search implements Runnable {
       // Prepare the move result
       if (moveResult.bestMove != IntMove.NOMOVE) {
         // Count all equal results
-        if (moveResult.bestMove == this.bestResult.bestMove) {
+        if (moveResult.bestMove == bestResult.bestMove) {
           equalResults++;
         } else {
           equalResults = 0;
         }
 
-        if (this.doTimeManagement) {
+        if (doTimeManagement) {
           //## BEGIN Time Control
           boolean timeExtended = false;
 
           // Check value change
-          if (moveResult.resultValue + TIMEEXTENSION_MARGIN < this.bestResult.resultValue
-            || moveResult.resultValue - TIMEEXTENSION_MARGIN > this.bestResult.resultValue) {
+          if (moveResult.resultValue + TIMEEXTENSION_MARGIN < bestResult.resultValue
+            || moveResult.resultValue - TIMEEXTENSION_MARGIN > bestResult.resultValue) {
             timeExtended = true;
           }
 
@@ -583,36 +583,36 @@ public final class Search implements Runnable {
           }
 
           // Check if we cannot finish the next iteration on time
-          if (this.searchTimeStart + this.searchTimeHard < System.currentTimeMillis() + nextIterationTime) {
+          if (searchTimeStart + searchTimeHard < System.currentTimeMillis() + nextIterationTime) {
             // Clear table
             if (currentDepth == initialDepth) {
-              for (int i = currentDepth + 1; i < this.timeTable.length; i++) {
-                this.timeTable[i] = 0;
+              for (int i = currentDepth + 1; i < timeTable.length; i++) {
+                timeTable[i] = 0;
               }
             } else {
-              for (int i = currentDepth + 1; i < this.timeTable.length; i++) {
-                this.timeTable[i] += this.timeTable[i - 1] * 2;
-                this.timeTable[i] /= 2;
+              for (int i = currentDepth + 1; i < timeTable.length; i++) {
+                timeTable[i] += timeTable[i - 1] * 2;
+                timeTable[i] /= 2;
               }
             }
-            this.stopFlag = true;
+            stopFlag = true;
           }
 
           // Check time limit
           else if (!timeExtended
-            && this.searchTimeStart + this.searchTime < System.currentTimeMillis() + nextIterationTime) {
+            && searchTimeStart + searchTime < System.currentTimeMillis() + nextIterationTime) {
             // Clear table
             if (currentDepth == initialDepth) {
-              for (int i = currentDepth + 1; i < this.timeTable.length; i++) {
-                this.timeTable[i] = 0;
+              for (int i = currentDepth + 1; i < timeTable.length; i++) {
+                timeTable[i] = 0;
               }
             } else {
-              for (int i = currentDepth + 1; i < this.timeTable.length; i++) {
-                this.timeTable[i] += this.timeTable[i - 1] * 2;
-                this.timeTable[i] /= 2;
+              for (int i = currentDepth + 1; i < timeTable.length; i++) {
+                timeTable[i] += timeTable[i - 1] * 2;
+                timeTable[i] /= 2;
               }
             }
-            this.stopFlag = true;
+            stopFlag = true;
           }
 
           // Check if this is an easy recapture
@@ -620,28 +620,28 @@ public final class Search implements Runnable {
             && IntMove.getEnd(moveResult.bestMove) == board.captureSquare
             && IntChessman.getValueFromChessman(IntMove.getTarget(moveResult.bestMove)) >= IntChessman.VALUE_KNIGHT
             && equalResults > 4) {
-            this.stopFlag = true;
+            stopFlag = true;
           }
 
           // Check if we have a checkmate
           else if (Math.abs(value) > CHECKMATE_THRESHOLD
             && currentDepth >= (CHECKMATE - Math.abs(value))) {
-            this.stopFlag = true;
+            stopFlag = true;
           }
 
           // Check if we have only one move to make
           else if (moveResult.moveNumber == 1) {
-            this.stopFlag = true;
+            stopFlag = true;
           }
           //## ENDOF Time Control
         }
 
         // Update the best result.
-        this.bestResult = moveResult;
+        bestResult = moveResult;
 
         if (pvList[0].tail > 1) {
           // We found a line. Set the ponder move.
-          this.bestResult.ponderMove = pvList[0].move[1];
+          bestResult.ponderMove = pvList[0].move[1];
         }
       } else {
         // We found no best move.
@@ -650,34 +650,34 @@ public final class Search implements Runnable {
       }
 
       // Check if we can stop the search
-      if (this.stopFlag) {
+      if (stopFlag) {
         break;
       }
 
-      this.canStop = true;
+      canStop = true;
 
-      if (this.stopped) {
+      if (stopped) {
         break;
       }
     }
     //## ENDOF Iterative Deepening
 
     // Update all stats
-    this.info.sendInformationSummary();
+    info.sendInformationSummary();
 
-    return this.bestResult;
+    return bestResult;
   }
 
   private void updateSearch(int height) {
-    assert this.transpositionTable.getPermillUsed() >= 0 && this.transpositionTable.getPermillUsed() <= 1000;
+    assert transpositionTable.getPermillUsed() >= 0 && transpositionTable.getPermillUsed() <= 1000;
 
-    this.info.totalNodes++;
-    this.info.setCurrentMaxDepth(height);
-    this.info.sendInformationStatus();
+    info.totalNodes++;
+    info.setCurrentMaxDepth(height);
+    info.sendInformationStatus();
 
-    if (this.searchNodes > 0 && this.searchNodes <= this.info.totalNodes) {
+    if (searchNodes > 0 && searchNodes <= info.totalNodes) {
       // Hard stop on number of nodes
-      this.stopped = true;
+      stopped = true;
     }
 
     // Reset
@@ -688,8 +688,8 @@ public final class Search implements Runnable {
     updateSearch(height);
 
     // Abort conditions
-    if ((this.stopped && this.canStop) || height == MAX_HEIGHT) {
-      return this.evaluation.evaluate(board);
+    if ((stopped && canStop) || height == MAX_HEIGHT) {
+      return evaluation.evaluate(board);
     }
 
     // Initialize
@@ -712,7 +712,7 @@ public final class Search implements Runnable {
 
       // Update the information if we evaluate a new move.
       currentMoveNumber++;
-      this.info.sendInformationMove(IntMove.toGenericMove(move), currentMoveNumber);
+      info.sendInformationMove(IntMove.toGenericMove(move), currentMoveNumber);
 
       // Extension
       int newDepth = getNewDepth(depth, move, isSingleReply, false);
@@ -737,7 +737,7 @@ public final class Search implements Runnable {
       // Undo move
       board.undoMove(move);
 
-      if (this.stopped && this.canStop) {
+      if (stopped && canStop) {
         break;
       }
 
@@ -772,12 +772,12 @@ public final class Search implements Runnable {
         moveType,
         sortValue,
         genericMoveList,
-        this.info.currentDepth,
-        this.info.currentMaxDepth,
-        this.transpositionTable.getPermillUsed(),
-        this.info.getCurrentNps(),
-        System.currentTimeMillis() - this.info.totalTimeStart,
-        this.info.totalNodes);
+        info.currentDepth,
+        info.currentMaxDepth,
+        transpositionTable.getPermillUsed(),
+        info.getCurrentNps(),
+        System.currentTimeMillis() - info.totalTimeStart,
+        info.totalNodes);
       multiPvMap.put(move, pv);
 
       // Save first pv
@@ -787,15 +787,15 @@ public final class Search implements Runnable {
 
       // Show refutations
       if (Configuration.showRefutations) {
-        this.info.sendInformationRefutations(genericMoveList);
+        info.sendInformationRefutations(genericMoveList);
       }
 
       // Show multi pv
-      if (this.showPvNumber > 1) {
-        assert currentMoveNumber <= this.showPvNumber || lastMultiPv != null;
-        if (currentMoveNumber <= this.showPvNumber || pv.compareTo(lastMultiPv) < 0) {
+      if (showPvNumber > 1) {
+        assert currentMoveNumber <= showPvNumber || lastMultiPv != null;
+        if (currentMoveNumber <= showPvNumber || pv.compareTo(lastMultiPv) < 0) {
           PriorityQueue<PrincipalVariation> tempPvList = new PriorityQueue<PrincipalVariation>(multiPvMap.values());
-          for (int i = 1; i <= this.showPvNumber && !tempPvList.isEmpty(); i++) {
+          for (int i = 1; i <= showPvNumber && !tempPvList.isEmpty(); i++) {
             lastMultiPv = tempPvList.remove();
             sendInformation(lastMultiPv, i);
           }
@@ -814,7 +814,7 @@ public final class Search implements Runnable {
           hashType = IntScore.EXACT;
           alpha = value;
 
-          if (depth > 1 && this.showPvNumber <= 1) {
+          if (depth > 1 && showPvNumber <= 1) {
             // Send pv information for depth > 1
             // Print the best move as soon as we get a new one
             // This is really an optimistic assumption
@@ -831,25 +831,25 @@ public final class Search implements Runnable {
         }
       }
 
-      if (this.showPvNumber > 1) {
+      if (showPvNumber > 1) {
         // Reset alpha to get the real value of the next move
         assert oldAlpha == -CHECKMATE;
         alpha = oldAlpha;
       }
     }
 
-    if (!(this.stopped && this.canStop)) {
-      this.transpositionTable.put(board.zobristCode, depth, bestValue, hashType, bestMove, false, height);
+    if (!(stopped && canStop)) {
+      transpositionTable.put(board.zobristCode, depth, bestValue, hashType, bestMove, false, height);
     }
 
-    if (depth == 1 && this.showPvNumber <= 1 && bestPv != null) {
+    if (depth == 1 && showPvNumber <= 1 && bestPv != null) {
       // Send pv information for depth 1
       // On depth 1 we have no move ordering available
       // To reduce the output we only print the best move here
       sendInformation(bestPv, 1);
     }
 
-    if (this.showPvNumber <= 1 && bestPv == null && firstPv != null) {
+    if (showPvNumber <= 1 && bestPv == null && firstPv != null) {
       // We have a fail low
       assert oldAlpha == alpha;
 
@@ -860,11 +860,11 @@ public final class Search implements Runnable {
         firstPv.sortValue,
         firstPv.pv,
         firstPv.depth,
-        this.info.currentMaxDepth,
-        this.transpositionTable.getPermillUsed(),
-        this.info.getCurrentNps(),
-        System.currentTimeMillis() - this.info.totalTimeStart,
-        this.info.totalNodes);
+        info.currentMaxDepth,
+        transpositionTable.getPermillUsed(),
+        info.getCurrentNps(),
+        System.currentTimeMillis() - info.totalTimeStart,
+        info.totalNodes);
       sendInformation(resultPv, 1);
     }
 
@@ -874,7 +874,7 @@ public final class Search implements Runnable {
     moveResult.moveNumber = currentMoveNumber;
 
     if (Configuration.useTranspositionTable) {
-      TranspositionTableEntry entry = this.transpositionTable.get(board.zobristCode);
+      TranspositionTableEntry entry = transpositionTable.get(board.zobristCode);
       if (entry != null) {
         for (int i = rootMoveList.head; i < rootMoveList.tail; i++) {
           if (rootMoveList.move[i] == entry.move) {
@@ -900,8 +900,8 @@ public final class Search implements Runnable {
     updateSearch(height);
 
     // Abort conditions
-    if ((this.stopped && this.canStop) || height == MAX_HEIGHT) {
-      return this.evaluation.evaluate(board);
+    if ((stopped && canStop) || height == MAX_HEIGHT) {
+      return evaluation.evaluate(board);
     }
 
     // Check the repetition table and fifty move rule
@@ -932,7 +932,7 @@ public final class Search implements Runnable {
     int transpositionMove = IntMove.NOMOVE;
     boolean mateThreat = false;
     if (Configuration.useTranspositionTable) {
-      TranspositionTableEntry entry = this.transpositionTable.get(board.zobristCode);
+      TranspositionTableEntry entry = transpositionTable.get(board.zobristCode);
       if (entry != null) {
         transpositionMove = entry.move;
         mateThreat = entry.mateThreat;
@@ -978,7 +978,7 @@ public final class Search implements Runnable {
         && !isCheck
         && !mateThreat
         && board.getGamePhase() != IntGamePhase.ENDGAME
-        && (evalValue = this.evaluation.evaluate(board)) >= beta) {
+        && (evalValue = evaluation.evaluate(board)) >= beta) {
         // Depth reduction
         int newDepth = depth - 1 - NULLMOVE_REDUCTION;
 
@@ -1016,9 +1016,9 @@ public final class Search implements Runnable {
             value = CHECKMATE_THRESHOLD;
           }
 
-          if (!(this.stopped && this.canStop)) {
+          if (!(stopped && canStop)) {
             // Store the value into the transposition table
-            this.transpositionTable.put(board.zobristCode, depth, value, IntScore.BETA, IntMove.NOMOVE, mateThreat, height);
+            transpositionTable.put(board.zobristCode, depth, value, IntScore.BETA, IntMove.NOMOVE, mateThreat, height);
           }
 
           return value;
@@ -1047,7 +1047,7 @@ public final class Search implements Runnable {
           int value = alphaBeta(newDepth, alpha, beta, height, true, false);
 
           //## BEGIN Aspiration Windows
-          if (!(this.stopped && this.canStop) && Configuration.useAspirationWindows) {
+          if (!(stopped && canStop) && Configuration.useAspirationWindows) {
             // First adjustment
             if (value <= alpha || value >= beta) {
               if (value <= alpha) {
@@ -1067,7 +1067,7 @@ public final class Search implements Runnable {
               // Do the Alpha-Beta search again
               value = alphaBeta(newDepth, alpha, beta, height, true, false);
 
-              if (!(this.stopped && this.canStop)) {
+              if (!(stopped && canStop)) {
                 // Second adjustment
                 // Open window to full width
                 if (value <= alpha || value >= beta) {
@@ -1092,7 +1092,7 @@ public final class Search implements Runnable {
           }
           //## ENDOF Aspiration Windows
 
-          if (this.stopped && this.canStop) {
+          if (stopped && canStop) {
             return oldAlpha;
           }
         }
@@ -1118,7 +1118,7 @@ public final class Search implements Runnable {
     while ((move = MoveGenerator.getNextMove()) != IntMove.NOMOVE) {
       //## BEGIN Minor Promotion Pruning
       if (Configuration.useMinorPromotionPruning
-        && !this.analyzeMode
+        && !analyzeMode
         && IntMove.getType(move) == IntMove.PAWNPROMOTION
         && IntMove.getPromotion(move) != IntChessman.QUEEN) {
         assert IntMove.getPromotion(move) == IntChessman.ROOK || IntMove.getPromotion(move) == IntChessman.BISHOP || IntMove.getPromotion(move) == IntChessman.KNIGHT;
@@ -1143,7 +1143,7 @@ public final class Search implements Runnable {
 
           if (evalValue == INFINITY) {
             // Store evaluation
-            evalValue = this.evaluation.evaluate(board);
+            evalValue = evaluation.evaluate(board);
           }
           int value = evalValue + FUTILITY_PREFRONTIERMARGIN;
 
@@ -1178,7 +1178,7 @@ public final class Search implements Runnable {
 
           if (evalValue == INFINITY) {
             // Store evaluation
-            evalValue = this.evaluation.evaluate(board);
+            evalValue = evaluation.evaluate(board);
           }
           int value = evalValue + FUTILITY_FRONTIERMARGIN;
 
@@ -1254,7 +1254,7 @@ public final class Search implements Runnable {
       // Undo move
       board.undoMove(move);
 
-      if (this.stopped && this.canStop) {
+      if (stopped && canStop) {
         break;
       }
 
@@ -1298,11 +1298,11 @@ public final class Search implements Runnable {
       }
     }
 
-    if (!(this.stopped && this.canStop)) {
+    if (!(stopped && canStop)) {
       if (bestMove != IntMove.NOMOVE) {
         addGoodMove(bestMove, depth, height);
       }
-      this.transpositionTable.put(board.zobristCode, depth, bestValue, hashType, bestMove, mateThreat, height);
+      transpositionTable.put(board.zobristCode, depth, bestValue, hashType, bestMove, mateThreat, height);
     }
 
     return bestValue;
@@ -1312,8 +1312,8 @@ public final class Search implements Runnable {
     updateSearch(height);
 
     // Abort conditions
-    if ((this.stopped && this.canStop) || height == MAX_HEIGHT) {
-      return this.evaluation.evaluate(board);
+    if ((stopped && canStop) || height == MAX_HEIGHT) {
+      return evaluation.evaluate(board);
     }
 
     // Check the repetition table and fifty move rule
@@ -1342,7 +1342,7 @@ public final class Search implements Runnable {
 
     // Check the transposition table first
     if (Configuration.useTranspositionTable && useTranspositionTable) {
-      TranspositionTableEntry entry = this.transpositionTable.get(board.zobristCode);
+      TranspositionTableEntry entry = transpositionTable.get(board.zobristCode);
       if (entry != null) {
         assert entry.depth >= checkingDepth;
         int value = entry.getValue(height);
@@ -1381,7 +1381,7 @@ public final class Search implements Runnable {
 
     if (!isCheck) {
       // Stand pat
-      int value = this.evaluation.evaluate(board);
+      int value = evaluation.evaluate(board);
 
       // Store evaluation
       evalValue = value;
@@ -1402,7 +1402,7 @@ public final class Search implements Runnable {
 
           if (useTranspositionTable) {
             assert checkingDepth == 0;
-            this.transpositionTable.put(board.zobristCode, 0, bestValue, hashType, IntMove.NOMOVE, false, height);
+            transpositionTable.put(board.zobristCode, 0, bestValue, hashType, IntMove.NOMOVE, false, height);
           }
 
           return bestValue;
@@ -1452,7 +1452,7 @@ public final class Search implements Runnable {
       // Undo move
       board.undoMove(move);
 
-      if (this.stopped && this.canStop) {
+      if (stopped && canStop) {
         break;
       }
 
@@ -1487,8 +1487,8 @@ public final class Search implements Runnable {
     }
 
     if (useTranspositionTable) {
-      if (!(this.stopped && this.canStop)) {
-        this.transpositionTable.put(board.zobristCode, 0, bestValue, hashType, IntMove.NOMOVE, false, height);
+      if (!(stopped && canStop)) {
+        transpositionTable.put(board.zobristCode, 0, bestValue, hashType, IntMove.NOMOVE, false, height);
       }
     }
 

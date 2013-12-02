@@ -33,13 +33,13 @@ public final class TranspositionTableEntry {
   public boolean mateThreat = false;
 
   public void clear() {
-    this.zobristCode = 0;
-    this.age = -1;
-    this.depth = -1;
-    this.value = -Search.INFINITY;
-    this.type = IntScore.NOSCORE;
-    this.move = IntMove.NOMOVE;
-    this.mateThreat = false;
+    zobristCode = 0;
+    age = -1;
+    depth = -1;
+    value = -Search.INFINITY;
+    type = IntScore.NOSCORE;
+    move = IntMove.NOMOVE;
+    mateThreat = false;
   }
 
   public int getValue(int height) {

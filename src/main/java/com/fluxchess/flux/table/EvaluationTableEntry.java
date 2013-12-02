@@ -26,8 +26,8 @@ public final class EvaluationTableEntry {
   public int evaluation = -Search.INFINITY;
 
   public void clear() {
-    this.zobristCode = 0;
-    this.evaluation = -Search.INFINITY;
+    zobristCode = 0;
+    evaluation = -Search.INFINITY;
   }
 
 }

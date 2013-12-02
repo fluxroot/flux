@@ -34,23 +34,23 @@ public final class RepetitionTable {
   /**
    * Puts a new zobrist code into the table.
    *
-   * @param newZobristCode the zobrist code.
+   * @param zobristCode the zobrist code.
    */
-  public void put(long newZobristCode) {
-    zobristCode[this.size++] = newZobristCode;
+  public void put(long zobristCode) {
+    this.zobristCode[size++] = zobristCode;
   }
 
   /**
    * Removes the zobrist code from the table.
    *
-   * @param newZobristCode the zobrist code.
+   * @param zobristCode the zobrist code.
    */
-  public void remove(long newZobristCode) {
+  public void remove(long zobristCode) {
     int index = -1;
 
     // Find the zobrist code from the end of the list
-    for (int i = this.size - 1; i >= 0; i--) {
-      if (zobristCode[i] == newZobristCode) {
+    for (int i = size - 1; i >= 0; i--) {
+      if (this.zobristCode[i] == zobristCode) {
         index = i;
         break;
       }
@@ -58,12 +58,12 @@ public final class RepetitionTable {
 
     // Remove and shift
     if (index != -1) {
-      for (int i = index + 1; i < this.size; i++) {
-        zobristCode[index] = zobristCode[i];
+      for (int i = index + 1; i < size; i++) {
+        this.zobristCode[index] = this.zobristCode[i];
         index++;
       }
 
-      this.size--;
+      size--;
 
       return;
     }
@@ -75,12 +75,12 @@ public final class RepetitionTable {
   /**
    * Returns whether or not the zobrist code exists in the table.
    *
-   * @param newZobristCode the zobrist code.
+   * @param zobristCode the zobrist code.
    * @return true if the zobrist code exists in the table, false otherwise.
    */
-  public boolean exists(long newZobristCode) {
-    for (int i = this.size - 1; i >= 0; i--) {
-      if (zobristCode[i] == newZobristCode) {
+  public boolean exists(long zobristCode) {
+    for (int i = size - 1; i >= 0; i--) {
+      if (this.zobristCode[i] == zobristCode) {
         return true;
       }
     }

@@ -37,33 +37,33 @@ public final class MoveList {
   private int historyCount = 0;
 
   public void newList() {
-    assert this.historyCount < HISTORYSIZE;
+    assert historyCount < HISTORYSIZE;
 
-    this.historyHead[this.historyCount] = this.head;
-    this.historyIndex[this.historyCount] = this.index;
-    this.historyTail[this.historyCount] = this.tail;
-    this.historyCount++;
+    historyHead[historyCount] = head;
+    historyIndex[historyCount] = index;
+    historyTail[historyCount] = tail;
+    historyCount++;
 
-    this.head = this.tail;
-    this.index = this.tail;
+    head = tail;
+    index = tail;
   }
 
   public void deleteList() {
-    assert this.historyCount > 0;
+    assert historyCount > 0;
 
-    this.historyCount--;
-    this.head = this.historyHead[this.historyCount];
-    this.index = this.historyIndex[this.historyCount];
-    this.tail = this.historyTail[this.historyCount];
+    historyCount--;
+    head = historyHead[historyCount];
+    index = historyIndex[historyCount];
+    tail = historyTail[historyCount];
   }
 
   public void resetList() {
-    this.tail = this.head;
-    this.index = this.head;
+    tail = head;
+    index = head;
   }
 
   public int getLength() {
-    return this.tail - this.head;
+    return tail - head;
   }
 
 }

@@ -130,9 +130,9 @@ public final class Evaluation {
   private final EvaluationTable evaluationTable;
   private final PawnTable pawnHashtable;
 
-  public Evaluation(EvaluationTable newEvaluationTable, PawnTable newPawnTable) {
-    this.evaluationTable = newEvaluationTable;
-    this.pawnHashtable = newPawnTable;
+  public Evaluation(EvaluationTable evaluationTable, PawnTable pawnTable) {
+    this.evaluationTable = evaluationTable;
+    this.pawnHashtable = pawnTable;
   }
 
   /**
@@ -243,7 +243,7 @@ public final class Evaluation {
 
     // Check the evaluation table
     if (Configuration.useEvaluationTable) {
-      EvaluationTableEntry entry = this.evaluationTable.get(board.zobristCode);
+      EvaluationTableEntry entry = evaluationTable.get(board.zobristCode);
       if (entry != null) {
         return entry.evaluation;
       }
@@ -340,16 +340,16 @@ public final class Evaluation {
     long pawnZobristCode = board.pawnZobristCode;
     int pawnStructureOpening = 0;
     int pawnStructureEndgame = 0;
-    if (Configuration.usePawnTable && this.pawnHashtable.exists(pawnZobristCode)) {
-      pawnStructureOpening = this.pawnHashtable.getOpening(pawnZobristCode);
-      pawnStructureEndgame = this.pawnHashtable.getEndgame(pawnZobristCode);
+    if (Configuration.usePawnTable && pawnHashtable.exists(pawnZobristCode)) {
+      pawnStructureOpening = pawnHashtable.getOpening(pawnZobristCode);
+      pawnStructureEndgame = pawnHashtable.getEndgame(pawnZobristCode);
     } else {
       evaluatePawnStructure(myColor, enemyColor, board);
       evaluatePawnStructure(enemyColor, myColor, board);
       pawnStructureOpening = totalPawnStructure[myColor][TOTAL_OPENING] - totalPawnStructure[enemyColor][TOTAL_OPENING];
       pawnStructureEndgame = totalPawnStructure[myColor][TOTAL_ENDGAME] - totalPawnStructure[enemyColor][TOTAL_ENDGAME];
       if (Configuration.usePawnTable) {
-        this.pawnHashtable.put(pawnZobristCode, pawnStructureOpening, pawnStructureEndgame);
+        pawnHashtable.put(pawnZobristCode, pawnStructureOpening, pawnStructureEndgame);
       }
     }
     totalOpening += pawnStructureOpening;
@@ -395,7 +395,7 @@ public final class Evaluation {
 
     // Store the result and return
     if (Configuration.useEvaluationTable) {
-      this.evaluationTable.put(board.zobristCode, total);
+      evaluationTable.put(board.zobristCode, total);
     }
 
     return total;

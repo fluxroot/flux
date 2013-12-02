@@ -26,13 +26,13 @@ public final class PositionList {
   public int size = 0;
 
   public PositionList() {
-    this.MAXSIZE = 64;
-    this.position = new int[MAXSIZE];
+    MAXSIZE = 64;
+    position = new int[MAXSIZE];
   }
 
   public PositionList(int MAXSIZE) {
     this.MAXSIZE = MAXSIZE;
-    this.position = new int[MAXSIZE];
+    position = new int[MAXSIZE];
   }
 
 }

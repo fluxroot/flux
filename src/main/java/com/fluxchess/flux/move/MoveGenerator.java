@@ -111,13 +111,13 @@ public final class MoveGenerator {
     stateList[position++] = GEN_END;
   }
 
-  public MoveGenerator(Hex88Board newBoard, KillerTable newKillerTable, HistoryTable historyTable) {
-    assert newBoard != null;
-    assert newKillerTable != null;
+  public MoveGenerator(Hex88Board board, KillerTable killerTable, HistoryTable historyTable) {
+    assert board != null;
+    assert killerTable != null;
     assert historyTable != null;
 
-    board = newBoard;
-    killerTable = newKillerTable;
+    this.board = board;
+    this.killerTable = killerTable;
     moveRater = new MoveRater(historyTable);
 
     moveList = new MoveList();
