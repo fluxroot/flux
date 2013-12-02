@@ -36,9 +36,6 @@ public final class MoveList {
   private final int[] historyTail = new int[HISTORYSIZE];
   private int historyCount = 0;
 
-  public MoveList() {
-  }
-
   public void newList() {
     assert historyCount < HISTORYSIZE;
 
