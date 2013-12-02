@@ -21,7 +21,7 @@ package com.fluxchess.flux;
 import com.fluxchess.jcpi.commands.IProtocol;
 import com.fluxchess.jcpi.commands.ProtocolInformationCommand;
 
-public class ChessLogger {
+public final class ChessLogger {
 
   // Singleton Pattern
   private static final ChessLogger instance = new ChessLogger();
