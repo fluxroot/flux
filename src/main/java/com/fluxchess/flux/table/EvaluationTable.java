@@ -42,28 +42,28 @@ public final class EvaluationTable {
   /**
    * Puts a zobrist code and evaluation value into the table.
    *
-   * @param newZobristCode the zobrist code.
-   * @param newEvaluation  the evaluation value.
+   * @param zobristCode the zobrist code.
+   * @param evaluation  the evaluation value.
    */
-  public void put(long newZobristCode, int newEvaluation) {
-    int position = (int) (newZobristCode % size);
+  public void put(long zobristCode, int evaluation) {
+    int position = (int) (zobristCode % size);
     EvaluationTableEntry currentEntry = entry[position];
 
-    currentEntry.zobristCode = newZobristCode;
-    currentEntry.evaluation = newEvaluation;
+    currentEntry.zobristCode = zobristCode;
+    currentEntry.evaluation = evaluation;
   }
 
   /**
    * Returns the evaluation table entry given the zobrist code.
    *
-   * @param newZobristCode the zobrist code.
+   * @param zobristCode the zobrist code.
    * @return the evaluation table entry or null if there exists no entry.
    */
-  public EvaluationTableEntry get(long newZobristCode) {
-    int position = (int) (newZobristCode % size);
+  public EvaluationTableEntry get(long zobristCode) {
+    int position = (int) (zobristCode % size);
     EvaluationTableEntry currentEntry = entry[position];
 
-    if (currentEntry.zobristCode == newZobristCode) {
+    if (currentEntry.zobristCode == zobristCode) {
       return currentEntry;
     } else {
       return null;
