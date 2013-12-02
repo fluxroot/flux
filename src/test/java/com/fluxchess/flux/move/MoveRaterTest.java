@@ -25,7 +25,7 @@ import static org.junit.Assert.assertEquals;
 
 public class MoveRaterTest {
 
-  //	@Test
+  //  @Test
   public void testRate() {
     MoveRater rater = new MoveRater(new HistoryTable());
 

@@ -33,13 +33,13 @@ public class IntMoveTest {
   public void testIntMove() {
     int move = IntMove.createMove(IntMove.NULL, IntPosition.NOPOSITION, IntPosition.NOPOSITION, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
     assertEquals(IntMove.NULL, IntMove.getType(move));
-//		assertEquals(IntPosition.NOPOSITION, IntMove.getStart(move));
-//		assertEquals(IntPosition.NOPOSITION, IntMove.getEnd(move));
-//		assertEquals(IntChessman.NOCHESSMAN, IntMove.getChessman(move));
-//		assertEquals(IntColor.NOCOLOR, IntMove.getChessmanColor(move));
-//		assertEquals(IntChessman.NOCHESSMAN, IntMove.getTarget(move));
-//		assertEquals(IntColor.NOCOLOR, IntMove.getTargetColor(move));
-//		assertEquals(IntChessman.NOCHESSMAN, IntMove.getPromotion(move));
+//      assertEquals(IntPosition.NOPOSITION, IntMove.getStart(move));
+//      assertEquals(IntPosition.NOPOSITION, IntMove.getEnd(move));
+//      assertEquals(IntChessman.NOCHESSMAN, IntMove.getChessman(move));
+//      assertEquals(IntColor.NOCOLOR, IntMove.getChessmanColor(move));
+//      assertEquals(IntChessman.NOCHESSMAN, IntMove.getTarget(move));
+//      assertEquals(IntColor.NOCOLOR, IntMove.getTargetColor(move));
+//      assertEquals(IntChessman.NOCHESSMAN, IntMove.getPromotion(move));
 
     move = IntMove.createMove(IntMove.NORMAL, 0, 16, IntChessman.createPiece(IntChessman.PAWN, IntColor.WHITE), IntChessman.createPiece(IntChessman.QUEEN, IntColor.BLACK), IntChessman.NOPIECE);
     assertEquals(IntMove.NORMAL, IntMove.getType(move));
@@ -51,7 +51,7 @@ public class IntMoveTest {
     assertEquals(IntChessman.QUEEN, IntMove.getTarget(move));
     assertEquals(IntColor.BLACK, IntMove.getTargetColor(move));
     assertEquals(IntChessman.BLACK_QUEEN, IntMove.getTargetPiece(move));
-//		assertEquals(IntChessman.NOCHESSMAN, IntMove.getPromotion(move));
+//      assertEquals(IntChessman.NOCHESSMAN, IntMove.getPromotion(move));
 
     move = IntMove.createMove(IntMove.NORMAL, 0, 16, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.QUEEN);
     assertEquals(IntChessman.QUEEN, IntMove.getPromotion(move));
@@ -69,8 +69,8 @@ public class IntMoveTest {
     assertEquals(IntColor.WHITE, IntMove.getChessmanColor(move));
     assertEquals(IntChessman.WHITE_PAWN, IntMove.getChessmanPiece(move));
     assertEquals(IntChessman.NOPIECE, IntMove.getTarget(move));
-//		assertEquals(IntColor.NOCOLOR, IntMove.getTargetColor(move));
-//		assertEquals(IntChessman.NOCHESSMAN, IntMove.getPromotion(move));
+//      assertEquals(IntColor.NOCOLOR, IntMove.getTargetColor(move));
+//      assertEquals(IntChessman.NOCHESSMAN, IntMove.getPromotion(move));
   }
 
   @Test

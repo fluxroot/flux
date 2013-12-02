@@ -26,6 +26,8 @@ import com.fluxchess.flux.table.KillerTable;
 import com.fluxchess.jcpi.models.GenericBoard;
 import com.fluxchess.jcpi.models.IllegalNotationException;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -36,6 +38,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 public class MoveGeneratorTest {
+
+  private static final Logger LOG = LoggerFactory.getLogger(MoveGeneratorTest.class);
 
   private final TestPerftTable table = new TestPerftTable();
 
@@ -49,12 +53,12 @@ public class MoveGeneratorTest {
       new MoveSee(testBoard);
       table.increaseAge();
 
-//			testBoard.makeMove(IntMove.createMove(IntMove.NORMAL, IntPosition.d2, IntPosition.c1, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN));
-//			testBoard.makeMove(IntMove.createMove(IntMove.NORMAL, IntPosition.e7, IntPosition.d6, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN));
-//			testBoard.makeMove(IntMove.createMove(IntMove.NORMAL, IntPosition.e1, IntPosition.d1, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN));
-//			testBoard.makeMove(IntMove.createMove(IntMove.PAWNDOUBLE, IntPosition.c7, IntPosition.c5, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN));
+//          testBoard.makeMove(IntMove.createMove(IntMove.NORMAL, IntPosition.d2, IntPosition.c1, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN));
+//          testBoard.makeMove(IntMove.createMove(IntMove.NORMAL, IntPosition.e7, IntPosition.d6, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN));
+//          testBoard.makeMove(IntMove.createMove(IntMove.NORMAL, IntPosition.e1, IntPosition.d1, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN));
+//          testBoard.makeMove(IntMove.createMove(IntMove.PAWNDOUBLE, IntPosition.c7, IntPosition.c5, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN));
       int result = miniMax(testBoard, new MoveGenerator(testBoard, new KillerTable(), new HistoryTable()), 5, 5);
-      System.out.println(result);
+      LOG.info(String.format("%d", result));
     } catch (IllegalNotationException e) {
       fail();
     }
@@ -63,7 +67,7 @@ public class MoveGeneratorTest {
   @Test
   public void testPerft() {
     for (int i = 1; i < 4; i++) {
-//		for (int i = 1; i < 7; i++) {
+//      for (int i = 1; i < 7; i++) {
       try {
         BufferedReader file = null;
         try {
@@ -88,11 +92,10 @@ public class MoveGeneratorTest {
             new MoveSee(testBoard);
             table.increaseAge();
 
-            System.out.print("Testing " + tokens[0].trim() + " depth " + depth + " with nodes number " + nodesNumber + ": ");
             long startTime = System.currentTimeMillis();
             int result = miniMax(testBoard, new MoveGenerator(testBoard, new KillerTable(), new HistoryTable()), depth, depth);
             long endTime = System.currentTimeMillis();
-            System.out.println(endTime - startTime);
+            LOG.info("Testing " + tokens[0].trim() + " depth " + depth + " with nodes number " + nodesNumber + ": " + String.format("%d", endTime - startTime));
             assertEquals(tokens[0].trim(), nodesNumber, result);
           }
 
@@ -133,9 +136,9 @@ public class MoveGeneratorTest {
       board.undoMove(move);
       assert captureSquare == board.captureSquare;
 
-//			if (depth == maxDepth) {
-//				System.out.println(IntMove.toGenericMove(move).toLongAlgebraicNotation() + ": " + nodes);
-//			}
+//          if (depth == maxDepth) {
+//              System.out.println(IntMove.toGenericMove(move).toLongAlgebraicNotation() + ": " + nodes);
+//          }
       totalNodes += nodes;
       move = MoveGenerator.getNextMove();
     }
@@ -165,7 +168,7 @@ public class MoveGeneratorTest {
   @Test
   public void testQuiescentCheckingMoves() {
     for (int i = 1; i < 3; i++) {
-//		for (int i = 1; i < 7; i++) {
+//      for (int i = 1; i < 7; i++) {
       try {
         BufferedReader file = null;
         try {
@@ -189,7 +192,7 @@ public class MoveGeneratorTest {
             Hex88Board testBoard = new Hex88Board(board);
             new MoveSee(testBoard);
 
-            System.out.println("Testing " + tokens[0].trim() + " depth " + depth + " with nodes number " + nodesNumber + ":");
+            LOG.info("Testing " + tokens[0].trim() + " depth " + depth + " with nodes number " + nodesNumber + ":");
             new MoveGenerator(testBoard, new KillerTable(), new HistoryTable());
             miniMaxQuiescentCheckingMoves(testBoard, depth, depth);
           }
