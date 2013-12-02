@@ -67,7 +67,7 @@ public class Hex88BoardTest {
     assertEquals(IntGamePhase.OPENING, testBoard.getGamePhase());
 
     // Test material value
-    assertEquals(IntChessman.VALUE_KING + IntChessman.VALUE_QUEEN + 2 * IntChessman.VALUE_ROOK + 2 * IntChessman.VALUE_BISHOP + 2 * IntChessman.VALUE_KNIGHT + 8 * IntChessman.VALUE_PAWN, Hex88Board.materialValue[IntColor.WHITE]);
+    assertEquals(IntChessman.VALUE_KING + IntChessman.VALUE_QUEEN + 2 * IntChessman.VALUE_ROOK + 2 * IntChessman.VALUE_BISHOP + 2 * IntChessman.VALUE_KNIGHT + 8 * IntChessman.VALUE_PAWN, Hex88Board.materialValueAll[IntColor.WHITE]);
   }
 
   @Test

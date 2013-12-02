@@ -150,12 +150,12 @@ public final class Evaluation {
       IntColor.valueOfIntColor(myColor).toString(),
       IntColor.valueOfIntColor(enemyColor).toString());
     System.out.printf("%20s: Opening %5d (%5d:%5d) Endgame %5d (%5d:%5d)\n", "Total Material",
-      Hex88Board.materialValue[myColor] - Hex88Board.materialValue[enemyColor],
-      Hex88Board.materialValue[myColor],
-      Hex88Board.materialValue[enemyColor],
-      Hex88Board.materialValue[myColor] - Hex88Board.materialValue[enemyColor],
-      Hex88Board.materialValue[myColor],
-      Hex88Board.materialValue[enemyColor]);
+      Hex88Board.materialValueAll[myColor] - Hex88Board.materialValueAll[enemyColor],
+      Hex88Board.materialValueAll[myColor],
+      Hex88Board.materialValueAll[enemyColor],
+      Hex88Board.materialValueAll[myColor] - Hex88Board.materialValueAll[enemyColor],
+      Hex88Board.materialValueAll[myColor],
+      Hex88Board.materialValueAll[enemyColor]);
     System.out.printf("%20s: Opening %5d (%5d:%5d) Endgame %5d (%5d:%5d)\n", "Total Position",
       Hex88Board.positionValueOpening[myColor] - Hex88Board.positionValueOpening[enemyColor],
       Hex88Board.positionValueOpening[myColor],
@@ -402,7 +402,7 @@ public final class Evaluation {
   }
 
   private static int evaluateMaterial(int myColor, int enemyColor) {
-    int myMaterialValue = Hex88Board.materialValue[myColor];
+    int myMaterialValue = Hex88Board.materialValueAll[myColor];
 
     // Correct material value based on Larry Kaufman's paper
     // TODO: Check this one

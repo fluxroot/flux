@@ -102,7 +102,7 @@ public final class Hex88Board {
   public int activeColor = IntColor.WHITE;
 
   // The material value and counter. We always keep the values current.
-  public static final int[] materialValue = new int[IntColor.ARRAY_DIMENSION];
+  public static final int[] materialValueAll = new int[IntColor.ARRAY_DIMENSION];
   public static final int[] materialCount = new int[IntColor.ARRAY_DIMENSION];
   public static final int[] materialCountAll = new int[IntColor.ARRAY_DIMENSION];
 
@@ -169,7 +169,7 @@ public final class Hex88Board {
 
     // Initialize the material values and counters
     for (int color : IntColor.values) {
-      materialValue[color] = 0;
+      materialValueAll[color] = 0;
       materialCount[color] = 0;
       materialCountAll[color] = 0;
     }
@@ -286,7 +286,7 @@ public final class Hex88Board {
 
     // Update
     board[position] = piece;
-    materialValue[color] += IntChessman.getValueFromChessman(chessman);
+    materialValueAll[color] += IntChessman.getValueFromChessman(chessman);
     if (update) {
       zobristCode ^= zobristChessman[chessman][color][position];
       positionValueOpening[color] += PositionValues.getPositionValue(IntGamePhase.OPENING, chessman, color, position);
@@ -350,7 +350,7 @@ public final class Hex88Board {
 
     // Update
     board[position] = IntChessman.NOPIECE;
-    materialValue[color] -= IntChessman.getValueFromChessman(chessman);
+    materialValueAll[color] -= IntChessman.getValueFromChessman(chessman);
     if (update) {
       zobristCode ^= zobristChessman[chessman][color][position];
       positionValueOpening[color] -= PositionValues.getPositionValue(IntGamePhase.OPENING, chessman, color, position);
@@ -544,9 +544,9 @@ public final class Hex88Board {
   }
 
   public int getGamePhase() {
-    if (materialValue[IntColor.WHITE] >= GAMEPHASE_OPENING_VALUE && materialValue[IntColor.BLACK] >= GAMEPHASE_OPENING_VALUE) {
+    if (materialValueAll[IntColor.WHITE] >= GAMEPHASE_OPENING_VALUE && materialValueAll[IntColor.BLACK] >= GAMEPHASE_OPENING_VALUE) {
       return IntGamePhase.OPENING;
-    } else if (materialValue[IntColor.WHITE] <= GAMEPHASE_ENDGAME_VALUE || materialValue[IntColor.BLACK] <= GAMEPHASE_ENDGAME_VALUE
+    } else if (materialValueAll[IntColor.WHITE] <= GAMEPHASE_ENDGAME_VALUE || materialValueAll[IntColor.BLACK] <= GAMEPHASE_ENDGAME_VALUE
       || materialCount[IntColor.WHITE] <= GAMEPHASE_ENDGAME_COUNT || materialCount[IntColor.BLACK] <= GAMEPHASE_ENDGAME_COUNT) {
       return IntGamePhase.ENDGAME;
     } else {
