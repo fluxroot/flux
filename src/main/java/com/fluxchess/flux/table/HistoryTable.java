@@ -28,11 +28,7 @@ public final class HistoryTable {
 
   public static final int MAX_HISTORYVALUE = 65536;
 
-  private static int[][] historyTable;
-
-  public HistoryTable() {
-    historyTable = new int[IntChessman.PIECE_VALUE_SIZE][Hex88Board.BOARDSIZE];
-  }
+  private final int[][] historyTable = new int[IntChessman.PIECE_VALUE_SIZE][Hex88Board.BOARDSIZE];
 
   /**
    * Returns the number of hits for the move.

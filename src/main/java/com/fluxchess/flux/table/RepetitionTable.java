@@ -24,12 +24,8 @@ public final class RepetitionTable {
 
   private static final int MAXSIZE = Search.MAX_MOVES;
 
-  private static long[] zobristCode;
+  private final long[] zobristCode = new long[MAXSIZE];
   private int size = 0;
-
-  public RepetitionTable() {
-    zobristCode = new long[MAXSIZE];
-  }
 
   /**
    * Puts a new zobrist code into the table.

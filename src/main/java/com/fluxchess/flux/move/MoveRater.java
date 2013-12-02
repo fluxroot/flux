@@ -23,7 +23,7 @@ import com.fluxchess.flux.table.HistoryTable;
 
 public final class MoveRater {
 
-  private static HistoryTable historyTable;
+  private final HistoryTable historyTable;
 
   public MoveRater(HistoryTable historyTable) {
     this.historyTable = historyTable;
