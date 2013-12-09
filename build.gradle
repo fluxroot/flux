@@ -70,6 +70,10 @@ tasks.withType(Checkstyle) {
   }
 }
 
+sourceSets {
+  integration
+}
+
 dependencies {
   compile 'com.fluxchess:jcpi:1.1.+'
 
@@ -77,6 +81,9 @@ dependencies {
   testCompile 'org.slf4j:slf4j-api:1.7.+'
   testCompile 'org.slf4j:slf4j-log4j12:1.7.+'
   testCompile 'log4j:log4j:1.2.+'
+
+  integrationCompile project(':')
+  integrationCompile 'junit:junit:4.+'
 }
 
 sourceCompatibility = 1.6
@@ -99,11 +106,6 @@ jar {
   }
 }
 
-task testsJar(type: Jar, dependsOn: testClasses) {
-  classifier = 'tests'
-  from sourceSets.test.output
-}
-
 task sourcesJar(type: Jar, dependsOn: classes) {
   classifier = 'sources'
   from sourceSets.main.allSource
@@ -112,6 +114,11 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 task javadocJar(type: Jar, dependsOn: javadoc) {
   classifier = 'javadoc'
   from javadoc.destinationDir
+}
+
+task integration(type: Test) {
+  testClassesDir = sourceSets.integration.output.classesDir
+  classpath = sourceSets.integration.runtimeClasspath
 }
 
 task dist(type: Zip) {
@@ -127,7 +134,6 @@ task dist(type: Zip) {
     from 'COPYING.LESSER'
 
     from jar
-    from testsJar
     from sourcesJar
     from javadocJar
 
@@ -150,7 +156,6 @@ task dist(type: Zip) {
 }
 
 artifacts {
-  archives testsJar
   archives sourcesJar
   archives javadocJar
 }
@@ -158,6 +163,13 @@ artifacts {
 uploadArchives {
   if (project.hasProperty('branchName')) {
     if (branchName == releaseBranch) {
+      if (version.contains('-')) {
+        ext.repositoryName = 'staging'
+      } else {
+        ext.repositoryName = 'release'
+      }
+      println "Queuing upload to ${repositoryName}."
+
       configurations {
         deployerJars
       }
@@ -169,7 +181,7 @@ uploadArchives {
       repositories {
         mavenDeployer {
           configuration = configurations.deployerJars
-          repository(url: 's3://maven.fluxchess.com/release') {
+          repository(url: "s3://maven.fluxchess.com/${repositoryName}") {
             authentication(userName: s3AccessKeyId, passphrase: s3SecretAccessKey)
           }
         }
