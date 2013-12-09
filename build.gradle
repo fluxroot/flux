@@ -46,9 +46,7 @@ if (!hasProperty('s3SecretAccessKey')) {
 
 repositories {
   mavenCentral()
-  maven {
-    url "http://maven.fluxchess.com/release"
-  }
+  maven { url "http://maven.fluxchess.com/release" }
 }
 
 tasks.withType(Pmd) {
