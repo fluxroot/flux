@@ -1,8 +1,10 @@
-Flux Chess UCI
-==============
+Flux Chess Engine
+=================
 
 Copyright 2007-2013 Phokham Nonava <pn@nonava.com>  
-http://www.fluxchess.com/
+http://fluxchess.com
+
+[![Build Status](https://travis-ci.org/fluxroot/flux.png?branch=master)](https://travis-ci.org/fluxroot/flux) [![Coverage Status](https://coveralls.io/repos/fluxroot/flux/badge.png?branch=master)](https://coveralls.io/r/fluxroot/flux?branch=master)
 
 
 Introduction
@@ -128,8 +130,7 @@ source, use the following steps.
 
 License
 -------
-Flux Chess is released under version 3 of the 
-[LGPL](http://www.gnu.org/copyleft/lgpl.html). 
+Flux Chess is released under version 3 of the [LGPL].
 
 
 Acknowledgments
@@ -157,6 +158,9 @@ lot from the following sources.
 
 - The XBoard Protocol  
 	http://home.hccnet.nl/h.g.muller/engine-intf.html
+
+
+[LGPL]: http://www.gnu.org/copyleft/lgpl.html
 
 
 Changelog
