@@ -18,10 +18,10 @@
  */
 package com.fluxchess.flux.evaluation;
 
+import com.fluxchess.flux.board.BitPieceList;
 import com.fluxchess.flux.board.Hex88Board;
 import com.fluxchess.flux.board.IntChessman;
 import com.fluxchess.flux.board.IntColor;
-import com.fluxchess.flux.board.PositionList;
 import com.fluxchess.flux.move.MoveGenerator;
 
 public final class KnightEvaluation {
@@ -41,11 +41,10 @@ public final class KnightEvaluation {
     // Initialize
     int total = 0;
     byte[] enemyAttackTable = AttackTableEvaluation.getInstance().attackTable[enemyColor];
-    PositionList myKnightList = board.knightList[myColor];
 
     // Evaluate each knight
-    for (int i = 0; i < myKnightList.size; i++) {
-      int knightPosition = myKnightList.position[i];
+    for (long positions = board.knightList[myColor].list; positions != 0; positions &= positions - 1) {
+      int knightPosition = BitPieceList.next(positions);
 
       int allMobility = EVAL_KNIGHT_MOBILITY_BASE;
 

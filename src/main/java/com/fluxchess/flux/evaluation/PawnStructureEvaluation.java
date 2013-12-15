@@ -43,11 +43,10 @@ public final class PawnStructureEvaluation {
     byte[] myAttackTable = AttackTableEvaluation.getInstance().attackTable[myColor];
     byte[] enemyAttackTable = AttackTableEvaluation.getInstance().attackTable[enemyColor];
     byte[] myPawnTable = PawnTableEvaluation.getInstance().pawnTable[myColor];
-    PositionList myPawnList = board.pawnList[myColor];
 
     // Evaluate each pawn
-    for (int i = 0; i < myPawnList.size; i++) {
-      int pawnPosition = myPawnList.position[i];
+    for (long positions = board.pawnList[myColor].list; positions != 0; positions &= positions - 1) {
+      int pawnPosition = BitPieceList.next(positions);
       int pawnFile = IntPosition.getFile(pawnPosition);
       int pawnRank = IntPosition.getRank(pawnPosition);
       int tableFile = pawnFile + 1;

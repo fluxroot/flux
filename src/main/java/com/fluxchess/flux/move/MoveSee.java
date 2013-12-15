@@ -172,9 +172,8 @@ public final class MoveSee {
     }
 
     // Knight attacks
-    PositionList tempPositionList = board.knightList[myColor];
-    for (int i = 0; i < tempPositionList.size; i++) {
-      int position = tempPositionList.position[i];
+    for (long positions = board.knightList[myColor].list; positions != 0; positions &= positions - 1) {
+      int position = BitPieceList.next(positions);
       if (board.canAttack(IntChessman.KNIGHT, myColor, position, targetPosition)) {
         list.chessman[list.size] = board.board[position];
         list.position[list.size] = position;
@@ -183,9 +182,8 @@ public final class MoveSee {
     }
 
     // Bishop attacks
-    tempPositionList = board.bishopList[myColor];
-    for (int i = 0; i < tempPositionList.size; i++) {
-      int position = tempPositionList.position[i];
+    for (long positions = board.bishopList[myColor].list; positions != 0; positions &= positions - 1) {
+      int position = BitPieceList.next(positions);
       if (board.canAttack(IntChessman.BISHOP, myColor, position, targetPosition)) {
         int bishop = board.board[position];
         if (hasHiddenAttacker(position, targetPosition)) {
@@ -197,9 +195,8 @@ public final class MoveSee {
     }
 
     // Rook attacks
-    tempPositionList = board.rookList[myColor];
-    for (int i = 0; i < tempPositionList.size; i++) {
-      int position = tempPositionList.position[i];
+    for (long positions = board.rookList[myColor].list; positions != 0; positions &= positions - 1) {
+      int position = BitPieceList.next(positions);
       if (board.canAttack(IntChessman.ROOK, myColor, position, targetPosition)) {
         int rook = board.board[position];
         if (hasHiddenAttacker(position, targetPosition)) {
@@ -211,9 +208,8 @@ public final class MoveSee {
     }
 
     // Queen attacks
-    tempPositionList = board.queenList[myColor];
-    for (int i = 0; i < tempPositionList.size; i++) {
-      int position = tempPositionList.position[i];
+    for (long positions = board.queenList[myColor].list; positions != 0; positions &= positions - 1) {
+      int position = BitPieceList.next(positions);
       if (board.canAttack(IntChessman.QUEEN, myColor, position, targetPosition)) {
         int queen = board.board[position];
         if (hasHiddenAttacker(position, targetPosition)) {
@@ -225,8 +221,8 @@ public final class MoveSee {
     }
 
     // King attacks
-    assert board.kingList[myColor].size == 1;
-    int position = board.kingList[myColor].position[0];
+    assert board.kingList[myColor].size() == 1;
+    int position = BitPieceList.next(board.kingList[myColor].list);
     if (board.canAttack(IntChessman.KING, myColor, position, targetPosition)) {
       list.chessman[list.size] = board.board[position];
       list.position[list.size] = position;

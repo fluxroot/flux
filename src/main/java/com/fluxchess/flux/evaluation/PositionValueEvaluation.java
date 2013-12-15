@@ -18,10 +18,10 @@
  */
 package com.fluxchess.flux.evaluation;
 
+import com.fluxchess.flux.board.BitPieceList;
 import com.fluxchess.flux.board.Hex88Board;
 import com.fluxchess.flux.board.IntChessman;
 import com.fluxchess.flux.board.IntColor;
-import com.fluxchess.flux.board.PositionList;
 
 public final class PositionValueEvaluation {
 
@@ -234,11 +234,10 @@ public final class PositionValueEvaluation {
     int endgame = 0;
 
     // Pawns
-    PositionList chessmanList = board.pawnList[myColor];
     int[] chessmanValueOpening = positionValueOpening[IntChessman.PAWN];
     int[] chessmanValueEndgame = positionValueEndgame[IntChessman.PAWN];
-    for (int i = 0; i < chessmanList.size; i++) {
-      int position = chessmanList.position[i];
+    for (long positions = board.pawnList[myColor].list; positions != 0; positions &= positions - 1) {
+      int position = BitPieceList.next(positions);
       if (myColor == IntColor.BLACK) {
         position = 127 - 8 - position;
       } else {
@@ -249,11 +248,10 @@ public final class PositionValueEvaluation {
     }
 
     // Knights
-    chessmanList = board.knightList[myColor];
     chessmanValueOpening = positionValueOpening[IntChessman.KNIGHT];
     chessmanValueEndgame = positionValueEndgame[IntChessman.KNIGHT];
-    for (int i = 0; i < chessmanList.size; i++) {
-      int position = chessmanList.position[i];
+    for (long positions = board.knightList[myColor].list; positions != 0; positions &= positions - 1) {
+      int position = BitPieceList.next(positions);
       if (myColor == IntColor.BLACK) {
         position = 127 - 8 - position;
       } else {
@@ -264,11 +262,10 @@ public final class PositionValueEvaluation {
     }
 
     // Bishops
-    chessmanList = board.bishopList[myColor];
     chessmanValueOpening = positionValueOpening[IntChessman.BISHOP];
     chessmanValueEndgame = positionValueEndgame[IntChessman.BISHOP];
-    for (int i = 0; i < chessmanList.size; i++) {
-      int position = chessmanList.position[i];
+    for (long positions = board.bishopList[myColor].list; positions != 0; positions &= positions - 1) {
+      int position = BitPieceList.next(positions);
       if (myColor == IntColor.BLACK) {
         position = 127 - 8 - position;
       } else {
@@ -279,11 +276,10 @@ public final class PositionValueEvaluation {
     }
 
     // Rooks
-    chessmanList = board.rookList[myColor];
     chessmanValueOpening = positionValueOpening[IntChessman.ROOK];
     chessmanValueEndgame = positionValueEndgame[IntChessman.ROOK];
-    for (int i = 0; i < chessmanList.size; i++) {
-      int position = chessmanList.position[i];
+    for (long positions = board.rookList[myColor].list; positions != 0; positions &= positions - 1) {
+      int position = BitPieceList.next(positions);
       if (myColor == IntColor.BLACK) {
         position = 127 - 8 - position;
       } else {
@@ -294,11 +290,10 @@ public final class PositionValueEvaluation {
     }
 
     // Queens
-    chessmanList = board.queenList[myColor];
     chessmanValueOpening = positionValueOpening[IntChessman.QUEEN];
     chessmanValueEndgame = positionValueEndgame[IntChessman.QUEEN];
-    for (int i = 0; i < chessmanList.size; i++) {
-      int position = chessmanList.position[i];
+    for (long positions = board.queenList[myColor].list; positions != 0; positions &= positions - 1) {
+      int position = BitPieceList.next(positions);
       if (myColor == IntColor.BLACK) {
         position = 127 - 8 - position;
       } else {
@@ -309,8 +304,8 @@ public final class PositionValueEvaluation {
     }
 
     // King
-    assert board.kingList[myColor].size == 1;
-    int position = board.kingList[myColor].position[0];
+    assert board.kingList[myColor].size() == 1;
+    int position = BitPieceList.next(board.kingList[myColor].list);
     if (myColor == IntColor.BLACK) {
       position = 127 - 8 - position;
     } else {
