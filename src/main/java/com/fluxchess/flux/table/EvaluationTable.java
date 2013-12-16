@@ -43,14 +43,14 @@ public final class EvaluationTable {
    * Puts a zobrist code and evaluation value into the table.
    *
    * @param zobristCode the zobrist code.
-   * @param evaluation  the evaluation value.
+   * @param value       the evaluation value.
    */
-  public void put(long zobristCode, int evaluation) {
+  public void put(long zobristCode, int value) {
     int position = (int) (zobristCode % size);
     EvaluationTableEntry currentEntry = entry[position];
 
     currentEntry.zobristCode = zobristCode;
-    currentEntry.evaluation = evaluation;
+    currentEntry.evaluation = value;
   }
 
   /**

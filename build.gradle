@@ -86,6 +86,7 @@ cobertura.coverageFormats = ['html', 'xml']
 
 sourceSets {
   integration
+  testing
 }
 
 dependencies {
@@ -98,6 +99,8 @@ dependencies {
 
   integrationCompile project(':')
   integrationCompile 'junit:junit:4.+'
+
+  testingCompile project(':')
 }
 
 sourceCompatibility = 1.6
