@@ -32,9 +32,6 @@ public final class Attack {
   public final int[] position = new int[MAXATTACK];
   public int numberOfMoves = -1;
 
-  public Attack() {
-  }
-
   public boolean isCheck() {
     return count != 0;
   }
