@@ -30,16 +30,6 @@ public final class Hex88BoardStackEntry {
     clear();
   }
 
-  public Hex88BoardStackEntry(Hex88BoardStackEntry entry) {
-    assert entry != null;
-
-    zobristHistory = entry.zobristHistory;
-    pawnZobristHistory = entry.pawnZobristHistory;
-    halfMoveClockHistory = entry.halfMoveClockHistory;
-    enPassantHistory = entry.enPassantHistory;
-    captureSquareHistory = entry.captureSquareHistory;
-  }
-
   public void clear() {
     zobristHistory = 0;
     pawnZobristHistory = 0;

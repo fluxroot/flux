@@ -73,16 +73,6 @@ public class Hex88BoardTest {
   }
 
   @Test
-  public void testCopyConstructor() {
-    GenericBoard board = new GenericBoard(GenericBoard.STANDARDSETUP);
-    Hex88Board testBoard = new Hex88Board(board);
-
-    Hex88Board copyBoard = new Hex88Board(testBoard);
-
-    assertEquals(testBoard.toString(), copyBoard.toString());
-  }
-
-  @Test
   public void testMakeMoveNormalMove() {
     GenericBoard board = new GenericBoard(GenericBoard.STANDARDSETUP);
     Hex88Board testBoard = new Hex88Board(board);

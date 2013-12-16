@@ -228,69 +228,6 @@ public final class Hex88Board {
     setFullMoveNumber(newBoard.getFullMoveNumber());
   }
 
-  public Hex88Board(Hex88Board board) {
-    // Initialize the board
-    System.arraycopy(board.board, 0, this.board, 0, BOARDSIZE);
-
-    // Initialize the position lists
-    for (int color : IntColor.values) {
-      pawnList[color] = new PositionList(board.pawnList[color]);
-      knightList[color] = new PositionList(board.knightList[color]);
-      bishopList[color] = new PositionList(board.bishopList[color]);
-      rookList[color] = new PositionList(board.rookList[color]);
-      queenList[color] = new PositionList(board.queenList[color]);
-      kingList[color] = new PositionList(board.kingList[color]);
-    }
-
-    for (int i = 0; i < STACKSIZE; i++) {
-      stack[i] = new Hex88BoardStackEntry(board.stack[i]);
-    }
-    stackSize = board.stackSize;
-
-    zobristCode = board.zobristCode;
-    pawnZobristCode = board.pawnZobristCode;
-
-    // Initialize en passant
-    enPassantSquare = board.enPassantSquare;
-
-    // Initialize castling
-    castling = board.castling;
-    System.arraycopy(board.castlingHistory, 0, castlingHistory, 0, STACKSIZE);
-    castlingHistorySize = board.castlingHistorySize;
-
-    // Initialize capture
-    captureSquare = board.captureSquare;
-    System.arraycopy(board.captureHistory, 0, captureHistory, 0, STACKSIZE);
-    captureHistorySize = board.captureHistorySize;
-
-    // Initialize the half move clock
-    halfMoveClock = board.halfMoveClock;
-
-    // Initialize the full move number
-    halfMoveNumber = board.halfMoveNumber;
-
-    // Initialize the active color
-    activeColor = board.activeColor;
-
-    // Initialize the material values and counters
-    for (int color : IntColor.values) {
-      materialValueAll[color] = board.materialValueAll[color];
-      materialCount[color] = board.materialCount[color];
-      materialCountAll[color] = board.materialCountAll[color];
-    }
-
-    // Initialize repetition table
-    repetitionTable = new RepetitionTable(board.repetitionTable);
-
-    // Initialize the attack list
-    for (int i = 0; i < STACKSIZE + 1; i++) {
-      for (int j = 0; j < IntColor.ARRAY_DIMENSION; j++) {
-        attackHistory[i][j] = new Attack(board.attackHistory[i][j]);
-      }
-    }
-    attackHistorySize = board.attackHistorySize;
-  }
-
   /**
    * Puts the piece on the board at the given position.
    *

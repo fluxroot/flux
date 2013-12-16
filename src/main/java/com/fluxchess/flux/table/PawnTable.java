@@ -18,10 +18,6 @@
  */
 package com.fluxchess.flux.table;
 
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-
 public final class PawnTable {
 
   public static final int ENTRYSIZE = 12;
@@ -31,20 +27,12 @@ public final class PawnTable {
   private final long[] zobristCode;
   private final int[] value;
 
-  private final Lock readLock;
-  private final Lock writeLock;
-
   public PawnTable(int size) {
     assert size >= 1;
 
     this.size = size;
     zobristCode = new long[size];
     value = new int[size];
-
-    // Initialize locks
-    ReadWriteLock lock = new ReentrantReadWriteLock();
-    readLock = lock.readLock();
-    writeLock = lock.writeLock();
   }
 
   /**
@@ -56,13 +44,8 @@ public final class PawnTable {
   public void put(long zobristCode, int value) {
     int position = (int) (zobristCode % size);
 
-    writeLock.lock();
-    try {
-      this.zobristCode[position] = zobristCode;
-      this.value[position] = value;
-    } finally {
-      writeLock.unlock();
-    }
+    this.zobristCode[position] = zobristCode;
+    this.value[position] = value;
   }
 
   /**
@@ -74,12 +57,7 @@ public final class PawnTable {
   public boolean exists(long zobristCode) {
     int position = (int) (zobristCode % size);
 
-    readLock.lock();
-    try {
-      return this.zobristCode[position] == zobristCode;
-    } finally {
-      readLock.unlock();
-    }
+    return this.zobristCode[position] == zobristCode;
   }
 
   /**
@@ -91,16 +69,11 @@ public final class PawnTable {
   public int getValue(long zobristCode) {
     int position = (int) (zobristCode % size);
 
-    readLock.lock();
-    try {
-      if (this.zobristCode[position] == zobristCode) {
-        return value[position];
-      }
-
-      throw new IllegalArgumentException();
-    } finally {
-      readLock.unlock();
+    if (this.zobristCode[position] == zobristCode) {
+      return value[position];
     }
+
+    throw new IllegalArgumentException();
   }
 
 }

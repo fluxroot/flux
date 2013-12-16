@@ -32,18 +32,6 @@ public final class Attack {
   public final int[] position = new int[MAXATTACK];
   public int numberOfMoves = -1;
 
-  public Attack() {
-  }
-
-  public Attack(Attack attack) {
-    assert attack != null;
-
-    count = attack.count;
-    System.arraycopy(attack.delta, 0, delta, 0, MAXATTACK);
-    System.arraycopy(attack.position, 0, position, 0, MAXATTACK);
-    numberOfMoves = attack.numberOfMoves;
-  }
-
   public boolean isCheck() {
     return count != 0;
   }

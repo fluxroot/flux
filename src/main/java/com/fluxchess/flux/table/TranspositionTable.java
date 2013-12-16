@@ -24,9 +24,6 @@ import com.fluxchess.flux.move.IntScore;
 import com.fluxchess.jcpi.models.GenericMove;
 
 import java.util.List;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public final class TranspositionTable {
 
@@ -44,9 +41,6 @@ public final class TranspositionTable {
   // Number of slots used
   private int slotsUsed = 0;
 
-  private final Lock readLock;
-  private final Lock writeLock;
-
   public TranspositionTable(int size) {
     assert size >= 1;
 
@@ -60,35 +54,20 @@ public final class TranspositionTable {
 
     currentAge = 0;
     slotsUsed = 0;
-
-    // Initialize locks
-    ReadWriteLock lock = new ReentrantReadWriteLock();
-    readLock = lock.readLock();
-    writeLock = lock.writeLock();
   }
 
   public void clear() {
-    writeLock.lock();
-    try {
-      currentAge = 0;
-      slotsUsed = 0;
+    currentAge = 0;
+    slotsUsed = 0;
 
-      for (TranspositionTableEntry anEntry : entry) {
-        anEntry.clear();
-      }
-    } finally {
-      writeLock.unlock();
+    for (TranspositionTableEntry anEntry : entry) {
+      anEntry.clear();
     }
   }
 
   public void increaseAge() {
-    writeLock.lock();
-    try {
-      currentAge++;
-      slotsUsed = 0;
-    } finally {
-      writeLock.unlock();
-    }
+    currentAge++;
+    slotsUsed = 0;
   }
 
   /**
@@ -106,44 +85,38 @@ public final class TranspositionTable {
     assert height >= 0;
 
     int position = (int) (zobristCode % size);
+    TranspositionTableEntry currentEntry = entry[position];
 
-    writeLock.lock();
-    try {
-      TranspositionTableEntry currentEntry = entry[position];
-
-      //## BEGIN "always replace" Scheme
-      if (currentEntry.zobristCode == 0 || currentEntry.age != currentAge) {
-        // This is a new entry
-        slotsUsed++;
-        currentEntry.zobristCode = zobristCode;
-        currentEntry.age = currentAge;
-        currentEntry.depth = depth;
-        currentEntry.setValue(value, height);
-        currentEntry.type = type;
-        currentEntry.move = move;
-        currentEntry.mateThreat = mateThreat;
-      } else if (currentEntry.zobristCode == zobristCode) {
-        // The same zobrist key already exists
-        if (depth >= currentEntry.depth && move != IntMove.NOMOVE) {
-          currentEntry.depth = depth;
-          currentEntry.setValue(value, height);
-          currentEntry.type = type;
-          currentEntry.move = move;
-          currentEntry.mateThreat = mateThreat;
-        }
-      } else {
-        // We have a collision. Overwrite existing entry
-        currentEntry.zobristCode = zobristCode;
+    //## BEGIN "always replace" Scheme
+    if (currentEntry.zobristCode == 0 || currentEntry.age != currentAge) {
+      // This is a new entry
+      slotsUsed++;
+      currentEntry.zobristCode = zobristCode;
+      currentEntry.age = currentAge;
+      currentEntry.depth = depth;
+      currentEntry.setValue(value, height);
+      currentEntry.type = type;
+      currentEntry.move = move;
+      currentEntry.mateThreat = mateThreat;
+    } else if (currentEntry.zobristCode == zobristCode) {
+      // The same zobrist key already exists
+      if (depth >= currentEntry.depth && move != IntMove.NOMOVE) {
         currentEntry.depth = depth;
         currentEntry.setValue(value, height);
         currentEntry.type = type;
         currentEntry.move = move;
         currentEntry.mateThreat = mateThreat;
       }
-      //## ENDOF "always replace" Scheme
-    } finally {
-      writeLock.unlock();
+    } else {
+      // We have a collision. Overwrite existing entry
+      currentEntry.zobristCode = zobristCode;
+      currentEntry.depth = depth;
+      currentEntry.setValue(value, height);
+      currentEntry.type = type;
+      currentEntry.move = move;
+      currentEntry.mateThreat = mateThreat;
     }
+    //## ENDOF "always replace" Scheme
   }
 
   /**
@@ -154,18 +127,12 @@ public final class TranspositionTable {
    */
   public TranspositionTableEntry get(long zobristCode) {
     int position = (int) (zobristCode % size);
+    TranspositionTableEntry currentEntry = entry[position];
 
-    readLock.lock();
-    try {
-      TranspositionTableEntry currentEntry = entry[position];
-
-      if (currentEntry.zobristCode == zobristCode && currentEntry.age == currentAge) {
-        return currentEntry;
-      } else {
-        return null;
-      }
-    } finally {
-      readLock.unlock();
+    if (currentEntry.zobristCode == zobristCode && currentEntry.age == currentAge) {
+      return currentEntry;
+    } else {
+      return null;
     }
   }
 
@@ -182,25 +149,20 @@ public final class TranspositionTable {
     assert depth >= 0;
     assert moveList != null;
 
-    readLock.lock();
-    try {
-      TranspositionTableEntry currentEntry = get(board.zobristCode);
+    TranspositionTableEntry currentEntry = get(board.zobristCode);
 
-      if (currentEntry == null
-        || depth == 0
-        || currentEntry.move == IntMove.NOMOVE) {
-        return moveList;
-      } else {
-        moveList.add(IntMove.toGenericMove(currentEntry.move));
+    if (currentEntry == null
+      || depth == 0
+      || currentEntry.move == IntMove.NOMOVE) {
+      return moveList;
+    } else {
+      moveList.add(IntMove.toGenericMove(currentEntry.move));
 
-        board.makeMove(currentEntry.move);
-        List<GenericMove> newMoveList = getMoveList(board, depth - 1, moveList);
-        board.undoMove(currentEntry.move);
+      board.makeMove(currentEntry.move);
+      List<GenericMove> newMoveList = getMoveList(board, depth - 1, moveList);
+      board.undoMove(currentEntry.move);
 
-        return newMoveList;
-      }
-    } finally {
-      readLock.unlock();
+      return newMoveList;
     }
   }
 
@@ -210,12 +172,7 @@ public final class TranspositionTable {
    * @return the permill of slots used.
    */
   public int getPermillUsed() {
-    readLock.lock();
-    try {
-      return (int) ((1000L * (long) slotsUsed) / (long) size);
-    } finally {
-      readLock.unlock();
-    }
+    return (int) ((1000L * (long) slotsUsed) / (long) size);
   }
 
 }

@@ -25,14 +25,4 @@ public final class PositionList {
   public final int[] position = new int[MAXSIZE];
   public int size = 0;
 
-  public PositionList() {
-  }
-
-  public PositionList(PositionList list) {
-    assert list != null;
-
-    System.arraycopy(list.position, 0, position, 0, MAXSIZE);
-    size = list.size;
-  }
-
 }
