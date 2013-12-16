@@ -37,7 +37,7 @@ public class Hex88BoardTest {
     for (GenericFile file : GenericFile.values()) {
       for (GenericRank rank : GenericRank.values()) {
         GenericPiece piece = board.getPiece(GenericPosition.valueOf(file, rank));
-        int testChessman = Hex88Board.board[IntPosition.valueOfPosition(GenericPosition.valueOf(file, rank))];
+        int testChessman = testBoard.board[IntPosition.valueOfPosition(GenericPosition.valueOf(file, rank))];
         if (piece == null) {
           assertEquals(IntChessman.NOPIECE, testChessman);
         } else {
@@ -67,7 +67,7 @@ public class Hex88BoardTest {
     assertEquals(IntGamePhase.OPENING, testBoard.getGamePhase());
 
     // Test material value
-    assertEquals(IntChessman.VALUE_KING + IntChessman.VALUE_QUEEN + 2 * IntChessman.VALUE_ROOK + 2 * IntChessman.VALUE_BISHOP + 2 * IntChessman.VALUE_KNIGHT + 8 * IntChessman.VALUE_PAWN, Hex88Board.materialValueAll[IntColor.WHITE]);
+    assertEquals(IntChessman.VALUE_KING + IntChessman.VALUE_QUEEN + 2 * IntChessman.VALUE_ROOK + 2 * IntChessman.VALUE_BISHOP + 2 * IntChessman.VALUE_KNIGHT + 8 * IntChessman.VALUE_PAWN, testBoard.materialValueAll[IntColor.WHITE]);
     assertEquals(1 /* QUEEN */ + 2 /* ROOKS */ + 2 /* BISHOPS */ + 2 /* KNIGHTS */, testBoard.materialCount[IntColor.WHITE]);
     assertEquals(1 /* QUEEN */ + 2 /* ROOKS */ + 2 /* BISHOPS */ + 2 /* KNIGHTS */ + 8 /* PAWNS */, testBoard.materialCountAll[IntColor.WHITE]);
   }
