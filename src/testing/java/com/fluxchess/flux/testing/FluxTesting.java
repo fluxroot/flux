@@ -32,73 +32,73 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class FluxTesting implements IProtocolHandler {
 
-    BlockingQueue<IEngineCommand> commandQueue = new LinkedBlockingQueue<IEngineCommand>();
-    List<GenericMove> moveList = new ArrayList<GenericMove>();
+  final BlockingQueue<IEngineCommand> commandQueue = new LinkedBlockingQueue<IEngineCommand>();
+  final List<GenericMove> moveList = new ArrayList<GenericMove>();
 
-    public FluxTesting() {
-        commandQueue.add(new EngineInitializeRequestCommand());
-        commandQueue.add(new EngineDebugCommand(false, true));
-        commandQueue.add(new EngineReadyRequestCommand("test"));
-        commandQueue.add(new EngineNewGameCommand());
-        commandQueue.add(new EngineAnalyzeCommand(new GenericBoard(GenericBoard.STANDARDSETUP), moveList));
-        EngineStartCalculatingCommand startCommand = new EngineStartCalculatingCommand();
-        startCommand.setMoveTime(5000L);
-        commandQueue.add(startCommand);
+  public FluxTesting() {
+    commandQueue.add(new EngineInitializeRequestCommand());
+    commandQueue.add(new EngineDebugCommand(false, true));
+    commandQueue.add(new EngineReadyRequestCommand("test"));
+    commandQueue.add(new EngineNewGameCommand());
+    commandQueue.add(new EngineAnalyzeCommand(new GenericBoard(GenericBoard.STANDARDSETUP), moveList));
+    EngineStartCalculatingCommand startCommand = new EngineStartCalculatingCommand();
+    startCommand.setMoveTime(5000L);
+    commandQueue.add(startCommand);
+  }
+
+  public static void main(String[] args) {
+    FluxTesting testing = new FluxTesting();
+    AbstractEngine engine = new Flux(testing);
+    engine.run();
+  }
+
+  public IEngineCommand receive() {
+    IEngineCommand command = null;
+    try {
+      command = commandQueue.take();
+    } catch (InterruptedException e) {
+      e.printStackTrace();
     }
+    assert command != null;
 
-    public static void main(String[] args) {
-        FluxTesting testing = new FluxTesting();
-        AbstractEngine engine = new Flux(testing);
-        engine.run();
+    System.out.println(command);
+
+    return command;
+  }
+
+  public void send(ProtocolInitializeAnswerCommand command) {
+    System.out.println(command);
+  }
+
+  public void send(ProtocolReadyAnswerCommand command) {
+    System.out.println(command);
+  }
+
+  public void send(ProtocolBestMoveCommand command) {
+    System.out.println(command);
+    if (command.bestMove != null) {
+      try {
+        Thread.sleep(100);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+      moveList.add(command.bestMove);
+      commandQueue.add(new EngineStopCalculatingCommand());
+      commandQueue.add(new EngineAnalyzeCommand(new GenericBoard(GenericBoard.STANDARDSETUP), moveList));
+      EngineStartCalculatingCommand startCommand = new EngineStartCalculatingCommand();
+      startCommand.setMoveTime(5000L);
+      commandQueue.add(startCommand);
+    } else {
+      commandQueue.add(new EngineQuitCommand());
     }
+  }
 
-    public IEngineCommand receive() {
-        IEngineCommand command = null;
-        try {
-            command = commandQueue.take();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        assert command != null;
+  public void send(ProtocolInformationCommand command) {
+    System.out.println(command);
+  }
 
-        System.out.println(command);
-
-        return command;
-    }
-
-    public void send(ProtocolInitializeAnswerCommand command) {
-        System.out.println(command);
-    }
-
-    public void send(ProtocolReadyAnswerCommand command) {
-        System.out.println(command);
-    }
-
-    public void send(ProtocolBestMoveCommand command) {
-        System.out.println(command);
-        if (command.bestMove != null) {
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            moveList.add(command.bestMove);
-            commandQueue.add(new EngineStopCalculatingCommand());
-            commandQueue.add(new EngineAnalyzeCommand(new GenericBoard(GenericBoard.STANDARDSETUP), moveList));
-            EngineStartCalculatingCommand startCommand = new EngineStartCalculatingCommand();
-            startCommand.setMoveTime(5000L);
-            commandQueue.add(startCommand);
-        } else {
-            commandQueue.add(new EngineQuitCommand());
-        }
-    }
-
-    public void send(ProtocolInformationCommand command) {
-        System.out.println(command);
-    }
-
-    public String toString() {
-        return "FluxTesting Protocol";
-    }
+  public String toString() {
+    return "FluxTesting Protocol";
+  }
 
 }
