@@ -806,11 +806,11 @@ public final class Search implements Runnable {
       // Pruning
       if (value > bestValue) {
         bestValue = value;
+        bestMove = move;
         addPv(pvList[height], pvList[height + 1], move);
 
         // Do we have a better value?
         if (value > alpha) {
-          bestMove = move;
           bestPv = pv;
           hashType = IntScore.EXACT;
           alpha = value;
@@ -1265,11 +1265,11 @@ public final class Search implements Runnable {
       // Pruning
       if (value > bestValue) {
         bestValue = value;
+        bestMove = move;
         addPv(pvList[height], pvList[height + 1], move);
 
         // Do we have a better value?
         if (value > alpha) {
-          bestMove = move;
           hashType = IntScore.EXACT;
           alpha = value;
 
