@@ -27,16 +27,6 @@ public final class RepetitionTable {
   private final long[] zobristCode = new long[MAXSIZE];
   private int size = 0;
 
-  public RepetitionTable() {
-  }
-
-  public RepetitionTable(RepetitionTable table) {
-    assert table != null;
-
-    System.arraycopy(table.zobristCode, 0, zobristCode, 0, MAXSIZE);
-    size = table.size;
-  }
-
   /**
    * Puts a new zobrist code into the table.
    *

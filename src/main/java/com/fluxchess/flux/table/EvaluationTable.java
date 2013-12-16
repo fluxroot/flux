@@ -18,10 +18,6 @@
  */
 package com.fluxchess.flux.table;
 
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-
 public final class EvaluationTable {
 
   // Size of one evaluation entry
@@ -30,9 +26,6 @@ public final class EvaluationTable {
   private final int size;
 
   private final EvaluationTableEntry[] entry;
-
-  private final Lock readLock;
-  private final Lock writeLock;
 
   public EvaluationTable(int size) {
     assert size >= 1;
@@ -44,11 +37,6 @@ public final class EvaluationTable {
     for (int i = 0; i < entry.length; i++) {
       entry[i] = new EvaluationTableEntry();
     }
-
-    // Initialize locks
-    ReadWriteLock lock = new ReentrantReadWriteLock();
-    readLock = lock.readLock();
-    writeLock = lock.writeLock();
   }
 
   /**
@@ -59,16 +47,10 @@ public final class EvaluationTable {
    */
   public void put(long zobristCode, int value) {
     int position = (int) (zobristCode % size);
+    EvaluationTableEntry currentEntry = entry[position];
 
-    writeLock.lock();
-    try {
-      EvaluationTableEntry currentEntry = entry[position];
-
-      currentEntry.zobristCode = zobristCode;
-      currentEntry.evaluation = value;
-    } finally {
-      writeLock.unlock();
-    }
+    currentEntry.zobristCode = zobristCode;
+    currentEntry.evaluation = value;
   }
 
   /**
@@ -79,18 +61,12 @@ public final class EvaluationTable {
    */
   public EvaluationTableEntry get(long zobristCode) {
     int position = (int) (zobristCode % size);
+    EvaluationTableEntry currentEntry = entry[position];
 
-    readLock.lock();
-    try {
-      EvaluationTableEntry currentEntry = entry[position];
-
-      if (currentEntry.zobristCode == zobristCode) {
-        return currentEntry;
-      } else {
-        return null;
-      }
-    } finally {
-      readLock.unlock();
+    if (currentEntry.zobristCode == zobristCode) {
+      return currentEntry;
+    } else {
+      return null;
     }
   }
 
