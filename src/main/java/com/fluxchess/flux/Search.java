@@ -89,6 +89,7 @@ public final class Search implements Runnable {
   private int showPvNumber = 1;
 
   // Search logic
+  private MoveGenerator moveGenerator;
   private Evaluation evaluation;
   private static Hex88Board board;
   private final int myColor;
@@ -136,7 +137,7 @@ public final class Search implements Runnable {
     killerTable = new KillerTable();
     historyTable = new HistoryTable();
 
-    new MoveGenerator(newBoard, killerTable, historyTable);
+    moveGenerator = new MoveGenerator(newBoard, killerTable, historyTable);
     new MoveSee(newBoard);
 
     info = newInfo;
@@ -416,14 +417,14 @@ public final class Search implements Runnable {
     boolean isCheck = attack.isCheck();
 
     if (searchMoveList.getLength() == 0) {
-      MoveGenerator.initializeMain(attack, 0, transpositionMove);
+      moveGenerator.initializeMain(attack, 0, transpositionMove);
 
       int move = IntMove.NOMOVE;
-      while ((move = MoveGenerator.getNextMove()) != IntMove.NOMOVE) {
+      while ((move = moveGenerator.getNextMove()) != IntMove.NOMOVE) {
         rootMoveList.move[rootMoveList.tail++] = move;
       }
 
-      MoveGenerator.destroy();
+      moveGenerator.destroy();
     } else {
       for (int i = searchMoveList.head; i < searchMoveList.tail; i++) {
         rootMoveList.move[rootMoveList.tail++] = searchMoveList.move[i];
@@ -1109,13 +1110,13 @@ public final class Search implements Runnable {
     //## ENDOF Internal Iterative Deepening
 
     // Initialize the move generator
-    MoveGenerator.initializeMain(attack, height, transpositionMove);
+    moveGenerator.initializeMain(attack, height, transpositionMove);
 
     // Initialize Single-Response Extension
     boolean isSingleReply = isCheck && attack.numberOfMoves == 1;
 
     int move = IntMove.NOMOVE;
-    while ((move = MoveGenerator.getNextMove()) != IntMove.NOMOVE) {
+    while ((move = moveGenerator.getNextMove()) != IntMove.NOMOVE) {
       //## BEGIN Minor Promotion Pruning
       if (Configuration.useMinorPromotionPruning
         && !analyzeMode
@@ -1283,7 +1284,7 @@ public final class Search implements Runnable {
       }
     }
 
-    MoveGenerator.destroy();
+    moveGenerator.destroy();
 
     // If we cannot move, check for checkmate and stalemate.
     if (bestValue == -INFINITY) {
@@ -1414,10 +1415,10 @@ public final class Search implements Runnable {
     }
 
     // Initialize the move generator
-    MoveGenerator.initializeQuiescent(attack, checkingDepth >= 0);
+    moveGenerator.initializeQuiescent(attack, checkingDepth >= 0);
 
     int move = IntMove.NOMOVE;
-    while ((move = MoveGenerator.getNextMove()) != IntMove.NOMOVE) {
+    while ((move = moveGenerator.getNextMove()) != IntMove.NOMOVE) {
       //## BEGIN Futility Pruning
       if (Configuration.useDeltaPruning) {
         if (!pvNode
@@ -1477,7 +1478,7 @@ public final class Search implements Runnable {
       }
     }
 
-    MoveGenerator.destroy();
+    moveGenerator.destroy();
 
     if (bestValue == -INFINITY) {
       assert isCheck;
@@ -1542,8 +1543,8 @@ public final class Search implements Runnable {
     }
 
     // Extend another ply if we enter a pawn endgame
-    if (Hex88Board.materialCount[board.activeColor] == 0
-      && Hex88Board.materialCount[IntColor.switchColor(board.activeColor)] == 1
+    if (board.materialCount[board.activeColor] == 0
+      && board.materialCount[IntColor.switchColor(board.activeColor)] == 1
       && IntMove.getTarget(move) != IntChessman.NOPIECE
       && IntMove.getTarget(move) != IntChessman.PAWN) {
       newDepth++;
