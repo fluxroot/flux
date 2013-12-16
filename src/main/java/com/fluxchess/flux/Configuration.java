@@ -21,7 +21,6 @@ package com.fluxchess.flux;
 import com.fluxchess.jcpi.models.Option;
 
 import java.util.Hashtable;
-import java.util.Properties;
 
 public final class Configuration {
 
@@ -104,19 +103,6 @@ public final class Configuration {
         } catch (NumberFormatException e) {
           showPvNumber = 1;
         }
-      }
-    }
-  }
-
-  public static void loadConfiguration() {
-    // Get the default properties
-    Properties defaultProperties = new Properties();
-    for (Option option : configuration.values()) {
-      assert option.name != null;
-
-      if (!option.type.equals(TYPE_Button)) {
-        assert option.defaultValue != null;
-        defaultProperties.setProperty(option.name, option.defaultValue);
       }
     }
   }
