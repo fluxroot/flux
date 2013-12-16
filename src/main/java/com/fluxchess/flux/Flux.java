@@ -34,7 +34,6 @@ import com.fluxchess.jcpi.models.Option;
 import com.fluxchess.jcpi.protocols.IProtocolHandler;
 
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 public final class Flux extends AbstractEngine {
@@ -93,9 +92,6 @@ public final class Flux extends AbstractEngine {
 
     // Stop calculating
     new EngineStopCalculatingCommand().accept(this);
-
-    // Load the configuration
-    Configuration.loadConfiguration();
 
     // Transposition Table
     int megabyteValue;
