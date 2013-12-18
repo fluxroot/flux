@@ -72,7 +72,7 @@ public final class Hex88Board {
   public final PositionList[] kingList = new PositionList[IntColor.ARRAY_DIMENSION];
 
   // Board stack
-  private final Hex88BoardStackEntry[] stack = new Hex88BoardStackEntry[STACKSIZE];
+  private final StackEntry[] stack = new StackEntry[STACKSIZE];
   private int stackSize = 0;
 
   // Zobrist code
@@ -149,7 +149,7 @@ public final class Hex88Board {
     repetitionTable = new RepetitionTable();
 
     for (int i = 0; i < stack.length; i++) {
-      stack[i] = new Hex88BoardStackEntry();
+      stack[i] = new StackEntry();
     }
 
     // Initialize the position lists
@@ -1043,7 +1043,7 @@ public final class Hex88Board {
 
   public void makeMove(int move) {
     // Get current stack entry
-    Hex88BoardStackEntry currentStackEntry = stack[stackSize];
+    StackEntry currentStackEntry = stack[stackSize];
 
     // Save history
     currentStackEntry.zobristHistory = zobristCode;
@@ -1117,7 +1117,7 @@ public final class Hex88Board {
     assert stackSize >= 0;
 
     // Get current stack entry
-    Hex88BoardStackEntry currentStackEntry = stack[stackSize];
+    StackEntry currentStackEntry = stack[stackSize];
 
     // Restore zobrist history
     zobristCode = currentStackEntry.zobristHistory;
@@ -1642,6 +1642,28 @@ public final class Hex88Board {
 
   public String toString() {
     return getBoard().toString();
+  }
+
+  private final class StackEntry {
+
+    public long zobristHistory = 0;
+    public long pawnZobristHistory = 0;
+    public int halfMoveClockHistory = 0;
+    public int enPassantHistory = 0;
+    public int captureSquareHistory = 0;
+
+    public StackEntry() {
+      clear();
+    }
+
+    public void clear() {
+      zobristHistory = 0;
+      pawnZobristHistory = 0;
+      halfMoveClockHistory = 0;
+      enPassantHistory = 0;
+      captureSquareHistory = 0;
+    }
+
   }
 
 }
