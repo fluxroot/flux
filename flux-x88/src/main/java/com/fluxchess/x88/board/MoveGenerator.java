@@ -211,8 +211,8 @@ public final class MoveGenerator {
     if (board.isPinned(X88Move.getStart(move), chessmanColor)) {
       // We are pinned. Test if we move on the line.
       int kingPosition = BitPieceList.next(board.kingList[chessmanColor].list);
-      int attackDeltaStart = AttackVector.delta[kingPosition - X88Move.getStart(move) + 127];
-      int attackDeltaEnd = AttackVector.delta[kingPosition - X88Move.getEnd(move) + 127];
+      int attackDeltaStart = Attack.deltas[kingPosition - X88Move.getStart(move) + 127];
+      int attackDeltaEnd = Attack.deltas[kingPosition - X88Move.getEnd(move) + 127];
       return attackDeltaStart == attackDeltaEnd;
     }
 
