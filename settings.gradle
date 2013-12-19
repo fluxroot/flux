@@ -1,4 +1,5 @@
 rootProject.name = 'flux'
 
+include 'flux-integration'
 include 'flux-x88'
 include 'flux-bitboard'

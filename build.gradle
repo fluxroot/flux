@@ -1,16 +1,8 @@
+apply plugin: 'maven'
+apply plugin: 'cobertura'
 apply plugin: 'coveralls'
 
 description = 'Flux Chess Engine'
-
-if (!hasProperty('s3AccessKeyId')) {
-  ext.s3AccessKeyId = 'n/a'
-}
-
-if (!hasProperty('s3SecretAccessKey')) {
-  ext.s3SecretAccessKey = 'n/a'
-}
-
-afterEvaluate { println "Building version ${version}" }
 
 buildscript {
   repositories {
@@ -25,26 +17,24 @@ buildscript {
 
 allprojects {
   apply plugin: 'java'
-  apply plugin: 'maven'
   apply plugin: 'pmd'
   apply plugin: 'findbugs'
   apply plugin: 'checkstyle'
-  apply plugin: 'cobertura'
 
   group = 'com.fluxchess'
   version = '3.0.0-alpha'
   ext.releaseBranch = 'master'
 
-  if (!hasProperty('buildNumber') || !(hasProperty('branchName') && branchName == releaseBranch)) {
+  if (!project.hasProperty('buildNumber') || !(project.hasProperty('branchName') && branchName == releaseBranch)) {
     // We're probably building on a dev machine or we're building a branch
     ext.buildNumber = 'dev'
   }
-  if (!hasProperty('revisionNumber')) {
+  if (!project.hasProperty('revisionNumber')) {
     // We're probably building on a dev machine
     ext.revisionNumber = 'dev'
   }
 
-  if (!version.contains('-') && !(hasProperty('releaseVersion') && releaseVersion == version)) {
+  if (!version.contains('-') && !(project.hasProperty('releaseVersion') && releaseVersion == version)) {
     // Append '-rc' if we're not releasing yet
     version += '-rc'
   }
@@ -54,9 +44,19 @@ allprojects {
     version += '.' + buildNumber
   }
 
-  if (version.contains('-') && !(hasProperty('branchName') && branchName == releaseBranch)) {
+  if (version.contains('-') && !(project.hasProperty('branchName') && branchName == releaseBranch)) {
     // Append the revisionNumber if we're not releasing and not on a release branch
     version += '+' + revisionNumber
+  }
+
+  afterEvaluate { println "Building ${name} version ${version}" }
+
+  if (!project.hasProperty('s3AccessKeyId_password')) {
+    ext.s3AccessKeyId_password = 'n/a'
+  }
+
+  if (!project.hasProperty('s3SecretAccessKey_password')) {
+    ext.s3SecretAccessKey_password = 'n/a'
   }
 
   repositories {
@@ -85,11 +85,7 @@ allprojects {
     }
   }
 
-  cobertura.coverageFormats = ['html', 'xml']
-
   dependencies {
-    compile 'com.fluxchess:jcpi:+'
-
     testCompile 'junit:junit:4.+'
   }
 
@@ -105,10 +101,35 @@ allprojects {
   }
 }
 
+project(':flux-integration') {
+  description = 'Integration Testing'
+
+  sourceSets {
+    integration
+  }
+
+  configurations {
+    integrationCompile.extendsFrom compile
+    integrationRuntime.extendsFrom runtime
+  }
+
+  dependencies {
+    compile project(':')
+    compile 'junit:junit:4.+'
+  }
+
+  task integration(type: Test) {
+    testClassesDir = sourceSets.integration.output.classesDir
+    classpath = sourceSets.integration.runtimeClasspath
+  }
+}
+
 project(':flux-x88') {
   description = '0x88 Move Generator'
 
   dependencies {
+    compile 'com.fluxchess:jcpi:+'
+
     compile 'org.slf4j:slf4j-api:1.7.+'
     compile 'org.slf4j:slf4j-log4j12:1.7.+'
     compile 'log4j:log4j:1.2.+'
@@ -119,24 +140,26 @@ project(':flux-bitboard') {
   description = 'Bitboard Move Generator'
 
   dependencies {
+    compile 'com.fluxchess:jcpi:+'
+
     compile 'org.slf4j:slf4j-api:1.7.+'
     compile 'org.slf4j:slf4j-log4j12:1.7.+'
     compile 'log4j:log4j:1.2.+'
   }
 }
 
+cobertura.coverageFormats = ['html', 'xml']
+
 sourceSets {
-  integration
   testing
 }
 
 dependencies {
+  compile 'com.fluxchess:jcpi:+'
+
   testCompile 'org.slf4j:slf4j-api:1.7.+'
   testCompile 'org.slf4j:slf4j-log4j12:1.7.+'
   testCompile 'log4j:log4j:1.2.+'
-
-  integrationCompile project(':')
-  integrationCompile 'junit:junit:4.+'
 
   testingCompile project(':')
 }
@@ -158,11 +181,6 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 task javadocJar(type: Jar, dependsOn: javadoc) {
   classifier = 'javadoc'
   from javadoc.destinationDir
-}
-
-task integration(type: Test) {
-  testClassesDir = sourceSets.integration.output.classesDir
-  classpath = sourceSets.integration.runtimeClasspath
 }
 
 task dist(type: Zip) {
@@ -221,7 +239,7 @@ uploadArchives {
         mavenDeployer {
           configuration = configurations.deployerJars
           repository(url: "s3://maven.fluxchess.com/${repositoryName}") {
-            authentication(userName: s3AccessKeyId, passphrase: s3SecretAccessKey)
+            authentication(userName: s3AccessKeyId_password, passphrase: s3SecretAccessKey_password)
           }
         }
       }
