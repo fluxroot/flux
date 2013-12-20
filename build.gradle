@@ -101,29 +101,6 @@ allprojects {
   }
 }
 
-project(':flux-integration') {
-  description = 'Integration Testing'
-
-  sourceSets {
-    integration
-  }
-
-  configurations {
-    integrationCompile.extendsFrom compile
-    integrationRuntime.extendsFrom runtime
-  }
-
-  dependencies {
-    compile project(':')
-    compile 'junit:junit:4.+'
-  }
-
-  task integration(type: Test) {
-    testClassesDir = sourceSets.integration.output.classesDir
-    classpath = sourceSets.integration.runtimeClasspath
-  }
-}
-
 project(':flux-x88') {
   description = '0x88 Move Generator'
 
@@ -151,6 +128,7 @@ project(':flux-bitboard') {
 cobertura.coverageFormats = ['html', 'xml']
 
 sourceSets {
+  integration
   testing
 }
 
@@ -160,6 +138,8 @@ dependencies {
   testCompile 'org.slf4j:slf4j-api:1.7.+'
   testCompile 'org.slf4j:slf4j-log4j12:1.7.+'
   testCompile 'log4j:log4j:1.2.+'
+
+  integrationCompile project(path: ':', configuration: 'testRuntime')
 
   testingCompile project(':')
 }
@@ -173,6 +153,11 @@ jar {
   }
 }
 
+task testsJar(type: Jar, dependsOn: testClasses) {
+  classifier = 'tests'
+  from sourceSets.test.output
+}
+
 task sourcesJar(type: Jar, dependsOn: classes) {
   classifier = 'sources'
   from sourceSets.main.allSource
@@ -181,6 +166,11 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 task javadocJar(type: Jar, dependsOn: javadoc) {
   classifier = 'javadoc'
   from javadoc.destinationDir
+}
+
+task integration(type: Test) {
+  testClassesDir = sourceSets.integration.output.classesDir
+  classpath = sourceSets.integration.runtimeClasspath
 }
 
 task dist(type: Zip) {
@@ -214,6 +204,9 @@ task dist(type: Zip) {
 }
 
 artifacts {
+  testCompile testsJar
+
+  archives testsJar
   archives sourcesJar
   archives javadocJar
 }
