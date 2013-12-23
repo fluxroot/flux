@@ -18,10 +18,10 @@
  */
 package com.fluxchess.flux.evaluation;
 
+import com.fluxchess.flux.board.BitPieceList;
 import com.fluxchess.flux.board.Hex88Board;
 import com.fluxchess.flux.board.IntChessman;
 import com.fluxchess.flux.board.IntColor;
-import com.fluxchess.flux.board.PositionList;
 import com.fluxchess.flux.move.MoveGenerator;
 
 import java.util.Arrays;
@@ -67,12 +67,9 @@ public final class AttackTableEvaluation {
     assert board != null;
     assert myAttackTable != null;
 
-    // Initialize
-    PositionList myPawnList = board.pawnList[myColor];
-
     // Evaluate each pawn
-    for (int i = 0; i < myPawnList.size; i++) {
-      int pawnPosition = myPawnList.position[i];
+    for (long positions = board.pawnList[myColor].list; positions != 0; positions &= positions - 1) {
+      int pawnPosition = BitPieceList.next(positions);
 
       // Fill attack table
       for (int j = 1; j < MoveGenerator.moveDeltaPawn.length; j++) {
@@ -99,12 +96,9 @@ public final class AttackTableEvaluation {
     assert board != null;
     assert myAttackTable != null;
 
-    // Initialize
-    PositionList myKnightList = board.knightList[myColor];
-
     // Evaluate each knight
-    for (int i = 0; i < myKnightList.size; i++) {
-      int knightPosition = myKnightList.position[i];
+    for (long positions = board.knightList[myColor].list; positions != 0; positions &= positions - 1) {
+      int knightPosition = BitPieceList.next(positions);
 
       // Fill attack table
       for (int delta : MoveGenerator.moveDeltaKnight) {
@@ -122,12 +116,9 @@ public final class AttackTableEvaluation {
     assert board != null;
     assert myAttackTable != null;
 
-    // Initialize
-    PositionList myBishopList = board.bishopList[myColor];
-
     // Evaluate each bishop
-    for (int i = 0; i < myBishopList.size; i++) {
-      int bishopPosition = myBishopList.position[i];
+    for (long positions = board.bishopList[myColor].list; positions != 0; positions &= positions - 1) {
+      int bishopPosition = BitPieceList.next(positions);
 
       // Fill attack table
       for (int delta : MoveGenerator.moveDeltaBishop) {
@@ -152,12 +143,9 @@ public final class AttackTableEvaluation {
     assert board != null;
     assert myAttackTable != null;
 
-    // Initialize
-    PositionList myRookList = board.rookList[myColor];
-
     // Evaluate each rook
-    for (int i = 0; i < myRookList.size; i++) {
-      int rookPosition = myRookList.position[i];
+    for (long positions = board.rookList[myColor].list; positions != 0; positions &= positions - 1) {
+      int rookPosition = BitPieceList.next(positions);
 
       // Fill attack table
       for (int delta : MoveGenerator.moveDeltaRook) {
@@ -182,12 +170,9 @@ public final class AttackTableEvaluation {
     assert board != null;
     assert myAttackTable != null;
 
-    // Initialize
-    PositionList myQueenList = board.queenList[myColor];
-
     // Evaluate the queen
-    for (int i = 0; i < myQueenList.size; i++) {
-      int queenPosition = myQueenList.position[i];
+    for (long positions = board.queenList[myColor].list; positions != 0; positions &= positions - 1) {
+      int queenPosition = BitPieceList.next(positions);
 
       // Fill attack table
       for (int delta : MoveGenerator.moveDeltaQueen) {
@@ -212,12 +197,9 @@ public final class AttackTableEvaluation {
     assert board != null;
     assert myAttackTable != null;
 
-    // Initialize
-    PositionList myKingList = board.kingList[myColor];
-
     // Evaluate the king
-    assert myKingList.size == 1;
-    int kingPosition = myKingList.position[0];
+    assert board.kingList[myColor].size() == 1;
+    int kingPosition = BitPieceList.next(board.kingList[myColor].list);
 
     // Fill attack table
     for (int delta : MoveGenerator.moveDeltaKing) {

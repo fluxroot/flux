@@ -18,10 +18,10 @@
  */
 package com.fluxchess.flux.evaluation;
 
+import com.fluxchess.flux.board.BitPieceList;
 import com.fluxchess.flux.board.Hex88Board;
 import com.fluxchess.flux.board.IntColor;
 import com.fluxchess.flux.board.IntPosition;
-import com.fluxchess.flux.board.PositionList;
 
 import java.util.Arrays;
 
@@ -47,11 +47,10 @@ public final class PawnTableEvaluation {
 
     // Initialize
     byte[] myPawnTable = pawnTable[myColor];
-    PositionList myPawnList = board.pawnList[myColor];
 
     // Evaluate each pawn
-    for (int i = 0; i < myPawnList.size; i++) {
-      int pawnPosition = myPawnList.position[i];
+    for (long positions = board.pawnList[myColor].list; positions != 0; positions &= positions - 1) {
+      int pawnPosition = BitPieceList.next(positions);
       int pawnFile = IntPosition.getFile(pawnPosition);
       int pawnRank = IntPosition.getRank(pawnPosition);
 

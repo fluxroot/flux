@@ -47,20 +47,19 @@ public final class PawnPasserEvaluation {
     int endgame = 0;
     byte[] myAttackTable = AttackTableEvaluation.getInstance().attackTable[myColor];
     byte[] enemyPawnTable = PawnTableEvaluation.getInstance().pawnTable[enemyColor];
-    PositionList myPawnList = board.pawnList[myColor];
 
-    assert board.kingList[enemyColor].size == 1;
-    int enemyKingPosition = board.kingList[enemyColor].position[0];
+    assert board.kingList[enemyColor].size() == 1;
+    int enemyKingPosition = BitPieceList.next(board.kingList[enemyColor].list);
     int enemyKingFile = IntPosition.getFile(enemyKingPosition);
     int enemyKingRank = IntPosition.getRank(enemyKingPosition);
-    assert board.kingList[myColor].size == 1;
-    int myKingPosition = board.kingList[myColor].position[0];
+    assert board.kingList[myColor].size() == 1;
+    int myKingPosition = BitPieceList.next(board.kingList[myColor].list);
     int myKingFile = IntPosition.getFile(myKingPosition);
     int myKingRank = IntPosition.getRank(myKingPosition);
 
     // Evaluate each pawn
-    for (int i = 0; i < myPawnList.size; i++) {
-      int pawnPosition = myPawnList.position[i];
+    for (long positions = board.pawnList[myColor].list; positions != 0; positions &= positions - 1) {
+      int pawnPosition = BitPieceList.next(positions);
       int pawnFile = IntPosition.getFile(pawnPosition);
       int pawnRank = IntPosition.getRank(pawnPosition);
       int pawn = board.board[pawnPosition];

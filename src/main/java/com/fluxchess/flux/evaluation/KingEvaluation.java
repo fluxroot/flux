@@ -52,11 +52,10 @@ public final class KingEvaluation {
     int endgame = 0;
     byte[] myAttackTable = AttackTableEvaluation.getInstance().attackTable[myColor];
     byte[] enemyAttackTable = AttackTableEvaluation.getInstance().attackTable[enemyColor];
-    PositionList myKingList = board.kingList[myColor];
 
     // Evaluate the king
-    assert myKingList.size == 1;
-    int kingPosition = myKingList.position[0];
+    assert board.kingList[myColor].size() == 1;
+    int kingPosition = BitPieceList.next(board.kingList[myColor].list);
 
     // Evaluate king safety
     int attackedSquare = IntPosition.NOPOSITION;
