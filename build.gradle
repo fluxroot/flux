@@ -90,6 +90,14 @@ sourceSets {
   testing
 }
 
+configurations {
+  integrationCompile.extendsFrom testCompile
+  integrationRuntime.extendsFrom testRuntime
+
+  testingCompile.extendsFrom testCompile
+  testingRuntime.extendsFrom testRuntime
+}
+
 dependencies {
   compile 'com.fluxchess:jcpi:+'
 
@@ -100,7 +108,7 @@ dependencies {
 
   integrationCompile project(path: ':', configuration: 'testRuntime')
 
-  testingCompile project(':')
+  testingCompile project(path: ':', configuration: 'testRuntime')
 }
 
 sourceCompatibility = 1.7
