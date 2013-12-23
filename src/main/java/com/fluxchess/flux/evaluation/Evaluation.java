@@ -23,7 +23,6 @@ import com.fluxchess.flux.Search;
 import com.fluxchess.flux.board.Hex88Board;
 import com.fluxchess.flux.board.IntColor;
 import com.fluxchess.flux.table.EvaluationTable;
-import com.fluxchess.flux.table.EvaluationTableEntry;
 import com.fluxchess.flux.table.PawnTable;
 
 public final class Evaluation {
@@ -54,7 +53,7 @@ public final class Evaluation {
 
     // Check the evaluation table
     if (Configuration.useEvaluationTable) {
-      EvaluationTableEntry entry = evaluationTable.get(board.zobristCode);
+      EvaluationTable.EvaluationTableEntry entry = evaluationTable.get(board.zobristCode);
       if (entry != null) {
         return entry.evaluation;
       }

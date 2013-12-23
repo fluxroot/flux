@@ -18,6 +18,8 @@
  */
 package com.fluxchess.flux.table;
 
+import com.fluxchess.flux.Search;
+
 public final class EvaluationTable {
 
   // Size of one evaluation entry
@@ -68,6 +70,18 @@ public final class EvaluationTable {
     } else {
       return null;
     }
+  }
+
+  public final class EvaluationTableEntry {
+
+    public long zobristCode = 0;
+    public int evaluation = -Search.INFINITY;
+
+    public void clear() {
+      zobristCode = 0;
+      evaluation = -Search.INFINITY;
+    }
+
   }
 
 }

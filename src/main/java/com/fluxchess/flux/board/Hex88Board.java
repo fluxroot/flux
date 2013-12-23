@@ -72,7 +72,7 @@ public final class Hex88Board {
   public final PositionList[] kingList = new PositionList[IntColor.ARRAY_DIMENSION];
 
   // Board stack
-  private final Hex88BoardStackEntry[] stack = new Hex88BoardStackEntry[STACKSIZE];
+  private final StackEntry[] stack = new StackEntry[STACKSIZE];
   private int stackSize = 0;
 
   // Zobrist code
@@ -149,7 +149,7 @@ public final class Hex88Board {
     repetitionTable = new RepetitionTable();
 
     for (int i = 0; i < stack.length; i++) {
-      stack[i] = new Hex88BoardStackEntry();
+      stack[i] = new StackEntry();
     }
 
     // Initialize the position lists
@@ -602,8 +602,8 @@ public final class Hex88Board {
 
         if (isPinned(startPosition, enemyKingColor)) {
           // We are pinned. Test if we move on the line.
-          int attackDeltaStart = AttackVector.delta[enemyKingPosition - startPosition + 127];
-          int attackDeltaEnd = AttackVector.delta[enemyKingPosition - endPosition + 127];
+          int attackDeltaStart = Attack.deltas[enemyKingPosition - startPosition + 127];
+          int attackDeltaEnd = Attack.deltas[enemyKingPosition - endPosition + 127];
           return attackDeltaStart != attackDeltaEnd;
         }
         // Indirect attacks
@@ -653,13 +653,13 @@ public final class Hex88Board {
     int myKingPosition = kingList[kingColor].position[0];
 
     // We can only be pinned on an attack line
-    int vector = AttackVector.vector[myKingPosition - chessmanPosition + 127];
-    if (vector == AttackVector.N || vector == AttackVector.K) {
+    int vector = Attack.vector[myKingPosition - chessmanPosition + 127];
+    if (vector == Attack.N || vector == Attack.K) {
       // No line
       return false;
     }
 
-    int delta = AttackVector.delta[myKingPosition - chessmanPosition + 127];
+    int delta = Attack.deltas[myKingPosition - chessmanPosition + 127];
 
     // Walk towards the king
     int end = chessmanPosition + delta;
@@ -702,7 +702,7 @@ public final class Hex88Board {
     assert (attackerPosition & 0x88) == 0;
     assert (targetPosition & 0x88) == 0;
 
-    int attackVector = AttackVector.N;
+    int attackVector = Attack.N;
 
     switch (IntChessman.getChessman(attacker)) {
       case IntChessman.PAWN:
@@ -710,34 +710,34 @@ public final class Hex88Board {
       case IntChessman.KNIGHT:
         break;
       case IntChessman.BISHOP:
-        attackVector = AttackVector.vector[targetPosition - attackerPosition + 127];
+        attackVector = Attack.vector[targetPosition - attackerPosition + 127];
         switch (attackVector) {
-          case AttackVector.u:
-          case AttackVector.d:
-          case AttackVector.D:
+          case Attack.u:
+          case Attack.d:
+          case Attack.D:
             return true;
           default:
             break;
         }
         break;
       case IntChessman.ROOK:
-        attackVector = AttackVector.vector[targetPosition - attackerPosition + 127];
+        attackVector = Attack.vector[targetPosition - attackerPosition + 127];
         switch (attackVector) {
-          case AttackVector.s:
-          case AttackVector.S:
+          case Attack.s:
+          case Attack.S:
             return true;
           default:
             break;
         }
         break;
       case IntChessman.QUEEN:
-        attackVector = AttackVector.vector[targetPosition - attackerPosition + 127];
+        attackVector = Attack.vector[targetPosition - attackerPosition + 127];
         switch (attackVector) {
-          case AttackVector.u:
-          case AttackVector.d:
-          case AttackVector.s:
-          case AttackVector.D:
-          case AttackVector.S:
+          case Attack.u:
+          case Attack.d:
+          case Attack.s:
+          case Attack.D:
+          case Attack.S:
             return true;
           default:
             break;
@@ -818,7 +818,7 @@ public final class Hex88Board {
         if (stop) {
           return true;
         }
-        assert AttackVector.delta[targetPosition - pawnAttackerPosition + 127] == sign * -15;
+        assert Attack.deltas[targetPosition - pawnAttackerPosition + 127] == sign * -15;
         attack.position[attack.count] = pawnAttackerPosition;
         attack.delta[attack.count] = sign * -15;
         attack.count++;
@@ -831,7 +831,7 @@ public final class Hex88Board {
         if (stop) {
           return true;
         }
-        assert AttackVector.delta[targetPosition - pawnAttackerPosition + 127] == sign * -17;
+        assert Attack.deltas[targetPosition - pawnAttackerPosition + 127] == sign * -17;
         attack.position[attack.count] = pawnAttackerPosition;
         attack.delta[attack.count] = sign * -17;
         attack.count++;
@@ -848,7 +848,7 @@ public final class Hex88Board {
         if (stop) {
           return true;
         }
-        int attackDelta = AttackVector.delta[targetPosition - attackerPosition + 127];
+        int attackDelta = Attack.deltas[targetPosition - attackerPosition + 127];
         assert attackDelta != 0;
         attack.position[attack.count] = attackerPosition;
         attack.delta[attack.count] = attackDelta;
@@ -866,7 +866,7 @@ public final class Hex88Board {
         if (stop) {
           return true;
         }
-        int attackDelta = AttackVector.delta[targetPosition - attackerPosition + 127];
+        int attackDelta = Attack.deltas[targetPosition - attackerPosition + 127];
         assert attackDelta != 0;
         attack.position[attack.count] = attackerPosition;
         attack.delta[attack.count] = attackDelta;
@@ -884,7 +884,7 @@ public final class Hex88Board {
         if (stop) {
           return true;
         }
-        int attackDelta = AttackVector.delta[targetPosition - attackerPosition + 127];
+        int attackDelta = Attack.deltas[targetPosition - attackerPosition + 127];
         assert attackDelta != 0;
         attack.position[attack.count] = attackerPosition;
         attack.delta[attack.count] = attackDelta;
@@ -902,7 +902,7 @@ public final class Hex88Board {
         if (stop) {
           return true;
         }
-        int attackDelta = AttackVector.delta[targetPosition - attackerPosition + 127];
+        int attackDelta = Attack.deltas[targetPosition - attackerPosition + 127];
         assert attackDelta != 0;
         attack.position[attack.count] = attackerPosition;
         attack.delta[attack.count] = attackDelta;
@@ -919,7 +919,7 @@ public final class Hex88Board {
       if (stop) {
         return true;
       }
-      int attackDelta = AttackVector.delta[targetPosition - attackerPosition + 127];
+      int attackDelta = Attack.deltas[targetPosition - attackerPosition + 127];
       assert attackDelta != 0;
       attack.position[attack.count] = attackerPosition;
       attack.delta[attack.count] = attackDelta;
@@ -944,27 +944,27 @@ public final class Hex88Board {
     assert (attackerPosition & 0x88) == 0;
     assert (targetPosition & 0x88) == 0;
 
-    int attackVector = AttackVector.vector[targetPosition - attackerPosition + 127];
+    int attackVector = Attack.vector[targetPosition - attackerPosition + 127];
 
     switch (attackerChessman) {
       case IntChessman.PAWN:
-        if (attackVector == AttackVector.u && attackerColor == IntColor.WHITE) {
+        if (attackVector == Attack.u && attackerColor == IntColor.WHITE) {
           return true;
-        } else if (attackVector == AttackVector.d && attackerColor == IntColor.BLACK) {
+        } else if (attackVector == Attack.d && attackerColor == IntColor.BLACK) {
           return true;
         }
         break;
       case IntChessman.KNIGHT:
-        if (attackVector == AttackVector.K) {
+        if (attackVector == Attack.K) {
           return true;
         }
         break;
       case IntChessman.BISHOP:
         switch (attackVector) {
-          case AttackVector.u:
-          case AttackVector.d:
+          case Attack.u:
+          case Attack.d:
             return true;
-          case AttackVector.D:
+          case Attack.D:
             if (canSliderAttack(attackerPosition, targetPosition)) {
               return true;
             }
@@ -975,9 +975,9 @@ public final class Hex88Board {
         break;
       case IntChessman.ROOK:
         switch (attackVector) {
-          case AttackVector.s:
+          case Attack.s:
             return true;
-          case AttackVector.S:
+          case Attack.S:
             if (canSliderAttack(attackerPosition, targetPosition)) {
               return true;
             }
@@ -988,12 +988,12 @@ public final class Hex88Board {
         break;
       case IntChessman.QUEEN:
         switch (attackVector) {
-          case AttackVector.u:
-          case AttackVector.d:
-          case AttackVector.s:
+          case Attack.u:
+          case Attack.d:
+          case Attack.s:
             return true;
-          case AttackVector.D:
-          case AttackVector.S:
+          case Attack.D:
+          case Attack.S:
             if (canSliderAttack(attackerPosition, targetPosition)) {
               return true;
             }
@@ -1004,9 +1004,9 @@ public final class Hex88Board {
         break;
       case IntChessman.KING:
         switch (attackVector) {
-          case AttackVector.u:
-          case AttackVector.d:
-          case AttackVector.s:
+          case Attack.u:
+          case Attack.d:
+          case Attack.s:
             return true;
           default:
             break;
@@ -1031,7 +1031,7 @@ public final class Hex88Board {
     assert (attackerPosition & 0x88) == 0;
     assert (targetPosition & 0x88) == 0;
 
-    int attackDelta = AttackVector.delta[targetPosition - attackerPosition + 127];
+    int attackDelta = Attack.deltas[targetPosition - attackerPosition + 127];
 
     int end = attackerPosition + attackDelta;
     while ((end & 0x88) == 0 && end != targetPosition && board[end] == IntChessman.NOPIECE) {
@@ -1043,7 +1043,7 @@ public final class Hex88Board {
 
   public void makeMove(int move) {
     // Get current stack entry
-    Hex88BoardStackEntry currentStackEntry = stack[stackSize];
+    StackEntry currentStackEntry = stack[stackSize];
 
     // Save history
     currentStackEntry.zobristHistory = zobristCode;
@@ -1117,7 +1117,7 @@ public final class Hex88Board {
     assert stackSize >= 0;
 
     // Get current stack entry
-    Hex88BoardStackEntry currentStackEntry = stack[stackSize];
+    StackEntry currentStackEntry = stack[stackSize];
 
     // Restore zobrist history
     zobristCode = currentStackEntry.zobristHistory;
@@ -1642,6 +1642,28 @@ public final class Hex88Board {
 
   public String toString() {
     return getBoard().toString();
+  }
+
+  private final class StackEntry {
+
+    public long zobristHistory = 0;
+    public long pawnZobristHistory = 0;
+    public int halfMoveClockHistory = 0;
+    public int enPassantHistory = 0;
+    public int captureSquareHistory = 0;
+
+    public StackEntry() {
+      clear();
+    }
+
+    public void clear() {
+      zobristHistory = 0;
+      pawnZobristHistory = 0;
+      halfMoveClockHistory = 0;
+      enPassantHistory = 0;
+      captureSquareHistory = 0;
+    }
+
   }
 
 }

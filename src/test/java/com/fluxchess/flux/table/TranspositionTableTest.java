@@ -43,7 +43,7 @@ public class TranspositionTableTest {
     // Put an entry into the table
     table.put(1L, 1, 100, IntScore.EXACT, move1, false, 0);
 
-    TranspositionTableEntry entry = table.get(1L);
+    TranspositionTable.TranspositionTableEntry entry = table.get(1L);
     assertNotNull(entry);
 
     assertEquals(1, entry.depth);

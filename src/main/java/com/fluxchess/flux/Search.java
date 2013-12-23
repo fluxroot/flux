@@ -24,7 +24,6 @@ import com.fluxchess.flux.move.*;
 import com.fluxchess.flux.table.HistoryTable;
 import com.fluxchess.flux.table.KillerTable;
 import com.fluxchess.flux.table.TranspositionTable;
-import com.fluxchess.flux.table.TranspositionTableEntry;
 import com.fluxchess.jcpi.models.GenericMove;
 
 import java.util.*;
@@ -388,7 +387,7 @@ public final class Search implements Runnable {
     int transpositionValue = 0;
     int transpositionType = IntScore.NOSCORE;
     if (Configuration.useTranspositionTable) {
-      TranspositionTableEntry entry = transpositionTable.get(board.zobristCode);
+      TranspositionTable.TranspositionTableEntry entry = transpositionTable.get(board.zobristCode);
       if (entry != null) {
         List<GenericMove> moveList = transpositionTable.getMoveList(board, entry.depth, new ArrayList<GenericMove>());
         if (moveList.size() != 0) {
@@ -869,7 +868,7 @@ public final class Search implements Runnable {
     moveResult.moveNumber = currentMoveNumber;
 
     if (Configuration.useTranspositionTable) {
-      TranspositionTableEntry entry = transpositionTable.get(board.zobristCode);
+      TranspositionTable.TranspositionTableEntry entry = transpositionTable.get(board.zobristCode);
       if (entry != null) {
         for (int i = rootMoveList.head; i < rootMoveList.tail; i++) {
           if (rootMoveList.move[i] == entry.move) {
@@ -927,7 +926,7 @@ public final class Search implements Runnable {
     int transpositionMove = IntMove.NOMOVE;
     boolean mateThreat = false;
     if (Configuration.useTranspositionTable) {
-      TranspositionTableEntry entry = transpositionTable.get(board.zobristCode);
+      TranspositionTable.TranspositionTableEntry entry = transpositionTable.get(board.zobristCode);
       if (entry != null) {
         transpositionMove = entry.move;
         mateThreat = entry.mateThreat;
@@ -1294,7 +1293,7 @@ public final class Search implements Runnable {
 
     // Check the transposition table first
     if (Configuration.useTranspositionTable && useTranspositionTable) {
-      TranspositionTableEntry entry = transpositionTable.get(board.zobristCode);
+      TranspositionTable.TranspositionTableEntry entry = transpositionTable.get(board.zobristCode);
       if (entry != null) {
         assert entry.depth >= checkingDepth;
         int value = entry.getValue(height);

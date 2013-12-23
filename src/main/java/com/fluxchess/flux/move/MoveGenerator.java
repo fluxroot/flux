@@ -504,8 +504,8 @@ public final class MoveGenerator {
     if (board.isPinned(IntMove.getStart(move), chessmanColor)) {
       // We are pinned. Test if we move on the line.
       int kingPosition = board.kingList[chessmanColor].position[0];
-      int attackDeltaStart = AttackVector.delta[kingPosition - IntMove.getStart(move) + 127];
-      int attackDeltaEnd = AttackVector.delta[kingPosition - IntMove.getEnd(move) + 127];
+      int attackDeltaStart = Attack.deltas[kingPosition - IntMove.getStart(move) + 127];
+      int attackDeltaEnd = Attack.deltas[kingPosition - IntMove.getEnd(move) + 127];
       return attackDeltaStart == attackDeltaEnd;
     }
 
@@ -805,7 +805,7 @@ public final class MoveGenerator {
     assert moveDelta != null;
 
     boolean sliding = IntChessman.isSliding(piece);
-    int attackDeltaStart = AttackVector.delta[kingPosition - chessmanPosition + 127];
+    int attackDeltaStart = Attack.deltas[kingPosition - chessmanPosition + 127];
     int moveTemplate = IntMove.createMove(IntMove.NORMAL, chessmanPosition, chessmanPosition, piece, IntChessman.NOPIECE, IntChessman.NOPIECE);
 
     for (int delta : moveDelta) {
@@ -815,7 +815,7 @@ public final class MoveGenerator {
       while ((end & 0x88) == 0 && board.board[end] == IntChessman.NOPIECE) {
         if (isPinned) {
           // We are pinned. Test if we move on the line.
-          int attackDeltaEnd = AttackVector.delta[kingPosition - end + 127];
+          int attackDeltaEnd = Attack.deltas[kingPosition - end + 127];
           if (attackDeltaStart != attackDeltaEnd) {
             int move = IntMove.setEndPosition(moveTemplate, end);
             moveList.move[moveList.tail++] = move;
@@ -1069,8 +1069,8 @@ public final class MoveGenerator {
       } else {
         if (isPinned) {
           // We are pinned. Test if we move on the line.
-          int attackDeltaStart = AttackVector.delta[kingPosition - pawnPosition + 127];
-          int attackDeltaEnd = AttackVector.delta[kingPosition - end + 127];
+          int attackDeltaStart = Attack.deltas[kingPosition - pawnPosition + 127];
+          int attackDeltaEnd = Attack.deltas[kingPosition - end + 127];
           if (attackDeltaStart != attackDeltaEnd) {
             int move = IntMove.createMove(IntMove.NORMAL, pawnPosition, end, pawn, IntChessman.NOPIECE, IntChessman.NOPIECE);
             moveList.move[moveList.tail++] = move;
@@ -1091,8 +1091,8 @@ public final class MoveGenerator {
 
             if (isPinned) {
               // We are pinned. Test if we move on the line.
-              int attackDeltaStart = AttackVector.delta[kingPosition - pawnPosition + 127];
-              int attackDeltaEnd = AttackVector.delta[kingPosition - end + 127];
+              int attackDeltaStart = Attack.deltas[kingPosition - pawnPosition + 127];
+              int attackDeltaEnd = Attack.deltas[kingPosition - end + 127];
               if (attackDeltaStart != attackDeltaEnd) {
                 int move = IntMove.createMove(IntMove.PAWNDOUBLE, pawnPosition, end, pawn, IntChessman.NOPIECE, IntChessman.NOPIECE);
                 moveList.move[moveList.tail++] = move;
