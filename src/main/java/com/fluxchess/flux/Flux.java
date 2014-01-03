@@ -30,7 +30,7 @@ import com.fluxchess.jcpi.commands.*;
 import com.fluxchess.jcpi.models.GenericBoard;
 import com.fluxchess.jcpi.models.GenericColor;
 import com.fluxchess.jcpi.models.GenericMove;
-import com.fluxchess.jcpi.models.Option;
+import com.fluxchess.jcpi.options.AbstractOption;
 import com.fluxchess.jcpi.protocols.IProtocolHandler;
 
 import java.util.Arrays;
@@ -63,26 +63,37 @@ public final class Flux extends AbstractEngine {
     // Set the protocol
     ChessLogger.setProtocol(getProtocol());
 
-    // Transposition Table
-    int megabyteValue = Integer.parseInt(Configuration.configuration.get(Configuration.KEY_Hash).defaultValue);
-    int numberOfEntries = megabyteValue * 1024 * 1024 / TranspositionTable.ENTRYSIZE;
-    transpositionTable = new TranspositionTable(numberOfEntries);
-
-    // Evaluation Table
-    megabyteValue = Integer.parseInt(Configuration.configuration.get(Configuration.KEY_HashEvaluation).defaultValue);
-    numberOfEntries = megabyteValue * 1024 * 1024 / EvaluationTable.ENTRYSIZE;
-    evaluationTable = new EvaluationTable(numberOfEntries);
-
-    // Pawn Table
-    megabyteValue = Integer.parseInt(Configuration.configuration.get(Configuration.KEY_HashPawn).defaultValue);
-    numberOfEntries = megabyteValue * 1024 * 1024 / PawnTable.ENTRYSIZE;
-    pawnTable = new PawnTable(numberOfEntries);
-
-    // Run GC
-    Runtime.getRuntime().gc();
+    initializeTranspositionTable();
+    initializeEvaluationTable();
+    initializePawnTable();
 
     // Create a new search
     search = new Search(new Evaluation(evaluationTable, pawnTable), new Hex88Board(new GenericBoard(GenericBoard.STANDARDSETUP)), transpositionTable, new InformationTimer(getProtocol(), transpositionTable), timeTable);
+  }
+
+  private void initializeTranspositionTable() {
+    ChessLogger.getLogger().debug("Using Transposition Table size of " + Configuration.transpositionTableSize + " MB");
+    int numberOfEntries = Configuration.transpositionTableSize * 1024 * 1024 / TranspositionTable.ENTRYSIZE;
+    transpositionTable = new TranspositionTable(numberOfEntries);
+  }
+
+  private void initializeEvaluationTable() {
+    ChessLogger.getLogger().debug("Using Evaluation Table size of " + Configuration.evaluationTableSize + " MB");
+    int numberOfEntries = Configuration.evaluationTableSize * 1024 * 1024 / EvaluationTable.ENTRYSIZE;
+    evaluationTable = new EvaluationTable(numberOfEntries);
+  }
+
+  private void initializePawnTable() {
+    ChessLogger.getLogger().debug("Using Pawn Table size of " + Configuration.pawnTableSize + " MB");
+    int numberOfEntries = Configuration.pawnTableSize * 1024 * 1024 / PawnTable.ENTRYSIZE;
+    pawnTable = new PawnTable(numberOfEntries);
+  }
+
+  protected void quit() {
+    ChessLogger.getLogger().debug("Received Quit command.");
+
+    // Stop calculating
+    new EngineStopCalculatingCommand().accept(this);
   }
 
   public void receive(EngineInitializeRequestCommand command) {
@@ -93,59 +104,73 @@ public final class Flux extends AbstractEngine {
     // Stop calculating
     new EngineStopCalculatingCommand().accept(this);
 
-    // Transposition Table
-    int megabyteValue;
-    try {
-      megabyteValue = Integer.parseInt(Configuration.configuration.get(Configuration.KEY_Hash).getValue());
-    } catch (NumberFormatException e) {
-      megabyteValue = Integer.parseInt(Configuration.configuration.get(Configuration.KEY_Hash).defaultValue);
-    }
-    int numberOfEntries = megabyteValue * 1024 * 1024 / TranspositionTable.ENTRYSIZE;
-    transpositionTable = new TranspositionTable(numberOfEntries);
-
-    // Evaluation Table
-    try {
-      megabyteValue = Integer.parseInt(Configuration.configuration.get(Configuration.KEY_HashEvaluation).getValue());
-    } catch (NumberFormatException e) {
-      megabyteValue = Integer.parseInt(Configuration.configuration.get(Configuration.KEY_HashEvaluation).defaultValue);
-    }
-    numberOfEntries = megabyteValue * 1024 * 1024 / EvaluationTable.ENTRYSIZE;
-    evaluationTable = new EvaluationTable(numberOfEntries);
-
-    // Pawn Table
-    try {
-      megabyteValue = Integer.parseInt(Configuration.configuration.get(Configuration.KEY_HashPawn).getValue());
-    } catch (NumberFormatException e) {
-      megabyteValue = Integer.parseInt(Configuration.configuration.get(Configuration.KEY_HashPawn).defaultValue);
-    }
-    numberOfEntries = megabyteValue * 1024 * 1024 / PawnTable.ENTRYSIZE;
-    pawnTable = new PawnTable(numberOfEntries);
-
-    // Run GC
-    Runtime.getRuntime().gc();
+    initializeTranspositionTable();
+    initializeEvaluationTable();
+    initializePawnTable();
 
     // Send the initialization commands
     ProtocolInitializeAnswerCommand initializeCommand = new ProtocolInitializeAnswerCommand(VersionInfo.current().toString(), Configuration.author);
-    for (Option option : Configuration.configuration.values()) {
+    for (AbstractOption option : Configuration.options) {
       initializeCommand.addOption(option);
     }
     getProtocol().send(initializeCommand);
   }
 
-  protected void quit() {
-    ChessLogger.getLogger().debug("Received Quit command.");
-
-    // Stop calculating
-    new EngineStopCalculatingCommand().accept(this);
-  }
-
-  public void receive(EngineReadyRequestCommand command) {
+  public void receive(EngineSetOptionCommand command) {
     if (command == null) throw new IllegalArgumentException();
 
-    ChessLogger.getLogger().debug("Received ReadyRequest command.");
+    ChessLogger.getLogger().debug("Received SetOption command.");
 
-    // Send a pong back
-    getProtocol().send(new ProtocolReadyAnswerCommand(command.token));
+    if (command.name.equalsIgnoreCase(Configuration.ponderOption.name)) {
+      if (command.value == null) throw new IllegalArgumentException();
+
+      Configuration.ponder = Boolean.parseBoolean(command.value);
+    } else if (command.name.equalsIgnoreCase(Configuration.multiPVOption.name)) {
+      if (command.value == null) throw new IllegalArgumentException();
+
+      try {
+        Configuration.showPvNumber = new Integer(command.value);
+      } catch (NumberFormatException e) {
+        Configuration.showPvNumber = 1;
+      }
+    } else if (command.name.equalsIgnoreCase(Configuration.hashOption.name)) {
+      if (command.value == null) throw new IllegalArgumentException();
+
+      try {
+        Configuration.transpositionTableSize = new Integer(command.value);
+      } catch (NumberFormatException e) {
+        Configuration.transpositionTableSize = 16;
+      }
+      initializeTranspositionTable();
+    } else if (command.name.equalsIgnoreCase(Configuration.clearHashOption.name)) {
+      transpositionTable.clear();
+    } else if (command.name.equalsIgnoreCase(Configuration.evaluationTableOption.name)) {
+      if (command.value == null) throw new IllegalArgumentException();
+
+      try {
+        Configuration.evaluationTableSize = new Integer(command.value);
+      } catch (NumberFormatException e) {
+        Configuration.evaluationTableSize = 4;
+      }
+      initializeEvaluationTable();
+    } else if (command.name.equalsIgnoreCase(Configuration.pawnTableOption.name)) {
+      if (command.value == null) throw new IllegalArgumentException();
+
+      try {
+        Configuration.pawnTableSize = new Integer(command.value);
+      } catch (NumberFormatException e) {
+        Configuration.pawnTableSize = 4;
+      }
+      initializePawnTable();
+    } else if (command.name.equalsIgnoreCase(Configuration.uciShowRefutationsOption.name)) {
+      if (command.value == null) throw new IllegalArgumentException();
+
+      Configuration.showRefutations = Boolean.parseBoolean(command.value);
+    } else if (command.name.equalsIgnoreCase(Configuration.uciAnalyzeModeOption.name)) {
+      if (command.value == null) throw new IllegalArgumentException();
+
+      Configuration.analyzeMode = Boolean.parseBoolean(command.value);
+    }
   }
 
   public void receive(EngineDebugCommand command) {
@@ -170,6 +195,15 @@ public final class Flux extends AbstractEngine {
     getProtocol().send(infoCommand);
 
     ChessLogger.setDebug(state);
+  }
+
+  public void receive(EngineReadyRequestCommand command) {
+    if (command == null) throw new IllegalArgumentException();
+
+    ChessLogger.getLogger().debug("Received ReadyRequest command.");
+
+    // Send a pong back
+    getProtocol().send(new ProtocolReadyAnswerCommand(command.token));
   }
 
   public void receive(EngineNewGameCommand command) {
@@ -281,64 +315,6 @@ public final class Flux extends AbstractEngine {
       search.stop();
     } else {
       ChessLogger.getLogger().debug("There is no search active.");
-    }
-  }
-
-  public void receive(EngineSetOptionCommand command) {
-    if (command == null) throw new IllegalArgumentException();
-
-    Configuration.setOption(command.name, command.value);
-
-    ChessLogger.getLogger().debug("Received SetOption command.");
-
-    if (command.name.equalsIgnoreCase(Configuration.KEY_ClearHash)) {
-      // Clear our hash table
-      transpositionTable.clear();
-    } else if (command.name.equalsIgnoreCase(Configuration.KEY_Hash)) {
-      // Set the new size of the hash table
-      int megabyteValue;
-      try {
-        megabyteValue = Integer.parseInt(Configuration.configuration.get(Configuration.KEY_Hash).getValue());
-      } catch (NumberFormatException e) {
-        megabyteValue = Integer.parseInt(Configuration.configuration.get(Configuration.KEY_Hash).defaultValue);
-        ChessLogger.getLogger().debug(e.getMessage());
-      }
-      ChessLogger.getLogger().debug("Using Transposition Table size of " + megabyteValue + " MB");
-      int numberOfEntries = megabyteValue * 1024 * 1024 / TranspositionTable.ENTRYSIZE;
-      transpositionTable = new TranspositionTable(numberOfEntries);
-
-      // Run GC
-      Runtime.getRuntime().gc();
-    } else if (command.name.equalsIgnoreCase(Configuration.KEY_HashEvaluation)) {
-      // Set the new size of the evaluation hash table
-      int megabyteValue;
-      try {
-        megabyteValue = Integer.parseInt(Configuration.configuration.get(Configuration.KEY_HashEvaluation).getValue());
-      } catch (NumberFormatException e) {
-        megabyteValue = Integer.parseInt(Configuration.configuration.get(Configuration.KEY_HashEvaluation).defaultValue);
-        ChessLogger.getLogger().debug(e.getMessage());
-      }
-      ChessLogger.getLogger().debug("Using Evaluation Table size of " + megabyteValue + " MB");
-      int numberOfEntries = megabyteValue * 1024 * 1024 / EvaluationTable.ENTRYSIZE;
-      evaluationTable = new EvaluationTable(numberOfEntries);
-
-      // Run GC
-      Runtime.getRuntime().gc();
-    } else if (command.name.equalsIgnoreCase(Configuration.KEY_HashPawn)) {
-      // Set the new size of the pawn hash table
-      int megabyteValue;
-      try {
-        megabyteValue = Integer.parseInt(Configuration.configuration.get(Configuration.KEY_HashPawn).getValue());
-      } catch (NumberFormatException e) {
-        megabyteValue = Integer.parseInt(Configuration.configuration.get(Configuration.KEY_HashPawn).defaultValue);
-        ChessLogger.getLogger().debug(e.getMessage());
-      }
-      ChessLogger.getLogger().debug("Using Pawn Table size of " + megabyteValue + " MB");
-      int numberOfEntries = megabyteValue * 1024 * 1024 / PawnTable.ENTRYSIZE;
-      pawnTable = new PawnTable(numberOfEntries);
-
-      // Run GC
-      Runtime.getRuntime().gc();
     }
   }
 

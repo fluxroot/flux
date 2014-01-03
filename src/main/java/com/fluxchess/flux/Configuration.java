@@ -18,9 +18,7 @@
  */
 package com.fluxchess.flux;
 
-import com.fluxchess.jcpi.models.Option;
-
-import java.util.Hashtable;
+import com.fluxchess.jcpi.options.*;
 
 public final class Configuration {
 
@@ -55,56 +53,34 @@ public final class Configuration {
   public static final boolean usePawnExtension = true;
   public static final boolean useMateThreatExtension = true;
 
-  // Options
-  public static boolean showRefutations = false;
+  public static boolean ponder = true;
+  public static final CheckboxOption ponderOption = Options.newPonderOption(ponder);
   public static int showPvNumber = 1;
+  public static final SpinnerOption multiPVOption = Options.newMultiPVOption(showPvNumber, 1, 256);
+  public static int transpositionTableSize = 16;
+  public static final SpinnerOption hashOption = Options.newHashOption(transpositionTableSize, 4, 256);
+  public static final ButtonOption clearHashOption = new ButtonOption("Clear Hash");
+  public static int evaluationTableSize = 4;
+  public static final SpinnerOption evaluationTableOption = new SpinnerOption("Evaluation Table", evaluationTableSize, 4, 64);
+  public static int pawnTableSize = 4;
+  public static final SpinnerOption pawnTableOption = new SpinnerOption("Pawn Table", pawnTableSize, 4, 64);
+  public static boolean showRefutations = false;
+  public static final CheckboxOption uciShowRefutationsOption = Options.newUciShowRefutationsOption(showRefutations);
   public static boolean analyzeMode = false;
+  public static final CheckboxOption uciAnalyzeModeOption = Options.newUciAnalyseModeOption(analyzeMode);
 
-  public static final String KEY_Ponder = "Ponder";
-  public static final String KEY_MultiPv = "MultiPV";
-  public static final String KEY_Hash = "Hash";
-  public static final String KEY_ClearHash = "Clear Hash";
-  public static final String KEY_HashEvaluation = "Evaluation Table";
-  public static final String KEY_HashPawn = "Pawn Table";
-  public static final String KEY_UCIShowRefutations = "UCI_ShowRefutations";
-  public static final String KEY_UCIAnalyseMode = "UCI_AnalyseMode";
+  public static final AbstractOption[] options = new AbstractOption[]{
+    ponderOption,
+    multiPVOption,
+    hashOption,
+    clearHashOption,
+    evaluationTableOption,
+    pawnTableOption,
+    uciShowRefutationsOption,
+    uciAnalyzeModeOption
+  };
 
-  private static final String TYPE_Check = "check";
-  private static final String TYPE_Spin = "spin";
-  private static final String TYPE_Button = "button";
-
-  public static final Hashtable<String, Option> configuration = new Hashtable<>();
-
-  static {
-    configuration.put(KEY_Ponder, new Option(KEY_Ponder, TYPE_Check, "true", null, null, null));
-    configuration.put(KEY_MultiPv, new Option(KEY_MultiPv, TYPE_Spin, "1", "1", "256", null));
-    configuration.put(KEY_Hash, new Option(KEY_Hash, TYPE_Spin, "16", "4", "256", null));
-    configuration.put(KEY_ClearHash, new Option(KEY_ClearHash, TYPE_Button, null, null, null, null));
-    configuration.put(KEY_HashEvaluation, new Option(KEY_HashEvaluation, TYPE_Spin, "4", "4", "64", null));
-    configuration.put(KEY_HashPawn, new Option(KEY_HashPawn, TYPE_Spin, "4", "4", "16", null));
-    configuration.put(KEY_UCIShowRefutations, new Option(KEY_UCIShowRefutations, TYPE_Check, "false", null, null, null));
-    configuration.put(KEY_UCIAnalyseMode, new Option(KEY_UCIAnalyseMode, TYPE_Check, "false", null, null, null));
-  }
-
-  public static void setOption(String name, String value) {
-    assert name != null;
-
-    if (configuration.get(name) != null && !configuration.get(name).type.equals(TYPE_Button)) {
-      assert value != null;
-      configuration.get(name).setValue(value);
-
-      if (name.equals(KEY_UCIShowRefutations)) {
-        showRefutations = value.equalsIgnoreCase("true");
-      } else if (name.equals(KEY_UCIAnalyseMode)) {
-        analyzeMode = value.equalsIgnoreCase("true");
-      } else if (name.equals(KEY_MultiPv)) {
-        try {
-          showPvNumber = new Integer(value);
-        } catch (NumberFormatException e) {
-          showPvNumber = 1;
-        }
-      }
-    }
+  private Configuration() {
   }
 
 }
