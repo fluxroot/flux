@@ -20,9 +20,9 @@ package com.fluxchess.flux;
 
 import com.fluxchess.flux.board.*;
 import com.fluxchess.flux.evaluation.Evaluation;
-import com.fluxchess.flux.table.HistoryTable;
-import com.fluxchess.flux.table.KillerTable;
-import com.fluxchess.flux.table.TranspositionTable;
+import com.fluxchess.flux.board.HistoryTable;
+import com.fluxchess.flux.board.KillerTable;
+import com.fluxchess.flux.board.TranspositionTable;
 import com.fluxchess.jcpi.models.GenericMove;
 
 import java.util.*;

@@ -20,7 +20,7 @@ package com.fluxchess.flux;
 
 import com.fluxchess.flux.board.Score;
 import com.fluxchess.flux.board.PrincipalVariation;
-import com.fluxchess.flux.table.TranspositionTable;
+import com.fluxchess.flux.board.TranspositionTable;
 import com.fluxchess.jcpi.commands.IProtocol;
 import com.fluxchess.jcpi.commands.ProtocolBestMoveCommand;
 import com.fluxchess.jcpi.commands.ProtocolInformationCommand;

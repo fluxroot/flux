@@ -18,8 +18,6 @@
  */
 package com.fluxchess.flux.board;
 
-import com.fluxchess.flux.table.HistoryTable;
-import com.fluxchess.flux.table.KillerTable;
 import com.fluxchess.jcpi.models.GenericBoard;
 import com.fluxchess.jcpi.models.IllegalNotationException;
 import org.junit.Test;

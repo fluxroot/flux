@@ -18,8 +18,6 @@
  */
 package com.fluxchess.flux.board;
 
-import com.fluxchess.flux.table.HistoryTable;
-
 public final class MoveRater {
 
   private final HistoryTable historyTable;

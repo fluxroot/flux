@@ -18,9 +18,6 @@
  */
 package com.fluxchess.flux.board;
 
-import com.fluxchess.flux.board.*;
-import com.fluxchess.flux.table.HistoryTable;
-
 import static org.junit.Assert.assertEquals;
 
 public class MoveRaterTest {

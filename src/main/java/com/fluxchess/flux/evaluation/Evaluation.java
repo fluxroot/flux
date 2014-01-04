@@ -22,8 +22,6 @@ import com.fluxchess.flux.Configuration;
 import com.fluxchess.flux.Search;
 import com.fluxchess.flux.board.Board;
 import com.fluxchess.flux.board.IntColor;
-import com.fluxchess.flux.table.EvaluationTable;
-import com.fluxchess.flux.table.PawnTable;
 
 public final class Evaluation {
 
