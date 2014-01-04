@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2013 the original author or authors.
+ * Copyright 2007-2014 the original author or authors.
  *
  * This file is part of Flux Chess.
  *
