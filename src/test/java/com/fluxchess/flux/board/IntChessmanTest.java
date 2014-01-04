@@ -19,6 +19,7 @@
 package com.fluxchess.flux.board;
 
 import com.fluxchess.jcpi.models.GenericChessman;
+import com.fluxchess.jcpi.models.IntColor;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

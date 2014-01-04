@@ -20,6 +20,7 @@ package com.fluxchess.flux.board;
 
 import com.fluxchess.flux.Configuration;
 import com.fluxchess.flux.search.Search;
+import com.fluxchess.jcpi.models.IntColor;
 
 /**
  * Notes: Ideas from Fruit. I specially like the Idea how to handle the state
@@ -494,7 +495,7 @@ public final class MoveGenerator {
 
     // Special test for king
     if (Move.getChessman(move) == IntChessman.KING) {
-      return !board.isAttacked(Move.getEnd(move), IntColor.switchColor(chessmanColor));
+      return !board.isAttacked(Move.getEnd(move), IntColor.opposite(chessmanColor));
     }
 
     assert board.kingList[chessmanColor].size() == 1;
@@ -550,7 +551,7 @@ public final class MoveGenerator {
     assert moveList != null;
 
     int activeColor = board.activeColor;
-    int oppositeColor = IntColor.switchColor(activeColor);
+    int oppositeColor = IntColor.opposite(activeColor);
 
     for (long positions = board.pawnList[activeColor].list; positions != 0; positions &= positions - 1) {
       int position = ChessmanList.next(positions);
@@ -585,7 +586,7 @@ public final class MoveGenerator {
     assert board.kingList[activeColor].size() == 1;
     int kingPosition = ChessmanList.next(board.kingList[activeColor].list);
     int king = board.board[kingPosition];
-    int attackerColor = IntColor.switchColor(activeColor);
+    int attackerColor = IntColor.opposite(activeColor);
     int oppositeColor = IntChessman.getColorOpposite(king);
     int moveTemplate = Move.createMove(Move.NORMAL, kingPosition, kingPosition, king, IntChessman.NOPIECE, IntChessman.NOPIECE);
 
@@ -698,8 +699,8 @@ public final class MoveGenerator {
   private void generateChecks() {
     int activeColor = board.activeColor;
 
-    assert board.kingList[IntColor.switchColor(activeColor)].size() == 1;
-    int enemyKingColor = IntColor.switchColor(activeColor);
+    assert board.kingList[IntColor.opposite(activeColor)].size() == 1;
+    int enemyKingColor = IntColor.opposite(activeColor);
     int enemyKingPosition = ChessmanList.next(board.kingList[enemyKingColor].list);
 
     for (long positions = board.pawnList[activeColor].list; positions != 0; positions &= positions - 1) {
@@ -1149,7 +1150,7 @@ public final class MoveGenerator {
           }
           target = board.board[enPassantTargetPosition];
           assert IntChessman.getChessman(target) == IntChessman.PAWN;
-          assert IntChessman.getColor(target) == IntColor.switchColor(pawnColor);
+          assert IntChessman.getColor(target) == IntColor.opposite(pawnColor);
 
           int move = Move.createMove(Move.ENPASSANT, pawnPosition, end, pawn, target, IntChessman.NOPIECE);
           moveList.move[moveList.tail++] = move;
@@ -1168,7 +1169,7 @@ public final class MoveGenerator {
   private void addPawnCaptureMovesToTarget(int pawnColor, int target, int targetPosition) {
     assert pawnColor == IntColor.WHITE || pawnColor == IntColor.BLACK;
     assert target != IntChessman.NOPIECE;
-    assert IntChessman.getColor(target) == IntColor.switchColor(pawnColor);
+    assert IntChessman.getColor(target) == IntColor.opposite(pawnColor);
     assert (targetPosition & 0x88) == 0;
     assert board != null;
     assert moveList != null;

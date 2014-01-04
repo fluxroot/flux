@@ -19,14 +19,14 @@
 package com.fluxchess.flux.evaluation;
 
 import com.fluxchess.flux.Configuration;
-import com.fluxchess.flux.search.Search;
 import com.fluxchess.flux.board.Board;
-import com.fluxchess.flux.board.IntColor;
+import com.fluxchess.flux.search.Search;
+import com.fluxchess.jcpi.models.IntColor;
 
 public final class Evaluation {
 
   // Our total values
-  private static final int[] material = new int[IntColor.ARRAY_DIMENSION];
+  private static final int[] material = new int[IntColor.values.length];
 
   // The hash tables
   private final EvaluationTable evaluationTable;
@@ -59,7 +59,7 @@ public final class Evaluation {
 
     // Initialize
     int myColor = board.activeColor;
-    int enemyColor = IntColor.switchColor(myColor);
+    int enemyColor = IntColor.opposite(myColor);
     int total = 0;
 
     // Create tables

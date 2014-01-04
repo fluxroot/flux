@@ -52,7 +52,7 @@ public final class Board {
 
   // The zobrist keys
   private static final long zobristActiveColor;
-  private static final long[][][] zobristChessman = new long[IntChessman.CHESSMAN_VALUE_SIZE][IntColor.ARRAY_DIMENSION][BOARDSIZE];
+  private static final long[][][] zobristChessman = new long[IntChessman.CHESSMAN_VALUE_SIZE][IntColor.values.length][BOARDSIZE];
   private static final long[] zobristCastling = new long[IntCastling.ARRAY_DIMENSION];
   private static final long[] zobristEnPassant = new long[BOARDSIZE];
 
@@ -61,12 +61,12 @@ public final class Board {
   //## ENDOF 0x88 Board Representation
 
   // The chessman lists.
-  public final ChessmanList[] pawnList = new ChessmanList[IntColor.ARRAY_DIMENSION];
-  public final ChessmanList[] knightList = new ChessmanList[IntColor.ARRAY_DIMENSION];
-  public final ChessmanList[] bishopList = new ChessmanList[IntColor.ARRAY_DIMENSION];
-  public final ChessmanList[] rookList = new ChessmanList[IntColor.ARRAY_DIMENSION];
-  public final ChessmanList[] queenList = new ChessmanList[IntColor.ARRAY_DIMENSION];
-  public final ChessmanList[] kingList = new ChessmanList[IntColor.ARRAY_DIMENSION];
+  public final ChessmanList[] pawnList = new ChessmanList[IntColor.values.length];
+  public final ChessmanList[] knightList = new ChessmanList[IntColor.values.length];
+  public final ChessmanList[] bishopList = new ChessmanList[IntColor.values.length];
+  public final ChessmanList[] rookList = new ChessmanList[IntColor.values.length];
+  public final ChessmanList[] queenList = new ChessmanList[IntColor.values.length];
+  public final ChessmanList[] kingList = new ChessmanList[IntColor.values.length];
 
   // Board stack
   private final StackEntry[] stack = new StackEntry[STACKSIZE];
@@ -101,19 +101,19 @@ public final class Board {
   public int activeColor = IntColor.WHITE;
 
   // Material values of all pieces (pawns, knights, bishops, rooks, queens, king)
-  public final int[] materialValueAll = new int[IntColor.ARRAY_DIMENSION];
+  public final int[] materialValueAll = new int[IntColor.values.length];
 
   // Material counters of minor and major pieces (knights, bishops, rooks, queens)
-  public final int[] materialCount = new int[IntColor.ARRAY_DIMENSION];
+  public final int[] materialCount = new int[IntColor.values.length];
 
   // Material counters of all pieces without the king (pawns, knights, bishops, rooks, queens)
-  public final int[] materialCountAll = new int[IntColor.ARRAY_DIMENSION];
+  public final int[] materialCountAll = new int[IntColor.values.length];
 
   // Our repetition table
   private final RepetitionTable repetitionTable;
 
   // Attack
-  private final Attack[][] attackHistory = new Attack[STACKSIZE + 1][IntColor.ARRAY_DIMENSION];
+  private final Attack[][] attackHistory = new Attack[STACKSIZE + 1][IntColor.values.length];
   private int attackHistorySize = 0;
   private final Attack tempAttack = new Attack();
 
@@ -161,7 +161,7 @@ public final class Board {
 
     // Initialize the attack list
     for (int i = 0; i < attackHistory.length; i++) {
-      for (int j = 0; j < IntColor.ARRAY_DIMENSION; j++) {
+      for (int j = 0; j < IntColor.values.length; j++) {
         attackHistory[i][j] = new Attack();
       }
     }
@@ -179,7 +179,7 @@ public final class Board {
 
       GenericPiece genericPiece = newBoard.getPiece(Position.valueOfIntPosition(position));
       if (genericPiece != null) {
-        int piece = IntChessman.createPiece(IntChessman.valueOfChessman(genericPiece.chessman), IntColor.valueOfColor(genericPiece.color));
+        int piece = IntChessman.createPiece(IntChessman.valueOfChessman(genericPiece.chessman), IntColor.valueOf(genericPiece.color));
         put(piece, position, true);
       }
     }
@@ -210,8 +210,8 @@ public final class Board {
     }
 
     // Initialize the active color
-    if (activeColor != IntColor.valueOfColor(newBoard.getActiveColor())) {
-      activeColor = IntColor.valueOfColor(newBoard.getActiveColor());
+    if (activeColor != IntColor.valueOf(newBoard.getActiveColor())) {
+      activeColor = IntColor.valueOf(newBoard.getActiveColor());
       zobristCode ^= zobristActiveColor;
       pawnZobristCode ^= zobristActiveColor;
     }
@@ -422,7 +422,7 @@ public final class Board {
 
     // Set chessmen
     for (GenericColor color : GenericColor.values()) {
-      int intColor = IntColor.valueOfColor(color);
+      int intColor = IntColor.valueOf(color);
 
       for (long positions = pawnList[intColor].list; positions != 0; positions &= positions - 1) {
         int intPosition = ChessmanList.next(positions);
@@ -485,7 +485,7 @@ public final class Board {
     }
 
     // Set active color
-    newBoard.setActiveColor(IntColor.valueOfIntColor(activeColor));
+    newBoard.setActiveColor(IntColor.toGenericColor(activeColor));
 
     // Set castling
     if ((castling & IntCastling.WHITE_KINGSIDE) != 0) {
@@ -523,7 +523,7 @@ public final class Board {
     assert fullMoveNumber > 0;
 
     halfMoveNumber = fullMoveNumber * 2;
-    if (activeColor == IntColor.valueOfColor(GenericColor.BLACK)) {
+    if (activeColor == IntColor.valueOf(GenericColor.BLACK)) {
       halfMoveNumber++;
     }
   }
@@ -582,7 +582,7 @@ public final class Board {
 
     int chessmanColor = Move.getChessmanColor(move);
     int endPosition = Move.getEnd(move);
-    int enemyKingColor = IntColor.switchColor(chessmanColor);
+    int enemyKingColor = IntColor.opposite(chessmanColor);
     int enemyKingPosition = ChessmanList.next(kingList[enemyKingColor].list);
 
     switch (Move.getType(move)) {
@@ -763,7 +763,7 @@ public final class Board {
 
     assert kingList[color].size() == 1;
 
-    int attackerColor = IntColor.switchColor(color);
+    int attackerColor = IntColor.opposite(color);
     getAttack(attack, ChessmanList.next(kingList[color].list), attackerColor, false);
 
     return attack;
@@ -1083,7 +1083,7 @@ public final class Board {
     halfMoveNumber++;
 
     // Update active color
-    activeColor = IntColor.switchColor(activeColor);
+    activeColor = IntColor.opposite(activeColor);
     zobristCode ^= zobristActiveColor;
     pawnZobristCode ^= zobristActiveColor;
 
@@ -1100,7 +1100,7 @@ public final class Board {
     attackHistorySize--;
 
     // Update active color
-    activeColor = IntColor.switchColor(activeColor);
+    activeColor = IntColor.opposite(activeColor);
 
     // Update half move number
     halfMoveNumber--;
@@ -1530,7 +1530,7 @@ public final class Board {
     int target = remove(targetPosition, true);
     assert Move.getTarget(move) != IntChessman.NOPIECE;
     assert IntChessman.getChessman(target) == IntChessman.PAWN;
-    assert IntChessman.getColor(target) == IntColor.switchColor(pawnColor);
+    assert IntChessman.getColor(target) == IntColor.opposite(pawnColor);
     captureHistory[captureHistorySize++] = target;
 
     // Update the capture square

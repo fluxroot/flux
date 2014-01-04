@@ -18,17 +18,17 @@
  */
 package com.fluxchess.flux.evaluation;
 
-import com.fluxchess.flux.board.ChessmanList;
 import com.fluxchess.flux.board.Board;
-import com.fluxchess.flux.board.IntColor;
+import com.fluxchess.flux.board.ChessmanList;
 import com.fluxchess.flux.board.Position;
+import com.fluxchess.jcpi.models.IntColor;
 
 import java.util.Arrays;
 
 public final class PawnTableEvaluation {
 
   // Our pawn structure table. 8 + 2 -> 2 Sentinels for each side.
-  public final byte[][] pawnTable = new byte[IntColor.ARRAY_DIMENSION][10];
+  public final byte[][] pawnTable = new byte[IntColor.values.length][10];
 
   private static final PawnTableEvaluation instance = new PawnTableEvaluation();
 

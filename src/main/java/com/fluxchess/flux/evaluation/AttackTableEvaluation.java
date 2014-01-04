@@ -18,11 +18,11 @@
  */
 package com.fluxchess.flux.evaluation;
 
-import com.fluxchess.flux.board.ChessmanList;
 import com.fluxchess.flux.board.Board;
+import com.fluxchess.flux.board.ChessmanList;
 import com.fluxchess.flux.board.IntChessman;
-import com.fluxchess.flux.board.IntColor;
 import com.fluxchess.flux.board.MoveGenerator;
+import com.fluxchess.jcpi.models.IntColor;
 
 import java.util.Arrays;
 
@@ -37,7 +37,7 @@ public final class AttackTableEvaluation {
   private static final AttackTableEvaluation instance = new AttackTableEvaluation();
 
   // Our attack table
-  public final byte[][] attackTable = new byte[IntColor.ARRAY_DIMENSION][Board.BOARDSIZE];
+  public final byte[][] attackTable = new byte[IntColor.values.length][Board.BOARDSIZE];
 
   private AttackTableEvaluation() {
   }

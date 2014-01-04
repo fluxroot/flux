@@ -18,9 +18,6 @@
  */
 package com.fluxchess.flux.board;
 
-import com.fluxchess.flux.board.*;
-import com.fluxchess.flux.board.IntChessman;
-import com.fluxchess.flux.board.IntColor;
 import com.fluxchess.jcpi.models.*;
 import org.junit.Test;
 

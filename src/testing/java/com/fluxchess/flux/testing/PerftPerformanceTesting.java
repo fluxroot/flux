@@ -18,13 +18,7 @@
  */
 package com.fluxchess.flux.testing;
 
-import com.fluxchess.flux.board.Attack;
-import com.fluxchess.flux.board.Board;
-import com.fluxchess.flux.board.Move;
-import com.fluxchess.flux.board.MoveGenerator;
-import com.fluxchess.flux.board.MoveSee;
-import com.fluxchess.flux.board.HistoryTable;
-import com.fluxchess.flux.board.KillerTable;
+import com.fluxchess.flux.board.*;
 import com.fluxchess.jcpi.models.GenericBoard;
 import com.fluxchess.jcpi.models.IllegalNotationException;
 

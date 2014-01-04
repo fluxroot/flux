@@ -18,9 +18,6 @@
  */
 package com.fluxchess.flux.board;
 
-import com.fluxchess.flux.board.IntChessman;
-import com.fluxchess.flux.board.KillerTable;
-import com.fluxchess.flux.board.Move;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

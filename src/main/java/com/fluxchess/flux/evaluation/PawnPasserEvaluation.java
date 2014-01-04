@@ -19,8 +19,7 @@
 package com.fluxchess.flux.evaluation;
 
 import com.fluxchess.flux.board.*;
-import com.fluxchess.flux.board.Move;
-import com.fluxchess.flux.board.MoveSee;
+import com.fluxchess.jcpi.models.IntColor;
 
 public final class PawnPasserEvaluation {
 

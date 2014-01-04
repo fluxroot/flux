@@ -18,7 +18,11 @@
  */
 package com.fluxchess.flux.search;
 
-import com.fluxchess.flux.board.*;
+import com.fluxchess.flux.board.IntChessman;
+import com.fluxchess.flux.board.Move;
+import com.fluxchess.flux.board.Position;
+import com.fluxchess.flux.board.Score;
+import com.fluxchess.jcpi.models.IntColor;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;

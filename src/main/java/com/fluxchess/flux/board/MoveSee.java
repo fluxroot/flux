@@ -18,13 +18,15 @@
  */
 package com.fluxchess.flux.board;
 
+import com.fluxchess.jcpi.models.IntColor;
+
 /**
  * Notes: Ideas from Fruit
  */
 public final class MoveSee {
 
   private static Board board = null;
-  private static final SeeList[] chessmanList = new SeeList[IntColor.ARRAY_DIMENSION];
+  private static final SeeList[] chessmanList = new SeeList[IntColor.values.length];
 
   public MoveSee(Board newBoard) {
     board = newBoard;
@@ -39,7 +41,7 @@ public final class MoveSee {
     int type = Move.getType(move);
 
     // Get the enemy color
-    int enemyColor = IntColor.switchColor(myColor);
+    int enemyColor = IntColor.opposite(myColor);
 
     // Clear the chessman list
     SeeList myList = chessmanList[myColor];

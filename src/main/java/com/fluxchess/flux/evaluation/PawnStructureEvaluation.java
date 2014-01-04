@@ -18,7 +18,11 @@
  */
 package com.fluxchess.flux.evaluation;
 
-import com.fluxchess.flux.board.*;
+import com.fluxchess.flux.board.Board;
+import com.fluxchess.flux.board.ChessmanList;
+import com.fluxchess.flux.board.IntChessman;
+import com.fluxchess.flux.board.Position;
+import com.fluxchess.jcpi.models.IntColor;
 
 public final class PawnStructureEvaluation {
 

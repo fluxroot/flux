@@ -41,13 +41,13 @@ public class BoardTest {
           assertEquals(IntChessman.NOPIECE, testChessman);
         } else {
           assertEquals(IntChessman.valueOfChessman(piece.chessman), IntChessman.getChessman(testChessman));
-          assertEquals(IntColor.valueOfColor(piece.color), IntChessman.getColor(testChessman));
+          assertEquals(IntColor.valueOf(piece.color), IntChessman.getColor(testChessman));
         }
       }
     }
 
     // Test active color
-    assertEquals(IntColor.valueOfColor(board.getActiveColor()), testBoard.activeColor);
+    assertEquals(IntColor.valueOf(board.getActiveColor()), testBoard.activeColor);
 
     // Test en passant
     if (board.getEnPassant() == null) {

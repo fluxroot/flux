@@ -21,6 +21,7 @@ package com.fluxchess.flux.board;
 import com.fluxchess.jcpi.models.GenericFile;
 import com.fluxchess.jcpi.models.GenericPosition;
 import com.fluxchess.jcpi.models.GenericRank;
+import com.fluxchess.jcpi.models.IntColor;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

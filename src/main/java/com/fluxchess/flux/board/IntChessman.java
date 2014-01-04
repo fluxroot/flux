@@ -19,13 +19,14 @@
 package com.fluxchess.flux.board;
 
 import com.fluxchess.jcpi.models.GenericChessman;
+import com.fluxchess.jcpi.models.IntColor;
 
 /**
  * This class represents a chessman as a int value. The fields are
  * represented by the following bits.<br/>
  * <br/>
  * <code>0 -  2</code>: the type (required)<br/>
- * <code>     3</code>: the color (required)<br/>
+ * <code>3 -  4</code>: the color (required)<br/>
  * <br/>
  */
 public final class IntChessman {
@@ -247,7 +248,7 @@ public final class IntChessman {
     assert piece != NOPIECE;
 
     int color = (piece & COLOR_MASK) >>> COLOR_SHIFT;
-    assert IntColor.isValidColor(color);
+    assert IntColor.isValid(color);
 
     return color;
   }
@@ -261,7 +262,7 @@ public final class IntChessman {
   public static int getColorOpposite(int piece) {
     assert piece != NOPIECE;
 
-    return ((piece & COLOR_MASK) ^ COLOR_MASK) >>> COLOR_SHIFT;
+    return IntColor.opposite((piece & COLOR_MASK) >>> COLOR_SHIFT);
   }
 
   /**

@@ -18,11 +18,7 @@
  */
 package com.fluxchess.flux.board;
 
-import com.fluxchess.flux.board.Board;
-import com.fluxchess.flux.board.IntChessman;
-import com.fluxchess.flux.board.IntColor;
-import com.fluxchess.flux.board.Position;
-import com.fluxchess.flux.board.Move;
+import com.fluxchess.jcpi.models.IntColor;
 
 public final class HistoryTable {
 

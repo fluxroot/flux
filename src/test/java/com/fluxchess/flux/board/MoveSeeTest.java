@@ -18,9 +18,9 @@
  */
 package com.fluxchess.flux.board;
 
-import com.fluxchess.flux.board.*;
 import com.fluxchess.jcpi.models.GenericBoard;
 import com.fluxchess.jcpi.models.IllegalNotationException;
+import com.fluxchess.jcpi.models.IntColor;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

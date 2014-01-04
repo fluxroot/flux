@@ -18,10 +18,7 @@
  */
 package com.fluxchess.flux.board;
 
-import com.fluxchess.jcpi.models.GenericFile;
-import com.fluxchess.jcpi.models.GenericMove;
-import com.fluxchess.jcpi.models.GenericPosition;
-import com.fluxchess.jcpi.models.GenericRank;
+import com.fluxchess.jcpi.models.*;
 
 /**
  * This class represents a move as a int value. The fields are represented by
@@ -30,11 +27,11 @@ import com.fluxchess.jcpi.models.GenericRank;
  *  0 -  6: the start position (required except Move.NULL)
  *  7 - 13: the end position (required except Move.NULL)
  * 14 - 16: the chessman (optional)
- *      17: the chessman color (optional)
- * 18 - 20: the target (optional)
- *      21: the target color (optional)
- * 22 - 24: the promotion chessman (optional)
- * 25 - 27: the type (required)
+ * 17   18: the chessman color (optional)
+ * 19 - 21: the target (optional)
+ * 22 - 23: the target color (optional)
+ * 24 - 26: the promotion chessman (optional)
+ * 27 - 29: the type (required)
  */
 public final class Move {
 
@@ -78,15 +75,15 @@ public final class Move {
   private static final int CHESSMAN_COLOR_MASK = IntColor.MASK << CHESSMAN_COLOR_SHIFT;
   private static final int CHESSMAN_PIECE_SHIFT = CHESSMAN_SHIFT;
   private static final int CHESSMAN_PIECE_MASK = IntChessman.PIECE_MASK << CHESSMAN_PIECE_SHIFT;
-  private static final int TARGET_SHIFT = 18;
+  private static final int TARGET_SHIFT = 19;
   private static final int TARGET_MASK = IntChessman.MASK << TARGET_SHIFT;
-  private static final int TARGET_COLOR_SHIFT = 21;
+  private static final int TARGET_COLOR_SHIFT = 22;
   private static final int TARGET_COLOR_MASK = IntColor.MASK << TARGET_COLOR_SHIFT;
   private static final int TARGET_PIECE_SHIFT = TARGET_SHIFT;
   private static final int TARGET_PIECE_MASK = IntChessman.PIECE_MASK << TARGET_PIECE_SHIFT;
-  private static final int PROMOTION_SHIFT = 22;
+  private static final int PROMOTION_SHIFT = 24;
   private static final int PROMOTION_MASK = IntChessman.MASK << PROMOTION_SHIFT;
-  private static final int MOVE_SHIFT = 25;
+  private static final int MOVE_SHIFT = 27;
   private static final int MOVE_MASK = MASK << MOVE_SHIFT;
 
   static {
@@ -311,7 +308,7 @@ public final class Move {
     assert getChessman(move) != IntChessman.NOPIECE;
 
     int color = (move & CHESSMAN_COLOR_MASK) >>> CHESSMAN_COLOR_SHIFT;
-    assert IntColor.isValidColor(color);
+    assert IntColor.isValid(color);
 
     return color;
   }
@@ -360,7 +357,7 @@ public final class Move {
     assert getTarget(move) != IntChessman.NOPIECE;
 
     int color = (move & TARGET_COLOR_MASK) >>> TARGET_COLOR_SHIFT;
-    assert IntColor.isValidColor(color);
+    assert IntColor.isValid(color);
 
     return color;
   }
@@ -624,7 +621,7 @@ public final class Move {
 
     if (getChessman(move) != IntChessman.NOPIECE) {
       string += ", (";
-      string += IntColor.valueOfIntColor(getChessmanColor(move));
+      string += IntColor.toGenericColor(getChessmanColor(move));
       string += "/";
       string += IntChessman.valueOfIntChessman(getChessman(move));
       string += ")";
@@ -635,7 +632,7 @@ public final class Move {
 
     if (getTarget(move) != IntChessman.NOPIECE) {
       string += ", (";
-      string += IntColor.valueOfIntColor(getTargetColor(move));
+      string += IntColor.toGenericColor(getTargetColor(move));
       string += "/";
       string += IntChessman.valueOfIntChessman(getTarget(move));
       string += ")";

@@ -22,9 +22,8 @@ import com.fluxchess.flux.ChessLogger;
 import com.fluxchess.flux.Configuration;
 import com.fluxchess.flux.board.*;
 import com.fluxchess.flux.evaluation.Evaluation;
-import com.fluxchess.flux.board.HistoryTable;
-import com.fluxchess.flux.board.KillerTable;
 import com.fluxchess.jcpi.models.GenericMove;
+import com.fluxchess.jcpi.models.IntColor;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -79,8 +78,8 @@ public final class Search implements Runnable {
   private long searchTime = 0;
   private long searchTimeHard = 0;
   private long searchTimeStart = 0;
-  private final long[] searchClock = new long[IntColor.ARRAY_DIMENSION];
-  private final long[] searchClockIncrement = new long[IntColor.ARRAY_DIMENSION];
+  private final long[] searchClock = new long[IntColor.values.length];
+  private final long[] searchClockIncrement = new long[IntColor.values.length];
   private int searchMovesToGo = 0;
   private final MoveList searchMoveList = new MoveList();
 
@@ -1494,7 +1493,7 @@ public final class Search implements Runnable {
 
     // Extend another ply if we enter a pawn endgame
     if (board.materialCount[board.activeColor] == 0
-      && board.materialCount[IntColor.switchColor(board.activeColor)] == 1
+      && board.materialCount[IntColor.opposite(board.activeColor)] == 1
       && Move.getTarget(move) != IntChessman.NOPIECE
       && Move.getTarget(move) != IntChessman.PAWN) {
       newDepth++;
