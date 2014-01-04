@@ -20,7 +20,7 @@ package com.fluxchess.flux.testing;
 
 import com.fluxchess.flux.board.Attack;
 import com.fluxchess.flux.board.Board;
-import com.fluxchess.flux.move.IntMove;
+import com.fluxchess.flux.move.Move;
 import com.fluxchess.flux.move.MoveGenerator;
 import com.fluxchess.flux.move.MoveSee;
 import com.fluxchess.flux.table.HistoryTable;
@@ -40,11 +40,11 @@ public class PerftPerformanceTesting {
     }
 
     Attack attack = board.getAttack(board.activeColor);
-    moveGenerator.initializeMain(attack, 0, IntMove.NOMOVE);
+    moveGenerator.initializeMain(attack, 0, Move.NOMOVE);
 
     long totalNodes = 0;
     int move = moveGenerator.getNextMove();
-    while (move != IntMove.NOMOVE) {
+    while (move != Move.NOMOVE) {
       board.makeMove(move);
       totalNodes += miniMax(board, moveGenerator, depth - 1);
       board.undoMove(move);

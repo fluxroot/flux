@@ -20,7 +20,7 @@ package com.fluxchess.flux.board;
 
 import com.fluxchess.flux.Search;
 import com.fluxchess.flux.move.IntCastling;
-import com.fluxchess.flux.move.IntMove;
+import com.fluxchess.flux.move.Move;
 import com.fluxchess.flux.table.RepetitionTable;
 import com.fluxchess.jcpi.models.*;
 
@@ -581,24 +581,24 @@ public final class Board {
    * @return true if this move checks the opponent king.
    */
   public boolean isCheckingMove(int move) {
-    assert move != IntMove.NOMOVE;
+    assert move != Move.NOMOVE;
 
-    int chessmanColor = IntMove.getChessmanColor(move);
-    int endPosition = IntMove.getEnd(move);
+    int chessmanColor = Move.getChessmanColor(move);
+    int endPosition = Move.getEnd(move);
     int enemyKingColor = IntColor.switchColor(chessmanColor);
     int enemyKingPosition = BitPieceList.next(kingList[enemyKingColor].list);
 
-    switch (IntMove.getType(move)) {
-      case IntMove.NORMAL:
-      case IntMove.PAWNDOUBLE:
-        int chessman = IntMove.getChessman(move);
+    switch (Move.getType(move)) {
+      case Move.NORMAL:
+      case Move.PAWNDOUBLE:
+        int chessman = Move.getChessman(move);
 
         // Direct attacks
         if (canAttack(chessman, chessmanColor, endPosition, enemyKingPosition)) {
           return true;
         }
 
-        int startPosition = IntMove.getStart(move);
+        int startPosition = Move.getStart(move);
 
         if (isPinned(startPosition, enemyKingColor)) {
           // We are pinned. Test if we move on the line.
@@ -608,14 +608,14 @@ public final class Board {
         }
         // Indirect attacks
         break;
-      case IntMove.PAWNPROMOTION:
-      case IntMove.ENPASSANT:
+      case Move.PAWNPROMOTION:
+      case Move.ENPASSANT:
         // We do a slow test for complex moves
         makeMove(move);
         boolean isCheck = isAttacked(enemyKingPosition, chessmanColor);
         undoMove(move);
         return isCheck;
-      case IntMove.CASTLING:
+      case Move.CASTLING:
         int rookEnd = IntPosition.NOPOSITION;
 
         if (endPosition == IntPosition.g1) {
@@ -635,11 +635,11 @@ public final class Board {
         }
 
         return canAttack(IntChessman.ROOK, chessmanColor, rookEnd, enemyKingPosition);
-      case IntMove.NULL:
+      case Move.NULL:
         assert false;
         break;
       default:
-        assert false : IntMove.getType(move);
+        assert false : Move.getType(move);
         break;
     }
 
@@ -1052,30 +1052,30 @@ public final class Board {
     stackSize++;
     assert stackSize < STACKSIZE;
 
-    int type = IntMove.getType(move);
+    int type = Move.getType(move);
 
     switch (type) {
-      case IntMove.NORMAL:
+      case Move.NORMAL:
         repetitionTable.put(zobristCode);
         makeMoveNormal(move);
         break;
-      case IntMove.PAWNDOUBLE:
+      case Move.PAWNDOUBLE:
         repetitionTable.put(zobristCode);
         makeMovePawnDouble(move);
         break;
-      case IntMove.PAWNPROMOTION:
+      case Move.PAWNPROMOTION:
         repetitionTable.put(zobristCode);
         makeMovePawnPromotion(move);
         break;
-      case IntMove.ENPASSANT:
+      case Move.ENPASSANT:
         repetitionTable.put(zobristCode);
         makeMoveEnPassant(move);
         break;
-      case IntMove.CASTLING:
+      case Move.CASTLING:
         repetitionTable.put(zobristCode);
         makeMoveCastling(move);
         break;
-      case IntMove.NULL:
+      case Move.NULL:
         makeMoveNull();
         break;
       default:
@@ -1097,7 +1097,7 @@ public final class Board {
   }
 
   public void undoMove(int move) {
-    int type = IntMove.getType(move);
+    int type = Move.getType(move);
 
     // Update attack list
     attackHistorySize--;
@@ -1123,27 +1123,27 @@ public final class Board {
     captureSquare = currentStackEntry.captureSquareHistory;
 
     switch (type) {
-      case IntMove.NORMAL:
+      case Move.NORMAL:
         undoMoveNormal(move);
         repetitionTable.remove(zobristCode);
         break;
-      case IntMove.PAWNDOUBLE:
+      case Move.PAWNDOUBLE:
         undoMovePawnDouble(move);
         repetitionTable.remove(zobristCode);
         break;
-      case IntMove.PAWNPROMOTION:
+      case Move.PAWNPROMOTION:
         undoMovePawnPromotion(move);
         repetitionTable.remove(zobristCode);
         break;
-      case IntMove.ENPASSANT:
+      case Move.ENPASSANT:
         undoMoveEnPassant(move);
         repetitionTable.remove(zobristCode);
         break;
-      case IntMove.CASTLING:
+      case Move.CASTLING:
         undoMoveCastling(move);
         repetitionTable.remove(zobristCode);
         break;
-      case IntMove.NULL:
+      case Move.NULL:
         break;
       default:
         throw new IllegalArgumentException();
@@ -1156,11 +1156,11 @@ public final class Board {
     int newCastling = castling;
 
     // Save the captured chessman
-    int endPosition = IntMove.getEnd(move);
+    int endPosition = Move.getEnd(move);
     int target = IntChessman.NOPIECE;
     if (board[endPosition] != IntChessman.NOPIECE) {
       target = remove(endPosition, true);
-      assert IntMove.getTarget(move) != IntChessman.NOPIECE : IntMove.toString(move);
+      assert Move.getTarget(move) != IntChessman.NOPIECE : Move.toString(move);
       captureHistory[captureHistorySize++] = target;
       captureSquare = endPosition;
 
@@ -1201,7 +1201,7 @@ public final class Board {
     }
 
     // Move the piece
-    int startPosition = IntMove.getStart(move);
+    int startPosition = Move.getStart(move);
     int piece = move(startPosition, endPosition, true);
     int chessman = IntChessman.getChessman(piece);
 
@@ -1255,12 +1255,12 @@ public final class Board {
 
   private void undoMoveNormal(int move) {
     // Move the chessman
-    int startPosition = IntMove.getStart(move);
-    int endPosition = IntMove.getEnd(move);
+    int startPosition = Move.getStart(move);
+    int endPosition = Move.getEnd(move);
     move(endPosition, startPosition, false);
 
     // Restore the captured chessman
-    int target = IntMove.getTarget(move);
+    int target = Move.getTarget(move);
     if (target != IntChessman.NOPIECE) {
       put(captureHistory[--captureHistorySize], endPosition, false);
     }
@@ -1271,15 +1271,15 @@ public final class Board {
 
   private void makeMovePawnPromotion(int move) {
     // Remove the pawn at the start position
-    int startPosition = IntMove.getStart(move);
+    int startPosition = Move.getStart(move);
     int pawn = remove(startPosition, true);
     assert IntChessman.getChessman(pawn) == IntChessman.PAWN;
     int pawnColor = IntChessman.getColor(pawn);
-    assert IntChessman.getChessman(pawn) == IntMove.getChessman(move);
-    assert pawnColor == IntMove.getChessmanColor(move);
+    assert IntChessman.getChessman(pawn) == Move.getChessman(move);
+    assert pawnColor == Move.getChessmanColor(move);
 
     // Save the captured chessman
-    int endPosition = IntMove.getEnd(move);
+    int endPosition = Move.getEnd(move);
     int target = IntChessman.NOPIECE;
     if (board[endPosition] != IntChessman.NOPIECE) {
       // Save the castling rights
@@ -1287,7 +1287,7 @@ public final class Board {
       int newCastling = castling;
 
       target = remove(endPosition, true);
-      assert IntMove.getTarget(move) != IntChessman.NOPIECE;
+      assert Move.getTarget(move) != IntChessman.NOPIECE;
       captureHistory[captureHistorySize++] = target;
       captureSquare = endPosition;
 
@@ -1328,7 +1328,7 @@ public final class Board {
     }
 
     // Create the promotion chessman
-    int promotion = IntMove.getPromotion(move);
+    int promotion = Move.getPromotion(move);
     int promotionPiece = IntChessman.createPromotion(promotion, pawnColor);
     put(promotionPiece, endPosition, true);
 
@@ -1344,11 +1344,11 @@ public final class Board {
 
   private void undoMovePawnPromotion(int move) {
     // Remove the promotion chessman at the end position
-    int endPosition = IntMove.getEnd(move);
+    int endPosition = Move.getEnd(move);
     remove(endPosition, false);
 
     // Restore the captured chessman
-    int target = IntMove.getTarget(move);
+    int target = Move.getTarget(move);
     if (target != IntChessman.NOPIECE) {
       put(captureHistory[--captureHistorySize], endPosition, false);
 
@@ -1357,21 +1357,21 @@ public final class Board {
     }
 
     // Put the pawn at the start position
-    int pawnChessman = IntMove.getChessman(move);
-    int pawnColor = IntMove.getChessmanColor(move);
+    int pawnChessman = Move.getChessman(move);
+    int pawnColor = Move.getChessmanColor(move);
     int pawnPiece = IntChessman.createPiece(pawnChessman, pawnColor);
-    put(pawnPiece, IntMove.getStart(move), false);
+    put(pawnPiece, Move.getStart(move), false);
   }
 
   private void makeMovePawnDouble(int move) {
     // Move the pawn
-    int startPosition = IntMove.getStart(move);
-    int endPosition = IntMove.getEnd(move);
+    int startPosition = Move.getStart(move);
+    int endPosition = Move.getEnd(move);
     int pawn = move(startPosition, endPosition, true);
     int pawnColor = IntChessman.getColor(pawn);
 
     assert IntChessman.getChessman(pawn) == IntChessman.PAWN;
-    assert (startPosition >>> 4 == 1 && pawnColor == IntColor.WHITE) || (startPosition >>> 4 == 6 && pawnColor == IntColor.BLACK) : getBoard().toString() + ":" + IntMove.toString(move);
+    assert (startPosition >>> 4 == 1 && pawnColor == IntColor.WHITE) || (startPosition >>> 4 == 6 && pawnColor == IntColor.BLACK) : getBoard().toString() + ":" + Move.toString(move);
     assert (endPosition >>> 4 == 3 && pawnColor == IntColor.WHITE) || (endPosition >>> 4 == 4 && pawnColor == IntColor.BLACK);
     assert Math.abs(startPosition - endPosition) == 32;
 
@@ -1405,7 +1405,7 @@ public final class Board {
 
   private void undoMovePawnDouble(int move) {
     // Move the pawn
-    move(IntMove.getEnd(move), IntMove.getStart(move), false);
+    move(Move.getEnd(move), Move.getStart(move), false);
   }
 
   private void makeMoveCastling(int move) {
@@ -1414,8 +1414,8 @@ public final class Board {
     int newCastling = castling;
 
     // Move the king
-    int kingStartPosition = IntMove.getStart(move);
-    int kingEndPosition = IntMove.getEnd(move);
+    int kingStartPosition = Move.getStart(move);
+    int kingEndPosition = Move.getEnd(move);
     int king = move(kingStartPosition, kingEndPosition, true);
     assert IntChessman.getChessman(king) == IntChessman.KING;
 
@@ -1475,7 +1475,7 @@ public final class Board {
   }
 
   private void undoMoveCastling(int move) {
-    int kingEndPosition = IntMove.getEnd(move);
+    int kingEndPosition = Move.getEnd(move);
 
     // Get the rook positions
     int rookStartPosition;
@@ -1505,7 +1505,7 @@ public final class Board {
     move(rookEndPosition, rookStartPosition, false);
 
     // Move the king
-    move(kingEndPosition, IntMove.getStart(move), false);
+    move(kingEndPosition, Move.getStart(move), false);
 
     // Restore the castling rights
     castling = castlingHistory[--castlingHistorySize];
@@ -1513,8 +1513,8 @@ public final class Board {
 
   private void makeMoveEnPassant(int move) {
     // Move the pawn
-    int startPosition = IntMove.getStart(move);
-    int endPosition = IntMove.getEnd(move);
+    int startPosition = Move.getStart(move);
+    int endPosition = Move.getEnd(move);
     int pawn = move(startPosition, endPosition, true);
     assert IntChessman.getChessman(pawn) == IntChessman.PAWN;
     int pawnColor = IntChessman.getColor(pawn);
@@ -1531,7 +1531,7 @@ public final class Board {
 
     // Remove the captured pawn
     int target = remove(targetPosition, true);
-    assert IntMove.getTarget(move) != IntChessman.NOPIECE;
+    assert Move.getTarget(move) != IntChessman.NOPIECE;
     assert IntChessman.getChessman(target) == IntChessman.PAWN;
     assert IntChessman.getColor(target) == IntColor.switchColor(pawnColor);
     captureHistory[captureHistorySize++] = target;
@@ -1552,8 +1552,8 @@ public final class Board {
 
   private void undoMoveEnPassant(int move) {
     // Move the pawn
-    int endPosition = IntMove.getEnd(move);
-    int pawn = move(endPosition, IntMove.getStart(move), false);
+    int endPosition = Move.getEnd(move);
+    int pawn = move(endPosition, Move.getStart(move), false);
 
     // Calculate the en passant position
     int targetPosition;

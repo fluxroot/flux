@@ -19,7 +19,7 @@
 package com.fluxchess.flux.evaluation;
 
 import com.fluxchess.flux.board.*;
-import com.fluxchess.flux.move.IntMove;
+import com.fluxchess.flux.move.Move;
 import com.fluxchess.flux.move.MoveSee;
 
 public final class PawnPasserEvaluation {
@@ -222,7 +222,7 @@ public final class PawnPasserEvaluation {
           assert ((pawnPosition + sign * 16) & 0x88) == 0;
           if (board.board[pawnPosition + sign * 16] == IntChessman.NOPIECE) {
             // TODO: Do we have to consider promotion moves?
-            int move = IntMove.createMove(IntMove.NORMAL, pawnPosition, pawnPosition + sign * 16, pawn, IntChessman.NOPIECE, IntChessman.NOPIECE);
+            int move = Move.createMove(Move.NORMAL, pawnPosition, pawnPosition + sign * 16, pawn, IntChessman.NOPIECE, IntChessman.NOPIECE);
             if (MoveSee.seeMove(move, myColor) >= 0) {
               endgameMax += EVAL_PAWN_PASSER_FREE;
             }

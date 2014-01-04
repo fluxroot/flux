@@ -20,7 +20,7 @@ package com.fluxchess.flux.table;
 
 import com.fluxchess.flux.Search;
 import com.fluxchess.flux.board.Board;
-import com.fluxchess.flux.move.IntMove;
+import com.fluxchess.flux.move.Move;
 import com.fluxchess.flux.move.IntScore;
 import com.fluxchess.jcpi.models.GenericMove;
 
@@ -101,7 +101,7 @@ public final class TranspositionTable {
       currentEntry.mateThreat = mateThreat;
     } else if (currentEntry.zobristCode == zobristCode) {
       // The same zobrist key already exists
-      if (depth >= currentEntry.depth && move != IntMove.NOMOVE) {
+      if (depth >= currentEntry.depth && move != Move.NOMOVE) {
         currentEntry.depth = depth;
         currentEntry.setValue(value, height);
         currentEntry.type = type;
@@ -154,10 +154,10 @@ public final class TranspositionTable {
 
     if (currentEntry == null
       || depth == 0
-      || currentEntry.move == IntMove.NOMOVE) {
+      || currentEntry.move == Move.NOMOVE) {
       return moveList;
     } else {
-      moveList.add(IntMove.toGenericMove(currentEntry.move));
+      moveList.add(Move.toGenericMove(currentEntry.move));
 
       board.makeMove(currentEntry.move);
       List<GenericMove> newMoveList = getMoveList(board, depth - 1, moveList);
@@ -183,7 +183,7 @@ public final class TranspositionTable {
     public int depth = -1;
     private int value = -Search.INFINITY;
     public int type = IntScore.NOSCORE;
-    public int move = IntMove.NOMOVE;
+    public int move = Move.NOMOVE;
     public boolean mateThreat = false;
 
     public void clear() {
@@ -192,7 +192,7 @@ public final class TranspositionTable {
       depth = -1;
       value = -Search.INFINITY;
       type = IntScore.NOSCORE;
-      move = IntMove.NOMOVE;
+      move = Move.NOMOVE;
       mateThreat = false;
     }
 

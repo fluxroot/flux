@@ -21,7 +21,7 @@ package com.fluxchess.flux;
 import com.fluxchess.flux.board.Board;
 import com.fluxchess.flux.board.IntColor;
 import com.fluxchess.flux.evaluation.Evaluation;
-import com.fluxchess.flux.move.IntMove;
+import com.fluxchess.flux.move.Move;
 import com.fluxchess.flux.table.EvaluationTable;
 import com.fluxchess.flux.table.PawnTable;
 import com.fluxchess.flux.table.TranspositionTable;
@@ -236,7 +236,7 @@ public final class Flux extends AbstractEngine {
     // Make all moves
     List<GenericMove> moveList = command.moves;
     for (GenericMove move : moveList) {
-      int newMove = IntMove.convertMove(move, board);
+      int newMove = Move.convertMove(move, board);
       board.makeMove(newMove);
     }
   }

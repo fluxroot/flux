@@ -19,7 +19,7 @@
 package com.fluxchess.flux.table;
 
 import com.fluxchess.flux.board.IntChessman;
-import com.fluxchess.flux.move.IntMove;
+import com.fluxchess.flux.move.Move;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -30,11 +30,11 @@ public class HistoryTableTest {
   public void testHistoryTable() {
     HistoryTable table = new HistoryTable();
 
-    int move1 = IntMove.createMove(IntMove.NORMAL, 16, 32, IntChessman.PAWN, IntChessman.NOPIECE, IntChessman.NOPIECE);
+    int move1 = Move.createMove(Move.NORMAL, 16, 32, IntChessman.PAWN, IntChessman.NOPIECE, IntChessman.NOPIECE);
     table.add(move1, 1);
     assertEquals(1, table.get(move1));
 
-    int move2 = IntMove.createMove(IntMove.NORMAL, 16, 32, IntChessman.PAWN, IntChessman.NOPIECE, IntChessman.NOPIECE);
+    int move2 = Move.createMove(Move.NORMAL, 16, 32, IntChessman.PAWN, IntChessman.NOPIECE, IntChessman.NOPIECE);
     table.add(move2, 1);
     assertEquals(2, table.get(move2));
   }

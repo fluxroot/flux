@@ -22,7 +22,7 @@ import com.fluxchess.flux.board.Board;
 import com.fluxchess.flux.board.IntChessman;
 import com.fluxchess.flux.board.IntColor;
 import com.fluxchess.flux.board.IntPosition;
-import com.fluxchess.flux.move.IntMove;
+import com.fluxchess.flux.move.Move;
 
 public final class HistoryTable {
 
@@ -33,16 +33,16 @@ public final class HistoryTable {
   /**
    * Returns the number of hits for the move.
    *
-   * @param move the IntMove.
+   * @param move the Move.
    * @return the number of hits.
    */
   public int get(int move) {
-    assert move != IntMove.NOMOVE;
+    assert move != Move.NOMOVE;
 
-    int piece = IntMove.getChessmanPiece(move);
-    int end = IntMove.getEnd(move);
-    assert IntMove.getChessman(move) != IntChessman.NOPIECE;
-    assert IntMove.getChessmanColor(move) != IntColor.NOCOLOR;
+    int piece = Move.getChessmanPiece(move);
+    int end = Move.getEnd(move);
+    assert Move.getChessman(move) != IntChessman.NOPIECE;
+    assert Move.getChessmanColor(move) != IntColor.NOCOLOR;
     assert (end & 0x88) == 0;
 
     return historyTable[piece][end];
@@ -51,15 +51,15 @@ public final class HistoryTable {
   /**
    * Increment the number of hits for this move.
    *
-   * @param move the IntMove.
+   * @param move the Move.
    */
   public void add(int move, int depth) {
-    assert move != IntMove.NOMOVE;
+    assert move != Move.NOMOVE;
 
-    int piece = IntMove.getChessmanPiece(move);
-    int end = IntMove.getEnd(move);
-    assert IntMove.getChessman(move) != IntChessman.NOPIECE;
-    assert IntMove.getChessmanColor(move) != IntColor.NOCOLOR;
+    int piece = Move.getChessmanPiece(move);
+    int end = Move.getEnd(move);
+    assert Move.getChessman(move) != IntChessman.NOPIECE;
+    assert Move.getChessmanColor(move) != IntColor.NOCOLOR;
     assert (end & 0x88) == 0;
 
     historyTable[piece][end] += depth;

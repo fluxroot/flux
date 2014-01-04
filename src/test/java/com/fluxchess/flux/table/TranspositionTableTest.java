@@ -22,7 +22,7 @@ import com.fluxchess.flux.Search;
 import com.fluxchess.flux.board.IntChessman;
 import com.fluxchess.flux.board.IntColor;
 import com.fluxchess.flux.board.IntPosition;
-import com.fluxchess.flux.move.IntMove;
+import com.fluxchess.flux.move.Move;
 import com.fluxchess.flux.move.IntScore;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -38,7 +38,7 @@ public class TranspositionTableTest {
   @Test
   public void testTranspositionTable() {
     TranspositionTable table = new TranspositionTable(10);
-    int move1 = IntMove.createMove(IntMove.NORMAL, IntPosition.a2, IntPosition.a3, IntChessman.createPiece(IntChessman.PAWN, IntColor.WHITE), IntChessman.NOPIECE, IntChessman.NOPIECE);
+    int move1 = Move.createMove(Move.NORMAL, IntPosition.a2, IntPosition.a3, IntChessman.createPiece(IntChessman.PAWN, IntColor.WHITE), IntChessman.NOPIECE, IntChessman.NOPIECE);
 
     // Put an entry into the table
     table.put(1L, 1, 100, IntScore.EXACT, move1, false, 0);

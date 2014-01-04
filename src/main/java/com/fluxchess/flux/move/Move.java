@@ -40,7 +40,7 @@ import com.fluxchess.jcpi.models.GenericRank;
  * 22 - 24: the promotion chessman (optional)
  * 25 - 27: the type (required)
  */
-public final class IntMove {
+public final class Move {
 
   public static final int NOMOVE = -8;
 
@@ -94,14 +94,14 @@ public final class IntMove {
   private static final int MOVE_MASK = MASK << MOVE_SHIFT;
 
   static {
-    NULLMOVE = IntMove.createMove(IntMove.NULL, IntPosition.NOPOSITION, IntPosition.NOPOSITION, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
+    NULLMOVE = Move.createMove(Move.NULL, IntPosition.NOPOSITION, IntPosition.NOPOSITION, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
   }
 
-  private IntMove() {
+  private Move() {
   }
 
   /**
-   * Get the IntMove.
+   * Get the Move.
    *
    * @param type      the type.
    * @param start     the start position.
@@ -109,7 +109,7 @@ public final class IntMove {
    * @param piece     the piece.
    * @param target    the target piece.
    * @param promotion the promotion.
-   * @return the IntMove.
+   * @return the Move.
    */
   public static int createMove(int type, int start, int end, int piece, int target, int promotion) {
     assert type != NOMOVE;
@@ -183,7 +183,7 @@ public final class IntMove {
    * @return the move.
    */
   public static int setEndPosition(int move, int endPosition) {
-    assert move != IntMove.NOMOVE;
+    assert move != Move.NOMOVE;
     assert endPosition != IntPosition.NOPOSITION;
 
     // Zero out the end position
@@ -204,7 +204,7 @@ public final class IntMove {
    * @return the move.
    */
   public static int setEndPositionAndTarget(int move, int endPosition, int target) {
-    assert move != IntMove.NOMOVE;
+    assert move != Move.NOMOVE;
     assert endPosition != IntPosition.NOPOSITION;
     assert target != IntChessman.NOPIECE;
 
@@ -236,7 +236,7 @@ public final class IntMove {
    * @return the move.
    */
   public static int setPromotion(int move, int promotion) {
-    assert move != IntMove.NOMOVE;
+    assert move != Move.NOMOVE;
     assert promotion != IntChessman.NOPIECE;
 
     // Zero out the promotion chessman
@@ -259,7 +259,7 @@ public final class IntMove {
 
     int position = (move & START_MASK) >>> START_SHIFT;
 
-    assert getType(move) != IntMove.NULL;
+    assert getType(move) != Move.NULL;
     assert position != INTERNAL_NOPOSITION;
     assert (position & 0x88) == 0;
 
@@ -277,7 +277,7 @@ public final class IntMove {
 
     int position = (move & END_MASK) >>> END_SHIFT;
 
-    assert getType(move) != IntMove.NULL;
+    assert getType(move) != Move.NULL;
     assert position != INTERNAL_NOPOSITION;
     assert (position & 0x88) == 0;
 
@@ -285,9 +285,9 @@ public final class IntMove {
   }
 
   /**
-   * Get the chessman from the IntMove.
+   * Get the chessman from the Move.
    *
-   * @param move the IntMove.
+   * @param move the Move.
    * @return the chessman.
    */
   public static int getChessman(int move) {
@@ -305,9 +305,9 @@ public final class IntMove {
   }
 
   /**
-   * Get the chessman IntColor from the IntMove.
+   * Get the chessman IntColor from the Move.
    *
-   * @param move the IntMove.
+   * @param move the Move.
    * @return the chessman IntColor.
    */
   public static int getChessmanColor(int move) {
@@ -354,7 +354,7 @@ public final class IntMove {
   }
 
   /**
-   * Get the target IntColor from the IntMove.
+   * Get the target IntColor from the Move.
    *
    * @param move the move.
    * @return the target IntColor.
@@ -415,11 +415,11 @@ public final class IntMove {
   }
 
   /**
-   * Returns the IntMove from the GenericMove.
+   * Returns the Move from the GenericMove.
    *
    * @param move  the GenericMove.
    * @param board the Board.
-   * @return the IntMove.
+   * @return the Move.
    */
   public static int convertMove(GenericMove move, Board board) {
     assert move != null;

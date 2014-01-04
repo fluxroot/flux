@@ -18,7 +18,7 @@
  */
 package com.fluxchess.flux.board;
 
-import com.fluxchess.flux.move.IntMove;
+import com.fluxchess.flux.move.Move;
 import com.fluxchess.jcpi.models.*;
 import org.junit.Test;
 
@@ -77,7 +77,7 @@ public class BoardTest {
     GenericBoard board = new GenericBoard(GenericBoard.STANDARDSETUP);
     Board testBoard = new Board(board);
 
-    int move = IntMove.createMove(IntMove.NORMAL, 16, 32, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
+    int move = Move.createMove(Move.NORMAL, 16, 32, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
     testBoard.makeMove(move);
     testBoard.undoMove(move);
 
@@ -95,7 +95,7 @@ public class BoardTest {
     }
     Board testBoard = new Board(board);
 
-    int move = IntMove.createMove(IntMove.PAWNPROMOTION, 96, 112, IntChessman.createPiece(IntChessman.PAWN, IntColor.WHITE), IntChessman.NOPIECE, IntChessman.QUEEN);
+    int move = Move.createMove(Move.PAWNPROMOTION, 96, 112, IntChessman.createPiece(IntChessman.PAWN, IntColor.WHITE), IntChessman.NOPIECE, IntChessman.QUEEN);
     testBoard.makeMove(move);
     testBoard.undoMove(move);
 
@@ -107,7 +107,7 @@ public class BoardTest {
     GenericBoard board = new GenericBoard(GenericBoard.STANDARDSETUP);
     Board testBoard = new Board(board);
 
-    int move = IntMove.createMove(IntMove.PAWNDOUBLE, 16, 48, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
+    int move = Move.createMove(Move.PAWNDOUBLE, 16, 48, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
     testBoard.makeMove(move);
     testBoard.undoMove(move);
 
@@ -125,12 +125,12 @@ public class BoardTest {
     }
     Board testBoard = new Board(board);
 
-    int move = IntMove.createMove(IntMove.CASTLING, 4, 2, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
+    int move = Move.createMove(Move.CASTLING, 4, 2, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
     testBoard.makeMove(move);
     testBoard.undoMove(move);
     assertEquals(board, testBoard.getBoard());
 
-    move = IntMove.createMove(IntMove.CASTLING, 4, 6, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
+    move = Move.createMove(Move.CASTLING, 4, 6, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
     testBoard.makeMove(move);
     testBoard.undoMove(move);
     assertEquals(board, testBoard.getBoard());
@@ -148,7 +148,7 @@ public class BoardTest {
     Board testBoard = new Board(board);
 
     // Make en passant move
-    int move = IntMove.createMove(IntMove.ENPASSANT, IntPosition.e4, IntPosition.d3, IntChessman.createPiece(IntChessman.PAWN, IntColor.BLACK), IntChessman.createPiece(IntChessman.PAWN, IntColor.WHITE), IntChessman.NOPIECE);
+    int move = Move.createMove(Move.ENPASSANT, IntPosition.e4, IntPosition.d3, IntChessman.createPiece(IntChessman.PAWN, IntColor.BLACK), IntChessman.createPiece(IntChessman.PAWN, IntColor.WHITE), IntChessman.NOPIECE);
     testBoard.makeMove(move);
     testBoard.undoMove(move);
 
@@ -160,7 +160,7 @@ public class BoardTest {
     GenericBoard board = new GenericBoard(GenericBoard.STANDARDSETUP);
     Board testBoard = new Board(board);
 
-    int move = IntMove.createMove(IntMove.NULL, IntPosition.NOPOSITION, IntPosition.NOPOSITION, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
+    int move = Move.createMove(Move.NULL, IntPosition.NOPOSITION, IntPosition.NOPOSITION, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
     testBoard.makeMove(move);
     testBoard.undoMove(move);
 
@@ -179,38 +179,38 @@ public class BoardTest {
 
     Board testBoard = new Board(board);
     // Move white bishop
-    int move = IntMove.createMove(IntMove.NORMAL, IntPosition.d2, IntPosition.e3, IntChessman.createPiece(IntChessman.BISHOP, IntColor.WHITE), IntChessman.NOPIECE, IntChessman.NOPIECE);
+    int move = Move.createMove(Move.NORMAL, IntPosition.d2, IntPosition.e3, IntChessman.createPiece(IntChessman.BISHOP, IntColor.WHITE), IntChessman.NOPIECE, IntChessman.NOPIECE);
     testBoard.makeMove(move);
     // Castling black KINGSIDE
-    move = IntMove.createMove(IntMove.CASTLING, IntPosition.e8, IntPosition.g8, IntChessman.createPiece(IntChessman.KING, IntColor.BLACK), IntChessman.NOPIECE, IntChessman.NOPIECE);
+    move = Move.createMove(Move.CASTLING, IntPosition.e8, IntPosition.g8, IntChessman.createPiece(IntChessman.KING, IntColor.BLACK), IntChessman.NOPIECE, IntChessman.NOPIECE);
     testBoard.makeMove(move);
     // Move white pawn
-    move = IntMove.createMove(IntMove.PAWNDOUBLE, IntPosition.c2, IntPosition.c4, IntChessman.createPiece(IntChessman.PAWN, IntColor.WHITE), IntChessman.NOPIECE, IntChessman.NOPIECE);
+    move = Move.createMove(Move.PAWNDOUBLE, IntPosition.c2, IntPosition.c4, IntChessman.createPiece(IntChessman.PAWN, IntColor.WHITE), IntChessman.NOPIECE, IntChessman.NOPIECE);
     testBoard.makeMove(move);
     // Move black pawn
-    move = IntMove.createMove(IntMove.ENPASSANT, IntPosition.d4, IntPosition.c3, IntChessman.createPiece(IntChessman.PAWN, IntColor.BLACK), IntChessman.createPiece(IntChessman.PAWN, IntColor.WHITE), IntChessman.NOPIECE);
+    move = Move.createMove(Move.ENPASSANT, IntPosition.d4, IntPosition.c3, IntChessman.createPiece(IntChessman.PAWN, IntColor.BLACK), IntChessman.createPiece(IntChessman.PAWN, IntColor.WHITE), IntChessman.NOPIECE);
     testBoard.makeMove(move);
     // Move white pawn
-    move = IntMove.createMove(IntMove.PAWNPROMOTION, IntPosition.c7, IntPosition.c8, IntChessman.createPiece(IntChessman.PAWN, IntColor.WHITE), IntChessman.NOPIECE, IntChessman.QUEEN);
+    move = Move.createMove(Move.PAWNPROMOTION, IntPosition.c7, IntPosition.c8, IntChessman.createPiece(IntChessman.PAWN, IntColor.WHITE), IntChessman.NOPIECE, IntChessman.QUEEN);
     testBoard.makeMove(move);
     long zobrist1 = testBoard.zobristCode;
     long pawnZobrist1 = testBoard.pawnZobristCode;
 
     testBoard = new Board(board);
     // Move white pawn
-    move = IntMove.createMove(IntMove.PAWNDOUBLE, IntPosition.c2, IntPosition.c4, IntChessman.createPiece(IntChessman.PAWN, IntColor.WHITE), IntChessman.NOPIECE, IntChessman.NOPIECE);
+    move = Move.createMove(Move.PAWNDOUBLE, IntPosition.c2, IntPosition.c4, IntChessman.createPiece(IntChessman.PAWN, IntColor.WHITE), IntChessman.NOPIECE, IntChessman.NOPIECE);
     testBoard.makeMove(move);
     // Move black pawn
-    move = IntMove.createMove(IntMove.ENPASSANT, IntPosition.d4, IntPosition.c3, IntChessman.createPiece(IntChessman.PAWN, IntColor.BLACK), IntChessman.createPiece(IntChessman.PAWN, IntColor.WHITE), IntChessman.NOPIECE);
+    move = Move.createMove(Move.ENPASSANT, IntPosition.d4, IntPosition.c3, IntChessman.createPiece(IntChessman.PAWN, IntColor.BLACK), IntChessman.createPiece(IntChessman.PAWN, IntColor.WHITE), IntChessman.NOPIECE);
     testBoard.makeMove(move);
     // Move white bishop
-    move = IntMove.createMove(IntMove.NORMAL, IntPosition.d2, IntPosition.e3, IntChessman.createPiece(IntChessman.BISHOP, IntColor.WHITE), IntChessman.NOPIECE, IntChessman.NOPIECE);
+    move = Move.createMove(Move.NORMAL, IntPosition.d2, IntPosition.e3, IntChessman.createPiece(IntChessman.BISHOP, IntColor.WHITE), IntChessman.NOPIECE, IntChessman.NOPIECE);
     testBoard.makeMove(move);
     // Castling black KINGSIDE
-    move = IntMove.createMove(IntMove.CASTLING, IntPosition.e8, IntPosition.g8, IntChessman.createPiece(IntChessman.KING, IntColor.BLACK), IntChessman.NOPIECE, IntChessman.NOPIECE);
+    move = Move.createMove(Move.CASTLING, IntPosition.e8, IntPosition.g8, IntChessman.createPiece(IntChessman.KING, IntColor.BLACK), IntChessman.NOPIECE, IntChessman.NOPIECE);
     testBoard.makeMove(move);
     // Move white pawn
-    move = IntMove.createMove(IntMove.PAWNPROMOTION, IntPosition.c7, IntPosition.c8, IntChessman.createPiece(IntChessman.PAWN, IntColor.WHITE), IntChessman.NOPIECE, IntChessman.QUEEN);
+    move = Move.createMove(Move.PAWNPROMOTION, IntPosition.c7, IntPosition.c8, IntChessman.createPiece(IntChessman.PAWN, IntColor.WHITE), IntChessman.NOPIECE, IntChessman.QUEEN);
     testBoard.makeMove(move);
     long zobrist2 = testBoard.zobristCode;
     long pawnZobrist2 = testBoard.pawnZobristCode;
@@ -225,12 +225,12 @@ public class BoardTest {
     Board testBoard = new Board(board);
 
     // Move white pawn
-    int move = IntMove.createMove(IntMove.NORMAL, 16, 32, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
+    int move = Move.createMove(Move.NORMAL, 16, 32, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
     testBoard.makeMove(move);
     assertEquals(IntColor.BLACK, testBoard.activeColor);
 
     // Move black pawn
-    move = IntMove.createMove(IntMove.NORMAL, 96, 80, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
+    move = Move.createMove(Move.NORMAL, 96, 80, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
     testBoard.makeMove(move);
     assertEquals(IntColor.WHITE, testBoard.activeColor);
   }
@@ -241,15 +241,15 @@ public class BoardTest {
     Board testBoard = new Board(board);
 
     // Move white pawn
-    int move = IntMove.createMove(IntMove.NORMAL, 16, 32, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
+    int move = Move.createMove(Move.NORMAL, 16, 32, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
     testBoard.makeMove(move);
     assertEquals(0, testBoard.halfMoveClock);
 
     // Move black pawn
-    move = IntMove.createMove(IntMove.NORMAL, 96, 80, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
+    move = Move.createMove(Move.NORMAL, 96, 80, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
     testBoard.makeMove(move);
     // Move white knight
-    move = IntMove.createMove(IntMove.NORMAL, 1, 34, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
+    move = Move.createMove(Move.NORMAL, 1, 34, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
     testBoard.makeMove(move);
     assertEquals(1, testBoard.halfMoveClock);
   }
@@ -260,12 +260,12 @@ public class BoardTest {
     Board testBoard = new Board(board);
 
     // Move white pawn
-    int move = IntMove.createMove(IntMove.NORMAL, 16, 32, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
+    int move = Move.createMove(Move.NORMAL, 16, 32, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
     testBoard.makeMove(move);
     assertEquals(1, testBoard.getFullMoveNumber());
 
     // Move black pawn
-    move = IntMove.createMove(IntMove.NORMAL, 96, 80, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
+    move = Move.createMove(Move.NORMAL, 96, 80, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
     testBoard.makeMove(move);
     assertEquals(2, testBoard.getFullMoveNumber());
   }
