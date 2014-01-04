@@ -16,13 +16,14 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Flux Chess.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.fluxchess.flux;
+package com.fluxchess.flux.search;
 
+import com.fluxchess.flux.ChessLogger;
+import com.fluxchess.flux.Configuration;
 import com.fluxchess.flux.board.*;
 import com.fluxchess.flux.evaluation.Evaluation;
 import com.fluxchess.flux.board.HistoryTable;
 import com.fluxchess.flux.board.KillerTable;
-import com.fluxchess.flux.board.TranspositionTable;
 import com.fluxchess.jcpi.models.GenericMove;
 
 import java.util.*;

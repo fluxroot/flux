@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Flux Chess.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.fluxchess.flux.board;
+package com.fluxchess.flux.search;
 
-import com.fluxchess.flux.Search;
+import com.fluxchess.flux.board.*;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;

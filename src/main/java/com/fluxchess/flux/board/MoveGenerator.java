@@ -19,7 +19,7 @@
 package com.fluxchess.flux.board;
 
 import com.fluxchess.flux.Configuration;
-import com.fluxchess.flux.Search;
+import com.fluxchess.flux.search.Search;
 
 /**
  * Notes: Ideas from Fruit. I specially like the Idea how to handle the state

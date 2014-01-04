@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Flux Chess.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.fluxchess.flux;
+package com.fluxchess.flux.search;
 
+import com.fluxchess.flux.Configuration;
 import com.fluxchess.flux.board.Score;
 import com.fluxchess.flux.board.PrincipalVariation;
-import com.fluxchess.flux.board.TranspositionTable;
 import com.fluxchess.jcpi.commands.IProtocol;
 import com.fluxchess.jcpi.commands.ProtocolBestMoveCommand;
 import com.fluxchess.jcpi.commands.ProtocolInformationCommand;

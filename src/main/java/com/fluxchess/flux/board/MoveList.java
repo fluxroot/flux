@@ -18,7 +18,7 @@
  */
 package com.fluxchess.flux.board;
 
-import com.fluxchess.flux.Search;
+import com.fluxchess.flux.search.Search;
 
 public final class MoveList {
 

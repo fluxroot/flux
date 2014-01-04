@@ -18,8 +18,7 @@
  */
 package com.fluxchess.flux.board;
 
-import com.fluxchess.flux.Search;
-import com.fluxchess.flux.board.Move;
+import com.fluxchess.flux.search.Search;
 
 /**
  * This table is used to store the Killer Moves. We use two slots to

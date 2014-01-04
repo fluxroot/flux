@@ -19,7 +19,7 @@
 package com.fluxchess.flux.evaluation;
 
 import com.fluxchess.flux.Configuration;
-import com.fluxchess.flux.Search;
+import com.fluxchess.flux.search.Search;
 import com.fluxchess.flux.board.Board;
 import com.fluxchess.flux.board.IntColor;
 
