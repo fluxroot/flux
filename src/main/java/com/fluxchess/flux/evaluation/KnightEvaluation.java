@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2013 the original author or authors.
+ * Copyright 2007-2014 the original author or authors.
  *
  * This file is part of Flux Chess.
  *
@@ -18,11 +18,11 @@
  */
 package com.fluxchess.flux.evaluation;
 
-import com.fluxchess.flux.board.BitPieceList;
-import com.fluxchess.flux.board.Hex88Board;
+import com.fluxchess.flux.board.ChessmanList;
+import com.fluxchess.flux.board.Board;
 import com.fluxchess.flux.board.IntChessman;
 import com.fluxchess.flux.board.IntColor;
-import com.fluxchess.flux.move.MoveGenerator;
+import com.fluxchess.flux.board.MoveGenerator;
 
 public final class KnightEvaluation {
 
@@ -33,7 +33,7 @@ public final class KnightEvaluation {
   private KnightEvaluation() {
   }
 
-  public static int evaluateKnight(int myColor, int enemyColor, Hex88Board board) {
+  public static int evaluateKnight(int myColor, int enemyColor, Board board) {
     assert myColor != IntColor.NOCOLOR;
     assert enemyColor != IntColor.NOCOLOR;
     assert board != null;
@@ -44,7 +44,7 @@ public final class KnightEvaluation {
 
     // Evaluate each knight
     for (long positions = board.knightList[myColor].list; positions != 0; positions &= positions - 1) {
-      int knightPosition = BitPieceList.next(positions);
+      int knightPosition = ChessmanList.next(positions);
 
       int allMobility = EVAL_KNIGHT_MOBILITY_BASE;
 

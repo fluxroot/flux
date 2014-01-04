@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2013 the original author or authors.
+ * Copyright 2007-2014 the original author or authors.
  *
  * This file is part of Flux Chess.
  *
@@ -19,7 +19,7 @@
 package com.fluxchess.flux.evaluation;
 
 import com.fluxchess.flux.board.*;
-import com.fluxchess.flux.move.IntCastling;
+import com.fluxchess.flux.board.IntCastling;
 
 public final class KingEvaluation {
 
@@ -42,7 +42,7 @@ public final class KingEvaluation {
   private KingEvaluation() {
   }
 
-  public static int evaluateKing(int myColor, int enemyColor, Hex88Board board) {
+  public static int evaluateKing(int myColor, int enemyColor, Board board) {
     assert myColor != IntColor.NOCOLOR;
     assert enemyColor != IntColor.NOCOLOR;
     assert board != null;
@@ -55,10 +55,10 @@ public final class KingEvaluation {
 
     // Evaluate the king
     assert board.kingList[myColor].size() == 1;
-    int kingPosition = BitPieceList.next(board.kingList[myColor].list);
+    int kingPosition = ChessmanList.next(board.kingList[myColor].list);
 
     // Evaluate king safety
-    int attackedSquare = IntPosition.NOPOSITION;
+    int attackedSquare = Position.NOPOSITION;
     int attackCount = 0;
     byte flag = 0;
 
@@ -178,11 +178,11 @@ public final class KingEvaluation {
 
     opening -= kingSafety;
 
-    int castlingPositionKingside = IntPosition.WHITE_CASTLING_KINGSIDE;
-    int castlingPositionQueenside = IntPosition.WHITE_CASTLING_QUEENSIDE;
+    int castlingPositionKingside = Position.WHITE_CASTLING_KINGSIDE;
+    int castlingPositionQueenside = Position.WHITE_CASTLING_QUEENSIDE;
     if (myColor == IntColor.BLACK) {
-      castlingPositionKingside = IntPosition.BLACK_CASTLING_KINGSIDE;
-      castlingPositionQueenside = IntPosition.BLACK_CASTLING_QUEENSIDE;
+      castlingPositionKingside = Position.BLACK_CASTLING_KINGSIDE;
+      castlingPositionQueenside = Position.BLACK_CASTLING_QUEENSIDE;
     } else {
       assert myColor == IntColor.WHITE;
     }
@@ -218,8 +218,8 @@ public final class KingEvaluation {
     // Initialize
     byte[] myPawnTable = PawnTableEvaluation.getInstance().pawnTable[myColor];
 
-    int kingFile = IntPosition.getFile(kingPosition);
-    int kingRank = IntPosition.getRank(kingPosition);
+    int kingFile = Position.getFile(kingPosition);
+    int kingRank = Position.getRank(kingPosition);
     int tableFile = kingFile + 1;
 
     // Evaluate pawn shield

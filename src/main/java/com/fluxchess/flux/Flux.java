@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2013 the original author or authors.
+ * Copyright 2007-2014 the original author or authors.
  *
  * This file is part of Flux Chess.
  *
@@ -18,13 +18,15 @@
  */
 package com.fluxchess.flux;
 
-import com.fluxchess.flux.board.Hex88Board;
+import com.fluxchess.flux.board.Board;
 import com.fluxchess.flux.board.IntColor;
 import com.fluxchess.flux.evaluation.Evaluation;
-import com.fluxchess.flux.move.IntMove;
-import com.fluxchess.flux.table.EvaluationTable;
-import com.fluxchess.flux.table.PawnTable;
-import com.fluxchess.flux.table.TranspositionTable;
+import com.fluxchess.flux.board.Move;
+import com.fluxchess.flux.evaluation.EvaluationTable;
+import com.fluxchess.flux.evaluation.PawnTable;
+import com.fluxchess.flux.search.TranspositionTable;
+import com.fluxchess.flux.search.InformationTimer;
+import com.fluxchess.flux.search.Search;
 import com.fluxchess.jcpi.AbstractEngine;
 import com.fluxchess.jcpi.commands.*;
 import com.fluxchess.jcpi.models.GenericBoard;
@@ -38,7 +40,7 @@ import java.util.List;
 
 public final class Flux extends AbstractEngine {
 
-  private Hex88Board board = null;
+  private Board board = null;
   private TranspositionTable transpositionTable;
   private EvaluationTable evaluationTable;
   private PawnTable pawnTable;
@@ -68,7 +70,7 @@ public final class Flux extends AbstractEngine {
     initializePawnTable();
 
     // Create a new search
-    search = new Search(new Evaluation(evaluationTable, pawnTable), new Hex88Board(new GenericBoard(GenericBoard.STANDARDSETUP)), transpositionTable, new InformationTimer(getProtocol(), transpositionTable), timeTable);
+    search = new Search(new Evaluation(evaluationTable, pawnTable), new Board(new GenericBoard(GenericBoard.STANDARDSETUP)), transpositionTable, new InformationTimer(getProtocol(), transpositionTable), timeTable);
   }
 
   private void initializeTranspositionTable() {
@@ -231,12 +233,12 @@ public final class Flux extends AbstractEngine {
     }
 
     // Create a new board
-    board = new Hex88Board(command.board);
+    board = new Board(command.board);
 
     // Make all moves
     List<GenericMove> moveList = command.moves;
     for (GenericMove move : moveList) {
-      int newMove = IntMove.convertMove(move, board);
+      int newMove = Move.convertMove(move, board);
       board.makeMove(newMove);
     }
   }

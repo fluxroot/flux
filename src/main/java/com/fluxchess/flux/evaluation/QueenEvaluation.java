@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2013 the original author or authors.
+ * Copyright 2007-2014 the original author or authors.
  *
  * This file is part of Flux Chess.
  *
@@ -19,7 +19,7 @@
 package com.fluxchess.flux.evaluation;
 
 import com.fluxchess.flux.board.*;
-import com.fluxchess.flux.move.MoveGenerator;
+import com.fluxchess.flux.board.MoveGenerator;
 
 public final class QueenEvaluation {
 
@@ -33,7 +33,7 @@ public final class QueenEvaluation {
   private QueenEvaluation() {
   }
 
-  public static int evaluateQueen(int myColor, int enemyColor, Hex88Board board) {
+  public static int evaluateQueen(int myColor, int enemyColor, Board board) {
     assert myColor != IntColor.NOCOLOR;
     assert enemyColor != IntColor.NOCOLOR;
     assert board != null;
@@ -46,8 +46,8 @@ public final class QueenEvaluation {
 
     // Evaluate the queen
     for (long positions = board.queenList[myColor].list; positions != 0; positions &= positions - 1) {
-      int queenPosition = BitPieceList.next(positions);
-      int queenRank = IntPosition.getRank(queenPosition);
+      int queenPosition = ChessmanList.next(positions);
+      int queenRank = Position.getRank(queenPosition);
 
       int allMobility = EVAL_QUEEN_MOBILITY_BASE;
 
@@ -90,8 +90,8 @@ public final class QueenEvaluation {
         assert myColor == IntColor.WHITE;
       }
       if (queenRank == seventhRank) {
-        int kingPosition = BitPieceList.next(board.kingList[enemyColor].list);
-        int kingRank = IntPosition.getRank(kingPosition);
+        int kingPosition = ChessmanList.next(board.kingList[enemyColor].list);
+        int kingRank = Position.getRank(kingPosition);
         boolean enemyPawnExists = false;
         for (int j = 1; j < enemyPawnTable.length - 1; j++) {
           if (enemyPawnTable[j] == seventhRank) {

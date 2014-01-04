@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2013 the original author or authors.
+ * Copyright 2007-2014 the original author or authors.
  *
  * This file is part of Flux Chess.
  *
@@ -53,14 +53,6 @@ public final class ChessLogger {
       ProtocolInformationCommand command = new ProtocolInformationCommand();
       command.setString(information);
       protocol.send(command);
-    }
-  }
-
-  public static void showTrace() {
-    try {
-      throw new Exception();
-    } catch (Exception e) {
-      e.printStackTrace();
     }
   }
 

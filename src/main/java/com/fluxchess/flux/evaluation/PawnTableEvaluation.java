@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2013 the original author or authors.
+ * Copyright 2007-2014 the original author or authors.
  *
  * This file is part of Flux Chess.
  *
@@ -18,10 +18,10 @@
  */
 package com.fluxchess.flux.evaluation;
 
-import com.fluxchess.flux.board.BitPieceList;
-import com.fluxchess.flux.board.Hex88Board;
+import com.fluxchess.flux.board.ChessmanList;
+import com.fluxchess.flux.board.Board;
 import com.fluxchess.flux.board.IntColor;
-import com.fluxchess.flux.board.IntPosition;
+import com.fluxchess.flux.board.Position;
 
 import java.util.Arrays;
 
@@ -39,7 +39,7 @@ public final class PawnTableEvaluation {
     return instance;
   }
 
-  public void createPawnTable(int myColor, Hex88Board board) {
+  public void createPawnTable(int myColor, Board board) {
     assert myColor != IntColor.NOCOLOR;
 
     // Zero our table
@@ -50,9 +50,9 @@ public final class PawnTableEvaluation {
 
     // Evaluate each pawn
     for (long positions = board.pawnList[myColor].list; positions != 0; positions &= positions - 1) {
-      int pawnPosition = BitPieceList.next(positions);
-      int pawnFile = IntPosition.getFile(pawnPosition);
-      int pawnRank = IntPosition.getRank(pawnPosition);
+      int pawnPosition = ChessmanList.next(positions);
+      int pawnFile = Position.getFile(pawnPosition);
+      int pawnRank = Position.getRank(pawnPosition);
 
       // Fill pawn table
       int tableFile = pawnFile + 1;

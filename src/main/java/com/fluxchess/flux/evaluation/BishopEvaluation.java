@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2013 the original author or authors.
+ * Copyright 2007-2014 the original author or authors.
  *
  * This file is part of Flux Chess.
  *
@@ -18,11 +18,11 @@
  */
 package com.fluxchess.flux.evaluation;
 
-import com.fluxchess.flux.board.BitPieceList;
-import com.fluxchess.flux.board.Hex88Board;
+import com.fluxchess.flux.board.ChessmanList;
+import com.fluxchess.flux.board.Board;
 import com.fluxchess.flux.board.IntChessman;
 import com.fluxchess.flux.board.IntColor;
-import com.fluxchess.flux.move.MoveGenerator;
+import com.fluxchess.flux.board.MoveGenerator;
 
 public final class BishopEvaluation {
 
@@ -34,7 +34,7 @@ public final class BishopEvaluation {
   private BishopEvaluation() {
   }
 
-  public static int evaluateBishop(int myColor, int enemyColor, Hex88Board board) {
+  public static int evaluateBishop(int myColor, int enemyColor, Board board) {
     assert myColor != IntColor.NOCOLOR;
     assert enemyColor != IntColor.NOCOLOR;
     assert board != null;
@@ -45,7 +45,7 @@ public final class BishopEvaluation {
 
     // Evaluate each bishop
     for (long positions = board.bishopList[myColor].list; positions != 0; positions &= positions - 1) {
-      int bishopPosition = BitPieceList.next(positions);
+      int bishopPosition = ChessmanList.next(positions);
 
       int allMobility = EVAL_BISHOP_MOBILITY_BASE;
 

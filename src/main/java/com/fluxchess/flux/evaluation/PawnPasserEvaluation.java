@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2013 the original author or authors.
+ * Copyright 2007-2014 the original author or authors.
  *
  * This file is part of Flux Chess.
  *
@@ -19,8 +19,8 @@
 package com.fluxchess.flux.evaluation;
 
 import com.fluxchess.flux.board.*;
-import com.fluxchess.flux.move.IntMove;
-import com.fluxchess.flux.move.MoveSee;
+import com.fluxchess.flux.board.Move;
+import com.fluxchess.flux.board.MoveSee;
 
 public final class PawnPasserEvaluation {
 
@@ -37,7 +37,7 @@ public final class PawnPasserEvaluation {
   private PawnPasserEvaluation() {
   }
 
-  public static int evaluatePawnPasser(int myColor, int enemyColor, Hex88Board board) {
+  public static int evaluatePawnPasser(int myColor, int enemyColor, Board board) {
     assert myColor != IntColor.NOCOLOR;
     assert enemyColor != IntColor.NOCOLOR;
     assert board != null;
@@ -49,19 +49,19 @@ public final class PawnPasserEvaluation {
     byte[] enemyPawnTable = PawnTableEvaluation.getInstance().pawnTable[enemyColor];
 
     assert board.kingList[enemyColor].size() == 1;
-    int enemyKingPosition = BitPieceList.next(board.kingList[enemyColor].list);
-    int enemyKingFile = IntPosition.getFile(enemyKingPosition);
-    int enemyKingRank = IntPosition.getRank(enemyKingPosition);
+    int enemyKingPosition = ChessmanList.next(board.kingList[enemyColor].list);
+    int enemyKingFile = Position.getFile(enemyKingPosition);
+    int enemyKingRank = Position.getRank(enemyKingPosition);
     assert board.kingList[myColor].size() == 1;
-    int myKingPosition = BitPieceList.next(board.kingList[myColor].list);
-    int myKingFile = IntPosition.getFile(myKingPosition);
-    int myKingRank = IntPosition.getRank(myKingPosition);
+    int myKingPosition = ChessmanList.next(board.kingList[myColor].list);
+    int myKingFile = Position.getFile(myKingPosition);
+    int myKingRank = Position.getRank(myKingPosition);
 
     // Evaluate each pawn
     for (long positions = board.pawnList[myColor].list; positions != 0; positions &= positions - 1) {
-      int pawnPosition = BitPieceList.next(positions);
-      int pawnFile = IntPosition.getFile(pawnPosition);
-      int pawnRank = IntPosition.getRank(pawnPosition);
+      int pawnPosition = ChessmanList.next(positions);
+      int pawnFile = Position.getFile(pawnPosition);
+      int pawnRank = Position.getRank(pawnPosition);
       int pawn = board.board[pawnPosition];
       int tableFile = pawnFile + 1;
 
@@ -170,10 +170,10 @@ public final class PawnPasserEvaluation {
               }
 
               // King protected passer
-              else if (IntPosition.getRelativeRank(myKingPosition, myColor) == IntPosition.rank7
+              else if (Position.getRelativeRank(myKingPosition, myColor) == Position.rank7
                 && ((promotionDistance <= 2 && (myAttackTable[pawnPosition] & AttackTableEvaluation.BIT_KING) != 0)
                 || (promotionDistance <= 3 && (myAttackTable[pawnPosition + 16] & AttackTableEvaluation.BIT_KING) != 0 && board.activeColor == myColor))
-                && (myKingFile != pawnFile || (pawnFile != IntPosition.fileA && pawnFile != IntPosition.fileH))) {
+                && (myKingFile != pawnFile || (pawnFile != Position.fileA && pawnFile != Position.fileH))) {
                 endgameMax += EVAL_PAWN_PASSER_UNSTOPPABLE;
               }
             }
@@ -209,10 +209,10 @@ public final class PawnPasserEvaluation {
               }
 
               // King protected passer
-              else if (IntPosition.getRelativeRank(myKingPosition, myColor) == IntPosition.rank7
+              else if (Position.getRelativeRank(myKingPosition, myColor) == Position.rank7
                 && ((promotionDistance <= 2 && (myAttackTable[pawnPosition] & AttackTableEvaluation.BIT_KING) != 0)
                 || (promotionDistance <= 3 && (myAttackTable[pawnPosition - 16] & AttackTableEvaluation.BIT_KING) != 0 && board.activeColor == myColor))
-                && (myKingFile != pawnFile || (pawnFile != IntPosition.fileA && pawnFile != IntPosition.fileH))) {
+                && (myKingFile != pawnFile || (pawnFile != Position.fileA && pawnFile != Position.fileH))) {
                 endgameMax += EVAL_PAWN_PASSER_UNSTOPPABLE;
               }
             }
@@ -222,7 +222,7 @@ public final class PawnPasserEvaluation {
           assert ((pawnPosition + sign * 16) & 0x88) == 0;
           if (board.board[pawnPosition + sign * 16] == IntChessman.NOPIECE) {
             // TODO: Do we have to consider promotion moves?
-            int move = IntMove.createMove(IntMove.NORMAL, pawnPosition, pawnPosition + sign * 16, pawn, IntChessman.NOPIECE, IntChessman.NOPIECE);
+            int move = Move.createMove(Move.NORMAL, pawnPosition, pawnPosition + sign * 16, pawn, IntChessman.NOPIECE, IntChessman.NOPIECE);
             if (MoveSee.seeMove(move, myColor) >= 0) {
               endgameMax += EVAL_PAWN_PASSER_FREE;
             }

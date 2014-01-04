@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2013 the original author or authors.
+ * Copyright 2007-2014 the original author or authors.
  *
  * This file is part of Flux Chess.
  *
@@ -19,12 +19,12 @@
 package com.fluxchess.flux.testing;
 
 import com.fluxchess.flux.board.Attack;
-import com.fluxchess.flux.board.Hex88Board;
-import com.fluxchess.flux.move.IntMove;
-import com.fluxchess.flux.move.MoveGenerator;
-import com.fluxchess.flux.move.MoveSee;
-import com.fluxchess.flux.table.HistoryTable;
-import com.fluxchess.flux.table.KillerTable;
+import com.fluxchess.flux.board.Board;
+import com.fluxchess.flux.board.Move;
+import com.fluxchess.flux.board.MoveGenerator;
+import com.fluxchess.flux.board.MoveSee;
+import com.fluxchess.flux.board.HistoryTable;
+import com.fluxchess.flux.board.KillerTable;
 import com.fluxchess.jcpi.models.GenericBoard;
 import com.fluxchess.jcpi.models.IllegalNotationException;
 
@@ -34,17 +34,17 @@ import java.io.InputStreamReader;
 
 public class PerftPerformanceTesting {
 
-  private static long miniMax(Hex88Board board, MoveGenerator moveGenerator, int depth) {
+  private static long miniMax(Board board, MoveGenerator moveGenerator, int depth) {
     if (depth == 0) {
       return 1;
     }
 
     Attack attack = board.getAttack(board.activeColor);
-    moveGenerator.initializeMain(attack, 0, IntMove.NOMOVE);
+    moveGenerator.initializeMain(attack, 0, Move.NOMOVE);
 
     long totalNodes = 0;
     int move = moveGenerator.getNextMove();
-    while (move != IntMove.NOMOVE) {
+    while (move != Move.NOMOVE) {
       board.makeMove(move);
       totalNodes += miniMax(board, moveGenerator, depth - 1);
       board.undoMove(move);
@@ -63,7 +63,7 @@ public class PerftPerformanceTesting {
       String token = reader.readLine();
       while (!token.equalsIgnoreCase("quit")) {
         try {
-          Hex88Board testBoard = new Hex88Board(new GenericBoard(token));
+          Board testBoard = new Board(new GenericBoard(token));
           new MoveSee(testBoard);
           KillerTable killerTable = new KillerTable();
           HistoryTable historyTable = new HistoryTable();
