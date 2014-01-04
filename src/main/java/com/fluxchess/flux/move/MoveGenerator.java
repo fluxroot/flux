@@ -69,7 +69,7 @@ public final class MoveGenerator {
   }
 
   // Board
-  private final Hex88Board board;
+  private final Board board;
 
   // Tables
   private final KillerTable killerTable;
@@ -111,7 +111,7 @@ public final class MoveGenerator {
     stateList[position++] = GEN_END;
   }
 
-  public MoveGenerator(Hex88Board board, KillerTable killerTable, HistoryTable historyTable) {
+  public MoveGenerator(Board board, KillerTable killerTable, HistoryTable historyTable) {
     assert board != null;
     assert killerTable != null;
     assert historyTable != null;

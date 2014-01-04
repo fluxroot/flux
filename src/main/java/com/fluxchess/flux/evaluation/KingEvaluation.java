@@ -42,7 +42,7 @@ public final class KingEvaluation {
   private KingEvaluation() {
   }
 
-  public static int evaluateKing(int myColor, int enemyColor, Hex88Board board) {
+  public static int evaluateKing(int myColor, int enemyColor, Board board) {
     assert myColor != IntColor.NOCOLOR;
     assert enemyColor != IntColor.NOCOLOR;
     assert board != null;

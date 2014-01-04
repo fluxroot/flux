@@ -18,7 +18,7 @@
  */
 package com.fluxchess.flux.move;
 
-import com.fluxchess.flux.board.Hex88Board;
+import com.fluxchess.flux.board.Board;
 import com.fluxchess.flux.board.IntChessman;
 import com.fluxchess.flux.board.IntColor;
 import com.fluxchess.flux.board.IntPosition;
@@ -61,7 +61,7 @@ public class IntMoveTest {
     assertEquals(move, move2);
 
     GenericMove genericMove = new GenericMove(GenericPosition.valueOf(GenericFile.Fa, GenericRank.R2), GenericPosition.valueOf(GenericFile.Fa, GenericRank.R4));
-    move = IntMove.convertMove(genericMove, new Hex88Board(new GenericBoard(GenericBoard.STANDARDSETUP)));
+    move = IntMove.convertMove(genericMove, new Board(new GenericBoard(GenericBoard.STANDARDSETUP)));
     assertEquals(IntMove.PAWNDOUBLE, IntMove.getType(move));
     assertEquals(16, IntMove.getStart(move));
     assertEquals(48, IntMove.getEnd(move));

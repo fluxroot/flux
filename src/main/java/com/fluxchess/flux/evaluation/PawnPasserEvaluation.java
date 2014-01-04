@@ -37,7 +37,7 @@ public final class PawnPasserEvaluation {
   private PawnPasserEvaluation() {
   }
 
-  public static int evaluatePawnPasser(int myColor, int enemyColor, Hex88Board board) {
+  public static int evaluatePawnPasser(int myColor, int enemyColor, Board board) {
     assert myColor != IntColor.NOCOLOR;
     assert enemyColor != IntColor.NOCOLOR;
     assert board != null;

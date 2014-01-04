@@ -19,7 +19,7 @@
 package com.fluxchess.flux.evaluation;
 
 import com.fluxchess.flux.board.BitPieceList;
-import com.fluxchess.flux.board.Hex88Board;
+import com.fluxchess.flux.board.Board;
 import com.fluxchess.flux.board.IntChessman;
 import com.fluxchess.flux.board.IntColor;
 
@@ -226,7 +226,7 @@ public final class PositionValueEvaluation {
   private PositionValueEvaluation() {
   }
 
-  public static int evaluatePositionValue(int myColor, Hex88Board board) {
+  public static int evaluatePositionValue(int myColor, Board board) {
     assert myColor != IntColor.NOCOLOR;
 
     // Initialize

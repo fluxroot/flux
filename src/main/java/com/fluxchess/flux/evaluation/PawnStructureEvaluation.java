@@ -32,7 +32,7 @@ public final class PawnStructureEvaluation {
   private PawnStructureEvaluation() {
   }
 
-  public static int evaluatePawnStructure(int myColor, int enemyColor, Hex88Board board) {
+  public static int evaluatePawnStructure(int myColor, int enemyColor, Board board) {
     assert myColor != IntColor.NOCOLOR;
     assert enemyColor != IntColor.NOCOLOR;
     assert board != null;

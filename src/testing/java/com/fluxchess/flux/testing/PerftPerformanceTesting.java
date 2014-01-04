@@ -19,7 +19,7 @@
 package com.fluxchess.flux.testing;
 
 import com.fluxchess.flux.board.Attack;
-import com.fluxchess.flux.board.Hex88Board;
+import com.fluxchess.flux.board.Board;
 import com.fluxchess.flux.move.IntMove;
 import com.fluxchess.flux.move.MoveGenerator;
 import com.fluxchess.flux.move.MoveSee;
@@ -34,7 +34,7 @@ import java.io.InputStreamReader;
 
 public class PerftPerformanceTesting {
 
-  private static long miniMax(Hex88Board board, MoveGenerator moveGenerator, int depth) {
+  private static long miniMax(Board board, MoveGenerator moveGenerator, int depth) {
     if (depth == 0) {
       return 1;
     }
@@ -63,7 +63,7 @@ public class PerftPerformanceTesting {
       String token = reader.readLine();
       while (!token.equalsIgnoreCase("quit")) {
         try {
-          Hex88Board testBoard = new Hex88Board(new GenericBoard(token));
+          Board testBoard = new Board(new GenericBoard(token));
           new MoveSee(testBoard);
           KillerTable killerTable = new KillerTable();
           HistoryTable historyTable = new HistoryTable();

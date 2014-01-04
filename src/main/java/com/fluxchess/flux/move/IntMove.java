@@ -18,7 +18,7 @@
  */
 package com.fluxchess.flux.move;
 
-import com.fluxchess.flux.board.Hex88Board;
+import com.fluxchess.flux.board.Board;
 import com.fluxchess.flux.board.IntChessman;
 import com.fluxchess.flux.board.IntColor;
 import com.fluxchess.flux.board.IntPosition;
@@ -418,10 +418,10 @@ public final class IntMove {
    * Returns the IntMove from the GenericMove.
    *
    * @param move  the GenericMove.
-   * @param board the Hex88Board.
+   * @param board the Board.
    * @return the IntMove.
    */
-  public static int convertMove(GenericMove move, Hex88Board board) {
+  public static int convertMove(GenericMove move, Board board) {
     assert move != null;
     assert board != null;
 
@@ -449,10 +449,10 @@ public final class IntMove {
    * Returns whether the GenericMove is a pawn promotion move.
    *
    * @param move  the GenericMove.
-   * @param board the Hex88Board.
+   * @param board the Board.
    * @return true if the GenericMove is a pawn promotion, false otherwise.
    */
-  private static boolean isPawnPromotion(GenericMove move, Hex88Board board) {
+  private static boolean isPawnPromotion(GenericMove move, Board board) {
     assert move != null;
     assert board != null;
 
@@ -473,10 +473,10 @@ public final class IntMove {
    * Returns whether the GenericMove is a pawn double advance move.
    *
    * @param move  the GenericMove.
-   * @param board the Hex88Board.
+   * @param board the Board.
    * @return true if the GenericMove is a pawn double advance, false otherwise.
    */
-  private static boolean isPawnDouble(GenericMove move, Hex88Board board) {
+  private static boolean isPawnDouble(GenericMove move, Board board) {
     assert move != null;
     assert board != null;
 
@@ -497,10 +497,10 @@ public final class IntMove {
    * Returns whether the GenericMove is a en passant move.
    *
    * @param move  the GenericMove.
-   * @param board the Hex88Board.
+   * @param board the Board.
    * @return true if the GenericMove is a en passant move, false otherwise.
    */
-  private static boolean isEnPassant(GenericMove move, Hex88Board board) {
+  private static boolean isEnPassant(GenericMove move, Board board) {
     assert move != null;
     assert board != null;
 
@@ -527,10 +527,10 @@ public final class IntMove {
    * Returns whether the GenericMove is a castling move.
    *
    * @param move  the GenericMove.
-   * @param board the Hex88Board.
+   * @param board the Board.
    * @return true if the GenericMove is a castling move, false otherwise.
    */
-  private static boolean isCastling(GenericMove move, Hex88Board board) {
+  private static boolean isCastling(GenericMove move, Board board) {
     assert move != null;
     assert board != null;
 

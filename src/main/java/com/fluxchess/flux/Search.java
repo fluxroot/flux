@@ -90,7 +90,7 @@ public final class Search implements Runnable {
   // Search logic
   private MoveGenerator moveGenerator;
   private Evaluation evaluation;
-  private static Hex88Board board;
+  private static Board board;
   private final int myColor;
 
   // Search tables
@@ -117,7 +117,7 @@ public final class Search implements Runnable {
     }
   }
 
-  public Search(Evaluation newEvaluation, Hex88Board newBoard, TranspositionTable newTranspositionTable, InformationTimer newInfo, int[] timeTable) {
+  public Search(Evaluation newEvaluation, Board newBoard, TranspositionTable newTranspositionTable, InformationTimer newInfo, int[] timeTable) {
     assert newEvaluation != null;
     assert newBoard != null;
     assert newTranspositionTable != null;

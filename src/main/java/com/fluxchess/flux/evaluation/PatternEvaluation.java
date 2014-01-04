@@ -18,7 +18,7 @@
  */
 package com.fluxchess.flux.evaluation;
 
-import com.fluxchess.flux.board.Hex88Board;
+import com.fluxchess.flux.board.Board;
 import com.fluxchess.flux.board.IntChessman;
 import com.fluxchess.flux.board.IntColor;
 import com.fluxchess.flux.board.IntPosition;
@@ -28,7 +28,7 @@ public final class PatternEvaluation {
   private PatternEvaluation() {
   }
 
-  public static int evaluatePatterns(int myColor, Hex88Board board) {
+  public static int evaluatePatterns(int myColor, Board board) {
     assert myColor != IntColor.NOCOLOR;
     assert board != null;
 

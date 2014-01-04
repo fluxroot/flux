@@ -34,7 +34,7 @@ public final class DrawEvaluation {
   private DrawEvaluation() {
   }
 
-  public static int evaluateDraw(Hex88Board board) {
+  public static int evaluateDraw(Board board) {
     assert board != null;
 
     for (int myColor : IntColor.values) {
@@ -179,7 +179,7 @@ public final class DrawEvaluation {
     return DRAW_FACTOR;
   }
 
-  private static int evaluateDrawKPK(int myColor, int enemyColor, Hex88Board board) {
+  private static int evaluateDrawKPK(int myColor, int enemyColor, Board board) {
     assert myColor != IntColor.NOCOLOR;
     assert enemyColor != IntColor.NOCOLOR;
     assert board != null;
@@ -288,7 +288,7 @@ public final class DrawEvaluation {
     return DRAW_FACTOR;
   }
 
-  private static int evaluateDrawKPKN(int myColor, int enemyColor, Hex88Board board) {
+  private static int evaluateDrawKPKN(int myColor, int enemyColor, Board board) {
     assert myColor != IntColor.NOCOLOR;
     assert enemyColor != IntColor.NOCOLOR;
     assert board != null;
@@ -315,7 +315,7 @@ public final class DrawEvaluation {
     return DRAW_FACTOR;
   }
 
-  private static int evaluateDrawKPKB(int myColor, int enemyColor, Hex88Board board) {
+  private static int evaluateDrawKPKB(int myColor, int enemyColor, Board board) {
     assert myColor != IntColor.NOCOLOR;
     assert enemyColor != IntColor.NOCOLOR;
     assert board != null;

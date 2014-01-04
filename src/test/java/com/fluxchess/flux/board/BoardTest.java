@@ -25,13 +25,13 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-public class Hex88BoardTest {
+public class BoardTest {
 
   @Test
   public void testClassCreation() {
     // Setup a new board
     GenericBoard board = new GenericBoard(GenericBoard.STANDARDSETUP);
-    Hex88Board testBoard = new Hex88Board(board);
+    Board testBoard = new Board(board);
 
     // Test chessman setup
     for (GenericFile file : GenericFile.values()) {
@@ -75,7 +75,7 @@ public class Hex88BoardTest {
   @Test
   public void testMakeMoveNormalMove() {
     GenericBoard board = new GenericBoard(GenericBoard.STANDARDSETUP);
-    Hex88Board testBoard = new Hex88Board(board);
+    Board testBoard = new Board(board);
 
     int move = IntMove.createMove(IntMove.NORMAL, 16, 32, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
     testBoard.makeMove(move);
@@ -93,7 +93,7 @@ public class Hex88BoardTest {
       e.printStackTrace();
       fail();
     }
-    Hex88Board testBoard = new Hex88Board(board);
+    Board testBoard = new Board(board);
 
     int move = IntMove.createMove(IntMove.PAWNPROMOTION, 96, 112, IntChessman.createPiece(IntChessman.PAWN, IntColor.WHITE), IntChessman.NOPIECE, IntChessman.QUEEN);
     testBoard.makeMove(move);
@@ -105,7 +105,7 @@ public class Hex88BoardTest {
   @Test
   public void testMakeMovePawnDoubleMove() {
     GenericBoard board = new GenericBoard(GenericBoard.STANDARDSETUP);
-    Hex88Board testBoard = new Hex88Board(board);
+    Board testBoard = new Board(board);
 
     int move = IntMove.createMove(IntMove.PAWNDOUBLE, 16, 48, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
     testBoard.makeMove(move);
@@ -123,7 +123,7 @@ public class Hex88BoardTest {
       e.printStackTrace();
       fail();
     }
-    Hex88Board testBoard = new Hex88Board(board);
+    Board testBoard = new Board(board);
 
     int move = IntMove.createMove(IntMove.CASTLING, 4, 2, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
     testBoard.makeMove(move);
@@ -145,7 +145,7 @@ public class Hex88BoardTest {
       e.printStackTrace();
       fail();
     }
-    Hex88Board testBoard = new Hex88Board(board);
+    Board testBoard = new Board(board);
 
     // Make en passant move
     int move = IntMove.createMove(IntMove.ENPASSANT, IntPosition.e4, IntPosition.d3, IntChessman.createPiece(IntChessman.PAWN, IntColor.BLACK), IntChessman.createPiece(IntChessman.PAWN, IntColor.WHITE), IntChessman.NOPIECE);
@@ -158,7 +158,7 @@ public class Hex88BoardTest {
   @Test
   public void testMakeMoveNullMove() {
     GenericBoard board = new GenericBoard(GenericBoard.STANDARDSETUP);
-    Hex88Board testBoard = new Hex88Board(board);
+    Board testBoard = new Board(board);
 
     int move = IntMove.createMove(IntMove.NULL, IntPosition.NOPOSITION, IntPosition.NOPOSITION, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
     testBoard.makeMove(move);
@@ -177,7 +177,7 @@ public class Hex88BoardTest {
       fail();
     }
 
-    Hex88Board testBoard = new Hex88Board(board);
+    Board testBoard = new Board(board);
     // Move white bishop
     int move = IntMove.createMove(IntMove.NORMAL, IntPosition.d2, IntPosition.e3, IntChessman.createPiece(IntChessman.BISHOP, IntColor.WHITE), IntChessman.NOPIECE, IntChessman.NOPIECE);
     testBoard.makeMove(move);
@@ -196,7 +196,7 @@ public class Hex88BoardTest {
     long zobrist1 = testBoard.zobristCode;
     long pawnZobrist1 = testBoard.pawnZobristCode;
 
-    testBoard = new Hex88Board(board);
+    testBoard = new Board(board);
     // Move white pawn
     move = IntMove.createMove(IntMove.PAWNDOUBLE, IntPosition.c2, IntPosition.c4, IntChessman.createPiece(IntChessman.PAWN, IntColor.WHITE), IntChessman.NOPIECE, IntChessman.NOPIECE);
     testBoard.makeMove(move);
@@ -222,7 +222,7 @@ public class Hex88BoardTest {
   @Test
   public void testActiveColor() {
     GenericBoard board = new GenericBoard(GenericBoard.STANDARDSETUP);
-    Hex88Board testBoard = new Hex88Board(board);
+    Board testBoard = new Board(board);
 
     // Move white pawn
     int move = IntMove.createMove(IntMove.NORMAL, 16, 32, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
@@ -238,7 +238,7 @@ public class Hex88BoardTest {
   @Test
   public void testHalfMoveClock() {
     GenericBoard board = new GenericBoard(GenericBoard.STANDARDSETUP);
-    Hex88Board testBoard = new Hex88Board(board);
+    Board testBoard = new Board(board);
 
     // Move white pawn
     int move = IntMove.createMove(IntMove.NORMAL, 16, 32, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
@@ -257,7 +257,7 @@ public class Hex88BoardTest {
   @Test
   public void testFullMoveNumber() {
     GenericBoard board = new GenericBoard(GenericBoard.STANDARDSETUP);
-    Hex88Board testBoard = new Hex88Board(board);
+    Board testBoard = new Board(board);
 
     // Move white pawn
     int move = IntMove.createMove(IntMove.NORMAL, 16, 32, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);

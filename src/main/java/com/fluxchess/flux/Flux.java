@@ -18,7 +18,7 @@
  */
 package com.fluxchess.flux;
 
-import com.fluxchess.flux.board.Hex88Board;
+import com.fluxchess.flux.board.Board;
 import com.fluxchess.flux.board.IntColor;
 import com.fluxchess.flux.evaluation.Evaluation;
 import com.fluxchess.flux.move.IntMove;
@@ -38,7 +38,7 @@ import java.util.List;
 
 public final class Flux extends AbstractEngine {
 
-  private Hex88Board board = null;
+  private Board board = null;
   private TranspositionTable transpositionTable;
   private EvaluationTable evaluationTable;
   private PawnTable pawnTable;
@@ -68,7 +68,7 @@ public final class Flux extends AbstractEngine {
     initializePawnTable();
 
     // Create a new search
-    search = new Search(new Evaluation(evaluationTable, pawnTable), new Hex88Board(new GenericBoard(GenericBoard.STANDARDSETUP)), transpositionTable, new InformationTimer(getProtocol(), transpositionTable), timeTable);
+    search = new Search(new Evaluation(evaluationTable, pawnTable), new Board(new GenericBoard(GenericBoard.STANDARDSETUP)), transpositionTable, new InformationTimer(getProtocol(), transpositionTable), timeTable);
   }
 
   private void initializeTranspositionTable() {
@@ -231,7 +231,7 @@ public final class Flux extends AbstractEngine {
     }
 
     // Create a new board
-    board = new Hex88Board(command.board);
+    board = new Board(command.board);
 
     // Make all moves
     List<GenericMove> moveList = command.moves;

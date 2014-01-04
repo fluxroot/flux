@@ -18,7 +18,7 @@
  */
 package com.fluxchess.flux.table;
 
-import com.fluxchess.flux.board.Hex88Board;
+import com.fluxchess.flux.board.Board;
 import com.fluxchess.flux.board.IntChessman;
 import com.fluxchess.flux.board.IntColor;
 import com.fluxchess.flux.board.IntPosition;
@@ -28,7 +28,7 @@ public final class HistoryTable {
 
   public static final int MAX_HISTORYVALUE = 65536;
 
-  private final int[][] historyTable = new int[IntChessman.PIECE_VALUE_SIZE][Hex88Board.BOARDSIZE];
+  private final int[][] historyTable = new int[IntChessman.PIECE_VALUE_SIZE][Board.BOARDSIZE];
 
   /**
    * Returns the number of hits for the move.

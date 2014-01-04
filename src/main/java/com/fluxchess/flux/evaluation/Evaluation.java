@@ -20,7 +20,7 @@ package com.fluxchess.flux.evaluation;
 
 import com.fluxchess.flux.Configuration;
 import com.fluxchess.flux.Search;
-import com.fluxchess.flux.board.Hex88Board;
+import com.fluxchess.flux.board.Board;
 import com.fluxchess.flux.board.IntColor;
 import com.fluxchess.flux.table.EvaluationTable;
 import com.fluxchess.flux.table.PawnTable;
@@ -48,7 +48,7 @@ public final class Evaluation {
    * @param board the board.
    * @return the evaluation value in centipawns.
    */
-  public int evaluate(Hex88Board board) {
+  public int evaluate(Board board) {
     assert board != null;
 
     // Check the evaluation table

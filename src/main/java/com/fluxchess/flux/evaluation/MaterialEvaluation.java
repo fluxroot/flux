@@ -18,7 +18,7 @@
  */
 package com.fluxchess.flux.evaluation;
 
-import com.fluxchess.flux.board.Hex88Board;
+import com.fluxchess.flux.board.Board;
 import com.fluxchess.flux.board.IntColor;
 
 public final class MaterialEvaluation {
@@ -28,23 +28,23 @@ public final class MaterialEvaluation {
   private MaterialEvaluation() {
   }
 
-  public static int evaluateMaterial(int myColor, Hex88Board board) {
+  public static int evaluateMaterial(int myColor, Board board) {
     assert myColor != IntColor.NOCOLOR;
 
     int total = board.materialValueAll[myColor];
 
-//      if (Hex88Board.materialCount[myColor] == 1) {
-//          if (Hex88Board.knightList[myColor].size == 1) {
-//              assert Hex88Board.queenList[myColor].size == 0
-//              && Hex88Board.rookList[myColor].size == 0
-//              && Hex88Board.bishopList[myColor].size == 0;
+//      if (Board.materialCount[myColor] == 1) {
+//          if (Board.knightList[myColor].size == 1) {
+//              assert Board.queenList[myColor].size == 0
+//              && Board.rookList[myColor].size == 0
+//              && Board.bishopList[myColor].size == 0;
 //
 //              myMaterialValue -= IntChessman.VALUE_KNIGHT - 250;
 //          }
-//          else if (Hex88Board.knightList[myColor].size == 1 || Hex88Board.bishopList[myColor].size == 1) {
-//              assert Hex88Board.queenList[myColor].size == 0
-//              && Hex88Board.rookList[myColor].size == 0
-//              && Hex88Board.knightList[myColor].size == 0;
+//          else if (Board.knightList[myColor].size == 1 || Board.bishopList[myColor].size == 1) {
+//              assert Board.queenList[myColor].size == 0
+//              && Board.rookList[myColor].size == 0
+//              && Board.knightList[myColor].size == 0;
 //
 //              myMaterialValue -= IntChessman.VALUE_BISHOP - 250;
 //          }
@@ -52,13 +52,13 @@ public final class MaterialEvaluation {
 
     // Correct material value based on Larry Kaufman's paper
     // TODO: Check this one
-//      myMaterialValue += (Hex88Board.knightList[myColor].size * (Hex88Board.pawnList[myColor].size - 5) * IntChessman.VALUE_PAWN) / 16;
-//      myMaterialValue -= (Hex88Board.rookList[myColor].size * (Hex88Board.pawnList[myColor].size - 5) * IntChessman.VALUE_PAWN) / 8;
+//      myMaterialValue += (Board.knightList[myColor].size * (Board.pawnList[myColor].size - 5) * IntChessman.VALUE_PAWN) / 16;
+//      myMaterialValue -= (Board.rookList[myColor].size * (Board.pawnList[myColor].size - 5) * IntChessman.VALUE_PAWN) / 8;
 
     // Queen + pawn vs. two rooks
     // TODO: Check this one
-//      if ((Hex88Board.knightList[myColor].size + Hex88Board.bishopList[myColor].size >= 2)
-//              && (Hex88Board.knightList[enemyColor].size + Hex88Board.bishopList[enemyColor].size >= 2)) {
+//      if ((Board.knightList[myColor].size + Board.bishopList[myColor].size >= 2)
+//              && (Board.knightList[enemyColor].size + Board.bishopList[enemyColor].size >= 2)) {
 //          myMaterialValue += EVAL_MATERIAL_QUEEN_BONUS;
 //      }
 

@@ -26,7 +26,7 @@ import com.fluxchess.jcpi.models.*;
 
 import java.util.Random;
 
-public final class Hex88Board {
+public final class Board {
 
   /**
    * The size of the 0x88 board
@@ -144,7 +144,7 @@ public final class Hex88Board {
     }
   }
 
-  public Hex88Board(GenericBoard newBoard) {
+  public Board(GenericBoard newBoard) {
     // Initialize repetition table
     repetitionTable = new RepetitionTable();
 

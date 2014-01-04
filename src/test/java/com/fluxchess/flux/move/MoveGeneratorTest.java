@@ -19,7 +19,7 @@
 package com.fluxchess.flux.move;
 
 import com.fluxchess.flux.board.Attack;
-import com.fluxchess.flux.board.Hex88Board;
+import com.fluxchess.flux.board.Board;
 import com.fluxchess.flux.board.IntChessman;
 import com.fluxchess.flux.table.HistoryTable;
 import com.fluxchess.flux.table.KillerTable;
@@ -49,7 +49,7 @@ public class MoveGeneratorTest {
     GenericBoard board;
     try {
       board = new GenericBoard("1k6/8/8/5pP1/4K1P1/8/8/8 w - f6");
-      Hex88Board testBoard = new Hex88Board(board);
+      Board testBoard = new Board(board);
       new MoveSee(testBoard);
       table.increaseAge();
 
@@ -88,7 +88,7 @@ public class MoveGeneratorTest {
             int depth = Integer.parseInt(data[0].substring(1));
             int nodesNumber = Integer.parseInt(data[1]);
 
-            Hex88Board testBoard = new Hex88Board(board);
+            Board testBoard = new Board(board);
             new MoveSee(testBoard);
             table.increaseAge();
 
@@ -107,7 +107,7 @@ public class MoveGeneratorTest {
     }
   }
 
-  private int miniMax(Hex88Board board, MoveGenerator moveGenerator, int depth, int maxDepth) {
+  private int miniMax(Board board, MoveGenerator moveGenerator, int depth, int maxDepth) {
     if (depth == 0) {
       return 1;
     }
@@ -154,7 +154,7 @@ public class MoveGeneratorTest {
     GenericBoard board;
     try {
       board = new GenericBoard("8/8/3K4/3Nn3/3nN3/4k3/8/8 b - - 0 1");
-      Hex88Board testBoard = new Hex88Board(board);
+      Board testBoard = new Board(board);
 
       miniMaxQuiescentCheckingMoves(testBoard, new MoveGenerator(testBoard, new KillerTable(), new HistoryTable()), 3, 3);
     } catch (IllegalNotationException e) {
@@ -186,7 +186,7 @@ public class MoveGeneratorTest {
             int depth = Integer.parseInt(data[0].substring(1));
             int nodesNumber = Integer.parseInt(data[1]);
 
-            Hex88Board testBoard = new Hex88Board(board);
+            Board testBoard = new Board(board);
             new MoveSee(testBoard);
 
             LOG.info("Testing " + tokens[0].trim() + " depth " + depth + " with nodes number " + nodesNumber + ":");
@@ -201,7 +201,7 @@ public class MoveGeneratorTest {
     }
   }
 
-  private void miniMaxQuiescentCheckingMoves(Hex88Board board, MoveGenerator moveGenerator, int depth, int maxDepth) {
+  private void miniMaxQuiescentCheckingMoves(Board board, MoveGenerator moveGenerator, int depth, int maxDepth) {
     if (depth == 0) {
       return;
     }
@@ -243,7 +243,7 @@ public class MoveGeneratorTest {
     assertEquals(printDifference(board, mainMoveList, quiescentMoveList), mainMoveList.getLength(), quiescentMoveList.getLength());
   }
 
-  private String printDifference(Hex88Board board, MoveList main, MoveList quiescent) {
+  private String printDifference(Board board, MoveList main, MoveList quiescent) {
     String result = board.getBoard().toString() + "\n";
 
     new MoveRater(new HistoryTable()).rateFromMVVLVA(main);

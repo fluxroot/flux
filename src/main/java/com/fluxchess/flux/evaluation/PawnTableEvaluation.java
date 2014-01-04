@@ -19,7 +19,7 @@
 package com.fluxchess.flux.evaluation;
 
 import com.fluxchess.flux.board.BitPieceList;
-import com.fluxchess.flux.board.Hex88Board;
+import com.fluxchess.flux.board.Board;
 import com.fluxchess.flux.board.IntColor;
 import com.fluxchess.flux.board.IntPosition;
 
@@ -39,7 +39,7 @@ public final class PawnTableEvaluation {
     return instance;
   }
 
-  public void createPawnTable(int myColor, Hex88Board board) {
+  public void createPawnTable(int myColor, Board board) {
     assert myColor != IntColor.NOCOLOR;
 
     // Zero our table

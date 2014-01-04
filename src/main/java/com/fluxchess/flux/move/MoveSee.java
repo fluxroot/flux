@@ -25,10 +25,10 @@ import com.fluxchess.flux.board.*;
  */
 public final class MoveSee {
 
-  private static Hex88Board board = null;
+  private static Board board = null;
   private static final SeeList[] chessmanList = new SeeList[IntColor.ARRAY_DIMENSION];
 
-  public MoveSee(Hex88Board newBoard) {
+  public MoveSee(Board newBoard) {
     board = newBoard;
     chessmanList[IntColor.WHITE] = new SeeList();
     chessmanList[IntColor.BLACK] = new SeeList();

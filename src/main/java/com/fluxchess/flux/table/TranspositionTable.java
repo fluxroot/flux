@@ -19,7 +19,7 @@
 package com.fluxchess.flux.table;
 
 import com.fluxchess.flux.Search;
-import com.fluxchess.flux.board.Hex88Board;
+import com.fluxchess.flux.board.Board;
 import com.fluxchess.flux.move.IntMove;
 import com.fluxchess.flux.move.IntScore;
 import com.fluxchess.jcpi.models.GenericMove;
@@ -145,7 +145,7 @@ public final class TranspositionTable {
    * @param moveList the move list.
    * @return the move list.
    */
-  public List<GenericMove> getMoveList(Hex88Board board, int depth, List<GenericMove> moveList) {
+  public List<GenericMove> getMoveList(Board board, int depth, List<GenericMove> moveList) {
     assert board != null;
     assert depth >= 0;
     assert moveList != null;
