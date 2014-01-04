@@ -16,11 +16,8 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Flux Chess.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.fluxchess.flux.move;
+package com.fluxchess.flux.board;
 
-import com.fluxchess.flux.board.Attack;
-import com.fluxchess.flux.board.Board;
-import com.fluxchess.flux.board.IntChessman;
 import com.fluxchess.flux.table.HistoryTable;
 import com.fluxchess.flux.table.KillerTable;
 import com.fluxchess.jcpi.models.GenericBoard;

@@ -19,8 +19,8 @@
 package com.fluxchess.flux.evaluation;
 
 import com.fluxchess.flux.board.*;
-import com.fluxchess.flux.move.Move;
-import com.fluxchess.flux.move.MoveSee;
+import com.fluxchess.flux.board.Move;
+import com.fluxchess.flux.board.MoveSee;
 
 public final class PawnPasserEvaluation {
 

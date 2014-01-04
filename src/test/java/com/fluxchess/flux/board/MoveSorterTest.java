@@ -16,8 +16,10 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Flux Chess.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.fluxchess.flux.move;
+package com.fluxchess.flux.board;
 
+import com.fluxchess.flux.board.MoveList;
+import com.fluxchess.flux.board.MoveSorter;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

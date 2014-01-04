@@ -20,9 +20,9 @@ package com.fluxchess.flux.testing;
 
 import com.fluxchess.flux.board.Attack;
 import com.fluxchess.flux.board.Board;
-import com.fluxchess.flux.move.Move;
-import com.fluxchess.flux.move.MoveGenerator;
-import com.fluxchess.flux.move.MoveSee;
+import com.fluxchess.flux.board.Move;
+import com.fluxchess.flux.board.MoveGenerator;
+import com.fluxchess.flux.board.MoveSee;
 import com.fluxchess.flux.table.HistoryTable;
 import com.fluxchess.flux.table.KillerTable;
 import com.fluxchess.jcpi.models.GenericBoard;

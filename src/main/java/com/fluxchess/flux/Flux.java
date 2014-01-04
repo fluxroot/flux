@@ -21,7 +21,7 @@ package com.fluxchess.flux;
 import com.fluxchess.flux.board.Board;
 import com.fluxchess.flux.board.IntColor;
 import com.fluxchess.flux.evaluation.Evaluation;
-import com.fluxchess.flux.move.Move;
+import com.fluxchess.flux.board.Move;
 import com.fluxchess.flux.table.EvaluationTable;
 import com.fluxchess.flux.table.PawnTable;
 import com.fluxchess.flux.table.TranspositionTable;

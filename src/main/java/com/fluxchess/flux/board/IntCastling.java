@@ -16,15 +16,18 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Flux Chess.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.fluxchess.flux.move;
+package com.fluxchess.flux.board;
 
-public final class SeeList {
+public final class IntCastling {
 
-  private static final int MAXSIZE = 16;
+  public static final int WHITE_KINGSIDE = 1 << 0;
+  public static final int WHITE_QUEENSIDE = 1 << 1;
+  public static final int BLACK_KINGSIDE = 1 << 2;
+  public static final int BLACK_QUEENSIDE = 1 << 3;
 
-  public final int[] chessman = new int[MAXSIZE];
-  public final int[] position = new int[MAXSIZE];
-  public int head = 0;
-  public int size = 0;
+  public static final int ARRAY_DIMENSION = 16;
+
+  private IntCastling() {
+  }
 
 }

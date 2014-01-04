@@ -18,8 +18,8 @@
  */
 package com.fluxchess.flux;
 
-import com.fluxchess.flux.move.Move;
-import com.fluxchess.flux.move.Score;
+import com.fluxchess.flux.board.Move;
+import com.fluxchess.flux.board.Score;
 
 public final class Result {
 

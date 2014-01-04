@@ -19,7 +19,7 @@
 package com.fluxchess.flux.evaluation;
 
 import com.fluxchess.flux.board.*;
-import com.fluxchess.flux.move.MoveGenerator;
+import com.fluxchess.flux.board.MoveGenerator;
 
 public final class QueenEvaluation {
 

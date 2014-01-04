@@ -16,12 +16,11 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Flux Chess.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.fluxchess.flux.move;
+package com.fluxchess.flux.board;
 
-import com.fluxchess.flux.board.Board;
+import com.fluxchess.flux.board.*;
 import com.fluxchess.flux.board.IntChessman;
 import com.fluxchess.flux.board.IntColor;
-import com.fluxchess.flux.board.Position;
 import com.fluxchess.jcpi.models.*;
 import org.junit.Test;
 

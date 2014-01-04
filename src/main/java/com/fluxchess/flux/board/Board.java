@@ -19,8 +19,6 @@
 package com.fluxchess.flux.board;
 
 import com.fluxchess.flux.Search;
-import com.fluxchess.flux.move.IntCastling;
-import com.fluxchess.flux.move.Move;
 import com.fluxchess.flux.table.RepetitionTable;
 import com.fluxchess.jcpi.models.*;
 

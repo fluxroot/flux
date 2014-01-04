@@ -18,7 +18,6 @@
  */
 package com.fluxchess.flux.board;
 
-import com.fluxchess.flux.move.Move;
 import com.fluxchess.jcpi.models.*;
 import org.junit.Test;
 

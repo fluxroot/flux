@@ -19,7 +19,7 @@
 package com.fluxchess.flux.table;
 
 import com.fluxchess.flux.board.IntChessman;
-import com.fluxchess.flux.move.Move;
+import com.fluxchess.flux.board.Move;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
