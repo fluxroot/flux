@@ -18,7 +18,7 @@
  */
 package com.fluxchess.flux;
 
-import com.fluxchess.flux.move.IntScore;
+import com.fluxchess.flux.move.Score;
 import com.fluxchess.flux.move.PrincipalVariation;
 import com.fluxchess.flux.table.TranspositionTable;
 import com.fluxchess.jcpi.commands.IProtocol;
@@ -188,7 +188,7 @@ public final class InformationTimer {
       command.setNodes(pv.totalNodes);
 
       command.setCentipawns(pv.value);
-      command.setValue(IntScore.valueOfIntScore(pv.type));
+      command.setValue(Score.valueOfIntScore(pv.type));
       command.setMoveList(pv.pv);
 
       if (Configuration.showPvNumber > 1) {
@@ -216,7 +216,7 @@ public final class InformationTimer {
       command.setNodes(pv.totalNodes);
 
       command.setMate(currentMateDepth);
-      command.setValue(IntScore.valueOfIntScore(pv.type));
+      command.setValue(Score.valueOfIntScore(pv.type));
       command.setMoveList(pv.pv);
 
       if (Configuration.showPvNumber > 1) {

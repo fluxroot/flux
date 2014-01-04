@@ -385,7 +385,7 @@ public final class Search implements Runnable {
     int transpositionMove = Move.NOMOVE;
     int transpositionDepth = -1;
     int transpositionValue = 0;
-    int transpositionType = IntScore.NOSCORE;
+    int transpositionType = Score.NOSCORE;
     if (Configuration.useTranspositionTable) {
       TranspositionTable.TranspositionTableEntry entry = transpositionTable.get(board.zobristCode);
       if (entry != null) {
@@ -450,7 +450,7 @@ public final class Search implements Runnable {
     int equalResults = 0;
     if (!analyzeMode
       && transpositionDepth > 1
-      && transpositionType == IntScore.EXACT
+      && transpositionType == Score.EXACT
       && Math.abs(transpositionValue) < CHECKMATE_THRESHOLD
       && pv != null) {
       bestResult.bestMove = transpositionMove;
@@ -687,7 +687,7 @@ public final class Search implements Runnable {
     }
 
     // Initialize
-    int hashType = IntScore.ALPHA;
+    int hashType = Score.ALPHA;
     int bestValue = -INFINITY;
     int bestMove = Move.NOMOVE;
     int oldAlpha = alpha;
@@ -740,16 +740,16 @@ public final class Search implements Runnable {
       int moveType;
       if (value <= alpha) {
         value = alpha;
-        moveType = IntScore.ALPHA;
+        moveType = Score.ALPHA;
         rootMoveList.value[j] = oldAlpha;
         sortValue = -INFINITY;
       } else if (value >= beta) {
         value = beta;
-        moveType = IntScore.BETA;
+        moveType = Score.BETA;
         rootMoveList.value[j] = beta;
         sortValue = INFINITY;
       } else {
-        moveType = IntScore.EXACT;
+        moveType = Score.EXACT;
         rootMoveList.value[j] = value;
         sortValue = value;
       }
@@ -805,7 +805,7 @@ public final class Search implements Runnable {
         // Do we have a better value?
         if (value > alpha) {
           bestPv = pv;
-          hashType = IntScore.EXACT;
+          hashType = Score.EXACT;
           alpha = value;
 
           if (depth > 1 && showPvNumber <= 1) {
@@ -819,7 +819,7 @@ public final class Search implements Runnable {
           if (value >= beta) {
             // Cut-off
 
-            hashType = IntScore.BETA;
+            hashType = Score.BETA;
             break;
           }
         }
@@ -936,17 +936,17 @@ public final class Search implements Runnable {
           int type = entry.type;
 
           switch (type) {
-            case IntScore.BETA:
+            case Score.BETA:
               if (value >= beta) {
                 return value;
               }
               break;
-            case IntScore.ALPHA:
+            case Score.ALPHA:
               if (value <= alpha) {
                 return value;
               }
               break;
-            case IntScore.EXACT:
+            case Score.EXACT:
               return value;
             default:
               assert false;
@@ -1012,7 +1012,7 @@ public final class Search implements Runnable {
 
           if (!(stopped && canStop)) {
             // Store the value into the transposition table
-            transpositionTable.put(board.zobristCode, depth, value, IntScore.BETA, Move.NOMOVE, mateThreat, height);
+            transpositionTable.put(board.zobristCode, depth, value, Score.BETA, Move.NOMOVE, mateThreat, height);
           }
 
           return value;
@@ -1022,7 +1022,7 @@ public final class Search implements Runnable {
     //## ENDOF Null-Move Forward Pruning
 
     // Initialize
-    int hashType = IntScore.ALPHA;
+    int hashType = Score.ALPHA;
     int bestValue = -INFINITY;
     int bestMove = Move.NOMOVE;
     int searchedMoves = 0;
@@ -1220,14 +1220,14 @@ public final class Search implements Runnable {
 
         // Do we have a better value?
         if (value > alpha) {
-          hashType = IntScore.EXACT;
+          hashType = Score.EXACT;
           alpha = value;
 
           // Is the value higher than beta?
           if (value >= beta) {
             // Cut-off
 
-            hashType = IntScore.BETA;
+            hashType = Score.BETA;
             break;
           }
         }
@@ -1240,11 +1240,11 @@ public final class Search implements Runnable {
     if (bestValue == -INFINITY) {
       if (isCheck) {
         // We have a check mate. This is bad for us, so return a -CHECKMATE.
-        hashType = IntScore.EXACT;
+        hashType = Score.EXACT;
         bestValue = -CHECKMATE + height;
       } else {
         // We have a stale mate. Return the draw value.
-        hashType = IntScore.EXACT;
+        hashType = Score.EXACT;
         bestValue = DRAW;
       }
     }
@@ -1300,17 +1300,17 @@ public final class Search implements Runnable {
         int type = entry.type;
 
         switch (type) {
-          case IntScore.BETA:
+          case Score.BETA:
             if (value >= beta) {
               return value;
             }
             break;
-          case IntScore.ALPHA:
+          case Score.ALPHA:
             if (value <= alpha) {
               return value;
             }
             break;
-          case IntScore.EXACT:
+          case Score.EXACT:
             return value;
           default:
             assert false;
@@ -1326,7 +1326,7 @@ public final class Search implements Runnable {
     boolean isCheck = attack.isCheck();
 
     // Initialize
-    int hashType = IntScore.ALPHA;
+    int hashType = Score.ALPHA;
     int bestValue = -INFINITY;
     int evalValue = INFINITY;
 
@@ -1342,14 +1342,14 @@ public final class Search implements Runnable {
 
       // Do we have a better value?
       if (value > alpha) {
-        hashType = IntScore.EXACT;
+        hashType = Score.EXACT;
         alpha = value;
 
         // Is the value higher than beta?
         if (value >= beta) {
           // Cut-off
 
-          hashType = IntScore.BETA;
+          hashType = Score.BETA;
 
           if (useTranspositionTable) {
             assert checkingDepth == 0;
@@ -1414,14 +1414,14 @@ public final class Search implements Runnable {
 
         // Do we have a better value?
         if (value > alpha) {
-          hashType = IntScore.EXACT;
+          hashType = Score.EXACT;
           alpha = value;
 
           // Is the value higher than beta?
           if (value >= beta) {
             // Cut-off
 
-            hashType = IntScore.BETA;
+            hashType = Score.BETA;
             break;
           }
         }

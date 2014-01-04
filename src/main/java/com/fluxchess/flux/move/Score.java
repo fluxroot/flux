@@ -20,7 +20,7 @@ package com.fluxchess.flux.move;
 
 import com.fluxchess.jcpi.models.GenericScore;
 
-public final class IntScore {
+public final class Score {
 
   public static final int NOSCORE = -9;
 
@@ -30,7 +30,7 @@ public final class IntScore {
 
   public static final int MASK = 0x3;
 
-  private IntScore() {
+  private Score() {
   }
 
   public static int valueOfScore(GenericScore value) {

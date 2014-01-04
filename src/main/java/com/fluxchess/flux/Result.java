@@ -19,13 +19,13 @@
 package com.fluxchess.flux;
 
 import com.fluxchess.flux.move.Move;
-import com.fluxchess.flux.move.IntScore;
+import com.fluxchess.flux.move.Score;
 
 public final class Result {
 
   public int bestMove = Move.NOMOVE;
   public int ponderMove = Move.NOMOVE;
-  public int value = IntScore.NOSCORE;
+  public int value = Score.NOSCORE;
   public int resultValue = -Search.INFINITY;
   public long time = -1;
   public int moveNumber = 0;

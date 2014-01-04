@@ -23,7 +23,7 @@ import com.fluxchess.flux.board.IntChessman;
 import com.fluxchess.flux.board.IntColor;
 import com.fluxchess.flux.board.IntPosition;
 import com.fluxchess.flux.move.Move;
-import com.fluxchess.flux.move.IntScore;
+import com.fluxchess.flux.move.Score;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -41,38 +41,38 @@ public class TranspositionTableTest {
     int move1 = Move.createMove(Move.NORMAL, IntPosition.a2, IntPosition.a3, IntChessman.createPiece(IntChessman.PAWN, IntColor.WHITE), IntChessman.NOPIECE, IntChessman.NOPIECE);
 
     // Put an entry into the table
-    table.put(1L, 1, 100, IntScore.EXACT, move1, false, 0);
+    table.put(1L, 1, 100, Score.EXACT, move1, false, 0);
 
     TranspositionTable.TranspositionTableEntry entry = table.get(1L);
     assertNotNull(entry);
 
     assertEquals(1, entry.depth);
     assertEquals(100, entry.getValue(0));
-    assertEquals(IntScore.EXACT, entry.type);
+    assertEquals(Score.EXACT, entry.type);
     assertEquals(move1, entry.move);
     assertEquals(100, table.getPermillUsed());
 
     // Overwrite the entry with a new one
-    table.put(1L, 2, 200, IntScore.BETA, move1, false, 0);
+    table.put(1L, 2, 200, Score.BETA, move1, false, 0);
 
     entry = table.get(1L);
     assertNotNull(entry);
 
     assertEquals(2, entry.depth);
     assertEquals(200, entry.getValue(0));
-    assertEquals(IntScore.BETA, entry.type);
+    assertEquals(Score.BETA, entry.type);
     assertEquals(move1, entry.move);
     assertEquals(100, table.getPermillUsed());
 
     // Put an mate entry into the table
-    table.put(2L, 0, Search.CHECKMATE - 5, IntScore.EXACT, move1, false, 3);
+    table.put(2L, 0, Search.CHECKMATE - 5, Score.EXACT, move1, false, 3);
 
     entry = table.get(2L);
     assertNotNull(entry);
 
     assertEquals(0, entry.depth);
     assertEquals(Search.CHECKMATE - 4, entry.getValue(2));
-    assertEquals(IntScore.EXACT, entry.type);
+    assertEquals(Score.EXACT, entry.type);
     assertEquals(move1, entry.move);
     assertEquals(200, table.getPermillUsed());
 
