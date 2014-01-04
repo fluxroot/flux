@@ -18,8 +18,10 @@
  */
 package com.fluxchess.flux.board;
 
+import com.fluxchess.flux.evaluation.Evaluation;
 import com.fluxchess.jcpi.models.GenericBoard;
 import com.fluxchess.jcpi.models.IllegalNotationException;
+import com.fluxchess.jcpi.models.IntChessman;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -196,7 +198,7 @@ public class MoveGeneratorTest {
     move = moveGenerator.getNextMove();
     while (move != Move.NOMOVE) {
       if (!attack.isCheck()) {
-        if ((Move.getTarget(move) != IntChessman.NOPIECE && isGoodCapture(move)) || (Move.getTarget(move) == IntChessman.NOPIECE && board.isCheckingMove(move)) && MoveSee.seeMove(move, Move.getChessmanColor(move)) >= 0) {
+        if ((Move.getTargetChessman(move) != IntChessman.NOCHESSMAN && isGoodCapture(move)) || (Move.getTargetChessman(move) == IntChessman.NOCHESSMAN && board.isCheckingMove(move)) && MoveSee.seeMove(move, Move.getOriginColor(move)) >= 0) {
           board.makeMove(move);
           miniMaxQuiescentCheckingMoves(board, moveGenerator, depth - 1, maxDepth);
           board.undoMove(move);
@@ -241,17 +243,17 @@ public class MoveGeneratorTest {
       return Move.getPromotion(move) == IntChessman.QUEEN;
     }
 
-    int chessman = Move.getChessman(move);
-    int target = Move.getTarget(move);
+    int chessman = Move.getOriginChessman(move);
+    int target = Move.getTargetChessman(move);
 
-    assert chessman != IntChessman.NOPIECE;
-    assert target != IntChessman.NOPIECE;
+    assert chessman != IntChessman.NOCHESSMAN;
+    assert target != IntChessman.NOCHESSMAN;
 
-    if (IntChessman.getValueFromChessman(chessman) <= IntChessman.getValueFromChessman(target)) {
+    if (Evaluation.getValueFromChessman(chessman) <= Evaluation.getValueFromChessman(target)) {
       return true;
     }
 
-    return MoveSee.seeMove(move, Move.getChessmanColor(move)) >= 0;
+    return MoveSee.seeMove(move, Move.getOriginColor(move)) >= 0;
   }
 
 }

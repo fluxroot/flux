@@ -18,11 +18,11 @@
  */
 package com.fluxchess.flux.search;
 
-import com.fluxchess.flux.board.IntChessman;
 import com.fluxchess.flux.board.Move;
 import com.fluxchess.flux.board.Position;
 import com.fluxchess.flux.board.Score;
-import com.fluxchess.jcpi.models.IntColor;
+import com.fluxchess.jcpi.models.IntChessman;
+import com.fluxchess.jcpi.models.IntPiece;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -37,7 +37,7 @@ public class TranspositionTableTest {
   @Test
   public void testTranspositionTable() {
     TranspositionTable table = new TranspositionTable(10);
-    int move1 = Move.createMove(Move.NORMAL, Position.a2, Position.a3, IntChessman.createPiece(IntChessman.PAWN, IntColor.WHITE), IntChessman.NOPIECE, IntChessman.NOPIECE);
+    int move1 = Move.createMove(Move.NORMAL, Position.a2, Position.a3, IntPiece.WHITEPAWN, IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
 
     // Put an entry into the table
     table.put(1L, 1, 100, Score.EXACT, move1, false, 0);

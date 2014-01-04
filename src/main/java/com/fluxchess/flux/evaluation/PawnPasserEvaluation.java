@@ -19,7 +19,9 @@
 package com.fluxchess.flux.evaluation;
 
 import com.fluxchess.flux.board.*;
+import com.fluxchess.jcpi.models.IntChessman;
 import com.fluxchess.jcpi.models.IntColor;
+import com.fluxchess.jcpi.models.IntPiece;
 
 public final class PawnPasserEvaluation {
 
@@ -80,8 +82,8 @@ public final class PawnPasserEvaluation {
             int endPosition = pawnPosition + 16;
             for (int j = pawnRank + 1; j <= 7; j++) {
               int chessman = board.board[endPosition];
-              if (chessman != IntChessman.NOPIECE) {
-                if (IntChessman.getChessman(chessman) == IntChessman.ROOK && IntChessman.getColor(chessman) == myColor) {
+              if (chessman != IntPiece.NOPIECE) {
+                if (IntPiece.getChessman(chessman) == IntChessman.ROOK && IntPiece.getColor(chessman) == myColor) {
                   // We have no bad rook
                   isPasser = false;
                 }
@@ -107,8 +109,8 @@ public final class PawnPasserEvaluation {
             int endPosition = pawnPosition - 16;
             for (int j = pawnRank - 1; j >= 0; j--) {
               int chessman = board.board[endPosition];
-              if (chessman != IntChessman.NOPIECE) {
-                if (IntChessman.getChessman(chessman) == IntChessman.ROOK && IntChessman.getColor(chessman) == myColor) {
+              if (chessman != IntPiece.NOPIECE) {
+                if (IntPiece.getChessman(chessman) == IntChessman.ROOK && IntPiece.getColor(chessman) == myColor) {
                   // We have no bad rook
                   isPasser = false;
                 }
@@ -145,7 +147,7 @@ public final class PawnPasserEvaluation {
             int endPosition = pawnPosition + 16;
             for (int j = pawnRank + 1; j <= 7; j++) {
               int chessman = board.board[endPosition];
-              if (chessman != IntChessman.NOPIECE && IntChessman.getColor(chessman) == myColor) {
+              if (chessman != IntPiece.NOPIECE && IntPiece.getColor(chessman) == myColor) {
                 pathClear = false;
               }
               endPosition += 16;
@@ -184,7 +186,7 @@ public final class PawnPasserEvaluation {
             int endPosition = pawnPosition - 16;
             for (int j = pawnRank - 1; j >= 0; j--) {
               int chessman = board.board[endPosition];
-              if (chessman != IntChessman.NOPIECE && IntChessman.getColor(chessman) == myColor) {
+              if (chessman != IntPiece.NOPIECE && IntPiece.getColor(chessman) == myColor) {
                 pathClear = false;
               }
               endPosition -= 16;
@@ -219,9 +221,9 @@ public final class PawnPasserEvaluation {
         } else {
           // Free passer
           assert ((pawnPosition + sign * 16) & 0x88) == 0;
-          if (board.board[pawnPosition + sign * 16] == IntChessman.NOPIECE) {
+          if (board.board[pawnPosition + sign * 16] == IntPiece.NOPIECE) {
             // TODO: Do we have to consider promotion moves?
-            int move = Move.createMove(Move.NORMAL, pawnPosition, pawnPosition + sign * 16, pawn, IntChessman.NOPIECE, IntChessman.NOPIECE);
+            int move = Move.createMove(Move.NORMAL, pawnPosition, pawnPosition + sign * 16, pawn, IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
             if (MoveSee.seeMove(move, myColor) >= 0) {
               endgameMax += EVAL_PAWN_PASSER_FREE;
             }

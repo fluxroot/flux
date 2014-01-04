@@ -18,8 +18,12 @@
  */
 package com.fluxchess.flux.evaluation;
 
-import com.fluxchess.flux.board.*;
+import com.fluxchess.flux.board.Board;
+import com.fluxchess.flux.board.ChessmanList;
+import com.fluxchess.flux.board.IntCastling;
+import com.fluxchess.flux.board.Position;
 import com.fluxchess.jcpi.models.IntColor;
+import com.fluxchess.jcpi.models.IntPiece;
 
 public final class KingEvaluation {
 
@@ -77,7 +81,7 @@ public final class KingEvaluation {
       attackCount += 4;
       flag |= enemyAttackTable[attackedSquare];
       int chessman = board.board[attackedSquare];
-      if (chessman == IntChessman.NOPIECE || IntChessman.getColor(chessman) == enemyColor) {
+      if (chessman == IntPiece.NOPIECE || IntPiece.getColor(chessman) == enemyColor) {
         attackCount += 3;
       }
       if (myAttackTable[attackedSquare] == -127) {
@@ -89,7 +93,7 @@ public final class KingEvaluation {
       attackCount += 4;
       flag |= enemyAttackTable[attackedSquare];
       int chessman = board.board[attackedSquare];
-      if (chessman == IntChessman.NOPIECE || IntChessman.getColor(chessman) == enemyColor) {
+      if (chessman == IntPiece.NOPIECE || IntPiece.getColor(chessman) == enemyColor) {
         attackCount += 3;
       }
       if (myAttackTable[attackedSquare] == -127) {
@@ -101,7 +105,7 @@ public final class KingEvaluation {
       attackCount += 4;
       flag |= enemyAttackTable[attackedSquare];
       int chessman = board.board[attackedSquare];
-      if (chessman == IntChessman.NOPIECE || IntChessman.getColor(chessman) == enemyColor) {
+      if (chessman == IntPiece.NOPIECE || IntPiece.getColor(chessman) == enemyColor) {
         attackCount += 3;
       }
       if (myAttackTable[attackedSquare] == -127) {
@@ -113,7 +117,7 @@ public final class KingEvaluation {
       attackCount += 4;
       flag |= enemyAttackTable[attackedSquare];
       int chessman = board.board[attackedSquare];
-      if (chessman == IntChessman.NOPIECE || IntChessman.getColor(chessman) == enemyColor) {
+      if (chessman == IntPiece.NOPIECE || IntPiece.getColor(chessman) == enemyColor) {
         attackCount += 3;
       }
       if (myAttackTable[attackedSquare] == -127) {
@@ -125,7 +129,7 @@ public final class KingEvaluation {
       attackCount += 4;
       flag |= enemyAttackTable[attackedSquare];
       int chessman = board.board[attackedSquare];
-      if (chessman == IntChessman.NOPIECE || IntChessman.getColor(chessman) == enemyColor) {
+      if (chessman == IntPiece.NOPIECE || IntPiece.getColor(chessman) == enemyColor) {
         attackCount += 3;
       }
       if (myAttackTable[attackedSquare] == -127) {
@@ -137,7 +141,7 @@ public final class KingEvaluation {
       attackCount += 4;
       flag |= enemyAttackTable[attackedSquare];
       int chessman = board.board[attackedSquare];
-      if (chessman == IntChessman.NOPIECE || IntChessman.getColor(chessman) == enemyColor) {
+      if (chessman == IntPiece.NOPIECE || IntPiece.getColor(chessman) == enemyColor) {
         attackCount += 3;
       }
       if (myAttackTable[attackedSquare] == -127) {
@@ -149,7 +153,7 @@ public final class KingEvaluation {
       attackCount += 4;
       flag |= enemyAttackTable[attackedSquare];
       int chessman = board.board[attackedSquare];
-      if (chessman == IntChessman.NOPIECE || IntChessman.getColor(chessman) == enemyColor) {
+      if (chessman == IntPiece.NOPIECE || IntPiece.getColor(chessman) == enemyColor) {
         attackCount += 3;
       }
       if (myAttackTable[attackedSquare] == -127) {
@@ -161,7 +165,7 @@ public final class KingEvaluation {
       attackCount += 4;
       flag |= enemyAttackTable[attackedSquare];
       int chessman = board.board[attackedSquare];
-      if (chessman == IntChessman.NOPIECE || IntChessman.getColor(chessman) == enemyColor) {
+      if (chessman == IntPiece.NOPIECE || IntPiece.getColor(chessman) == enemyColor) {
         attackCount += 3;
       }
       if (myAttackTable[attackedSquare] == -127) {

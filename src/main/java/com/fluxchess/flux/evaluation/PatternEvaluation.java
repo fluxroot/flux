@@ -19,9 +19,9 @@
 package com.fluxchess.flux.evaluation;
 
 import com.fluxchess.flux.board.Board;
-import com.fluxchess.flux.board.IntChessman;
 import com.fluxchess.flux.board.Position;
 import com.fluxchess.jcpi.models.IntColor;
+import com.fluxchess.jcpi.models.IntPiece;
 
 public final class PatternEvaluation {
 
@@ -37,132 +37,132 @@ public final class PatternEvaluation {
 
     if (myColor == IntColor.WHITE) {
       // Trapped white bishop
-      if (board.board[Position.a7] == IntChessman.WHITE_BISHOP
-        && board.board[Position.b6] == IntChessman.BLACK_PAWN) {
+      if (board.board[Position.a7] == IntPiece.WHITEBISHOP
+        && board.board[Position.b6] == IntPiece.BLACKPAWN) {
         total -= 100;
-        if (board.board[Position.c7] == IntChessman.BLACK_PAWN) {
+        if (board.board[Position.c7] == IntPiece.BLACKPAWN) {
           total -= 50;
         }
       }
-      if (board.board[Position.b8] == IntChessman.WHITE_BISHOP
-        && board.board[Position.c7] == IntChessman.BLACK_PAWN) {
+      if (board.board[Position.b8] == IntPiece.WHITEBISHOP
+        && board.board[Position.c7] == IntPiece.BLACKPAWN) {
         total -= 100;
       }
-      if (board.board[Position.h7] == IntChessman.WHITE_BISHOP
-        && board.board[Position.g6] == IntChessman.BLACK_PAWN) {
+      if (board.board[Position.h7] == IntPiece.WHITEBISHOP
+        && board.board[Position.g6] == IntPiece.BLACKPAWN) {
         total -= 100;
-        if (board.board[Position.f7] == IntChessman.BLACK_PAWN) {
+        if (board.board[Position.f7] == IntPiece.BLACKPAWN) {
           total -= 50;
         }
       }
-      if (board.board[Position.g8] == IntChessman.WHITE_BISHOP
-        && board.board[Position.f7] == IntChessman.BLACK_PAWN) {
+      if (board.board[Position.g8] == IntPiece.WHITEBISHOP
+        && board.board[Position.f7] == IntPiece.BLACKPAWN) {
         total -= 100;
       }
-      if (board.board[Position.a6] == IntChessman.WHITE_BISHOP
-        && board.board[Position.b5] == IntChessman.BLACK_PAWN) {
+      if (board.board[Position.a6] == IntPiece.WHITEBISHOP
+        && board.board[Position.b5] == IntPiece.BLACKPAWN) {
         total -= 50;
       }
-      if (board.board[Position.h6] == IntChessman.WHITE_BISHOP
-        && board.board[Position.g5] == IntChessman.BLACK_PAWN) {
+      if (board.board[Position.h6] == IntPiece.WHITEBISHOP
+        && board.board[Position.g5] == IntPiece.BLACKPAWN) {
         total -= 50;
       }
 
       // Blocked center pawn
-      if (board.board[Position.d2] == IntChessman.WHITE_PAWN
-        && board.board[Position.d3] != IntChessman.NOPIECE) {
+      if (board.board[Position.d2] == IntPiece.WHITEPAWN
+        && board.board[Position.d3] != IntPiece.NOPIECE) {
         total -= 20;
-        if (board.board[Position.c1] == IntChessman.WHITE_BISHOP) {
+        if (board.board[Position.c1] == IntPiece.WHITEBISHOP) {
           total -= 30;
         }
       }
-      if (board.board[Position.e2] == IntChessman.WHITE_PAWN
-        && board.board[Position.e3] != IntChessman.NOPIECE) {
+      if (board.board[Position.e2] == IntPiece.WHITEPAWN
+        && board.board[Position.e3] != IntPiece.NOPIECE) {
         total -= 20;
-        if (board.board[Position.f1] == IntChessman.WHITE_BISHOP) {
+        if (board.board[Position.f1] == IntPiece.WHITEBISHOP) {
           total -= 30;
         }
       }
 
       // Blocked rook
-      if ((board.board[Position.c1] == IntChessman.WHITE_KING
-        || board.board[Position.b1] == IntChessman.WHITE_KING)
-        && (board.board[Position.a1] == IntChessman.WHITE_ROOK
-        || board.board[Position.a2] == IntChessman.WHITE_ROOK
-        || board.board[Position.b1] == IntChessman.WHITE_ROOK)) {
+      if ((board.board[Position.c1] == IntPiece.WHITEKING
+        || board.board[Position.b1] == IntPiece.WHITEKING)
+        && (board.board[Position.a1] == IntPiece.WHITEROOK
+        || board.board[Position.a2] == IntPiece.WHITEROOK
+        || board.board[Position.b1] == IntPiece.WHITEROOK)) {
         total -= 50;
       }
-      if ((board.board[Position.f1] == IntChessman.WHITE_KING
-        || board.board[Position.g1] == IntChessman.WHITE_KING)
-        && (board.board[Position.h1] == IntChessman.WHITE_ROOK
-        || board.board[Position.h2] == IntChessman.WHITE_ROOK
-        || board.board[Position.g1] == IntChessman.WHITE_ROOK)) {
+      if ((board.board[Position.f1] == IntPiece.WHITEKING
+        || board.board[Position.g1] == IntPiece.WHITEKING)
+        && (board.board[Position.h1] == IntPiece.WHITEROOK
+        || board.board[Position.h2] == IntPiece.WHITEROOK
+        || board.board[Position.g1] == IntPiece.WHITEROOK)) {
         total -= 50;
       }
     } else {
       assert myColor == IntColor.BLACK;
 
       // Trapped black bishop
-      if (board.board[Position.a2] == IntChessman.BLACK_BISHOP
-        && board.board[Position.b3] == IntChessman.WHITE_PAWN) {
+      if (board.board[Position.a2] == IntPiece.BLACKBISHOP
+        && board.board[Position.b3] == IntPiece.WHITEPAWN) {
         total -= 100;
-        if (board.board[Position.c2] == IntChessman.WHITE_PAWN) {
+        if (board.board[Position.c2] == IntPiece.WHITEPAWN) {
           total -= 50;
         }
       }
-      if (board.board[Position.b1] == IntChessman.BLACK_BISHOP
-        && board.board[Position.c2] == IntChessman.WHITE_PAWN) {
+      if (board.board[Position.b1] == IntPiece.BLACKBISHOP
+        && board.board[Position.c2] == IntPiece.WHITEPAWN) {
         total -= 100;
       }
-      if (board.board[Position.h2] == IntChessman.BLACK_BISHOP
-        && board.board[Position.g3] == IntChessman.WHITE_PAWN) {
+      if (board.board[Position.h2] == IntPiece.BLACKBISHOP
+        && board.board[Position.g3] == IntPiece.WHITEPAWN) {
         total -= 100;
-        if (board.board[Position.f2] == IntChessman.WHITE_PAWN) {
+        if (board.board[Position.f2] == IntPiece.WHITEPAWN) {
           total -= 50;
         }
       }
-      if (board.board[Position.g1] == IntChessman.BLACK_BISHOP
-        && board.board[Position.f2] == IntChessman.WHITE_PAWN) {
+      if (board.board[Position.g1] == IntPiece.BLACKBISHOP
+        && board.board[Position.f2] == IntPiece.WHITEPAWN) {
         total -= 100;
       }
-      if (board.board[Position.a3] == IntChessman.BLACK_BISHOP
-        && board.board[Position.b4] == IntChessman.WHITE_PAWN) {
+      if (board.board[Position.a3] == IntPiece.BLACKBISHOP
+        && board.board[Position.b4] == IntPiece.WHITEPAWN) {
         total -= 50;
       }
-      if (board.board[Position.h3] == IntChessman.BLACK_BISHOP
-        && board.board[Position.g4] == IntChessman.WHITE_PAWN) {
+      if (board.board[Position.h3] == IntPiece.BLACKBISHOP
+        && board.board[Position.g4] == IntPiece.WHITEPAWN) {
         total -= 50;
       }
 
       // Blocked center pawn
-      if (board.board[Position.d7] == IntChessman.BLACK_PAWN
-        && board.board[Position.d6] != IntChessman.NOPIECE) {
+      if (board.board[Position.d7] == IntPiece.BLACKPAWN
+        && board.board[Position.d6] != IntPiece.NOPIECE) {
         total -= 20;
-        if (board.board[Position.c8] == IntChessman.BLACK_BISHOP) {
+        if (board.board[Position.c8] == IntPiece.BLACKBISHOP) {
           total -= 30;
         }
       }
-      if (board.board[Position.e7] == IntChessman.BLACK_PAWN
-        && board.board[Position.e6] != IntChessman.NOPIECE) {
+      if (board.board[Position.e7] == IntPiece.BLACKPAWN
+        && board.board[Position.e6] != IntPiece.NOPIECE) {
         total -= 20;
-        if (board.board[Position.f8] == IntChessman.BLACK_BISHOP) {
+        if (board.board[Position.f8] == IntPiece.BLACKBISHOP) {
           total -= 30;
         }
       }
 
       // Blocked rook
-      if ((board.board[Position.c8] == IntChessman.BLACK_KING
-        || board.board[Position.b8] == IntChessman.BLACK_KING)
-        && (board.board[Position.a8] == IntChessman.BLACK_ROOK
-        || board.board[Position.a7] == IntChessman.BLACK_ROOK
-        || board.board[Position.b8] == IntChessman.BLACK_ROOK)) {
+      if ((board.board[Position.c8] == IntPiece.BLACKKING
+        || board.board[Position.b8] == IntPiece.BLACKKING)
+        && (board.board[Position.a8] == IntPiece.BLACKROOK
+        || board.board[Position.a7] == IntPiece.BLACKROOK
+        || board.board[Position.b8] == IntPiece.BLACKROOK)) {
         total -= 50;
       }
-      if ((board.board[Position.f8] == IntChessman.BLACK_KING
-        || board.board[Position.g8] == IntChessman.BLACK_KING)
-        && (board.board[Position.h8] == IntChessman.BLACK_ROOK
-        || board.board[Position.h7] == IntChessman.BLACK_ROOK
-        || board.board[Position.g8] == IntChessman.BLACK_ROOK)) {
+      if ((board.board[Position.f8] == IntPiece.BLACKKING
+        || board.board[Position.g8] == IntPiece.BLACKKING)
+        && (board.board[Position.h8] == IntPiece.BLACKROOK
+        || board.board[Position.h7] == IntPiece.BLACKROOK
+        || board.board[Position.g8] == IntPiece.BLACKROOK)) {
         total -= 50;
       }
     }

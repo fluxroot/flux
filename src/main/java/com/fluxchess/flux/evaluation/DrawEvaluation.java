@@ -20,9 +20,9 @@ package com.fluxchess.flux.evaluation;
 
 import com.fluxchess.flux.board.Board;
 import com.fluxchess.flux.board.ChessmanList;
-import com.fluxchess.flux.board.IntChessman;
 import com.fluxchess.flux.board.Position;
 import com.fluxchess.jcpi.models.IntColor;
+import com.fluxchess.jcpi.models.IntPiece;
 
 public final class DrawEvaluation {
 
@@ -309,7 +309,7 @@ public final class DrawEvaluation {
     int end = ChessmanList.next(board.pawnList[myColor].list) + delta;
     while ((end & 0x88) == 0) {
       int chessman = board.board[end];
-      if ((chessman != IntChessman.NOPIECE && IntChessman.getColor(chessman) == enemyColor) || (enemyAttackTable[end] & AttackTableEvaluation.BIT_MINOR) != 0) {
+      if ((chessman != IntPiece.NOPIECE && IntPiece.getColor(chessman) == enemyColor) || (enemyAttackTable[end] & AttackTableEvaluation.BIT_MINOR) != 0) {
         return 1;
       } else {
         end += delta;
@@ -336,7 +336,7 @@ public final class DrawEvaluation {
     int end = ChessmanList.next(board.pawnList[myColor].list) + delta;
     while ((end & 0x88) == 0) {
       int chessman = board.board[end];
-      if ((chessman != IntChessman.NOPIECE && IntChessman.getColor(chessman) == enemyColor) || (enemyAttackTable[end] & AttackTableEvaluation.BIT_MINOR) != 0) {
+      if ((chessman != IntPiece.NOPIECE && IntPiece.getColor(chessman) == enemyColor) || (enemyAttackTable[end] & AttackTableEvaluation.BIT_MINOR) != 0) {
         return 1;
       } else {
         end += delta;

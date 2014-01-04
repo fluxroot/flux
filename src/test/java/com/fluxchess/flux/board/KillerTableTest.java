@@ -18,6 +18,8 @@
  */
 package com.fluxchess.flux.board;
 
+import com.fluxchess.jcpi.models.IntChessman;
+import com.fluxchess.jcpi.models.IntPiece;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -29,25 +31,25 @@ public class KillerTableTest {
     KillerTable killerMoves = new KillerTable();
 
     // Put a new killer move into the list
-    int move1 = Move.createMove(Move.NORMAL, 0, 16, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
+    int move1 = Move.createMove(Move.NORMAL, 0, 16, IntPiece.NOPIECE, IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
     killerMoves.add(move1, 0);
     assertEquals(move1, killerMoves.getPrimaryKiller(0));
     assertEquals(Move.NOMOVE, killerMoves.getSecondaryKiller(0));
 
     // Put the same killer move into the list
-    int move2 = Move.createMove(Move.NORMAL, 0, 16, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
+    int move2 = Move.createMove(Move.NORMAL, 0, 16, IntPiece.NOPIECE, IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
     killerMoves.add(move2, 0);
     assertEquals(move2, killerMoves.getPrimaryKiller(0));
     assertEquals(Move.NOMOVE, killerMoves.getSecondaryKiller(0));
 
     // Put a new killer move into the list
-    int move3 = Move.createMove(Move.NORMAL, 1, 17, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
+    int move3 = Move.createMove(Move.NORMAL, 1, 17, IntPiece.NOPIECE, IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
     killerMoves.add(move3, 0);
     assertEquals(move3, killerMoves.getPrimaryKiller(0));
     assertEquals(move2, killerMoves.getSecondaryKiller(0));
 
     // Put a new killer move into the list twice
-    int move4 = Move.createMove(Move.NORMAL, 2, 18, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
+    int move4 = Move.createMove(Move.NORMAL, 2, 18, IntPiece.NOPIECE, IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
     killerMoves.add(move4, 0);
     killerMoves.add(move4, 0);
     assertEquals(move4, killerMoves.getPrimaryKiller(0));

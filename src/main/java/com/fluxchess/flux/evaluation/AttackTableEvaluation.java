@@ -20,9 +20,9 @@ package com.fluxchess.flux.evaluation;
 
 import com.fluxchess.flux.board.Board;
 import com.fluxchess.flux.board.ChessmanList;
-import com.fluxchess.flux.board.IntChessman;
 import com.fluxchess.flux.board.MoveGenerator;
 import com.fluxchess.jcpi.models.IntColor;
+import com.fluxchess.jcpi.models.IntPiece;
 
 import java.util.Arrays;
 
@@ -128,7 +128,7 @@ public final class AttackTableEvaluation {
           myAttackTable[targetPosition] |= BIT_MINOR;
 
           int target = board.board[targetPosition];
-          if (target == IntChessman.NOPIECE) {
+          if (target == IntPiece.NOPIECE) {
             targetPosition += delta;
           } else {
             break;
@@ -155,7 +155,7 @@ public final class AttackTableEvaluation {
           myAttackTable[targetPosition] |= BIT_ROOK;
 
           int target = board.board[targetPosition];
-          if (target == IntChessman.NOPIECE) {
+          if (target == IntPiece.NOPIECE) {
             targetPosition += delta;
           } else {
             break;
@@ -182,7 +182,7 @@ public final class AttackTableEvaluation {
           myAttackTable[targetPosition] |= BIT_QUEEN;
 
           int target = board.board[targetPosition];
-          if (target == IntChessman.NOPIECE) {
+          if (target == IntPiece.NOPIECE) {
             targetPosition += delta;
           } else {
             break;

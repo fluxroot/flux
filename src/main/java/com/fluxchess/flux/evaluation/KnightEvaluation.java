@@ -20,9 +20,9 @@ package com.fluxchess.flux.evaluation;
 
 import com.fluxchess.flux.board.Board;
 import com.fluxchess.flux.board.ChessmanList;
-import com.fluxchess.flux.board.IntChessman;
 import com.fluxchess.flux.board.MoveGenerator;
 import com.fluxchess.jcpi.models.IntColor;
+import com.fluxchess.jcpi.models.IntPiece;
 
 public final class KnightEvaluation {
 
@@ -53,10 +53,10 @@ public final class KnightEvaluation {
         int targetPosition = knightPosition + delta;
         if ((targetPosition & 0x88) == 0) {
           int target = board.board[targetPosition];
-          if (target == IntChessman.NOPIECE) {
+          if (target == IntPiece.NOPIECE) {
             allMobility++;
           } else {
-            if (IntChessman.getColor(target) == enemyColor) {
+            if (IntPiece.getColor(target) == enemyColor) {
               allMobility++;
             }
           }

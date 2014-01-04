@@ -21,9 +21,18 @@ package com.fluxchess.flux.evaluation;
 import com.fluxchess.flux.Configuration;
 import com.fluxchess.flux.board.Board;
 import com.fluxchess.flux.search.Search;
+import com.fluxchess.jcpi.models.IntChessman;
 import com.fluxchess.jcpi.models.IntColor;
+import com.fluxchess.jcpi.models.IntPiece;
 
 public final class Evaluation {
+
+  public static final int VALUE_PAWN = 100;
+  public static final int VALUE_KNIGHT = 325;
+  public static final int VALUE_BISHOP = 325;
+  public static final int VALUE_ROOK = 500;
+  public static final int VALUE_QUEEN = 975;
+  public static final int VALUE_KING = 20000;
 
   // Our total values
   private static final int[] material = new int[IntColor.values.length];
@@ -131,6 +140,62 @@ public final class Evaluation {
     }
 
     return total;
+  }
+
+  /**
+   * Returns the value of the piece.
+   *
+   * @param piece the piece.
+   * @return the value of the piece.
+   */
+  public static int getValueFromPiece(int piece) {
+    assert piece != IntPiece.NOPIECE;
+
+    int chessman = IntPiece.getChessman(piece);
+
+    switch (chessman) {
+      case IntChessman.PAWN:
+        return VALUE_PAWN;
+      case IntChessman.KNIGHT:
+        return VALUE_KNIGHT;
+      case IntChessman.BISHOP:
+        return VALUE_BISHOP;
+      case IntChessman.ROOK:
+        return VALUE_ROOK;
+      case IntChessman.QUEEN:
+        return VALUE_QUEEN;
+      case IntChessman.KING:
+        return VALUE_KING;
+      default:
+        throw new IllegalArgumentException();
+    }
+  }
+
+  /**
+   * Returns the value of the chessman.
+   *
+   * @param chessman the chessman.
+   * @return the value of the chessman.
+   */
+  public static int getValueFromChessman(int chessman) {
+    assert chessman != IntChessman.NOCHESSMAN;
+
+    switch (chessman) {
+      case IntChessman.PAWN:
+        return VALUE_PAWN;
+      case IntChessman.KNIGHT:
+        return VALUE_KNIGHT;
+      case IntChessman.BISHOP:
+        return VALUE_BISHOP;
+      case IntChessman.ROOK:
+        return VALUE_ROOK;
+      case IntChessman.QUEEN:
+        return VALUE_QUEEN;
+      case IntChessman.KING:
+        return VALUE_KING;
+      default:
+        throw new IllegalArgumentException();
+    }
   }
 
 }

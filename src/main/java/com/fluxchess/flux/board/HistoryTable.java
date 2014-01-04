@@ -18,13 +18,15 @@
  */
 package com.fluxchess.flux.board;
 
+import com.fluxchess.jcpi.models.IntChessman;
 import com.fluxchess.jcpi.models.IntColor;
+import com.fluxchess.jcpi.models.IntPiece;
 
 public final class HistoryTable {
 
   public static final int MAX_HISTORYVALUE = 65536;
 
-  private final int[][] historyTable = new int[IntChessman.PIECE_VALUE_SIZE][Board.BOARDSIZE];
+  private final int[][] historyTable = new int[IntPiece.values.length][Board.BOARDSIZE];
 
   /**
    * Returns the number of hits for the move.
@@ -35,13 +37,13 @@ public final class HistoryTable {
   public int get(int move) {
     assert move != Move.NOMOVE;
 
-    int piece = Move.getChessmanPiece(move);
+    int piece = Move.getOriginPiece(move);
     int end = Move.getEnd(move);
-    assert Move.getChessman(move) != IntChessman.NOPIECE;
-    assert Move.getChessmanColor(move) != IntColor.NOCOLOR;
+    assert Move.getOriginChessman(move) != IntChessman.NOCHESSMAN;
+    assert Move.getOriginColor(move) != IntColor.NOCOLOR;
     assert (end & 0x88) == 0;
 
-    return historyTable[piece][end];
+    return historyTable[IntPiece.ordinal(piece)][end];
   }
 
   /**
@@ -52,18 +54,18 @@ public final class HistoryTable {
   public void add(int move, int depth) {
     assert move != Move.NOMOVE;
 
-    int piece = Move.getChessmanPiece(move);
+    int piece = Move.getOriginPiece(move);
     int end = Move.getEnd(move);
-    assert Move.getChessman(move) != IntChessman.NOPIECE;
-    assert Move.getChessmanColor(move) != IntColor.NOCOLOR;
+    assert Move.getOriginChessman(move) != IntChessman.NOCHESSMAN;
+    assert Move.getOriginColor(move) != IntColor.NOCOLOR;
     assert (end & 0x88) == 0;
 
-    historyTable[piece][end] += depth;
+    historyTable[IntPiece.ordinal(piece)][end] += depth;
 
-    if (historyTable[piece][end] >= MAX_HISTORYVALUE) {
-      for (int pieceValue : IntChessman.pieceValues) {
+    if (historyTable[IntPiece.ordinal(piece)][end] >= MAX_HISTORYVALUE) {
+      for (int pieceValue : IntPiece.values) {
         for (int positionValue : Position.values) {
-          historyTable[pieceValue][positionValue] /= 2;
+          historyTable[IntPiece.ordinal(pieceValue)][positionValue] /= 2;
         }
       }
     }

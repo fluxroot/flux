@@ -18,8 +18,10 @@
  */
 package com.fluxchess.flux.board;
 
+import com.fluxchess.flux.evaluation.Evaluation;
 import com.fluxchess.jcpi.models.GenericBoard;
 import com.fluxchess.jcpi.models.IllegalNotationException;
+import com.fluxchess.jcpi.models.IntChessman;
 import com.fluxchess.jcpi.models.IntColor;
 import org.junit.Test;
 
@@ -33,24 +35,24 @@ public class MoveSeeTest {
     try {
       // Pawn capture
       Board board = new Board(new GenericBoard("8/8/8/4p1k1/2KP4/8/8/8 w - -"));
-      int move = Move.createMove(Move.NORMAL, Position.d4, Position.e5, board.board[Position.d4], board.board[Position.e5], IntChessman.NOPIECE);
+      int move = Move.createMove(Move.NORMAL, Position.d4, Position.e5, board.board[Position.d4], board.board[Position.e5], IntChessman.NOCHESSMAN);
       new MoveSee(board);
       int value = MoveSee.seeMove(move, IntColor.WHITE);
-      assertEquals(IntChessman.VALUE_PAWN, value);
+      assertEquals(Evaluation.VALUE_PAWN, value);
 
       // En passant capture
       board = new Board(new GenericBoard("8/8/K7/6k1/2Pp4/8/1P6/8 b - c3"));
-      move = Move.createMove(Move.ENPASSANT, Position.d4, Position.c3, board.board[Position.d4], board.board[Position.c4], IntChessman.NOPIECE);
+      move = Move.createMove(Move.ENPASSANT, Position.d4, Position.c3, board.board[Position.d4], board.board[Position.c4], IntChessman.NOCHESSMAN);
       new MoveSee(board);
       value = MoveSee.seeMove(move, IntColor.BLACK);
       assertEquals(0, value);
 
       // En passant capture with hidden attacker
       board = new Board(new GenericBoard("8/6k1/4r3/8/4Pp2/8/1K1P4/8 b - e3"));
-      move = Move.createMove(Move.ENPASSANT, Position.f4, Position.e3, board.board[Position.f4], board.board[Position.e4], IntChessman.NOPIECE);
+      move = Move.createMove(Move.ENPASSANT, Position.f4, Position.e3, board.board[Position.f4], board.board[Position.e4], IntChessman.NOCHESSMAN);
       new MoveSee(board);
       value = MoveSee.seeMove(move, IntColor.BLACK);
-      assertEquals(IntChessman.VALUE_PAWN, value);
+      assertEquals(Evaluation.VALUE_PAWN, value);
 
       // Pawn promotion capture
       board = new Board(new GenericBoard("8/8/K7/6k1/8/5B2/4p3/3R4 b - -"));
@@ -58,52 +60,52 @@ public class MoveSeeTest {
       new MoveSee(board);
       value = MoveSee.seeMove(move, IntColor.BLACK);
       assertEquals(
-        IntChessman.VALUE_ROOK
-          + (IntChessman.VALUE_ROOK - IntChessman.VALUE_PAWN)
-          - IntChessman.VALUE_ROOK, value);
+        Evaluation.VALUE_ROOK
+          + (Evaluation.VALUE_ROOK - Evaluation.VALUE_PAWN)
+          - Evaluation.VALUE_ROOK, value);
 
       // King capture abort
       board = new Board(new GenericBoard("8/6k1/8/4q3/8/5p2/1R1KP3/8 b - -"));
-      move = Move.createMove(Move.NORMAL, Position.f3, Position.e2, board.board[Position.f3], board.board[Position.e2], IntChessman.NOPIECE);
+      move = Move.createMove(Move.NORMAL, Position.f3, Position.e2, board.board[Position.f3], board.board[Position.e2], IntChessman.NOCHESSMAN);
       new MoveSee(board);
       value = MoveSee.seeMove(move, IntColor.BLACK);
       assertEquals(
-        IntChessman.VALUE_PAWN
-          - IntChessman.VALUE_PAWN
-          + IntChessman.VALUE_KING, value);
+        Evaluation.VALUE_PAWN
+          - Evaluation.VALUE_PAWN
+          + Evaluation.VALUE_KING, value);
 
       // Complex capture
       board = new Board(new GenericBoard("R1B3q1/N1KP4/3n4/8/6b1/2R5/6k1/8 b - -"));
-      move = Move.createMove(Move.NORMAL, Position.d6, Position.c8, board.board[Position.d6], board.board[Position.c8], IntChessman.NOPIECE);
+      move = Move.createMove(Move.NORMAL, Position.d6, Position.c8, board.board[Position.d6], board.board[Position.c8], IntChessman.NOCHESSMAN);
       new MoveSee(board);
       value = MoveSee.seeMove(move, IntColor.BLACK);
       assertEquals(
-        IntChessman.VALUE_BISHOP
-          - IntChessman.VALUE_KNIGHT
-          - (IntChessman.VALUE_QUEEN - IntChessman.VALUE_PAWN)
-          + IntChessman.VALUE_QUEEN
-          - IntChessman.VALUE_BISHOP
-          + IntChessman.VALUE_KNIGHT
-          - IntChessman.VALUE_QUEEN, value);
+        Evaluation.VALUE_BISHOP
+          - Evaluation.VALUE_KNIGHT
+          - (Evaluation.VALUE_QUEEN - Evaluation.VALUE_PAWN)
+          + Evaluation.VALUE_QUEEN
+          - Evaluation.VALUE_BISHOP
+          + Evaluation.VALUE_KNIGHT
+          - Evaluation.VALUE_QUEEN, value);
 
       // Same piece capture test
       board = new Board(new GenericBoard("r4rk1/5ppp/2Np4/p2P2b1/Pp3Rq1/1R1pP2P/1PP3P1/7K w - -"));
-      move = Move.createMove(Move.NORMAL, Position.c6, Position.b4, board.board[Position.c6], board.board[Position.b4], IntChessman.NOPIECE);
+      move = Move.createMove(Move.NORMAL, Position.c6, Position.b4, board.board[Position.c6], board.board[Position.b4], IntChessman.NOCHESSMAN);
       new MoveSee(board);
       value = MoveSee.seeMove(move, IntColor.WHITE);
       assertEquals(
-        IntChessman.VALUE_PAWN
-          - IntChessman.VALUE_KNIGHT
-          + IntChessman.VALUE_PAWN
-          - IntChessman.VALUE_ROOK
-          + IntChessman.VALUE_QUEEN, value);
+        Evaluation.VALUE_PAWN
+          - Evaluation.VALUE_KNIGHT
+          + Evaluation.VALUE_PAWN
+          - Evaluation.VALUE_ROOK
+          + Evaluation.VALUE_QUEEN, value);
 
       // Non-capture move
       board = new Board(new GenericBoard("8/6k1/4r3/8/5p2/8/1K1PP3/8 w - -"));
-      move = Move.createMove(Move.NORMAL, Position.e2, Position.e3, board.board[Position.e2], board.board[Position.e3], IntChessman.NOPIECE);
+      move = Move.createMove(Move.NORMAL, Position.e2, Position.e3, board.board[Position.e2], board.board[Position.e3], IntChessman.NOCHESSMAN);
       new MoveSee(board);
       value = MoveSee.seeMove(move, IntColor.WHITE);
-      assertEquals(-IntChessman.VALUE_PAWN, value);
+      assertEquals(-Evaluation.VALUE_PAWN, value);
     } catch (IllegalNotationException e) {
       e.printStackTrace();
       fail();

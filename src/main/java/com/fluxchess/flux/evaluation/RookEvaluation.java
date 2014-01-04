@@ -18,8 +18,12 @@
  */
 package com.fluxchess.flux.evaluation;
 
-import com.fluxchess.flux.board.*;
+import com.fluxchess.flux.board.Board;
+import com.fluxchess.flux.board.ChessmanList;
+import com.fluxchess.flux.board.MoveGenerator;
+import com.fluxchess.flux.board.Position;
 import com.fluxchess.jcpi.models.IntColor;
+import com.fluxchess.jcpi.models.IntPiece;
 
 public final class RookEvaluation {
 
@@ -63,11 +67,11 @@ public final class RookEvaluation {
         int targetPosition = rookPosition + delta;
         while ((targetPosition & 0x88) == 0) {
           int target = board.board[targetPosition];
-          if (target == IntChessman.NOPIECE) {
+          if (target == IntPiece.NOPIECE) {
             allMobility++;
             targetPosition += delta;
           } else {
-            if (IntChessman.getColor(target) == enemyColor) {
+            if (IntPiece.getColor(target) == enemyColor) {
               allMobility++;
             }
             break;
