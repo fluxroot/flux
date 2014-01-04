@@ -50,18 +50,18 @@ public final class PawnPasserEvaluation {
 
     assert board.kingList[enemyColor].size() == 1;
     int enemyKingPosition = BitPieceList.next(board.kingList[enemyColor].list);
-    int enemyKingFile = IntPosition.getFile(enemyKingPosition);
-    int enemyKingRank = IntPosition.getRank(enemyKingPosition);
+    int enemyKingFile = Position.getFile(enemyKingPosition);
+    int enemyKingRank = Position.getRank(enemyKingPosition);
     assert board.kingList[myColor].size() == 1;
     int myKingPosition = BitPieceList.next(board.kingList[myColor].list);
-    int myKingFile = IntPosition.getFile(myKingPosition);
-    int myKingRank = IntPosition.getRank(myKingPosition);
+    int myKingFile = Position.getFile(myKingPosition);
+    int myKingRank = Position.getRank(myKingPosition);
 
     // Evaluate each pawn
     for (long positions = board.pawnList[myColor].list; positions != 0; positions &= positions - 1) {
       int pawnPosition = BitPieceList.next(positions);
-      int pawnFile = IntPosition.getFile(pawnPosition);
-      int pawnRank = IntPosition.getRank(pawnPosition);
+      int pawnFile = Position.getFile(pawnPosition);
+      int pawnRank = Position.getRank(pawnPosition);
       int pawn = board.board[pawnPosition];
       int tableFile = pawnFile + 1;
 
@@ -170,10 +170,10 @@ public final class PawnPasserEvaluation {
               }
 
               // King protected passer
-              else if (IntPosition.getRelativeRank(myKingPosition, myColor) == IntPosition.rank7
+              else if (Position.getRelativeRank(myKingPosition, myColor) == Position.rank7
                 && ((promotionDistance <= 2 && (myAttackTable[pawnPosition] & AttackTableEvaluation.BIT_KING) != 0)
                 || (promotionDistance <= 3 && (myAttackTable[pawnPosition + 16] & AttackTableEvaluation.BIT_KING) != 0 && board.activeColor == myColor))
-                && (myKingFile != pawnFile || (pawnFile != IntPosition.fileA && pawnFile != IntPosition.fileH))) {
+                && (myKingFile != pawnFile || (pawnFile != Position.fileA && pawnFile != Position.fileH))) {
                 endgameMax += EVAL_PAWN_PASSER_UNSTOPPABLE;
               }
             }
@@ -209,10 +209,10 @@ public final class PawnPasserEvaluation {
               }
 
               // King protected passer
-              else if (IntPosition.getRelativeRank(myKingPosition, myColor) == IntPosition.rank7
+              else if (Position.getRelativeRank(myKingPosition, myColor) == Position.rank7
                 && ((promotionDistance <= 2 && (myAttackTable[pawnPosition] & AttackTableEvaluation.BIT_KING) != 0)
                 || (promotionDistance <= 3 && (myAttackTable[pawnPosition - 16] & AttackTableEvaluation.BIT_KING) != 0 && board.activeColor == myColor))
-                && (myKingFile != pawnFile || (pawnFile != IntPosition.fileA && pawnFile != IntPosition.fileH))) {
+                && (myKingFile != pawnFile || (pawnFile != Position.fileA && pawnFile != Position.fileH))) {
                 endgameMax += EVAL_PAWN_PASSER_UNSTOPPABLE;
               }
             }

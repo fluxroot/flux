@@ -21,7 +21,7 @@ package com.fluxchess.flux.move;
 import com.fluxchess.flux.board.Board;
 import com.fluxchess.flux.board.IntChessman;
 import com.fluxchess.flux.board.IntColor;
-import com.fluxchess.flux.board.IntPosition;
+import com.fluxchess.flux.board.Position;
 import com.fluxchess.jcpi.models.*;
 import org.junit.Test;
 
@@ -31,10 +31,10 @@ public class MoveTest {
 
   @Test
   public void testIntMove() {
-    int move = Move.createMove(Move.NULL, IntPosition.NOPOSITION, IntPosition.NOPOSITION, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
+    int move = Move.createMove(Move.NULL, Position.NOPOSITION, Position.NOPOSITION, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
     assertEquals(Move.NULL, Move.getType(move));
-//      assertEquals(IntPosition.NOPOSITION, Move.getStart(move));
-//      assertEquals(IntPosition.NOPOSITION, Move.getEnd(move));
+//      assertEquals(Position.NOPOSITION, Move.getStart(move));
+//      assertEquals(Position.NOPOSITION, Move.getEnd(move));
 //      assertEquals(IntChessman.NOCHESSMAN, Move.getChessman(move));
 //      assertEquals(IntColor.NOCOLOR, Move.getChessmanColor(move));
 //      assertEquals(IntChessman.NOCHESSMAN, Move.getTarget(move));
@@ -75,11 +75,11 @@ public class MoveTest {
 
   @Test
   public void testSetEndPosition() {
-    int move = Move.createMove(Move.NORMAL, IntPosition.a2, IntPosition.a3, IntChessman.createPiece(IntChessman.PAWN, IntColor.WHITE), IntChessman.NOPIECE, IntChessman.NOPIECE);
-    assertEquals(IntPosition.a3, Move.getEnd(move));
+    int move = Move.createMove(Move.NORMAL, Position.a2, Position.a3, IntChessman.createPiece(IntChessman.PAWN, IntColor.WHITE), IntChessman.NOPIECE, IntChessman.NOPIECE);
+    assertEquals(Position.a3, Move.getEnd(move));
 
-    move = Move.setEndPosition(move, IntPosition.a4);
-    assertEquals(IntPosition.a4, Move.getEnd(move));
+    move = Move.setEndPosition(move, Position.a4);
+    assertEquals(Position.a4, Move.getEnd(move));
   }
 
 }

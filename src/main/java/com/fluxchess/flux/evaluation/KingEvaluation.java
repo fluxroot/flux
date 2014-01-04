@@ -58,7 +58,7 @@ public final class KingEvaluation {
     int kingPosition = BitPieceList.next(board.kingList[myColor].list);
 
     // Evaluate king safety
-    int attackedSquare = IntPosition.NOPOSITION;
+    int attackedSquare = Position.NOPOSITION;
     int attackCount = 0;
     byte flag = 0;
 
@@ -178,11 +178,11 @@ public final class KingEvaluation {
 
     opening -= kingSafety;
 
-    int castlingPositionKingside = IntPosition.WHITE_CASTLING_KINGSIDE;
-    int castlingPositionQueenside = IntPosition.WHITE_CASTLING_QUEENSIDE;
+    int castlingPositionKingside = Position.WHITE_CASTLING_KINGSIDE;
+    int castlingPositionQueenside = Position.WHITE_CASTLING_QUEENSIDE;
     if (myColor == IntColor.BLACK) {
-      castlingPositionKingside = IntPosition.BLACK_CASTLING_KINGSIDE;
-      castlingPositionQueenside = IntPosition.BLACK_CASTLING_QUEENSIDE;
+      castlingPositionKingside = Position.BLACK_CASTLING_KINGSIDE;
+      castlingPositionQueenside = Position.BLACK_CASTLING_QUEENSIDE;
     } else {
       assert myColor == IntColor.WHITE;
     }
@@ -218,8 +218,8 @@ public final class KingEvaluation {
     // Initialize
     byte[] myPawnTable = PawnTableEvaluation.getInstance().pawnTable[myColor];
 
-    int kingFile = IntPosition.getFile(kingPosition);
-    int kingRank = IntPosition.getRank(kingPosition);
+    int kingFile = Position.getFile(kingPosition);
+    int kingRank = Position.getRank(kingPosition);
     int tableFile = kingFile + 1;
 
     // Evaluate pawn shield

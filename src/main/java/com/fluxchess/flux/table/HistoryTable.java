@@ -21,7 +21,7 @@ package com.fluxchess.flux.table;
 import com.fluxchess.flux.board.Board;
 import com.fluxchess.flux.board.IntChessman;
 import com.fluxchess.flux.board.IntColor;
-import com.fluxchess.flux.board.IntPosition;
+import com.fluxchess.flux.board.Position;
 import com.fluxchess.flux.move.Move;
 
 public final class HistoryTable {
@@ -66,7 +66,7 @@ public final class HistoryTable {
 
     if (historyTable[piece][end] >= MAX_HISTORYVALUE) {
       for (int pieceValue : IntChessman.pieceValues) {
-        for (int positionValue : IntPosition.values) {
+        for (int positionValue : Position.values) {
           historyTable[pieceValue][positionValue] /= 2;
         }
       }

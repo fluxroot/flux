@@ -53,10 +53,10 @@ public class MoveGeneratorTest {
       new MoveSee(testBoard);
       table.increaseAge();
 
-//          testBoard.makeMove(Move.createMove(Move.NORMAL, IntPosition.d2, IntPosition.c1, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN));
-//          testBoard.makeMove(Move.createMove(Move.NORMAL, IntPosition.e7, IntPosition.d6, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN));
-//          testBoard.makeMove(Move.createMove(Move.NORMAL, IntPosition.e1, IntPosition.d1, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN));
-//          testBoard.makeMove(Move.createMove(Move.PAWNDOUBLE, IntPosition.c7, IntPosition.c5, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN));
+//          testBoard.makeMove(Move.createMove(Move.NORMAL, Position.d2, Position.c1, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN));
+//          testBoard.makeMove(Move.createMove(Move.NORMAL, Position.e7, Position.d6, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN));
+//          testBoard.makeMove(Move.createMove(Move.NORMAL, Position.e1, Position.d1, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN));
+//          testBoard.makeMove(Move.createMove(Move.PAWNDOUBLE, Position.c7, Position.c5, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN));
       int result = miniMax(testBoard, new MoveGenerator(testBoard, new KillerTable(), new HistoryTable()), 5, 5);
       LOG.info(String.format("%d", result));
     } catch (IllegalNotationException e) {

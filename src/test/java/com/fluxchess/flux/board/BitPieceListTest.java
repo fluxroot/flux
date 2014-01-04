@@ -38,8 +38,8 @@ public class BitPieceListTest {
 
     while (pool.size() < Long.SIZE) {
       int value = random.nextInt(Long.SIZE);
-      if (!pool.contains(IntPosition.values[value])) {
-        pool.add(IntPosition.values[value]);
+      if (!pool.contains(Position.values[value])) {
+        pool.add(Position.values[value]);
       }
     }
   }
@@ -47,7 +47,7 @@ public class BitPieceListTest {
   @Test
   public void testX88Positions() {
     int bitposition = 0;
-    for (int x88position : IntPosition.values) {
+    for (int x88position : Position.values) {
       assertEquals(bitposition, BitPieceList.toBitPosition(x88position));
       assertEquals(x88position, BitPieceList.toX88Position(bitposition));
       ++bitposition;

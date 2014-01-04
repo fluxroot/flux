@@ -24,7 +24,7 @@ import com.fluxchess.jcpi.models.GenericRank;
 
 import java.util.Arrays;
 
-public final class IntPosition {
+public final class Position {
 
   public static final int NOPOSITION = -6;
 
@@ -100,7 +100,7 @@ public final class IntPosition {
 
   public static final int MASK = 0x7F;
 
-  private IntPosition() {
+  private Position() {
   }
 
   public static int valueOfPosition(GenericPosition position) {

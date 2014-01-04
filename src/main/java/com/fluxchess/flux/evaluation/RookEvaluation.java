@@ -52,8 +52,8 @@ public final class RookEvaluation {
     // Evaluate each rook
     for (long positions = board.rookList[myColor].list; positions != 0; positions &= positions - 1) {
       int rookPosition = BitPieceList.next(positions);
-      int rookFile = IntPosition.getFile(rookPosition);
-      int rookRank = IntPosition.getRank(rookPosition);
+      int rookFile = Position.getFile(rookPosition);
+      int rookRank = Position.getRank(rookPosition);
       int tableFile = rookFile + 1;
 
       int allMobility = EVAL_ROOK_MOBILITY_BASE;
@@ -95,7 +95,7 @@ public final class RookEvaluation {
           totalOpenFile += EVAL_ROOK_OPENFILE / 2;
         }
         int kingPosition = BitPieceList.next(board.kingList[enemyColor].list);
-        int kingFile = IntPosition.getFile(kingPosition);
+        int kingFile = Position.getFile(kingPosition);
         int delta = Math.abs(kingFile - rookFile);
         if (delta <= 1) {
           opening += EVAL_ROOK_NEARKINGFILE;
@@ -117,7 +117,7 @@ public final class RookEvaluation {
       }
       if (rookRank == seventhRank) {
         int kingPosition = BitPieceList.next(board.kingList[enemyColor].list);
-        int kingRank = IntPosition.getRank(kingPosition);
+        int kingRank = Position.getRank(kingPosition);
         boolean enemyPawnExists = false;
         for (int j = 1; j < enemyPawnTable.length - 1; j++) {
           if (enemyPawnTable[j] == seventhRank) {
