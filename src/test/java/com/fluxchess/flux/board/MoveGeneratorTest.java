@@ -39,27 +39,6 @@ public class MoveGeneratorTest {
   private final TestPerftTable table = new TestPerftTable();
 
   @Test
-  public void testSpecialPerft() {
-    // Setup a new board from fen
-    GenericBoard board;
-    try {
-      board = new GenericBoard("1k6/8/8/5pP1/4K1P1/8/8/8 w - f6");
-      Board testBoard = new Board(board);
-      new MoveSee(testBoard);
-      table.increaseAge();
-
-//          testBoard.makeMove(Move.createMove(Move.NORMAL, Position.d2, Position.c1, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN));
-//          testBoard.makeMove(Move.createMove(Move.NORMAL, Position.e7, Position.d6, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN));
-//          testBoard.makeMove(Move.createMove(Move.NORMAL, Position.e1, Position.d1, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN));
-//          testBoard.makeMove(Move.createMove(Move.PAWNDOUBLE, Position.c7, Position.c5, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN));
-      int result = miniMax(testBoard, new MoveGenerator(testBoard, new KillerTable(), new HistoryTable()), 5, 5);
-      LOG.info(String.format("%d", result));
-    } catch (IllegalNotationException e) {
-      fail();
-    }
-  }
-
-  @Test
   public void testPerft() {
     for (int i = 1; i < 4; i++) {
 //      for (int i = 1; i < 7; i++) {
@@ -90,8 +69,7 @@ public class MoveGeneratorTest {
             long startTime = System.currentTimeMillis();
             int result = miniMax(testBoard, new MoveGenerator(testBoard, new KillerTable(), new HistoryTable()), depth, depth);
             long endTime = System.currentTimeMillis();
-            LOG.info("Testing " + tokens[0].trim() + " depth " + depth + " with nodes number " + nodesNumber + ": " + String.format("%d", endTime - startTime));
-            assertEquals(tokens[0].trim(), nodesNumber, result);
+            assertEquals("Tested " + tokens[0].trim() + " depth " + depth + " with nodes number " + nodesNumber + ": " + String.format("%d", endTime - startTime), nodesNumber, result);
           }
 
           line = file.readLine();
@@ -184,7 +162,6 @@ public class MoveGeneratorTest {
             Board testBoard = new Board(board);
             new MoveSee(testBoard);
 
-            LOG.info("Testing " + tokens[0].trim() + " depth " + depth + " with nodes number " + nodesNumber + ":");
             miniMaxQuiescentCheckingMoves(testBoard, new MoveGenerator(testBoard, new KillerTable(), new HistoryTable()), depth, depth);
           }
 

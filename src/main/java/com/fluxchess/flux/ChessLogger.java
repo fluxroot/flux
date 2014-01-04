@@ -56,12 +56,4 @@ public final class ChessLogger {
     }
   }
 
-  public static void showTrace() {
-    try {
-      throw new Exception();
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-  }
-
 }

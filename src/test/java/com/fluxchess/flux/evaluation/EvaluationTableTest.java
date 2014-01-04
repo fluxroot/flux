@@ -19,15 +19,11 @@
 package com.fluxchess.flux.evaluation;
 
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 public class EvaluationTableTest {
-
-  private static final Logger LOG = LoggerFactory.getLogger(EvaluationTableTest.class);
 
   @Test
   public void testEvaluationTable() {
@@ -40,23 +36,6 @@ public class EvaluationTableTest {
     table.put(2, 2);
     assertNotNull(table.get(2));
     assertEquals(2, table.get(2).evaluation);
-  }
-
-  @Test
-  public void testSize() {
-    LOG.info("Testing Evaluation Table size:");
-    int[] megabytes = {4, 8, 16, 32, 64};
-    for (int i : megabytes) {
-      int numberOfEntries = i * 1024 * 1024 / EvaluationTable.ENTRYSIZE;
-
-      System.gc();
-      long usedMemoryBefore = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
-      new EvaluationTable(numberOfEntries);
-      long usedMemoryAfter = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
-
-      long hashAllocation = (usedMemoryAfter - usedMemoryBefore) / 1024 / 1024;
-      LOG.info("Evaluation Table size " + i + " = " + hashAllocation);
-    }
   }
 
 }

@@ -19,23 +19,28 @@
 package com.fluxchess.flux.evaluation;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+public class PawnTableMemoryTest {
 
-public class PawnTableTest {
+  private static final Logger LOG = LoggerFactory.getLogger(PawnTableTest.class);
 
   @Test
-  public void testPawnTable() {
-    PawnTable table = new PawnTable(1024);
+  public void testSize() {
+    LOG.info("Testing Pawn Table size:");
+    int[] megabytes = {4, 8, 16, 32, 64};
+    for (int i : megabytes) {
+      int numberOfEntries = i * 1024 * 1024 / PawnTable.ENTRYSIZE;
 
-    table.put(1, 1);
-    assertTrue(table.exists(1));
-    assertEquals(1, table.getValue(1));
+      System.gc();
+      long usedMemoryBefore = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+      new PawnTable(numberOfEntries);
+      long usedMemoryAfter = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
 
-    table.put(2, 2);
-    assertTrue(table.exists(2));
-    assertEquals(2, table.getValue(2));
+      long hashAllocation = (usedMemoryAfter - usedMemoryBefore) / 1024 / 1024;
+      LOG.info("Pawn Table size " + i + " = " + hashAllocation);
+    }
   }
 
 }
