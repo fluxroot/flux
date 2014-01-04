@@ -18,7 +18,7 @@
  */
 package com.fluxchess.flux.evaluation;
 
-import com.fluxchess.flux.board.BitPieceList;
+import com.fluxchess.flux.board.ChessmanList;
 import com.fluxchess.flux.board.Board;
 import com.fluxchess.flux.board.IntChessman;
 import com.fluxchess.flux.board.IntColor;
@@ -44,7 +44,7 @@ public final class KnightEvaluation {
 
     // Evaluate each knight
     for (long positions = board.knightList[myColor].list; positions != 0; positions &= positions - 1) {
-      int knightPosition = BitPieceList.next(positions);
+      int knightPosition = ChessmanList.next(positions);
 
       int allMobility = EVAL_KNIGHT_MOBILITY_BASE;
 

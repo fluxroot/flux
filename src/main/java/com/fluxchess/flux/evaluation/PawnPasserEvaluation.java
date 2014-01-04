@@ -49,17 +49,17 @@ public final class PawnPasserEvaluation {
     byte[] enemyPawnTable = PawnTableEvaluation.getInstance().pawnTable[enemyColor];
 
     assert board.kingList[enemyColor].size() == 1;
-    int enemyKingPosition = BitPieceList.next(board.kingList[enemyColor].list);
+    int enemyKingPosition = ChessmanList.next(board.kingList[enemyColor].list);
     int enemyKingFile = Position.getFile(enemyKingPosition);
     int enemyKingRank = Position.getRank(enemyKingPosition);
     assert board.kingList[myColor].size() == 1;
-    int myKingPosition = BitPieceList.next(board.kingList[myColor].list);
+    int myKingPosition = ChessmanList.next(board.kingList[myColor].list);
     int myKingFile = Position.getFile(myKingPosition);
     int myKingRank = Position.getRank(myKingPosition);
 
     // Evaluate each pawn
     for (long positions = board.pawnList[myColor].list; positions != 0; positions &= positions - 1) {
-      int pawnPosition = BitPieceList.next(positions);
+      int pawnPosition = ChessmanList.next(positions);
       int pawnFile = Position.getFile(pawnPosition);
       int pawnRank = Position.getRank(pawnPosition);
       int pawn = board.board[pawnPosition];

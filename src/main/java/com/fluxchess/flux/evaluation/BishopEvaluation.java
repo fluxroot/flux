@@ -18,7 +18,7 @@
  */
 package com.fluxchess.flux.evaluation;
 
-import com.fluxchess.flux.board.BitPieceList;
+import com.fluxchess.flux.board.ChessmanList;
 import com.fluxchess.flux.board.Board;
 import com.fluxchess.flux.board.IntChessman;
 import com.fluxchess.flux.board.IntColor;
@@ -45,7 +45,7 @@ public final class BishopEvaluation {
 
     // Evaluate each bishop
     for (long positions = board.bishopList[myColor].list; positions != 0; positions &= positions - 1) {
-      int bishopPosition = BitPieceList.next(positions);
+      int bishopPosition = ChessmanList.next(positions);
 
       int allMobility = EVAL_BISHOP_MOBILITY_BASE;
 

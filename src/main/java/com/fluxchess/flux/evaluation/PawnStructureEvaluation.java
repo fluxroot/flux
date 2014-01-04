@@ -46,7 +46,7 @@ public final class PawnStructureEvaluation {
 
     // Evaluate each pawn
     for (long positions = board.pawnList[myColor].list; positions != 0; positions &= positions - 1) {
-      int pawnPosition = BitPieceList.next(positions);
+      int pawnPosition = ChessmanList.next(positions);
       int pawnFile = Position.getFile(pawnPosition);
       int pawnRank = Position.getRank(pawnPosition);
       int tableFile = pawnFile + 1;

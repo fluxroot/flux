@@ -18,14 +18,14 @@
  */
 package com.fluxchess.flux.board;
 
-public final class BitPieceList {
+public final class ChessmanList {
 
   public long list = 0;
 
-  public BitPieceList() {
+  public ChessmanList() {
   }
 
-  public BitPieceList(BitPieceList list) {
+  public ChessmanList(ChessmanList list) {
     assert list != null;
 
     this.list = list.list;
@@ -44,7 +44,7 @@ public final class BitPieceList {
   }
 
   public static int next(long positions) {
-    return BitPieceList.toX88Position(Long.numberOfTrailingZeros(positions));
+    return ChessmanList.toX88Position(Long.numberOfTrailingZeros(positions));
   }
 
   public int size() {

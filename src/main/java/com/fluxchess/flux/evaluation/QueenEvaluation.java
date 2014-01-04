@@ -46,7 +46,7 @@ public final class QueenEvaluation {
 
     // Evaluate the queen
     for (long positions = board.queenList[myColor].list; positions != 0; positions &= positions - 1) {
-      int queenPosition = BitPieceList.next(positions);
+      int queenPosition = ChessmanList.next(positions);
       int queenRank = Position.getRank(queenPosition);
 
       int allMobility = EVAL_QUEEN_MOBILITY_BASE;
@@ -90,7 +90,7 @@ public final class QueenEvaluation {
         assert myColor == IntColor.WHITE;
       }
       if (queenRank == seventhRank) {
-        int kingPosition = BitPieceList.next(board.kingList[enemyColor].list);
+        int kingPosition = ChessmanList.next(board.kingList[enemyColor].list);
         int kingRank = Position.getRank(kingPosition);
         boolean enemyPawnExists = false;
         for (int j = 1; j < enemyPawnTable.length - 1; j++) {

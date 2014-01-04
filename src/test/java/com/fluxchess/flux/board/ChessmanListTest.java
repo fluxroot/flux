@@ -26,7 +26,7 @@ import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
 
-public class BitPieceListTest {
+public class ChessmanListTest {
 
   private Random random = null;
   private LinkedList<Integer> pool = null;
@@ -48,15 +48,15 @@ public class BitPieceListTest {
   public void testX88Positions() {
     int bitposition = 0;
     for (int x88position : Position.values) {
-      assertEquals(bitposition, BitPieceList.toBitPosition(x88position));
-      assertEquals(x88position, BitPieceList.toX88Position(bitposition));
+      assertEquals(bitposition, ChessmanList.toBitPosition(x88position));
+      assertEquals(x88position, ChessmanList.toX88Position(bitposition));
       ++bitposition;
     }
   }
 
   @Test
   public void testAdd() {
-    BitPieceList list = new BitPieceList();
+    ChessmanList list = new ChessmanList();
 
     for (int x88position : pool) {
       list.add(x88position);
@@ -67,7 +67,7 @@ public class BitPieceListTest {
 
   @Test
   public void testRemove() {
-    BitPieceList list = new BitPieceList();
+    ChessmanList list = new ChessmanList();
     list.list = -1;
 
     for (int x88position : pool) {

@@ -55,7 +55,7 @@ public final class KingEvaluation {
 
     // Evaluate the king
     assert board.kingList[myColor].size() == 1;
-    int kingPosition = BitPieceList.next(board.kingList[myColor].list);
+    int kingPosition = ChessmanList.next(board.kingList[myColor].list);
 
     // Evaluate king safety
     int attackedSquare = Position.NOPOSITION;
