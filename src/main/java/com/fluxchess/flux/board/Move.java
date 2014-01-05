@@ -24,14 +24,12 @@ import com.fluxchess.jcpi.models.*;
  * This class represents a move as a int value. The fields are represented by
  * the following bits.
  * <p/>
- *  0 -  6: the start position (required except Move.NULL)
- *  7 - 13: the end position (required except Move.NULL)
- * 14 - 16: the chessman (optional)
- * 17   18: the chessman color (optional)
- * 19 - 21: the target (optional)
- * 22 - 23: the target color (optional)
- * 24 - 26: the promotion chessman (optional)
- * 27 - 29: the type (required)
+ *  0 -  2: the type (required)
+ *  3 -  9: the start position (required except Move.NULL)
+ * 10 - 16: the end position (required except Move.NULL)
+ * 17 - 21: the chessman piece (required)
+ * 22 - 26: the target piece (optional)
+ * 27 - 29: the promotion chessman (optional)
  */
 public final class Move {
 
@@ -65,26 +63,18 @@ public final class Move {
   private static final int INTERNAL_NOPOSITION = 126;
 
   // Bit operation values
-  private static final int START_SHIFT = 0;
-  private static final int START_MASK = Position.MASK << START_SHIFT;
-  private static final int END_SHIFT = 7;
-  private static final int END_MASK = Position.MASK << END_SHIFT;
-  private static final int CHESSMAN_SHIFT = 14;
-  private static final int CHESSMAN_MASK = IntChessman.MASK << CHESSMAN_SHIFT;
-  private static final int CHESSMAN_COLOR_SHIFT = 17;
-  private static final int CHESSMAN_COLOR_MASK = IntColor.MASK << CHESSMAN_COLOR_SHIFT;
-  private static final int CHESSMAN_PIECE_SHIFT = CHESSMAN_SHIFT;
-  private static final int CHESSMAN_PIECE_MASK = IntPiece.MASK << CHESSMAN_PIECE_SHIFT;
-  private static final int TARGET_SHIFT = 19;
-  private static final int TARGET_MASK = IntChessman.MASK << TARGET_SHIFT;
-  private static final int TARGET_COLOR_SHIFT = 22;
-  private static final int TARGET_COLOR_MASK = IntColor.MASK << TARGET_COLOR_SHIFT;
-  private static final int TARGET_PIECE_SHIFT = TARGET_SHIFT;
-  private static final int TARGET_PIECE_MASK = IntPiece.MASK << TARGET_PIECE_SHIFT;
-  private static final int PROMOTION_SHIFT = 24;
-  private static final int PROMOTION_MASK = IntChessman.MASK << PROMOTION_SHIFT;
-  private static final int MOVE_SHIFT = 27;
+  private static final int MOVE_SHIFT = 0;
   private static final int MOVE_MASK = MASK << MOVE_SHIFT;
+  private static final int START_SHIFT = 3;
+  private static final int START_MASK = Position.MASK << START_SHIFT;
+  private static final int END_SHIFT = 10;
+  private static final int END_MASK = Position.MASK << END_SHIFT;
+  private static final int CHESSMAN_PIECE_SHIFT = 17;
+  private static final int CHESSMAN_PIECE_MASK = IntPiece.MASK << CHESSMAN_PIECE_SHIFT;
+  private static final int TARGET_PIECE_SHIFT = 22;
+  private static final int TARGET_PIECE_MASK = IntPiece.MASK << TARGET_PIECE_SHIFT;
+  private static final int PROMOTION_SHIFT = 27;
+  private static final int PROMOTION_MASK = IntChessman.MASK << PROMOTION_SHIFT;
 
   static {
     NULLMOVE = Move.createMove(Move.NULL, Position.NOPOSITION, Position.NOPOSITION, IntPiece.NOPIECE, IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
@@ -278,42 +268,6 @@ public final class Move {
   }
 
   /**
-   * Get the chessman from the Move.
-   *
-   * @param move the Move.
-   * @return the chessman.
-   */
-  public static int getOriginChessman(int move) {
-    assert move != NOMOVE;
-
-    int chessman = (move & CHESSMAN_MASK) >>> CHESSMAN_SHIFT;
-    assert (chessman == IntChessman.PAWN)
-      || (chessman == IntChessman.KNIGHT)
-      || (chessman == IntChessman.BISHOP)
-      || (chessman == IntChessman.ROOK)
-      || (chessman == IntChessman.QUEEN)
-      || (chessman == IntChessman.KING);
-
-    return chessman;
-  }
-
-  /**
-   * Get the chessman IntColor from the Move.
-   *
-   * @param move the Move.
-   * @return the chessman IntColor.
-   */
-  public static int getOriginColor(int move) {
-    assert move != NOMOVE;
-    assert getOriginChessman(move) != IntChessman.NOCHESSMAN;
-
-    int color = (move & CHESSMAN_COLOR_MASK) >>> CHESSMAN_COLOR_SHIFT;
-    assert IntColor.isValid(color);
-
-    return color;
-  }
-
-  /**
    * Returns the piece from the move.
    *
    * @param move the move.
@@ -323,43 +277,6 @@ public final class Move {
     assert move != NOMOVE;
 
     return (move & CHESSMAN_PIECE_MASK) >>> CHESSMAN_PIECE_SHIFT;
-  }
-
-  /**
-   * Get the target chessman from the move.
-   *
-   * @param move the move.
-   * @return the target chessman.
-   */
-  public static int getTargetChessman(int move) {
-    assert move != NOMOVE;
-
-    int chessman = (move & TARGET_MASK) >>> TARGET_SHIFT;
-    assert (chessman == IntChessman.PAWN)
-      || (chessman == IntChessman.KNIGHT)
-      || (chessman == IntChessman.BISHOP)
-      || (chessman == IntChessman.ROOK)
-      || (chessman == IntChessman.QUEEN)
-      || (chessman == IntChessman.KING)
-      || (chessman == IntChessman.NOCHESSMAN);
-
-    return chessman;
-  }
-
-  /**
-   * Get the target IntColor from the Move.
-   *
-   * @param move the move.
-   * @return the target IntColor.
-   */
-  public static int getTargetColor(int move) {
-    assert move != NOMOVE;
-    assert getTargetChessman(move) != IntChessman.NOCHESSMAN;
-
-    int color = (move & TARGET_COLOR_MASK) >>> TARGET_COLOR_SHIFT;
-    assert IntColor.isValid(color);
-
-    return color;
   }
 
   /**
@@ -619,22 +536,17 @@ public final class Move {
         throw new IllegalArgumentException();
     }
 
-    if (getOriginChessman(move) != IntChessman.NOCHESSMAN) {
-      string += ", (";
-      string += IntColor.toGenericColor(getOriginColor(move));
-      string += "/";
-      string += IntChessman.toGenericChessman(getOriginChessman(move));
-      string += ")";
-    }
+    assert getOriginPiece(move) != IntPiece.NOPIECE;
+    string += ", (";
+    string += IntPiece.toGenericPiece(getOriginPiece(move));
+    string += ")";
 
     string += ", ";
     string += toGenericMove(move).toString();
 
-    if (getTargetChessman(move) != IntChessman.NOCHESSMAN) {
+    if (getTargetPiece(move) != IntPiece.NOPIECE) {
       string += ", (";
-      string += IntColor.toGenericColor(getTargetColor(move));
-      string += "/";
-      string += IntChessman.toGenericChessman(getTargetChessman(move));
+      string += IntPiece.toGenericPiece(getTargetPiece(move));
       string += ")";
     }
 

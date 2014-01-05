@@ -39,8 +39,8 @@ public final class HistoryTable {
 
     int piece = Move.getOriginPiece(move);
     int end = Move.getEnd(move);
-    assert Move.getOriginChessman(move) != IntChessman.NOCHESSMAN;
-    assert Move.getOriginColor(move) != IntColor.NOCOLOR;
+    assert IntPiece.getChessman(Move.getOriginPiece(move)) != IntChessman.NOCHESSMAN;
+    assert IntPiece.getColor(Move.getOriginPiece(move)) != IntColor.NOCOLOR;
     assert (end & 0x88) == 0;
 
     return historyTable[IntPiece.ordinal(piece)][end];
@@ -56,8 +56,8 @@ public final class HistoryTable {
 
     int piece = Move.getOriginPiece(move);
     int end = Move.getEnd(move);
-    assert Move.getOriginChessman(move) != IntChessman.NOCHESSMAN;
-    assert Move.getOriginColor(move) != IntColor.NOCOLOR;
+    assert IntPiece.getChessman(Move.getOriginPiece(move)) != IntChessman.NOCHESSMAN;
+    assert IntPiece.getColor(Move.getOriginPiece(move)) != IntColor.NOCOLOR;
     assert (end & 0x88) == 0;
 
     historyTable[IntPiece.ordinal(piece)][end] += depth;

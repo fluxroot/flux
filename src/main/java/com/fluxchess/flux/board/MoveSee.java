@@ -40,7 +40,6 @@ public final class MoveSee {
   public static int seeMove(int move, int myColor) {
     int start = Move.getStart(move);
     int end = Move.getEnd(move);
-    int target = Move.getTargetChessman(move);
     int type = Move.getType(move);
 
     // Get the enemy color
@@ -59,15 +58,16 @@ public final class MoveSee {
     if (type == Move.PAWNPROMOTION) {
       attackerValue = Evaluation.getValueFromChessman(Move.getPromotion(move));
     } else {
-      attackerValue = Evaluation.getValueFromChessman(Move.getOriginChessman(move));
+      attackerValue = Evaluation.getValueFromChessman(IntPiece.getChessman(Move.getOriginPiece(move)));
     }
 
     // We have no target for now
     int value = 0;
 
     // Get the target value
-    if (target != IntChessman.NOCHESSMAN) {
-      value = Evaluation.getValueFromChessman(target);
+    int target = Move.getTargetPiece(move);
+    if (target != IntPiece.NOPIECE) {
+      value = Evaluation.getValueFromPiece(target);
     }
     if (type == Move.PAWNPROMOTION) {
       value += Evaluation.getValueFromChessman(Move.getPromotion(move)) - Evaluation.VALUE_PAWN;

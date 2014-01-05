@@ -20,6 +20,7 @@ package com.fluxchess.flux.board;
 
 import com.fluxchess.flux.evaluation.Evaluation;
 import com.fluxchess.jcpi.models.IntChessman;
+import com.fluxchess.jcpi.models.IntPiece;
 
 public final class MoveRater {
 
@@ -35,7 +36,7 @@ public final class MoveRater {
 
       if (move == transpositionMove) {
         moveList.value[i] = Integer.MAX_VALUE;
-      } else if (Move.getTargetChessman(move) != IntChessman.NOCHESSMAN) {
+      } else if (Move.getTargetPiece(move) != IntPiece.NOPIECE) {
         moveList.value[i] = getMVVLVARating(move);
       } else if (move == primaryKillerMove) {
         moveList.value[i] = 0;
@@ -66,7 +67,7 @@ public final class MoveRater {
    */
   public void rateFromSEE(MoveList moveList) {
     for (int i = moveList.head; i < moveList.tail; i++) {
-      moveList.value[i] = MoveSee.seeMove(moveList.move[i], Move.getOriginColor(moveList.move[i]));
+      moveList.value[i] = MoveSee.seeMove(moveList.move[i], IntPiece.getColor(Move.getOriginPiece(moveList.move[i])));
     }
   }
 
@@ -101,12 +102,12 @@ public final class MoveRater {
   private int getMVVLVARating(int move) {
     int value = 0;
 
-    int chessman = Move.getOriginChessman(move);
-    int target = Move.getTargetChessman(move);
+    int chessman = IntPiece.getChessman(Move.getOriginPiece(move));
 
     value += Evaluation.VALUE_KING / Evaluation.getValueFromChessman(chessman);
-    if (target != IntChessman.NOCHESSMAN) {
-      value += 10 * Evaluation.getValueFromChessman(target);
+    int target = Move.getTargetPiece(move);
+    if (target != IntPiece.NOPIECE) {
+      value += 10 * Evaluation.getValueFromPiece(target);
     }
 
     assert value >= (Evaluation.VALUE_KING / Evaluation.VALUE_KING) && value <= (Evaluation.VALUE_KING / Evaluation.VALUE_PAWN) + 10 * Evaluation.VALUE_QUEEN;
@@ -123,12 +124,12 @@ public final class MoveRater {
   private int getMVPDRating(int move) {
     int value = 0;
 
-    int chessman = Move.getOriginChessman(move);
-    int target = Move.getTargetChessman(move);
+    int chessman = IntPiece.getChessman(Move.getOriginPiece(move));
+    int target = Move.getTargetPiece(move);
 
-    if (target != IntChessman.NOCHESSMAN) {
-      value += Evaluation.VALUE_KING * (Evaluation.getValueFromChessman(target) - Evaluation.getValueFromChessman(chessman));
-      value += Evaluation.getValueFromChessman(target);
+    if (target != IntPiece.NOPIECE) {
+      value += Evaluation.VALUE_KING * (Evaluation.getValueFromPiece(target) - Evaluation.getValueFromChessman(chessman));
+      value += Evaluation.getValueFromPiece(target);
     } else {
       value -= Evaluation.getValueFromChessman(chessman);
     }

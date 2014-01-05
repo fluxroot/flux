@@ -48,7 +48,7 @@ public class SearchTest {
     queue.add(new EngineNewGameCommand());
     queue.add(new EngineAnalyzeCommand(new GenericBoard("5n2/B3K3/2p2Np1/4k3/7P/3bN1P1/2Prn1P1/1q6 w - -"), new ArrayList<GenericMove>()));
     EngineStartCalculatingCommand startCommand = new EngineStartCalculatingCommand();
-    startCommand.setDepth(2);
+    startCommand.setDepth(3);
     queue.add(startCommand);
 
     new Flux(new IProtocolHandler() {

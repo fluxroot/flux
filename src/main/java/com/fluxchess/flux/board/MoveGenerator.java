@@ -206,7 +206,7 @@ public final class MoveGenerator {
             if (!isLegal(move)) {
               continue;
             }
-            assert Move.getTargetChessman(move) != IntChessman.NOCHESSMAN;
+            assert Move.getTargetPiece(move) != IntPiece.NOPIECE;
             if (!isGoodCapture(move)) {
               tempMoveList.move[tempMoveList.tail++] = move;
               continue;
@@ -248,7 +248,7 @@ public final class MoveGenerator {
             if (!isLegal(move)) {
               continue;
             }
-            assert Move.getTargetChessman(move) != IntChessman.NOCHESSMAN : IntChessman.toGenericChessman(Move.getTargetChessman(move)).toString();
+            assert Move.getTargetPiece(move) != IntPiece.NOPIECE : IntPiece.toGenericPiece(Move.getTargetPiece(move)).toString();
             if (!isGoodCapture(move)) {
               continue;
             }
@@ -257,7 +257,7 @@ public final class MoveGenerator {
             if (!isLegal(move)) {
               continue;
             }
-            if (MoveSee.seeMove(move, Move.getOriginColor(move)) < 0) {
+            if (MoveSee.seeMove(move, IntPiece.getColor(Move.getOriginPiece(move))) < 0) {
               continue;
             }
             assert board.isCheckingMove(move) : board.getBoard().toString() + ", " + Move.toGenericMove(move).toString();
@@ -348,11 +348,11 @@ public final class MoveGenerator {
     int piece = board.board[chessmanPosition];
 
     // Check chessman
-    if (piece == IntPiece.NOPIECE || Move.getOriginChessman(move) != IntPiece.getChessman(piece)) {
+    if (piece == IntPiece.NOPIECE || IntPiece.getChessman(Move.getOriginPiece(move)) != IntPiece.getChessman(piece)) {
       return false;
     }
 
-    int color = Move.getOriginColor(move);
+    int color = IntPiece.getColor(Move.getOriginPiece(move));
 
     // Check color
     if (color != IntPiece.getColor(piece)) {
@@ -368,7 +368,7 @@ public final class MoveGenerator {
       return false;
     }
 
-    assert Move.getTargetChessman(move) == IntChessman.NOCHESSMAN;
+    assert Move.getTargetPiece(move) == IntPiece.NOPIECE;
 
     int type = Move.getType(move);
 
@@ -458,7 +458,7 @@ public final class MoveGenerator {
     }
 
     int chessman = IntPiece.getChessman(piece);
-    assert chessman == Move.getOriginChessman(move);
+    assert chessman == IntPiece.getChessman(Move.getOriginPiece(move));
 
     // Check pawn move
     if (chessman == IntChessman.PAWN) {
@@ -494,10 +494,10 @@ public final class MoveGenerator {
       return !isCheck;
     }
 
-    int chessmanColor = Move.getOriginColor(move);
+    int chessmanColor = IntPiece.getColor(Move.getOriginPiece(move));
 
     // Special test for king
-    if (Move.getOriginChessman(move) == IntChessman.KING) {
+    if (IntPiece.getChessman(Move.getOriginPiece(move)) == IntChessman.KING) {
       return !board.isAttacked(Move.getEnd(move), IntColor.opposite(chessmanColor));
     }
 
@@ -518,17 +518,17 @@ public final class MoveGenerator {
       return Move.getPromotion(move) == IntChessman.QUEEN;
     }
 
-    int chessman = Move.getOriginChessman(move);
-    int target = Move.getTargetChessman(move);
+    int chessman = IntPiece.getChessman(Move.getOriginPiece(move));
+    int target = Move.getTargetPiece(move);
 
     assert chessman != IntChessman.NOCHESSMAN;
-    assert target != IntChessman.NOCHESSMAN;
+    assert target != IntPiece.NOPIECE;
 
-    if (Evaluation.getValueFromChessman(chessman) <= Evaluation.getValueFromChessman(target)) {
+    if (Evaluation.getValueFromChessman(chessman) <= Evaluation.getValueFromPiece(target)) {
       return true;
     }
 
-    return MoveSee.seeMove(move, Move.getOriginColor(move)) >= 0;
+    return MoveSee.seeMove(move, IntPiece.getColor(Move.getOriginPiece(move))) >= 0;
   }
 
   private void generateNonCaptures() {

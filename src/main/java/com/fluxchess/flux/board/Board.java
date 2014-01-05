@@ -581,7 +581,7 @@ public final class Board {
   public boolean isCheckingMove(int move) {
     assert move != Move.NOMOVE;
 
-    int chessmanColor = Move.getOriginColor(move);
+    int chessmanColor = IntPiece.getColor(Move.getOriginPiece(move));
     int endPosition = Move.getEnd(move);
     int enemyKingColor = IntColor.opposite(chessmanColor);
     int enemyKingPosition = ChessmanList.next(kingList[enemyKingColor].list);
@@ -589,7 +589,7 @@ public final class Board {
     switch (Move.getType(move)) {
       case Move.NORMAL:
       case Move.PAWNDOUBLE:
-        int chessman = Move.getOriginChessman(move);
+        int chessman = IntPiece.getChessman(Move.getOriginPiece(move));
 
         // Direct attacks
         if (canAttack(chessman, chessmanColor, endPosition, enemyKingPosition)) {
@@ -1158,7 +1158,7 @@ public final class Board {
     int target = IntPiece.NOPIECE;
     if (board[endPosition] != IntPiece.NOPIECE) {
       target = remove(endPosition, true);
-      assert Move.getTargetChessman(move) != IntChessman.NOCHESSMAN : Move.toString(move);
+      assert Move.getTargetPiece(move) != IntPiece.NOPIECE : Move.toString(move);
       captureHistory[captureHistorySize++] = target;
       captureSquare = endPosition;
 
@@ -1258,8 +1258,7 @@ public final class Board {
     move(endPosition, startPosition, false);
 
     // Restore the captured chessman
-    int target = Move.getTargetChessman(move);
-    if (target != IntChessman.NOCHESSMAN) {
+    if (Move.getTargetPiece(move) != IntPiece.NOPIECE) {
       put(captureHistory[--captureHistorySize], endPosition, false);
     }
 
@@ -1273,8 +1272,8 @@ public final class Board {
     int pawn = remove(startPosition, true);
     assert IntPiece.getChessman(pawn) == IntChessman.PAWN;
     int pawnColor = IntPiece.getColor(pawn);
-    assert IntPiece.getChessman(pawn) == Move.getOriginChessman(move);
-    assert pawnColor == Move.getOriginColor(move);
+    assert IntPiece.getChessman(pawn) == IntPiece.getChessman(Move.getOriginPiece(move));
+    assert pawnColor == IntPiece.getColor(Move.getOriginPiece(move));
 
     // Save the captured chessman
     int endPosition = Move.getEnd(move);
@@ -1285,7 +1284,7 @@ public final class Board {
       int newCastling = castling;
 
       target = remove(endPosition, true);
-      assert Move.getTargetChessman(move) != IntChessman.NOCHESSMAN;
+      assert Move.getTargetPiece(move) != IntPiece.NOPIECE;
       captureHistory[captureHistorySize++] = target;
       captureSquare = endPosition;
 
@@ -1346,8 +1345,7 @@ public final class Board {
     remove(endPosition, false);
 
     // Restore the captured chessman
-    int target = Move.getTargetChessman(move);
-    if (target != IntChessman.NOCHESSMAN) {
+    if (Move.getTargetPiece(move) != IntPiece.NOPIECE) {
       put(captureHistory[--captureHistorySize], endPosition, false);
 
       // Restore the castling rights
@@ -1355,8 +1353,8 @@ public final class Board {
     }
 
     // Put the pawn at the start position
-    int pawnChessman = Move.getOriginChessman(move);
-    int pawnColor = Move.getOriginColor(move);
+    int pawnChessman = IntPiece.getChessman(Move.getOriginPiece(move));
+    int pawnColor = IntPiece.getColor(Move.getOriginPiece(move));
     int pawnPiece = IntPiece.valueOf(pawnChessman, pawnColor);
     put(pawnPiece, Move.getStart(move), false);
   }
@@ -1529,7 +1527,7 @@ public final class Board {
 
     // Remove the captured pawn
     int target = remove(targetPosition, true);
-    assert Move.getTargetChessman(move) != IntChessman.NOCHESSMAN;
+    assert Move.getTargetPiece(move) != IntPiece.NOPIECE;
     assert IntPiece.getChessman(target) == IntChessman.PAWN;
     assert IntPiece.getColor(target) == IntColor.opposite(pawnColor);
     captureHistory[captureHistorySize++] = target;
