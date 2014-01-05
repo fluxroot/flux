@@ -240,7 +240,7 @@ public class MoveGeneratorTest {
   }
 
   private static boolean isGoodCapture(int move) {
-    if (Move.getType(move) == Move.PAWNPROMOTION) {
+    if (Move.getType(move) == Move.Type.PAWNPROMOTION) {
       return Move.getPromotion(move) == IntChessman.QUEEN;
     }
 

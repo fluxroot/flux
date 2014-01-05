@@ -587,8 +587,8 @@ public final class Board {
     int enemyKingPosition = ChessmanList.next(kingList[enemyKingColor].list);
 
     switch (Move.getType(move)) {
-      case Move.NORMAL:
-      case Move.PAWNDOUBLE:
+      case Move.Type.NORMAL:
+      case Move.Type.PAWNDOUBLE:
         int chessman = IntPiece.getChessman(Move.getOriginPiece(move));
 
         // Direct attacks
@@ -606,14 +606,14 @@ public final class Board {
         }
         // Indirect attacks
         break;
-      case Move.PAWNPROMOTION:
-      case Move.ENPASSANT:
+      case Move.Type.PAWNPROMOTION:
+      case Move.Type.ENPASSANT:
         // We do a slow test for complex moves
         makeMove(move);
         boolean isCheck = isAttacked(enemyKingPosition, chessmanColor);
         undoMove(move);
         return isCheck;
-      case Move.CASTLING:
+      case Move.Type.CASTLING:
         int rookEnd = Position.NOPOSITION;
 
         if (endPosition == Position.g1) {
@@ -633,7 +633,7 @@ public final class Board {
         }
 
         return canAttack(IntChessman.ROOK, chessmanColor, rookEnd, enemyKingPosition);
-      case Move.NULL:
+      case Move.Type.NULL:
         assert false;
         break;
       default:
@@ -1053,27 +1053,27 @@ public final class Board {
     int type = Move.getType(move);
 
     switch (type) {
-      case Move.NORMAL:
+      case Move.Type.NORMAL:
         repetitionTable.put(zobristCode);
         makeMoveNormal(move);
         break;
-      case Move.PAWNDOUBLE:
+      case Move.Type.PAWNDOUBLE:
         repetitionTable.put(zobristCode);
         makeMovePawnDouble(move);
         break;
-      case Move.PAWNPROMOTION:
+      case Move.Type.PAWNPROMOTION:
         repetitionTable.put(zobristCode);
         makeMovePawnPromotion(move);
         break;
-      case Move.ENPASSANT:
+      case Move.Type.ENPASSANT:
         repetitionTable.put(zobristCode);
         makeMoveEnPassant(move);
         break;
-      case Move.CASTLING:
+      case Move.Type.CASTLING:
         repetitionTable.put(zobristCode);
         makeMoveCastling(move);
         break;
-      case Move.NULL:
+      case Move.Type.NULL:
         makeMoveNull();
         break;
       default:
@@ -1121,27 +1121,27 @@ public final class Board {
     captureSquare = currentStackEntry.captureSquareHistory;
 
     switch (type) {
-      case Move.NORMAL:
+      case Move.Type.NORMAL:
         undoMoveNormal(move);
         repetitionTable.remove(zobristCode);
         break;
-      case Move.PAWNDOUBLE:
+      case Move.Type.PAWNDOUBLE:
         undoMovePawnDouble(move);
         repetitionTable.remove(zobristCode);
         break;
-      case Move.PAWNPROMOTION:
+      case Move.Type.PAWNPROMOTION:
         undoMovePawnPromotion(move);
         repetitionTable.remove(zobristCode);
         break;
-      case Move.ENPASSANT:
+      case Move.Type.ENPASSANT:
         undoMoveEnPassant(move);
         repetitionTable.remove(zobristCode);
         break;
-      case Move.CASTLING:
+      case Move.Type.CASTLING:
         undoMoveCastling(move);
         repetitionTable.remove(zobristCode);
         break;
-      case Move.NULL:
+      case Move.Type.NULL:
         break;
       default:
         throw new IllegalArgumentException();

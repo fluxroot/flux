@@ -223,7 +223,7 @@ public final class PawnPasserEvaluation {
           assert ((pawnPosition + sign * 16) & 0x88) == 0;
           if (board.board[pawnPosition + sign * 16] == IntPiece.NOPIECE) {
             // TODO: Do we have to consider promotion moves?
-            int move = Move.createMove(Move.NORMAL, pawnPosition, pawnPosition + sign * 16, pawn, IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
+            int move = Move.createMove(Move.Type.NORMAL, pawnPosition, pawnPosition + sign * 16, pawn, IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
             if (MoveSee.seeMove(move, myColor) >= 0) {
               endgameMax += EVAL_PAWN_PASSER_FREE;
             }

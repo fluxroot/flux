@@ -1071,7 +1071,7 @@ public final class Search implements Runnable {
       //## BEGIN Minor Promotion Pruning
       if (Configuration.useMinorPromotionPruning
         && !analyzeMode
-        && Move.getType(move) == Move.PAWNPROMOTION
+        && Move.getType(move) == Move.Type.PAWNPROMOTION
         && Move.getPromotion(move) != IntChessman.QUEEN) {
         assert Move.getPromotion(move) == IntChessman.ROOK || Move.getPromotion(move) == IntChessman.BISHOP || Move.getPromotion(move) == IntChessman.KNIGHT;
         continue;
@@ -1091,7 +1091,7 @@ public final class Search implements Runnable {
           && (Configuration.useCheckExtension || !board.isCheckingMove(move))
           && !isDangerousMove(move)) {
           assert !board.isCheckingMove(move);
-          assert Move.getType(move) != Move.PAWNPROMOTION : board.getBoard() + ", " + Move.toString(move);
+          assert Move.getType(move) != Move.Type.PAWNPROMOTION : board.getBoard() + ", " + Move.toString(move);
 
           if (evalValue == INFINITY) {
             // Store evaluation
@@ -1126,7 +1126,7 @@ public final class Search implements Runnable {
           && (Configuration.useCheckExtension || !board.isCheckingMove(move))
           && !isDangerousMove(move)) {
           assert !board.isCheckingMove(move);
-          assert Move.getType(move) != Move.PAWNPROMOTION : board.getBoard() + ", " + Move.toString(move);
+          assert Move.getType(move) != Move.Type.PAWNPROMOTION : board.getBoard() + ", " + Move.toString(move);
 
           if (evalValue == INFINITY) {
             // Store evaluation
@@ -1164,7 +1164,7 @@ public final class Search implements Runnable {
           && Move.getTargetPiece(move) == IntPiece.NOPIECE
           && !isDangerousMove(move)) {
           assert !board.isCheckingMove(move);
-          assert Move.getType(move) != Move.PAWNPROMOTION : board.getBoard() + ", " + Move.toString(move);
+          assert Move.getType(move) != Move.Type.PAWNPROMOTION : board.getBoard() + ", " + Move.toString(move);
 
           newDepth--;
           reduced = true;
@@ -1377,7 +1377,7 @@ public final class Search implements Runnable {
           && !board.isCheckingMove(move)
           && !isDangerousMove(move)) {
           assert Move.getTargetPiece(move) != IntPiece.NOPIECE;
-          assert Move.getType(move) != Move.PAWNPROMOTION : board.getBoard() + ", " + Move.toString(move);
+          assert Move.getType(move) != Move.Type.PAWNPROMOTION : board.getBoard() + ", " + Move.toString(move);
 
           int value = evalValue + FUTILITY_QUIESCENTMARGIN;
 
@@ -1541,11 +1541,11 @@ public final class Search implements Runnable {
     }
 
     int type = Move.getType(move);
-    if (type == Move.PAWNPROMOTION || type == Move.NULL) {
+    if (type == Move.Type.PAWNPROMOTION || type == Move.Type.NULL) {
       return;
     }
 
-    assert type != Move.ENPASSANT;
+    assert type != Move.Type.ENPASSANT;
 
     killerTable.add(move, height);
     historyTable.add(move, depth);

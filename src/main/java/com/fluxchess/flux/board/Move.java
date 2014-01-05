@@ -33,27 +33,33 @@ import com.fluxchess.jcpi.models.*;
  */
 public final class Move {
 
+  public static final class Type {
+    public static final int MASK = 0x7;
+
+    public static final int NORMAL = 0;
+    public static final int PAWNDOUBLE = 1;
+    public static final int PAWNPROMOTION = 2;
+    public static final int ENPASSANT = 3;
+    public static final int CASTLING = 4;
+    public static final int NULL = 5;
+    public static final int NOTYPE = 6;
+
+    public static final int[] values = {
+      NORMAL,
+      PAWNDOUBLE,
+      PAWNPROMOTION,
+      ENPASSANT,
+      CASTLING,
+      NULL
+    };
+
+    private Type() {
+    }
+  }
+
   public static final int NOMOVE = -8;
 
   public static final int NULLMOVE;
-
-  public static final int NORMAL = 0;
-  public static final int PAWNDOUBLE = 1;
-  public static final int PAWNPROMOTION = 2;
-  public static final int ENPASSANT = 3;
-  public static final int CASTLING = 4;
-  public static final int NULL = 5;
-
-  public static final int[] values = {
-    NORMAL,
-    PAWNDOUBLE,
-    PAWNPROMOTION,
-    ENPASSANT,
-    CASTLING,
-    NULL
-  };
-
-  public static final int MASK = 0x7;
 
   public static final int INTMOVE_MASK = 0xFFFFFFF;
   public static final int INTMOVE_SIZE = 28;
@@ -64,7 +70,7 @@ public final class Move {
 
   // Bit operation values
   private static final int MOVE_SHIFT = 0;
-  private static final int MOVE_MASK = MASK << MOVE_SHIFT;
+  private static final int MOVE_MASK = Type.MASK << MOVE_SHIFT;
   private static final int START_SHIFT = 3;
   private static final int START_MASK = Position.MASK << START_SHIFT;
   private static final int END_SHIFT = 10;
@@ -77,7 +83,7 @@ public final class Move {
   private static final int PROMOTION_MASK = IntChessman.MASK << PROMOTION_SHIFT;
 
   static {
-    NULLMOVE = Move.createMove(Move.NULL, Position.NOPOSITION, Position.NOPOSITION, IntPiece.NOPIECE, IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
+    NULLMOVE = Move.createMove(Move.Type.NULL, Position.NOPOSITION, Position.NOPOSITION, IntPiece.NOPIECE, IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
   }
 
   private Move() {
@@ -96,13 +102,13 @@ public final class Move {
    */
   public static int createMove(int type, int start, int end, int piece, int target, int promotion) {
     assert type != NOMOVE;
-    assert (type == NULL && start == Position.NOPOSITION) || (start & 0x88) == 0;
-    assert (type == NULL && end == Position.NOPOSITION) || (end & 0x88) == 0;
+    assert (type == Type.NULL && start == Position.NOPOSITION) || (start & 0x88) == 0;
+    assert (type == Type.NULL && end == Position.NOPOSITION) || (end & 0x88) == 0;
 
     int move = 0;
 
     // Check for special case Move.NULL
-    if (type == NULL) {
+    if (type == Type.NULL) {
       start = INTERNAL_NOPOSITION;
       end = INTERNAL_NOPOSITION;
     }
@@ -147,12 +153,12 @@ public final class Move {
     move |= promotion << PROMOTION_SHIFT;
 
     // Encode move
-    assert (type == NORMAL)
-      || (type == PAWNDOUBLE)
-      || (type == PAWNPROMOTION)
-      || (type == ENPASSANT)
-      || (type == CASTLING)
-      || (type == NULL);
+    assert (type == Type.NORMAL)
+      || (type == Type.PAWNDOUBLE)
+      || (type == Type.PAWNPROMOTION)
+      || (type == Type.ENPASSANT)
+      || (type == Type.CASTLING)
+      || (type == Type.NULL);
     move |= type << MOVE_SHIFT;
 
     return move;
@@ -242,7 +248,7 @@ public final class Move {
 
     int position = (move & START_MASK) >>> START_SHIFT;
 
-    assert getType(move) != Move.NULL;
+    assert getType(move) != Move.Type.NULL;
     assert position != INTERNAL_NOPOSITION;
     assert (position & 0x88) == 0;
 
@@ -260,7 +266,7 @@ public final class Move {
 
     int position = (move & END_MASK) >>> END_SHIFT;
 
-    assert getType(move) != Move.NULL;
+    assert getType(move) != Move.Type.NULL;
     assert position != INTERNAL_NOPOSITION;
     assert (position & 0x88) == 0;
 
@@ -343,15 +349,15 @@ public final class Move {
       } else {
         promotion = IntChessman.valueOf(move.promotion);
       }
-      return createMove(PAWNPROMOTION, Position.valueOfPosition(move.from), Position.valueOfPosition(move.to), board.board[Position.valueOfPosition(move.from)], board.board[Position.valueOfPosition(move.to)], promotion);
+      return createMove(Type.PAWNPROMOTION, Position.valueOfPosition(move.from), Position.valueOfPosition(move.to), board.board[Position.valueOfPosition(move.from)], board.board[Position.valueOfPosition(move.to)], promotion);
     } else if (isPawnDouble(move, board)) {
-      return createMove(PAWNDOUBLE, Position.valueOfPosition(move.from), Position.valueOfPosition(move.to), board.board[Position.valueOfPosition(move.from)], IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
+      return createMove(Type.PAWNDOUBLE, Position.valueOfPosition(move.from), Position.valueOfPosition(move.to), board.board[Position.valueOfPosition(move.from)], IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
     } else if (isEnPassant(move, board)) {
-      return createMove(ENPASSANT, Position.valueOfPosition(move.from), Position.valueOfPosition(move.to), board.board[Position.valueOfPosition(move.from)], board.board[Position.valueOfPosition(GenericPosition.valueOf(move.to.file, move.from.rank))], IntChessman.NOCHESSMAN);
+      return createMove(Type.ENPASSANT, Position.valueOfPosition(move.from), Position.valueOfPosition(move.to), board.board[Position.valueOfPosition(move.from)], board.board[Position.valueOfPosition(GenericPosition.valueOf(move.to.file, move.from.rank))], IntChessman.NOCHESSMAN);
     } else if (isCastling(move, board)) {
-      return createMove(CASTLING, Position.valueOfPosition(move.from), Position.valueOfPosition(move.to), board.board[Position.valueOfPosition(move.from)], IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
+      return createMove(Type.CASTLING, Position.valueOfPosition(move.from), Position.valueOfPosition(move.to), board.board[Position.valueOfPosition(move.from)], IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
     } else {
-      return createMove(NORMAL, Position.valueOfPosition(move.from), Position.valueOfPosition(move.to), board.board[Position.valueOfPosition(move.from)], board.board[Position.valueOfPosition(move.to)], IntChessman.NOCHESSMAN);
+      return createMove(Type.NORMAL, Position.valueOfPosition(move.from), Position.valueOfPosition(move.to), board.board[Position.valueOfPosition(move.from)], board.board[Position.valueOfPosition(move.to)], IntChessman.NOCHESSMAN);
     }
   }
 
@@ -494,14 +500,14 @@ public final class Move {
     int end = getEnd(move);
 
     switch (type) {
-      case NORMAL:
-      case PAWNDOUBLE:
-      case ENPASSANT:
-      case CASTLING:
+      case Type.NORMAL:
+      case Type.PAWNDOUBLE:
+      case Type.ENPASSANT:
+      case Type.CASTLING:
         return new GenericMove(Position.valueOfIntPosition(start), Position.valueOfIntPosition(end));
-      case PAWNPROMOTION:
+      case Type.PAWNPROMOTION:
         return new GenericMove(Position.valueOfIntPosition(start), Position.valueOfIntPosition(end), IntChessman.toGenericChessman(getPromotion(move)));
-      case NULL:
+      case Type.NULL:
         // TODO:
         return null;
       default:
@@ -514,22 +520,22 @@ public final class Move {
     String string = "<";
 
     switch (getType(move)) {
-      case NORMAL:
+      case Type.NORMAL:
         string += "NORMAL";
         break;
-      case PAWNDOUBLE:
+      case Type.PAWNDOUBLE:
         string += "PAWNDOUBLE";
         break;
-      case PAWNPROMOTION:
+      case Type.PAWNPROMOTION:
         string += "PAWNPROMOTION";
         break;
-      case ENPASSANT:
+      case Type.ENPASSANT:
         string += "ENPASSANT";
         break;
-      case CASTLING:
+      case Type.CASTLING:
         string += "CASTLING";
         break;
-      case NULL:
+      case Type.NULL:
         string += "NULL";
         break;
       default:
@@ -556,7 +562,7 @@ public final class Move {
   }
 
   public static boolean isValidMove(int move) {
-    for (int moveValue : values) {
+    for (int moveValue : Type.values) {
       if (move == moveValue) {
         return true;
       }
