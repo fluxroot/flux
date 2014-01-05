@@ -19,9 +19,7 @@
 package com.fluxchess.flux.evaluation;
 
 import com.fluxchess.flux.board.*;
-import com.fluxchess.jcpi.models.IntChessman;
-import com.fluxchess.jcpi.models.IntColor;
-import com.fluxchess.jcpi.models.IntPiece;
+import com.fluxchess.jcpi.models.*;
 
 public final class PawnPasserEvaluation {
 
@@ -171,10 +169,10 @@ public final class PawnPasserEvaluation {
               }
 
               // King protected passer
-              else if (Position.getRelativeRank(myKingPosition, myColor) == Position.rank7
+              else if (Position.getRelativeRank(myKingPosition, myColor) == IntRank.R7
                 && ((promotionDistance <= 2 && (myAttackTable[pawnPosition] & AttackTableEvaluation.BIT_KING) != 0)
                 || (promotionDistance <= 3 && (myAttackTable[pawnPosition + 16] & AttackTableEvaluation.BIT_KING) != 0 && board.activeColor == myColor))
-                && (myKingFile != pawnFile || (pawnFile != Position.fileA && pawnFile != Position.fileH))) {
+                && (myKingFile != pawnFile || (pawnFile != IntFile.Fa && pawnFile != IntFile.Fh))) {
                 endgameMax += EVAL_PAWN_PASSER_UNSTOPPABLE;
               }
             }
@@ -210,10 +208,10 @@ public final class PawnPasserEvaluation {
               }
 
               // King protected passer
-              else if (Position.getRelativeRank(myKingPosition, myColor) == Position.rank7
+              else if (Position.getRelativeRank(myKingPosition, myColor) == IntRank.R7
                 && ((promotionDistance <= 2 && (myAttackTable[pawnPosition] & AttackTableEvaluation.BIT_KING) != 0)
                 || (promotionDistance <= 3 && (myAttackTable[pawnPosition - 16] & AttackTableEvaluation.BIT_KING) != 0 && board.activeColor == myColor))
-                && (myKingFile != pawnFile || (pawnFile != Position.fileA && pawnFile != Position.fileH))) {
+                && (myKingFile != pawnFile || (pawnFile != IntFile.Fa && pawnFile != IntFile.Fh))) {
                 endgameMax += EVAL_PAWN_PASSER_UNSTOPPABLE;
               }
             }
@@ -223,7 +221,7 @@ public final class PawnPasserEvaluation {
           assert ((pawnPosition + sign * 16) & 0x88) == 0;
           if (board.board[pawnPosition + sign * 16] == IntPiece.NOPIECE) {
             // TODO: Do we have to consider promotion moves?
-            int move = Move.createMove(Move.Type.NORMAL, pawnPosition, pawnPosition + sign * 16, pawn, IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
+            int move = Move.valueOf(Move.Type.NORMAL, pawnPosition, pawnPosition + sign * 16, pawn, IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
             if (MoveSee.seeMove(move, myColor) >= 0) {
               endgameMax += EVAL_PAWN_PASSER_FREE;
             }

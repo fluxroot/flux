@@ -18,16 +18,14 @@
  */
 package com.fluxchess.flux.board;
 
-import com.fluxchess.jcpi.models.GenericFile;
 import com.fluxchess.jcpi.models.GenericPosition;
-import com.fluxchess.jcpi.models.GenericRank;
 import com.fluxchess.jcpi.models.IntColor;
-
-import java.util.Arrays;
+import com.fluxchess.jcpi.models.IntFile;
+import com.fluxchess.jcpi.models.IntRank;
 
 public final class Position {
 
-  public static final int NOPOSITION = -6;
+  public static final int MASK = 0x7F;
 
   public static final int a1 = 0;   public static final int a2 = 16;
   public static final int b1 = 1;   public static final int b2 = 17;
@@ -65,6 +63,8 @@ public final class Position {
   public static final int g7 = 102; public static final int g8 = 118;
   public static final int h7 = 103; public static final int h8 = 119;
 
+  public static final int NOPOSITION = 127;
+
   public static final int[] values = {
     a1, b1, c1, d1, e1, f1, g1, h1,
     a2, b2, c2, d2, e2, f2, g2, h2,
@@ -76,50 +76,19 @@ public final class Position {
     a8, b8, c8, d8, e8, f8, g8, h8
   };
 
-  public static final int fileA = 0;
-  public static final int fileB = 1;
-  public static final int fileC = 2;
-  public static final int fileD = 3;
-  public static final int fileE = 4;
-  public static final int fileF = 5;
-  public static final int fileG = 6;
-  public static final int fileH = 7;
-
-  public static final int rank1 = 0;
-  public static final int rank2 = 1;
-  public static final int rank3 = 2;
-  public static final int rank4 = 3;
-  public static final int rank5 = 4;
-  public static final int rank6 = 5;
-  public static final int rank7 = 6;
-  public static final int rank8 = 7;
-
-  public static final int WHITE_CASTLING_KINGSIDE = g1;
-  public static final int WHITE_CASTLING_QUEENSIDE = c1;
-  public static final int BLACK_CASTLING_KINGSIDE = g8;
-  public static final int BLACK_CASTLING_QUEENSIDE = c8;
-
-  public static final int MASK = 0x7F;
-
   private Position() {
   }
 
-  public static int valueOfPosition(GenericPosition position) {
-    assert position != null;
+  public static int valueOf(GenericPosition genericPosition) {
+    assert genericPosition != null;
 
-    int file = Arrays.asList(GenericFile.values()).indexOf(position.file);
-    int rank = Arrays.asList(GenericRank.values()).indexOf(position.rank);
-
-    return rank * 16 + file;
+    return IntRank.valueOf(genericPosition.rank) * 16 + IntFile.valueOf(genericPosition.file);
   }
 
-  public static GenericPosition valueOfIntPosition(int position) {
+  public static GenericPosition toGenericPosition(int position) {
     assert (position & 0x88) == 0;
 
-    GenericFile file = GenericFile.values()[position % 16];
-    GenericRank rank = GenericRank.values()[position >>> 4];
-
-    return GenericPosition.valueOf(file, rank);
+    return GenericPosition.valueOf(IntFile.toGenericFile(getFile(position)), IntRank.toGenericRank(getRank(position)));
   }
 
   /**

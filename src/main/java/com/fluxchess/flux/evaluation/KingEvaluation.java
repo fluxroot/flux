@@ -182,11 +182,11 @@ public final class KingEvaluation {
 
     opening -= kingSafety;
 
-    int castlingPositionKingside = Position.WHITE_CASTLING_KINGSIDE;
-    int castlingPositionQueenside = Position.WHITE_CASTLING_QUEENSIDE;
+    int castlingPositionKingside = Position.g1;
+    int castlingPositionQueenside = Position.c1;
     if (myColor == IntColor.BLACK) {
-      castlingPositionKingside = Position.BLACK_CASTLING_KINGSIDE;
-      castlingPositionQueenside = Position.BLACK_CASTLING_QUEENSIDE;
+      castlingPositionKingside = Position.g8;
+      castlingPositionQueenside = Position.c8;
     } else {
       assert myColor == IntColor.WHITE;
     }

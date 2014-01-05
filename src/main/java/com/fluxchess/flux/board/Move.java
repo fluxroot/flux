@@ -25,9 +25,9 @@ import com.fluxchess.jcpi.models.*;
  * the following bits.
  * <p/>
  *  0 -  2: the type (required)
- *  3 -  9: the start position (required except Move.NULL)
- * 10 - 16: the end position (required except Move.NULL)
- * 17 - 21: the chessman piece (required)
+ *  3 -  9: the origin position (required except Move.NULL)
+ * 10 - 16: the target position (required except Move.NULL)
+ * 17 - 21: the origin piece (required)
  * 22 - 26: the target piece (optional)
  * 27 - 29: the promotion chessman (optional)
  */
@@ -57,327 +57,234 @@ public final class Move {
     }
   }
 
-  public static final int NOMOVE = -8;
-
   public static final int NULLMOVE;
 
-  public static final int INTMOVE_MASK = 0xFFFFFFF;
-  public static final int INTMOVE_SIZE = 28;
-
-  // Position value
-  // We do not use 127 because there all bits are set
-  private static final int INTERNAL_NOPOSITION = 126;
-
   // Bit operation values
-  private static final int MOVE_SHIFT = 0;
-  private static final int MOVE_MASK = Type.MASK << MOVE_SHIFT;
-  private static final int START_SHIFT = 3;
-  private static final int START_MASK = Position.MASK << START_SHIFT;
-  private static final int END_SHIFT = 10;
-  private static final int END_MASK = Position.MASK << END_SHIFT;
-  private static final int CHESSMAN_PIECE_SHIFT = 17;
-  private static final int CHESSMAN_PIECE_MASK = IntPiece.MASK << CHESSMAN_PIECE_SHIFT;
-  private static final int TARGET_PIECE_SHIFT = 22;
-  private static final int TARGET_PIECE_MASK = IntPiece.MASK << TARGET_PIECE_SHIFT;
+  private static final int TYPE_SHIFT = 0;
+  private static final int TYPE_MASK = Type.MASK << TYPE_SHIFT;
+  private static final int ORIGINPOSITION_SHIFT = 3;
+  private static final int ORIGINPOSITION_MASK = Position.MASK << ORIGINPOSITION_SHIFT;
+  private static final int TARGETPOSITION_SHIFT = 10;
+  private static final int TARGETPOSITION_MASK = Position.MASK << TARGETPOSITION_SHIFT;
+  private static final int ORIGINPIECE_SHIFT = 17;
+  private static final int ORIGINPIECE_MASK = IntPiece.MASK << ORIGINPIECE_SHIFT;
+  private static final int TARGETPIECE_SHIFT = 22;
+  private static final int TARGETPIECE_MASK = IntPiece.MASK << TARGETPIECE_SHIFT;
   private static final int PROMOTION_SHIFT = 27;
   private static final int PROMOTION_MASK = IntChessman.MASK << PROMOTION_SHIFT;
 
+  public static final int NOMOVE = (Type.NOTYPE << TYPE_SHIFT)
+    | (Position.NOPOSITION << ORIGINPOSITION_SHIFT)
+    | (Position.NOPOSITION << TARGETPOSITION_SHIFT)
+    | (IntPiece.NOPIECE << ORIGINPIECE_SHIFT)
+    | (IntPiece.NOPIECE << TARGETPIECE_SHIFT)
+    | (IntChessman.NOCHESSMAN << PROMOTION_SHIFT);
+
   static {
-    NULLMOVE = Move.createMove(Move.Type.NULL, Position.NOPOSITION, Position.NOPOSITION, IntPiece.NOPIECE, IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
+    NULLMOVE = Move.valueOf(Move.Type.NULL, Position.NOPOSITION, Position.NOPOSITION, IntPiece.NOPIECE, IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
   }
 
   private Move() {
   }
 
-  /**
-   * Get the Move.
-   *
-   * @param type      the type.
-   * @param start     the start position.
-   * @param end       the end position.
-   * @param piece     the piece.
-   * @param target    the target piece.
-   * @param promotion the promotion.
-   * @return the Move.
-   */
-  public static int createMove(int type, int start, int end, int piece, int target, int promotion) {
-    assert type != NOMOVE;
-    assert (type == Type.NULL && start == Position.NOPOSITION) || (start & 0x88) == 0;
-    assert (type == Type.NULL && end == Position.NOPOSITION) || (end & 0x88) == 0;
+  public static int valueOf(GenericMove genericMove, Board board) {
+    assert genericMove != null;
+    assert board != null;
 
+    if (isPawnPromotion(genericMove, board)) {
+      int promotion;
+      if (genericMove.promotion == null) {
+        // TODO: maybe better throw IllegalArgumentException()
+        promotion = IntChessman.QUEEN;
+      } else {
+        promotion = IntChessman.valueOf(genericMove.promotion);
+      }
+      return valueOf(Type.PAWNPROMOTION, Position.valueOf(genericMove.from), Position.valueOf(genericMove.to), board.board[Position.valueOf(genericMove.from)], board.board[Position.valueOf(genericMove.to)], promotion);
+    } else if (isPawnDouble(genericMove, board)) {
+      return valueOf(Type.PAWNDOUBLE, Position.valueOf(genericMove.from), Position.valueOf(genericMove.to), board.board[Position.valueOf(genericMove.from)], IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
+    } else if (isEnPassant(genericMove, board)) {
+      return valueOf(Type.ENPASSANT, Position.valueOf(genericMove.from), Position.valueOf(genericMove.to), board.board[Position.valueOf(genericMove.from)], board.board[Position.valueOf(GenericPosition.valueOf(genericMove.to.file, genericMove.from.rank))], IntChessman.NOCHESSMAN);
+    } else if (isCastling(genericMove, board)) {
+      return valueOf(Type.CASTLING, Position.valueOf(genericMove.from), Position.valueOf(genericMove.to), board.board[Position.valueOf(genericMove.from)], IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
+    } else {
+      return valueOf(Type.NORMAL, Position.valueOf(genericMove.from), Position.valueOf(genericMove.to), board.board[Position.valueOf(genericMove.from)], board.board[Position.valueOf(genericMove.to)], IntChessman.NOCHESSMAN);
+    }
+  }
+
+  public static int valueOf(int type, int originPosition, int targetPosition, int originPiece, int targetPiece, int promotion) {
     int move = 0;
 
-    // Check for special case Move.NULL
-    if (type == Type.NULL) {
-      start = INTERNAL_NOPOSITION;
-      end = INTERNAL_NOPOSITION;
-    }
+    // Encode type
+    assert type == Type.NORMAL
+      || type == Type.PAWNDOUBLE
+      || type == Type.PAWNPROMOTION
+      || type == Type.ENPASSANT
+      || type == Type.CASTLING
+      || type == Type.NULL;
+    move |= type << TYPE_SHIFT;
 
-    // Encode start
-    move |= start << START_SHIFT;
+    // Encode origin position
+    assert (type == Type.NULL && originPosition == Position.NOPOSITION) || (originPosition & 0x88) == 0;
+    move |= originPosition << ORIGINPOSITION_SHIFT;
 
-    // Encode end
-    move |= end << END_SHIFT;
+    // Encode target position
+    assert (type == Type.NULL && targetPosition == Position.NOPOSITION) || (targetPosition & 0x88) == 0;
+    move |= targetPosition << TARGETPOSITION_SHIFT;
 
-    // Encode piece
-    assert piece == IntPiece.NOPIECE
-      || (IntPiece.getChessman(piece) == IntChessman.PAWN)
-      || (IntPiece.getChessman(piece) == IntChessman.KNIGHT)
-      || (IntPiece.getChessman(piece) == IntChessman.BISHOP)
-      || (IntPiece.getChessman(piece) == IntChessman.ROOK)
-      || (IntPiece.getChessman(piece) == IntChessman.QUEEN)
-      || (IntPiece.getChessman(piece) == IntChessman.KING);
-    assert piece == IntPiece.NOPIECE
-      || (IntPiece.getColor(piece) == IntColor.WHITE)
-      || (IntPiece.getColor(piece) == IntColor.BLACK);
-    move |= piece << CHESSMAN_PIECE_SHIFT;
+    // Encode origin piece
+    assert (type == Type.NULL && originPiece == IntPiece.NOPIECE) || IntPiece.isValid(originPiece);
+    move |= originPiece << ORIGINPIECE_SHIFT;
 
-    // Encode target
-    assert target == IntPiece.NOPIECE
-      || (IntPiece.getChessman(target) == IntChessman.PAWN)
-      || (IntPiece.getChessman(target) == IntChessman.KNIGHT)
-      || (IntPiece.getChessman(target) == IntChessman.BISHOP)
-      || (IntPiece.getChessman(target) == IntChessman.ROOK)
-      || (IntPiece.getChessman(target) == IntChessman.QUEEN);
-    assert target == IntPiece.NOPIECE
-      || (IntPiece.getColor(target) == IntColor.WHITE)
-      || (IntPiece.getColor(target) == IntColor.BLACK);
-    move |= target << TARGET_PIECE_SHIFT;
+    // Encode target piece
+    assert IntPiece.isValid(targetPiece) || targetPiece == IntPiece.NOPIECE;
+    move |= targetPiece << TARGETPIECE_SHIFT;
 
     // Encode promotion
-    assert promotion == IntChessman.NOCHESSMAN
-      || (promotion == IntChessman.KNIGHT)
-      || (promotion == IntChessman.BISHOP)
-      || (promotion == IntChessman.ROOK)
-      || (promotion == IntChessman.QUEEN);
-    move |= promotion << PROMOTION_SHIFT;
-
-    // Encode move
-    assert (type == Type.NORMAL)
-      || (type == Type.PAWNDOUBLE)
-      || (type == Type.PAWNPROMOTION)
-      || (type == Type.ENPASSANT)
-      || (type == Type.CASTLING)
-      || (type == Type.NULL);
-    move |= type << MOVE_SHIFT;
-
-    return move;
-  }
-
-  /**
-   * Sets the end position value in the move.
-   *
-   * @param move        the move.
-   * @param endPosition the end position.
-   * @return the move.
-   */
-  public static int setEndPosition(int move, int endPosition) {
-    assert move != Move.NOMOVE;
-    assert endPosition != Position.NOPOSITION;
-
-    // Zero out the end position
-    move &= ~END_MASK;
-
-    // Encode the end position
-    move |= endPosition << END_SHIFT;
-
-    return move;
-  }
-
-  /**
-   * Sets the end position value and the target piece in the move.
-   *
-   * @param move        the move.
-   * @param endPosition the end position.
-   * @param target      the target piece.
-   * @return the move.
-   */
-  public static int setEndPositionAndTarget(int move, int endPosition, int target) {
-    assert move != Move.NOMOVE;
-    assert endPosition != Position.NOPOSITION;
-    assert target != IntPiece.NOPIECE;
-
-    // Zero out the end position and the target piece
-    move &= ~END_MASK;
-    move &= ~TARGET_PIECE_MASK;
-
-    // Encode the end position
-    move |= endPosition << END_SHIFT;
-
-    // Encode target
-    assert (IntPiece.getChessman(target) == IntChessman.PAWN)
-      || (IntPiece.getChessman(target) == IntChessman.KNIGHT)
-      || (IntPiece.getChessman(target) == IntChessman.BISHOP)
-      || (IntPiece.getChessman(target) == IntChessman.ROOK)
-      || (IntPiece.getChessman(target) == IntChessman.QUEEN);
-    assert (IntPiece.getColor(target) == IntColor.WHITE)
-      || (IntPiece.getColor(target) == IntColor.BLACK);
-    move |= target << TARGET_PIECE_SHIFT;
-
-    return move;
-  }
-
-  /**
-   * Sets the promotion chessman in the move.
-   *
-   * @param move      the move.
-   * @param promotion the promotion chessman.
-   * @return the move.
-   */
-  public static int setPromotion(int move, int promotion) {
-    assert move != Move.NOMOVE;
-    assert promotion != IntChessman.NOCHESSMAN;
-
-    // Zero out the promotion chessman
-    move &= ~PROMOTION_MASK;
-
-    // Encode the end position
+    assert (IntChessman.isValid(promotion) && IntChessman.isValidPromotion(promotion))
+      || promotion == IntChessman.NOCHESSMAN;
     move |= promotion << PROMOTION_SHIFT;
 
     return move;
   }
 
-  /**
-   * Get the start position value from the move.
-   *
-   * @param move the move.
-   * @return the start position value of the move.
-   */
-  public static int getStart(int move) {
+  public static GenericMove toGenericMove(int move) {
     assert move != NOMOVE;
 
-    int position = (move & START_MASK) >>> START_SHIFT;
+    int type = getType(move);
+    int originPosition = getOriginPosition(move);
+    int targetPosition = getTargetPosition(move);
 
-    assert getType(move) != Move.Type.NULL;
-    assert position != INTERNAL_NOPOSITION;
-    assert (position & 0x88) == 0;
-
-    return position;
+    switch (type) {
+      case Type.NORMAL:
+      case Type.PAWNDOUBLE:
+      case Type.ENPASSANT:
+      case Type.CASTLING:
+        return new GenericMove(Position.toGenericPosition(originPosition), Position.toGenericPosition(targetPosition));
+      case Type.PAWNPROMOTION:
+        return new GenericMove(Position.toGenericPosition(originPosition), Position.toGenericPosition(targetPosition), IntChessman.toGenericChessman(getPromotion(move)));
+      case Type.NULL:
+        // TODO:
+        return null;
+      default:
+        throw new IllegalArgumentException();
+    }
   }
 
-  /**
-   * Get the end position value from the move.
-   *
-   * @param move the move.
-   * @return the end position value of the move.
-   */
-  public static int getEnd(int move) {
-    assert move != NOMOVE;
-
-    int position = (move & END_MASK) >>> END_SHIFT;
-
-    assert getType(move) != Move.Type.NULL;
-    assert position != INTERNAL_NOPOSITION;
-    assert (position & 0x88) == 0;
-
-    return position;
-  }
-
-  /**
-   * Returns the piece from the move.
-   *
-   * @param move the move.
-   * @return the piece.
-   */
-  public static int getOriginPiece(int move) {
-    assert move != NOMOVE;
-
-    return (move & CHESSMAN_PIECE_MASK) >>> CHESSMAN_PIECE_SHIFT;
-  }
-
-  /**
-   * Returns the target piece from the move.
-   *
-   * @param move the move.
-   * @return the piece.
-   */
-  public static int getTargetPiece(int move) {
-    assert move != NOMOVE;
-
-    return (move & TARGET_PIECE_MASK) >>> TARGET_PIECE_SHIFT;
-  }
-
-  /**
-   * Get the promotion chessman from the move.
-   *
-   * @param move the move.
-   * @return the promotion chessman.
-   */
-  public static int getPromotion(int move) {
-    assert move != NOMOVE;
-
-    int promotion = (move & PROMOTION_MASK) >>> PROMOTION_SHIFT;
-    assert (promotion == IntChessman.KNIGHT)
-      || (promotion == IntChessman.BISHOP)
-      || (promotion == IntChessman.ROOK)
-      || (promotion == IntChessman.QUEEN);
-
-    return promotion;
-  }
-
-  /**
-   * Get the type from the move.
-   *
-   * @param move the move.
-   * @return the type.
-   */
   public static int getType(int move) {
-    assert move != NOMOVE;
-
-    int type = (move & MOVE_MASK) >>> MOVE_SHIFT;
-    assert isValidMove(type);
+    int type = (move & TYPE_MASK) >>> TYPE_SHIFT;
+    assert type == Type.NORMAL
+      || type == Type.PAWNDOUBLE
+      || type == Type.PAWNPROMOTION
+      || type == Type.ENPASSANT
+      || type == Type.CASTLING
+      || type == Type.NULL;
 
     return type;
   }
 
-  /**
-   * Returns the Move from the GenericMove.
-   *
-   * @param move  the GenericMove.
-   * @param board the Board.
-   * @return the Move.
-   */
-  public static int convertMove(GenericMove move, Board board) {
-    assert move != null;
-    assert board != null;
+  public static int getOriginPosition(int move) {
+    assert move != NOMOVE;
 
-    if (isPawnPromotion(move, board)) {
-      int promotion;
-      if (move.promotion == null) {
-        // TODO: maybe better throw IllegalArgumentException()
-        promotion = IntChessman.QUEEN;
-      } else {
-        promotion = IntChessman.valueOf(move.promotion);
-      }
-      return createMove(Type.PAWNPROMOTION, Position.valueOfPosition(move.from), Position.valueOfPosition(move.to), board.board[Position.valueOfPosition(move.from)], board.board[Position.valueOfPosition(move.to)], promotion);
-    } else if (isPawnDouble(move, board)) {
-      return createMove(Type.PAWNDOUBLE, Position.valueOfPosition(move.from), Position.valueOfPosition(move.to), board.board[Position.valueOfPosition(move.from)], IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
-    } else if (isEnPassant(move, board)) {
-      return createMove(Type.ENPASSANT, Position.valueOfPosition(move.from), Position.valueOfPosition(move.to), board.board[Position.valueOfPosition(move.from)], board.board[Position.valueOfPosition(GenericPosition.valueOf(move.to.file, move.from.rank))], IntChessman.NOCHESSMAN);
-    } else if (isCastling(move, board)) {
-      return createMove(Type.CASTLING, Position.valueOfPosition(move.from), Position.valueOfPosition(move.to), board.board[Position.valueOfPosition(move.from)], IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
-    } else {
-      return createMove(Type.NORMAL, Position.valueOfPosition(move.from), Position.valueOfPosition(move.to), board.board[Position.valueOfPosition(move.from)], board.board[Position.valueOfPosition(move.to)], IntChessman.NOCHESSMAN);
-    }
+    int originPosition = (move & ORIGINPOSITION_MASK) >>> ORIGINPOSITION_SHIFT;
+
+    assert getType(move) != Move.Type.NULL;
+    assert (originPosition & 0x88) == 0;
+
+    return originPosition;
   }
 
-  /**
-   * Returns whether the GenericMove is a pawn promotion move.
-   *
-   * @param move  the GenericMove.
-   * @param board the Board.
-   * @return true if the GenericMove is a pawn promotion, false otherwise.
-   */
+  public static int getTargetPosition(int move) {
+    assert move != NOMOVE;
+
+    int targetPosition = (move & TARGETPOSITION_MASK) >>> TARGETPOSITION_SHIFT;
+
+    assert getType(move) != Move.Type.NULL;
+    assert (targetPosition & 0x88) == 0;
+
+    return targetPosition;
+  }
+
+  public static int setTargetPosition(int move, int targetPosition) {
+    assert move != Move.NOMOVE;
+    assert targetPosition != Position.NOPOSITION;
+
+    // Zero out target position
+    move &= ~TARGETPOSITION_MASK;
+
+    // Encode target position
+    assert (targetPosition & 0x88) == 0;
+    move |= targetPosition << TARGETPOSITION_SHIFT;
+
+    return move;
+  }
+
+  public static int setTargetPositionAndTargetPiece(int move, int targetPosition, int targetPiece) {
+    assert move != Move.NOMOVE;
+    assert targetPosition != Position.NOPOSITION;
+    assert targetPiece != IntPiece.NOPIECE;
+
+    // Zero out target position and target piece
+    move &= ~TARGETPOSITION_MASK;
+    move &= ~TARGETPIECE_MASK;
+
+    // Encode target position
+    assert (targetPosition & 0x88) == 0;
+    move |= targetPosition << TARGETPOSITION_SHIFT;
+
+    // Encode target piece
+    assert IntPiece.isValid(targetPiece) || targetPiece == IntPiece.NOPIECE;
+    move |= targetPiece << TARGETPIECE_SHIFT;
+
+    return move;
+  }
+
+  public static int getOriginPiece(int move) {
+    int originPiece = (move & ORIGINPIECE_MASK) >>> ORIGINPIECE_SHIFT;
+    assert IntPiece.isValid(originPiece);
+
+    return originPiece;
+  }
+
+  public static int getTargetPiece(int move) {
+    int targetPiece = (move & TARGETPIECE_MASK) >>> TARGETPIECE_SHIFT;
+    assert IntPiece.isValid(targetPiece) || targetPiece == IntPiece.NOPIECE;
+
+    return targetPiece;
+  }
+
+  public static int getPromotion(int move) {
+    assert move != NOMOVE;
+
+    int promotion = (move & PROMOTION_MASK) >>> PROMOTION_SHIFT;
+    assert (IntChessman.isValid(promotion) && IntChessman.isValidPromotion(promotion))
+      || promotion == IntChessman.NOCHESSMAN;
+
+    return promotion;
+  }
+
+  public static int setPromotion(int move, int promotion) {
+    assert move != Move.NOMOVE;
+    assert promotion != IntChessman.NOCHESSMAN;
+
+    // Zero out promotion chessman
+    move &= ~PROMOTION_MASK;
+
+    // Encode promotion
+    assert (IntChessman.isValid(promotion) && IntChessman.isValidPromotion(promotion))
+      || promotion == IntChessman.NOCHESSMAN;
+    move |= promotion << PROMOTION_SHIFT;
+
+    return move;
+  }
+
   private static boolean isPawnPromotion(GenericMove move, Board board) {
     assert move != null;
     assert board != null;
 
-    int position = Position.valueOfPosition(move.from);
-
-    int piece = board.board[position];
-    if (piece != IntPiece.NOPIECE) {
-      if ((piece == IntPiece.WHITEPAWN && move.from.rank == GenericRank.R7 && move.to.rank == GenericRank.R8)
-        || (piece == IntPiece.BLACKPAWN && move.from.rank == GenericRank.R2 && move.to.rank == GenericRank.R1)) {
+    int originPiece = board.board[Position.valueOf(move.from)];
+    if (originPiece != IntPiece.NOPIECE) {
+      if ((originPiece == IntPiece.WHITEPAWN && move.from.rank == GenericRank.R7 && move.to.rank == GenericRank.R8)
+        || (originPiece == IntPiece.BLACKPAWN && move.from.rank == GenericRank.R2 && move.to.rank == GenericRank.R1)) {
         return true;
       }
     }
@@ -385,23 +292,14 @@ public final class Move {
     return false;
   }
 
-  /**
-   * Returns whether the GenericMove is a pawn double advance move.
-   *
-   * @param move  the GenericMove.
-   * @param board the Board.
-   * @return true if the GenericMove is a pawn double advance, false otherwise.
-   */
   private static boolean isPawnDouble(GenericMove move, Board board) {
     assert move != null;
     assert board != null;
 
-    int position = Position.valueOfPosition(move.from);
-
-    int piece = board.board[position];
-    if (piece != IntPiece.NOPIECE) {
-      if ((piece == IntPiece.WHITEPAWN && move.from.rank == GenericRank.R2 && move.to.rank == GenericRank.R4)
-        || (piece == IntPiece.BLACKPAWN && move.from.rank == GenericRank.R7 && move.to.rank == GenericRank.R5)) {
+    int originPiece = board.board[Position.valueOf(move.from)];
+    if (originPiece != IntPiece.NOPIECE) {
+      if ((originPiece == IntPiece.WHITEPAWN && move.from.rank == GenericRank.R2 && move.to.rank == GenericRank.R4)
+        || (originPiece == IntPiece.BLACKPAWN && move.from.rank == GenericRank.R7 && move.to.rank == GenericRank.R5)) {
         return true;
       }
     }
@@ -409,27 +307,18 @@ public final class Move {
     return false;
   }
 
-  /**
-   * Returns whether the GenericMove is a en passant move.
-   *
-   * @param move  the GenericMove.
-   * @param board the Board.
-   * @return true if the GenericMove is a en passant move, false otherwise.
-   */
   private static boolean isEnPassant(GenericMove move, Board board) {
     assert move != null;
     assert board != null;
 
-    int position = Position.valueOfPosition(move.from);
-    GenericPosition targetPosition = GenericPosition.valueOf(move.to.file, move.from.rank);
-    int targetIntPosition = Position.valueOfPosition(targetPosition);
+    GenericPosition genericPosition = GenericPosition.valueOf(move.to.file, move.from.rank);
 
-    int piece = board.board[position];
-    int target = board.board[targetIntPosition];
-    if (piece != IntPiece.NOPIECE && target != IntPiece.NOPIECE) {
-      if (IntPiece.getChessman(piece) == IntChessman.PAWN && IntPiece.getChessman(target) == IntChessman.PAWN) {
-        if (IntPiece.getColor(piece) == IntColor.opposite(IntPiece.getColor(target))) {
-          if (board.enPassantSquare == Position.valueOfPosition(move.to)) {
+    int originPiece = board.board[Position.valueOf(move.from)];
+    int targetPiece = board.board[Position.valueOf(genericPosition)];
+    if (originPiece != IntPiece.NOPIECE && targetPiece != IntPiece.NOPIECE) {
+      if (IntPiece.getChessman(originPiece) == IntChessman.PAWN && IntPiece.getChessman(targetPiece) == IntChessman.PAWN) {
+        if (IntPiece.getColor(originPiece) == IntColor.opposite(IntPiece.getColor(targetPiece))) {
+          if (board.enPassantSquare == Position.valueOf(move.to)) {
             return true;
           }
         }
@@ -439,44 +328,23 @@ public final class Move {
     return false;
   }
 
-  /**
-   * Returns whether the GenericMove is a castling move.
-   *
-   * @param move  the GenericMove.
-   * @param board the Board.
-   * @return true if the GenericMove is a castling move, false otherwise.
-   */
   private static boolean isCastling(GenericMove move, Board board) {
     assert move != null;
     assert board != null;
 
-    int position = Position.valueOfPosition(move.from);
-
-    int piece = board.board[position];
-    if (piece != IntPiece.NOPIECE) {
-      if (IntPiece.getChessman(piece) == IntChessman.KING) {
-        if (move.from.file == GenericFile.Fe
-          && move.from.rank == GenericRank.R1
-          && move.to.file == GenericFile.Fg
-          && move.to.rank == GenericRank.R1) {
+    int originPiece = board.board[Position.valueOf(move.from)];
+    if (originPiece != IntPiece.NOPIECE) {
+      if (IntPiece.getChessman(originPiece) == IntChessman.KING) {
+        if (move.from == GenericPosition.e1 && move.to == GenericPosition.g1) {
           // Castling WHITE kingside.
           return true;
-        } else if (move.from.file == GenericFile.Fe
-          && move.from.rank == GenericRank.R1
-          && move.to.file == GenericFile.Fc
-          && move.to.rank == GenericRank.R1) {
+        } else if (move.from == GenericPosition.e1 && move.to == GenericPosition.c1) {
           // Castling WHITE queenside.
           return true;
-        } else if (move.from.file == GenericFile.Fe
-          && move.from.rank == GenericRank.R8
-          && move.to.file == GenericFile.Fg
-          && move.to.rank == GenericRank.R8) {
+        } else if (move.from == GenericPosition.e8 && move.to == GenericPosition.g8) {
           // Castling BLACK kingside.
           return true;
-        } else if (move.from.file == GenericFile.Fe
-          && move.from.rank == GenericRank.R8
-          && move.to.file == GenericFile.Fc
-          && move.to.rank == GenericRank.R8) {
+        } else if (move.from == GenericPosition.e8 && move.to == GenericPosition.c8) {
           // Castling BLACK queenside.
           return true;
         }
@@ -486,38 +354,8 @@ public final class Move {
     return false;
   }
 
-  /**
-   * Returns the GenericMove from the move.
-   *
-   * @param move the move.
-   * @return the GenericMove.
-   */
-  public static GenericMove toGenericMove(int move) {
-    assert move != NOMOVE;
-
-    int type = getType(move);
-    int start = getStart(move);
-    int end = getEnd(move);
-
-    switch (type) {
-      case Type.NORMAL:
-      case Type.PAWNDOUBLE:
-      case Type.ENPASSANT:
-      case Type.CASTLING:
-        return new GenericMove(Position.valueOfIntPosition(start), Position.valueOfIntPosition(end));
-      case Type.PAWNPROMOTION:
-        return new GenericMove(Position.valueOfIntPosition(start), Position.valueOfIntPosition(end), IntChessman.toGenericChessman(getPromotion(move)));
-      case Type.NULL:
-        // TODO:
-        return null;
-      default:
-        throw new IllegalArgumentException();
-    }
-
-  }
-
   public static String toString(int move) {
-    String string = "<";
+    String string = "";
 
     switch (getType(move)) {
       case Type.NORMAL:
@@ -543,32 +381,23 @@ public final class Move {
     }
 
     assert getOriginPiece(move) != IntPiece.NOPIECE;
-    string += ", (";
+    string += ":";
     string += IntPiece.toGenericPiece(getOriginPiece(move));
-    string += ")";
 
-    string += ", ";
+    string += ":";
     string += toGenericMove(move).toString();
 
     if (getTargetPiece(move) != IntPiece.NOPIECE) {
-      string += ", (";
+      string += ":";
       string += IntPiece.toGenericPiece(getTargetPiece(move));
-      string += ")";
     }
 
-    string += ">";
+    if (getType(move) == Type.PAWNPROMOTION) {
+      string += ":";
+      string += IntChessman.toGenericChessman(getPromotion(move));
+    }
 
     return string;
-  }
-
-  public static boolean isValidMove(int move) {
-    for (int moveValue : Type.values) {
-      if (move == moveValue) {
-        return true;
-      }
-    }
-
-    return false;
   }
 
 }

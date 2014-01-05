@@ -22,7 +22,9 @@ import com.fluxchess.flux.board.Board;
 import com.fluxchess.flux.board.ChessmanList;
 import com.fluxchess.flux.board.Position;
 import com.fluxchess.jcpi.models.IntColor;
+import com.fluxchess.jcpi.models.IntFile;
 import com.fluxchess.jcpi.models.IntPiece;
+import com.fluxchess.jcpi.models.IntRank;
 
 public final class DrawEvaluation {
 
@@ -207,8 +209,8 @@ public final class DrawEvaluation {
     int myKingPromotionDistance;
     int enemyKingPromotionDistance;
     if (myColor == IntColor.WHITE) {
-      myKingPromotionDistance = Math.max(Math.abs(pawnFile - myKingFile), Position.rank8 - myKingRank);
-      enemyKingPromotionDistance = Math.max(Math.abs(pawnFile - enemyKingFile), Position.rank8 - enemyKingRank);
+      myKingPromotionDistance = Math.max(Math.abs(pawnFile - myKingFile), IntRank.R8 - myKingRank);
+      enemyKingPromotionDistance = Math.max(Math.abs(pawnFile - enemyKingFile), IntRank.R8 - enemyKingRank);
     } else {
       assert myColor == IntColor.BLACK;
 
@@ -225,8 +227,8 @@ public final class DrawEvaluation {
       if (myColor == IntColor.WHITE) {
         delta = 16;
 
-        promotionDistance = Position.rank8 - pawnRank;
-        if (pawnRank == Position.rank2) {
+        promotionDistance = IntRank.R8 - pawnRank;
+        if (pawnRank == IntRank.R2) {
           // We can do a pawn double move
           promotionDistance--;
         }
@@ -236,7 +238,7 @@ public final class DrawEvaluation {
         delta = -16;
 
         promotionDistance = pawnRank;
-        if (pawnRank == Position.rank7) {
+        if (pawnRank == IntRank.R7) {
           // We can do a pawn double move
           promotionDistance--;
         }
@@ -253,16 +255,16 @@ public final class DrawEvaluation {
       }
 
       // King protected passer
-      else if (Position.getRelativeRank(myKingPosition, myColor) == Position.rank7
+      else if (Position.getRelativeRank(myKingPosition, myColor) == IntRank.R7
         && ((promotionDistance <= 2 && (myAttackTable[pawnPosition] & AttackTableEvaluation.BIT_KING) != 0)
         || (promotionDistance <= 3 && (myAttackTable[pawnPosition + delta] & AttackTableEvaluation.BIT_KING) != 0 && board.activeColor == myColor))
-        && (myKingFile != pawnFile || (pawnFile != Position.fileA && pawnFile != Position.fileH))) {
+        && (myKingFile != pawnFile || (pawnFile != IntFile.Fa && pawnFile != IntFile.Fh))) {
         unstoppablePasser = true;
       }
     }
 
     if (!unstoppablePasser) {
-      if (pawnFile == Position.fileA || pawnFile == Position.fileH) {
+      if (pawnFile == IntFile.Fa || pawnFile == IntFile.Fh) {
         int difference = enemyKingPromotionDistance - myKingPromotionDistance;
         if (board.activeColor == enemyColor) {
           difference--;

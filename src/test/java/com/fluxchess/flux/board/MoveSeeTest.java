@@ -35,28 +35,28 @@ public class MoveSeeTest {
     try {
       // Pawn capture
       Board board = new Board(new GenericBoard("8/8/8/4p1k1/2KP4/8/8/8 w - -"));
-      int move = Move.createMove(Move.Type.NORMAL, Position.d4, Position.e5, board.board[Position.d4], board.board[Position.e5], IntChessman.NOCHESSMAN);
+      int move = Move.valueOf(Move.Type.NORMAL, Position.d4, Position.e5, board.board[Position.d4], board.board[Position.e5], IntChessman.NOCHESSMAN);
       new MoveSee(board);
       int value = MoveSee.seeMove(move, IntColor.WHITE);
       assertEquals(Evaluation.VALUE_PAWN, value);
 
       // En passant capture
       board = new Board(new GenericBoard("8/8/K7/6k1/2Pp4/8/1P6/8 b - c3"));
-      move = Move.createMove(Move.Type.ENPASSANT, Position.d4, Position.c3, board.board[Position.d4], board.board[Position.c4], IntChessman.NOCHESSMAN);
+      move = Move.valueOf(Move.Type.ENPASSANT, Position.d4, Position.c3, board.board[Position.d4], board.board[Position.c4], IntChessman.NOCHESSMAN);
       new MoveSee(board);
       value = MoveSee.seeMove(move, IntColor.BLACK);
       assertEquals(0, value);
 
       // En passant capture with hidden attacker
       board = new Board(new GenericBoard("8/6k1/4r3/8/4Pp2/8/1K1P4/8 b - e3"));
-      move = Move.createMove(Move.Type.ENPASSANT, Position.f4, Position.e3, board.board[Position.f4], board.board[Position.e4], IntChessman.NOCHESSMAN);
+      move = Move.valueOf(Move.Type.ENPASSANT, Position.f4, Position.e3, board.board[Position.f4], board.board[Position.e4], IntChessman.NOCHESSMAN);
       new MoveSee(board);
       value = MoveSee.seeMove(move, IntColor.BLACK);
       assertEquals(Evaluation.VALUE_PAWN, value);
 
       // Pawn promotion capture
       board = new Board(new GenericBoard("8/8/K7/6k1/8/5B2/4p3/3R4 b - -"));
-      move = Move.createMove(Move.Type.PAWNPROMOTION, Position.e2, Position.d1, board.board[Position.e2], board.board[Position.d1], IntChessman.ROOK);
+      move = Move.valueOf(Move.Type.PAWNPROMOTION, Position.e2, Position.d1, board.board[Position.e2], board.board[Position.d1], IntChessman.ROOK);
       new MoveSee(board);
       value = MoveSee.seeMove(move, IntColor.BLACK);
       assertEquals(
@@ -66,7 +66,7 @@ public class MoveSeeTest {
 
       // King capture abort
       board = new Board(new GenericBoard("8/6k1/8/4q3/8/5p2/1R1KP3/8 b - -"));
-      move = Move.createMove(Move.Type.NORMAL, Position.f3, Position.e2, board.board[Position.f3], board.board[Position.e2], IntChessman.NOCHESSMAN);
+      move = Move.valueOf(Move.Type.NORMAL, Position.f3, Position.e2, board.board[Position.f3], board.board[Position.e2], IntChessman.NOCHESSMAN);
       new MoveSee(board);
       value = MoveSee.seeMove(move, IntColor.BLACK);
       assertEquals(
@@ -76,7 +76,7 @@ public class MoveSeeTest {
 
       // Complex capture
       board = new Board(new GenericBoard("R1B3q1/N1KP4/3n4/8/6b1/2R5/6k1/8 b - -"));
-      move = Move.createMove(Move.Type.NORMAL, Position.d6, Position.c8, board.board[Position.d6], board.board[Position.c8], IntChessman.NOCHESSMAN);
+      move = Move.valueOf(Move.Type.NORMAL, Position.d6, Position.c8, board.board[Position.d6], board.board[Position.c8], IntChessman.NOCHESSMAN);
       new MoveSee(board);
       value = MoveSee.seeMove(move, IntColor.BLACK);
       assertEquals(
@@ -90,7 +90,7 @@ public class MoveSeeTest {
 
       // Same piece capture test
       board = new Board(new GenericBoard("r4rk1/5ppp/2Np4/p2P2b1/Pp3Rq1/1R1pP2P/1PP3P1/7K w - -"));
-      move = Move.createMove(Move.Type.NORMAL, Position.c6, Position.b4, board.board[Position.c6], board.board[Position.b4], IntChessman.NOCHESSMAN);
+      move = Move.valueOf(Move.Type.NORMAL, Position.c6, Position.b4, board.board[Position.c6], board.board[Position.b4], IntChessman.NOCHESSMAN);
       new MoveSee(board);
       value = MoveSee.seeMove(move, IntColor.WHITE);
       assertEquals(
@@ -102,7 +102,7 @@ public class MoveSeeTest {
 
       // Non-capture move
       board = new Board(new GenericBoard("8/6k1/4r3/8/5p2/8/1K1PP3/8 w - -"));
-      move = Move.createMove(Move.Type.NORMAL, Position.e2, Position.e3, board.board[Position.e2], board.board[Position.e3], IntChessman.NOCHESSMAN);
+      move = Move.valueOf(Move.Type.NORMAL, Position.e2, Position.e3, board.board[Position.e2], board.board[Position.e3], IntChessman.NOCHESSMAN);
       new MoveSee(board);
       value = MoveSee.seeMove(move, IntColor.WHITE);
       assertEquals(-Evaluation.VALUE_PAWN, value);

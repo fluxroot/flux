@@ -30,11 +30,11 @@ public class HistoryTableTest {
   public void testHistoryTable() {
     HistoryTable table = new HistoryTable();
 
-    int move1 = Move.createMove(Move.Type.NORMAL, 16, 32, IntChessman.PAWN, IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
+    int move1 = Move.valueOf(Move.Type.NORMAL, 16, 32, IntChessman.PAWN, IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
     table.add(move1, 1);
     assertEquals(1, table.get(move1));
 
-    int move2 = Move.createMove(Move.Type.NORMAL, 16, 32, IntChessman.PAWN, IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
+    int move2 = Move.valueOf(Move.Type.NORMAL, 16, 32, IntChessman.PAWN, IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
     table.add(move2, 1);
     assertEquals(2, table.get(move2));
   }

@@ -32,35 +32,35 @@ public class MoveRaterTest {
     MoveList list = new MoveList();
 
     // Pawn -> Rook
-    int move1 = Move.createMove(Move.Type.NORMAL, 16, 0, IntPiece.NOPIECE, IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
+    int move1 = Move.valueOf(Move.Type.NORMAL, 16, 0, IntPiece.NOPIECE, IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
     list.move[list.tail++] = move1;
 
     // Knight -> Rook
-    int move2 = Move.createMove(Move.Type.NORMAL, 1, 0, IntPiece.NOPIECE, IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
+    int move2 = Move.valueOf(Move.Type.NORMAL, 1, 0, IntPiece.NOPIECE, IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
     list.move[list.tail++] = move2;
 
     // Pawn -> Knight
-    int move3 = Move.createMove(Move.Type.NORMAL, 16, 1, IntPiece.NOPIECE, IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
+    int move3 = Move.valueOf(Move.Type.NORMAL, 16, 1, IntPiece.NOPIECE, IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
     list.move[list.tail++] = move3;
 
     // Rook -> Knight
-    int move4 = Move.createMove(Move.Type.NORMAL, 0, 1, IntPiece.NOPIECE, IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
+    int move4 = Move.valueOf(Move.Type.NORMAL, 0, 1, IntPiece.NOPIECE, IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
     list.move[list.tail++] = move4;
 
     // Rook -> Rook
-    int move5 = Move.createMove(Move.Type.NORMAL, 0, 7, IntPiece.NOPIECE, IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
+    int move5 = Move.valueOf(Move.Type.NORMAL, 0, 7, IntPiece.NOPIECE, IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
     list.move[list.tail++] = move5;
 
     // King -> Empty
-    int move6 = Move.createMove(Move.Type.NORMAL, 4, 32, IntPiece.NOPIECE, IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
+    int move6 = Move.valueOf(Move.Type.NORMAL, 4, 32, IntPiece.NOPIECE, IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
     list.move[list.tail++] = move6;
 
     // Pawn -> Pawn
-    int move7 = Move.createMove(Move.Type.NORMAL, 16, 17, IntPiece.NOPIECE, IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
+    int move7 = Move.valueOf(Move.Type.NORMAL, 16, 17, IntPiece.NOPIECE, IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
     list.move[list.tail++] = move7;
 
     // Pawn -> Empty
-    int move8 = Move.createMove(Move.Type.NORMAL, 16, 32, IntPiece.NOPIECE, IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
+    int move8 = Move.valueOf(Move.Type.NORMAL, 16, 32, IntPiece.NOPIECE, IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
     list.move[list.tail++] = move8;
 
     rater.rateFromMVVLVA(list);

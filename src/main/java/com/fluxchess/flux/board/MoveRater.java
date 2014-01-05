@@ -19,7 +19,6 @@
 package com.fluxchess.flux.board;
 
 import com.fluxchess.flux.evaluation.Evaluation;
-import com.fluxchess.jcpi.models.IntChessman;
 import com.fluxchess.jcpi.models.IntPiece;
 
 public final class MoveRater {

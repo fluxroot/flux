@@ -38,8 +38,8 @@ public final class MoveSee {
   }
 
   public static int seeMove(int move, int myColor) {
-    int start = Move.getStart(move);
-    int end = Move.getEnd(move);
+    int start = Move.getOriginPosition(move);
+    int end = Move.getTargetPosition(move);
     int type = Move.getType(move);
 
     // Get the enemy color

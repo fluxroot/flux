@@ -38,7 +38,7 @@ public final class HistoryTable {
     assert move != Move.NOMOVE;
 
     int piece = Move.getOriginPiece(move);
-    int end = Move.getEnd(move);
+    int end = Move.getTargetPosition(move);
     assert IntPiece.getChessman(Move.getOriginPiece(move)) != IntChessman.NOCHESSMAN;
     assert IntPiece.getColor(Move.getOriginPiece(move)) != IntColor.NOCOLOR;
     assert (end & 0x88) == 0;
@@ -55,7 +55,7 @@ public final class HistoryTable {
     assert move != Move.NOMOVE;
 
     int piece = Move.getOriginPiece(move);
-    int end = Move.getEnd(move);
+    int end = Move.getTargetPosition(move);
     assert IntPiece.getChessman(Move.getOriginPiece(move)) != IntChessman.NOCHESSMAN;
     assert IntPiece.getColor(Move.getOriginPiece(move)) != IntColor.NOCOLOR;
     assert (end & 0x88) == 0;

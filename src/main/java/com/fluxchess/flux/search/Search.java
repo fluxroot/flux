@@ -22,10 +22,7 @@ import com.fluxchess.flux.ChessLogger;
 import com.fluxchess.flux.Configuration;
 import com.fluxchess.flux.board.*;
 import com.fluxchess.flux.evaluation.Evaluation;
-import com.fluxchess.jcpi.models.GenericMove;
-import com.fluxchess.jcpi.models.IntChessman;
-import com.fluxchess.jcpi.models.IntColor;
-import com.fluxchess.jcpi.models.IntPiece;
+import com.fluxchess.jcpi.models.*;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -305,7 +302,7 @@ public final class Search implements Runnable {
 
   public void setSearchMoveList(List<GenericMove> moveList) {
     for (GenericMove move : moveList) {
-      searchMoveList.move[searchMoveList.tail++] = Move.convertMove(move, board);
+      searchMoveList.move[searchMoveList.tail++] = Move.valueOf(move, board);
     }
   }
 
@@ -612,7 +609,7 @@ public final class Search implements Runnable {
 
           // Check if this is an easy recapture
           else if (!timeExtended
-            && Move.getEnd(moveResult.bestMove) == board.captureSquare
+            && Move.getTargetPosition(moveResult.bestMove) == board.captureSquare
             && Evaluation.getValueFromPiece(Move.getTargetPiece(moveResult.bestMove)) >= Evaluation.VALUE_KNIGHT
             && equalResults > 4) {
             stopFlag = true;
@@ -1459,11 +1456,11 @@ public final class Search implements Runnable {
   private int getNewDepth(int depth, int move, boolean isSingleReply, boolean mateThreat) {
     int newDepth = depth - 1;
 
-    assert (Move.getEnd(move) != board.captureSquare) || (Move.getTargetPiece(move) != IntPiece.NOPIECE);
+    assert (Move.getTargetPosition(move) != board.captureSquare) || (Move.getTargetPiece(move) != IntPiece.NOPIECE);
 
     //## Recapture Extension
     if (Configuration.useRecaptureExtension
-      && Move.getEnd(move) == board.captureSquare
+      && Move.getTargetPosition(move) == board.captureSquare
       && MoveSee.seeMove(move, IntPiece.getColor(Move.getOriginPiece(move))) > 0) {
       newDepth++;
     }
@@ -1477,7 +1474,7 @@ public final class Search implements Runnable {
     //## Pawn Extension
     else if (Configuration.usePawnExtension
       && IntPiece.getChessman(Move.getOriginPiece(move)) == IntChessman.PAWN
-      && Position.getRelativeRank(Move.getEnd(move), board.activeColor) == Position.rank7) {
+      && Position.getRelativeRank(Move.getTargetPosition(move), board.activeColor) == IntRank.R7) {
       newDepth++;
     }
 
@@ -1506,8 +1503,8 @@ public final class Search implements Runnable {
 
   private static boolean isDangerousMove(int move) {
     int chessman = IntPiece.getChessman(Move.getOriginPiece(move));
-    int relativeRank = Position.getRelativeRank(Move.getEnd(move), board.activeColor);
-    if (chessman == IntChessman.PAWN && relativeRank >= Position.rank7) {
+    int relativeRank = Position.getRelativeRank(Move.getTargetPosition(move), board.activeColor);
+    if (chessman == IntChessman.PAWN && relativeRank >= IntRank.R7) {
       return true;
     }
 
