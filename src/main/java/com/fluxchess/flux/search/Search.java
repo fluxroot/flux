@@ -413,7 +413,7 @@ public final class Search implements Runnable {
     Attack attack = board.getAttack(board.activeColor);
     boolean isCheck = attack.isCheck();
 
-    if (searchMoveList.getLength() == 0) {
+    if (searchMoveList.size() == 0) {
       moveGenerator.initializeMain(attack, 0, transpositionMove);
 
       int move = Move.NOMOVE;
@@ -429,15 +429,15 @@ public final class Search implements Runnable {
     }
 
     // Check if we cannot move
-    if (rootMoveList.getLength() == 0) {
+    if (rootMoveList.size() == 0) {
       // This position is a checkmate or stalemate
       return bestResult;
     }
 
     // Adjust pv number
     showPvNumber = Configuration.showPvNumber;
-    if (Configuration.showPvNumber > rootMoveList.getLength()) {
-      showPvNumber = rootMoveList.getLength();
+    if (Configuration.showPvNumber > rootMoveList.size()) {
+      showPvNumber = rootMoveList.size();
     }
     //## ENDOF Root Move List
 
@@ -455,7 +455,7 @@ public final class Search implements Runnable {
       bestResult.resultValue = transpositionValue;
       bestResult.value = transpositionType;
       bestResult.time = 0;
-      bestResult.moveNumber = rootMoveList.getLength();
+      bestResult.moveNumber = rootMoveList.size();
 
       initialDepth = transpositionDepth;
       equalResults = transpositionDepth - 2;
@@ -475,13 +475,13 @@ public final class Search implements Runnable {
       int value;
       if (currentDepth == initialDepth && initialDepth > 1) {
         value = transpositionValue;
-        pvList[0].resetList();
+        pvList[0].clear();
         sendInformation(pv, 1);
 
         moveResult.bestMove = transpositionMove;
         moveResult.resultValue = transpositionValue;
         moveResult.value = transpositionType;
-        moveResult.moveNumber = rootMoveList.getLength();
+        moveResult.moveNumber = rootMoveList.size();
       } else {
         // Do the Alpha-Beta search
         value = alphaBetaRoot(currentDepth, alpha, beta, 0, rootMoveList, isCheck, moveResult);
@@ -673,7 +673,7 @@ public final class Search implements Runnable {
     }
 
     // Reset
-    pvList[height].resetList();
+    pvList[height].clear();
   }
 
   private int alphaBetaRoot(int depth, int alpha, int beta, int height, MoveList rootMoveList, boolean isCheck, Result moveResult) {
@@ -697,7 +697,7 @@ public final class Search implements Runnable {
     int currentMoveNumber = 0;
 
     // Initialize Single-Response Extension
-    boolean isSingleReply = isCheck && rootMoveList.getLength() == 1;
+    boolean isSingleReply = isCheck && rootMoveList.size() == 1;
 
     for (int j = rootMoveList.head; j < rootMoveList.tail; j++) {
       int move = rootMoveList.move[j];
@@ -1049,7 +1049,7 @@ public final class Search implements Runnable {
         alpha = oldAlpha;
         beta = oldBeta;
 
-        if (pvList[height].getLength() > 0) {
+        if (pvList[height].size() > 0) {
           // Hopefully we have a transposition move now
           transpositionMove = pvList[height].move[pvList[height].head];
         }
@@ -1521,7 +1521,7 @@ public final class Search implements Runnable {
     assert source != null;
     assert move != Move.NOMOVE;
 
-    destination.resetList();
+    destination.clear();
 
     destination.move[destination.tail++] = move;
 

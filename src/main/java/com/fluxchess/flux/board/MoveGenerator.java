@@ -150,7 +150,7 @@ public final class MoveGenerator {
       generator[generatorHistory].testState = GEN_EVASION;
 
       // Set the move number
-      attack.numberOfMoves = moveList.getLength();
+      attack.numberOfMoves = moveList.size();
     } else {
       generator[generatorHistory].statePosition = statePositionMain;
     }
@@ -174,7 +174,7 @@ public final class MoveGenerator {
       generator[generatorHistory].testState = GEN_EVASION;
 
       // Set the move number
-      attack.numberOfMoves = moveList.getLength();
+      attack.numberOfMoves = moveList.size();
     } else if (generateCheckingMoves) {
       generator[generatorHistory].statePosition = statePositionQuiescentAll;
     } else {
@@ -197,7 +197,7 @@ public final class MoveGenerator {
         switch (generator[generatorHistory].testState) {
           case GEN_TRANSPOSITION:
             assert isLegal(move);
-            assert moveList.getLength() == 1;
+            assert moveList.size() == 1;
             break;
           case GEN_GOODCAPTURE:
             if (move == generator[generatorHistory].transpositionMove) {
@@ -275,7 +275,7 @@ public final class MoveGenerator {
 
       // Move generation
       int state = stateList[generator[generatorHistory].statePosition++];
-      moveList.resetList();
+      moveList.clear();
 
       switch (state) {
         case GEN_TRANSPOSITION:
@@ -290,7 +290,7 @@ public final class MoveGenerator {
           break;
         case GEN_GOODCAPTURE:
           generateCaptures();
-          tempMoveList.resetList();
+          tempMoveList.clear();
           moveRater.rateFromMVVLVA(moveList);
 //              moveRater.rateFromMVPD(moveList);
           MoveSorter.sort(moveList);
@@ -319,8 +319,8 @@ public final class MoveGenerator {
           generator[generatorHistory].testState = GEN_NONCAPTURE;
           break;
         case GEN_BADCAPTURE:
-          System.arraycopy(tempMoveList.move, tempMoveList.head, moveList.move, moveList.tail, tempMoveList.getLength());
-          moveList.tail += tempMoveList.getLength();
+          System.arraycopy(tempMoveList.move, tempMoveList.head, moveList.move, moveList.tail, tempMoveList.size());
+          moveList.tail += tempMoveList.size();
           generator[generatorHistory].testState = GEN_BADCAPTURE;
           break;
         case GEN_GOODCAPTURE_QS:
@@ -541,8 +541,8 @@ public final class MoveGenerator {
       int position = ChessmanList.next(positions);
       addPawnNonCaptureMovesTo(board.board[position], activeColor, position);
     }
-    System.arraycopy(nonCaptureMoveList.move, nonCaptureMoveList.head, moveList.move, moveList.tail, nonCaptureMoveList.getLength());
-    moveList.tail += nonCaptureMoveList.getLength();
+    System.arraycopy(nonCaptureMoveList.move, nonCaptureMoveList.head, moveList.move, moveList.tail, nonCaptureMoveList.size());
+    moveList.tail += nonCaptureMoveList.size();
     assert board.kingList[activeColor].size() == 1;
     int position = ChessmanList.next(board.kingList[activeColor].positions);
     int king = board.board[position];

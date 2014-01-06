@@ -29,22 +29,22 @@ public class MoveListTest {
     MoveList moveList = new MoveList();
 
     moveList.newList();
-    assertEquals(0, moveList.getLength());
+    assertEquals(0, moveList.size());
     moveList.move[moveList.tail++] = 1;
-    assertEquals(1, moveList.getLength());
+    assertEquals(1, moveList.size());
 
     moveList.newList();
-    assertEquals(0, moveList.getLength());
+    assertEquals(0, moveList.size());
     moveList.move[moveList.tail++] = 1;
     moveList.move[moveList.tail++] = 1;
     moveList.move[moveList.tail++] = 1;
-    assertEquals(3, moveList.getLength());
+    assertEquals(3, moveList.size());
 
     moveList.deleteList();
-    assertEquals(1, moveList.getLength());
+    assertEquals(1, moveList.size());
 
     moveList.deleteList();
-    assertEquals(0, moveList.getLength());
+    assertEquals(0, moveList.size());
   }
 
 }

@@ -215,7 +215,7 @@ public class MoveGeneratorTest {
     }
     moveGenerator.destroy();
 
-    assertEquals(printDifference(board, mainMoveList, quiescentMoveList), mainMoveList.getLength(), quiescentMoveList.getLength());
+    assertEquals(printDifference(board, mainMoveList, quiescentMoveList), mainMoveList.size(), quiescentMoveList.size());
   }
 
   private String printDifference(Board board, MoveList main, MoveList quiescent) {
