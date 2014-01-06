@@ -308,13 +308,13 @@ public final class DrawEvaluation {
     } else {
       assert myColor == IntColor.WHITE;
     }
-    int end = ChessmanList.next(board.pawnList[myColor].positions) + delta;
-    while ((end & 0x88) == 0) {
-      int chessman = board.board[end];
-      if ((chessman != IntPiece.NOPIECE && IntPiece.getColor(chessman) == enemyColor) || (enemyAttackTable[end] & AttackTableEvaluation.BIT_MINOR) != 0) {
+    int targetPosition = ChessmanList.next(board.pawnList[myColor].positions) + delta;
+    while ((targetPosition & 0x88) == 0) {
+      int chessman = board.board[targetPosition];
+      if ((chessman != IntPiece.NOPIECE && IntPiece.getColor(chessman) == enemyColor) || (enemyAttackTable[targetPosition] & AttackTableEvaluation.BIT_MINOR) != 0) {
         return 1;
       } else {
-        end += delta;
+        targetPosition += delta;
       }
     }
 
@@ -335,13 +335,13 @@ public final class DrawEvaluation {
     } else {
       assert myColor == IntColor.WHITE;
     }
-    int end = ChessmanList.next(board.pawnList[myColor].positions) + delta;
-    while ((end & 0x88) == 0) {
-      int chessman = board.board[end];
-      if ((chessman != IntPiece.NOPIECE && IntPiece.getColor(chessman) == enemyColor) || (enemyAttackTable[end] & AttackTableEvaluation.BIT_MINOR) != 0) {
+    int targetPosition = ChessmanList.next(board.pawnList[myColor].positions) + delta;
+    while ((targetPosition & 0x88) == 0) {
+      int chessman = board.board[targetPosition];
+      if ((chessman != IntPiece.NOPIECE && IntPiece.getColor(chessman) == enemyColor) || (enemyAttackTable[targetPosition] & AttackTableEvaluation.BIT_MINOR) != 0) {
         return 1;
       } else {
-        end += delta;
+        targetPosition += delta;
       }
     }
 

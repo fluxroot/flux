@@ -104,9 +104,9 @@ public final class PawnPasserEvaluation {
           if ((myAttackTable[pawnPosition] & AttackTableEvaluation.BIT_ROOK) != 0) {
             // We are protected by a rook
             // Check whether the rook is in front of us
-            int endPosition = pawnPosition - 16;
+            int targetPosition = pawnPosition - 16;
             for (int j = pawnRank - 1; j >= 0; j--) {
-              int chessman = board.board[endPosition];
+              int chessman = board.board[targetPosition];
               if (chessman != IntPiece.NOPIECE) {
                 if (IntPiece.getChessman(chessman) == IntChessman.ROOK && IntPiece.getColor(chessman) == myColor) {
                   // We have no bad rook
@@ -114,7 +114,7 @@ public final class PawnPasserEvaluation {
                 }
                 break;
               }
-              endPosition -= 16;
+              targetPosition -= 16;
             }
           }
         }
@@ -142,13 +142,13 @@ public final class PawnPasserEvaluation {
           if (myColor == IntColor.WHITE) {
             // Is a friendly chessman blocking our promotion path?
             boolean pathClear = true;
-            int endPosition = pawnPosition + 16;
+            int targetPosition = pawnPosition + 16;
             for (int j = pawnRank + 1; j <= 7; j++) {
-              int chessman = board.board[endPosition];
+              int chessman = board.board[targetPosition];
               if (chessman != IntPiece.NOPIECE && IntPiece.getColor(chessman) == myColor) {
                 pathClear = false;
               }
-              endPosition += 16;
+              targetPosition += 16;
             }
 
             if (pathClear) {
@@ -181,13 +181,13 @@ public final class PawnPasserEvaluation {
 
             // Is a friendly chessman blocking our promotion path?
             boolean pathClear = true;
-            int endPosition = pawnPosition - 16;
+            int targetPosition = pawnPosition - 16;
             for (int j = pawnRank - 1; j >= 0; j--) {
-              int chessman = board.board[endPosition];
+              int chessman = board.board[targetPosition];
               if (chessman != IntPiece.NOPIECE && IntPiece.getColor(chessman) == myColor) {
                 pathClear = false;
               }
-              endPosition -= 16;
+              targetPosition -= 16;
             }
 
             if (pathClear) {

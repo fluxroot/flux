@@ -37,13 +37,13 @@ public final class HistoryTable {
   public int get(int move) {
     assert move != Move.NOMOVE;
 
-    int piece = Move.getOriginPiece(move);
-    int end = Move.getTargetPosition(move);
+    int originPiece = Move.getOriginPiece(move);
+    int targetPosition = Move.getTargetPosition(move);
     assert IntPiece.getChessman(Move.getOriginPiece(move)) != IntChessman.NOCHESSMAN;
     assert IntPiece.getColor(Move.getOriginPiece(move)) != IntColor.NOCOLOR;
-    assert (end & 0x88) == 0;
+    assert (targetPosition & 0x88) == 0;
 
-    return historyTable[IntPiece.ordinal(piece)][end];
+    return historyTable[IntPiece.ordinal(originPiece)][targetPosition];
   }
 
   /**
@@ -54,15 +54,15 @@ public final class HistoryTable {
   public void add(int move, int depth) {
     assert move != Move.NOMOVE;
 
-    int piece = Move.getOriginPiece(move);
-    int end = Move.getTargetPosition(move);
+    int originPiece = Move.getOriginPiece(move);
+    int targetPosition = Move.getTargetPosition(move);
     assert IntPiece.getChessman(Move.getOriginPiece(move)) != IntChessman.NOCHESSMAN;
     assert IntPiece.getColor(Move.getOriginPiece(move)) != IntColor.NOCOLOR;
-    assert (end & 0x88) == 0;
+    assert (targetPosition & 0x88) == 0;
 
-    historyTable[IntPiece.ordinal(piece)][end] += depth;
+    historyTable[IntPiece.ordinal(originPiece)][targetPosition] += depth;
 
-    if (historyTable[IntPiece.ordinal(piece)][end] >= MAX_HISTORYVALUE) {
+    if (historyTable[IntPiece.ordinal(originPiece)][targetPosition] >= MAX_HISTORYVALUE) {
       for (int pieceValue : IntPiece.values) {
         for (int positionValue : Position.values) {
           historyTable[IntPiece.ordinal(pieceValue)][positionValue] /= 2;

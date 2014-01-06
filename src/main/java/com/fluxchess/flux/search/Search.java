@@ -609,7 +609,7 @@ public final class Search implements Runnable {
 
           // Check if this is an easy recapture
           else if (!timeExtended
-            && Move.getTargetPosition(moveResult.bestMove) == board.captureSquare
+            && Move.getTargetPosition(moveResult.bestMove) == board.capturePosition
             && Evaluation.getValueFromPiece(Move.getTargetPiece(moveResult.bestMove)) >= Evaluation.VALUE_KNIGHT
             && equalResults > 4) {
             stopFlag = true;
@@ -1456,11 +1456,11 @@ public final class Search implements Runnable {
   private int getNewDepth(int depth, int move, boolean isSingleReply, boolean mateThreat) {
     int newDepth = depth - 1;
 
-    assert (Move.getTargetPosition(move) != board.captureSquare) || (Move.getTargetPiece(move) != IntPiece.NOPIECE);
+    assert (Move.getTargetPosition(move) != board.capturePosition) || (Move.getTargetPiece(move) != IntPiece.NOPIECE);
 
     //## Recapture Extension
     if (Configuration.useRecaptureExtension
-      && Move.getTargetPosition(move) == board.captureSquare
+      && Move.getTargetPosition(move) == board.capturePosition
       && MoveSee.seeMove(move, IntPiece.getColor(Move.getOriginPiece(move))) > 0) {
       newDepth++;
     }

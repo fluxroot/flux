@@ -52,9 +52,9 @@ public class BoardTest {
 
     // Test en passant
     if (board.getEnPassant() == null) {
-      assertEquals(Position.NOPOSITION, testBoard.enPassantSquare);
+      assertEquals(Position.NOPOSITION, testBoard.enPassantPosition);
     } else {
-      assertEquals(Position.valueOf(board.getEnPassant()), testBoard.enPassantSquare);
+      assertEquals(Position.valueOf(board.getEnPassant()), testBoard.enPassantPosition);
     }
 
     // Test half move clock

@@ -102,13 +102,13 @@ public class MoveGeneratorTest {
       boolean isCheckingMove = board.isCheckingMove(move);
       GenericBoard oldBoard = board.getBoard();
 
-      int captureSquare = board.captureSquare;
+      int captureSquare = board.capturePosition;
       board.makeMove(move);
       boolean isCheckingMoveReal = board.getAttack(board.activeColor).isCheck();
       assertEquals(oldBoard.toString() + ", " + Move.toGenericMove(move).toString(), isCheckingMoveReal, isCheckingMove);
       nodes = miniMax(board, moveGenerator, depth - 1, maxDepth);
       board.undoMove(move);
-      assert captureSquare == board.captureSquare;
+      assert captureSquare == board.capturePosition;
 
 //          if (depth == maxDepth) {
 //              System.out.println(Move.toGenericMove(move).toLongAlgebraicNotation() + ": " + nodes);

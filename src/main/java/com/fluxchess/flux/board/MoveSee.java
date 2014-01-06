@@ -38,8 +38,8 @@ public final class MoveSee {
   }
 
   public static int seeMove(int move, int myColor) {
-    int start = Move.getOriginPosition(move);
-    int end = Move.getTargetPosition(move);
+    int originPosition = Move.getOriginPosition(move);
+    int targetPosition = Move.getTargetPosition(move);
     int type = Move.getType(move);
 
     // Get the enemy color
@@ -74,24 +74,24 @@ public final class MoveSee {
     }
 
     // Find all attackers
-    addAllAttackers(myList, end, myColor);
-    addAllAttackers(enemyList, end, enemyColor);
+    addAllAttackers(myList, targetPosition, myColor);
+    addAllAttackers(enemyList, targetPosition, enemyColor);
 
     // Find the attacker hiding behind the en-passant
     if (type == Move.Type.ENPASSANT) {
       if (myColor == IntColor.WHITE) {
-        addHiddenAttacker(end - 16, end);
+        addHiddenAttacker(targetPosition - 16, targetPosition);
       } else {
         assert myColor == IntColor.BLACK;
 
-        addHiddenAttacker(end + 16, end);
+        addHiddenAttacker(targetPosition + 16, targetPosition);
       }
     }
 
     // Remove the chessman from the attackers
     int position = -1;
     for (int i = 0; i < myList.size; i++) {
-      if (start == myList.position[i]) {
+      if (originPosition == myList.position[i]) {
         position = i;
         break;
       }
@@ -105,10 +105,10 @@ public final class MoveSee {
     }
 
     // Add the hidden attacker
-    addHiddenAttacker(start, end);
+    addHiddenAttacker(originPosition, targetPosition);
 
     // Make the capture
-    value -= makeCapture(end, enemyColor, myColor, attackerValue);
+    value -= makeCapture(targetPosition, enemyColor, myColor, attackerValue);
 
     return value;
   }
@@ -262,24 +262,24 @@ public final class MoveSee {
     }
   }
 
-  private static boolean hasHiddenAttacker(int chessmanPosition, int targetPosition) {
-    int vector = Attack.vector[targetPosition - chessmanPosition + 127];
+  private static boolean hasHiddenAttacker(int chessmanPosition, int endPosition) {
+    int vector = Attack.vector[endPosition - chessmanPosition + 127];
     if (vector == Attack.N || vector == Attack.K) {
       // No line
       return false;
     }
 
     // Get the reverse delta
-    int delta = Attack.deltas[chessmanPosition - targetPosition + 127];
+    int delta = Attack.deltas[chessmanPosition - endPosition + 127];
 
     // Find the hidden attacker
-    int end = chessmanPosition + delta;
-    while ((end & 0x88) == 0) {
-      int chessman = board.board[end];
+    int targetPosition = chessmanPosition + delta;
+    while ((targetPosition & 0x88) == 0) {
+      int chessman = board.board[targetPosition];
       if (chessman == IntPiece.NOPIECE) {
-        end += delta;
+        targetPosition += delta;
       } else {
-        if (board.canSliderPseudoAttack(chessman, end, targetPosition)) {
+        if (board.canSliderPseudoAttack(chessman, targetPosition, endPosition)) {
           return true;
         }
         break;

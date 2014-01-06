@@ -318,7 +318,7 @@ public final class Move {
     if (originPiece != IntPiece.NOPIECE && targetPiece != IntPiece.NOPIECE) {
       if (IntPiece.getChessman(originPiece) == IntChessman.PAWN && IntPiece.getChessman(targetPiece) == IntChessman.PAWN) {
         if (IntPiece.getColor(originPiece) == IntColor.opposite(IntPiece.getColor(targetPiece))) {
-          if (board.enPassantSquare == Position.valueOf(move.to)) {
+          if (board.enPassantPosition == Position.valueOf(move.to)) {
             return true;
           }
         }
