@@ -143,7 +143,7 @@ public final class RookEvaluation {
       endgame += EVAL_ROOK_SEVENTHRANK_BONUS;
     }
 
-    return board.getGamePhaseEvaluation(myColor, opening, endgame);
+    return Evaluation.getGamePhaseEvaluation(myColor, opening, endgame, board);
   }
 
 }

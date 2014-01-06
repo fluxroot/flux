@@ -129,7 +129,7 @@ public final class PawnStructureEvaluation {
       }
     }
 
-    return board.getGamePhaseEvaluation(myColor, opening, endgame);
+    return Evaluation.getGamePhaseEvaluation(myColor, opening, endgame, board);
   }
 
 }

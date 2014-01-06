@@ -64,8 +64,8 @@ public final class DrawEvaluation {
       if (myMaterial == 0) {
         if (enemyMaterial == 0) {
           // KK: insufficient material
-          assert board.materialCountAll[myColor] == 0;
-          assert board.materialCountAll[enemyColor] == 0;
+          assert Evaluation.materialCountAll(myColor, board) == 0;
+          assert Evaluation.materialCountAll(enemyColor, board) == 0;
           return 0;
         } else if (enemyMaterial == PAWN_VALUE) {
           // KKP

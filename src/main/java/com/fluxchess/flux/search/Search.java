@@ -969,7 +969,7 @@ public final class Search implements Runnable {
         && doNull
         && !isCheck
         && !mateThreat
-        && board.getGamePhase() != IntGamePhase.ENDGAME
+        && Evaluation.getGamePhase(board) != IntGamePhase.ENDGAME
         && (evalValue = evaluation.evaluate(board)) >= beta) {
         // Depth reduction
         int newDepth = depth - 1 - NULLMOVE_REDUCTION;
@@ -1491,8 +1491,8 @@ public final class Search implements Runnable {
     }
 
     // Extend another ply if we enter a pawn endgame
-    if (board.materialCount[board.activeColor] == 0
-      && board.materialCount[IntColor.opposite(board.activeColor)] == 1
+    if (Evaluation.materialCount(board.activeColor, board) == 0
+      && Evaluation.materialCount(IntColor.opposite(board.activeColor), board) == 1
       && Move.getTargetPiece(move) != IntPiece.NOPIECE
       && IntPiece.getChessman(Move.getTargetPiece(move)) != IntChessman.PAWN) {
       newDepth++;

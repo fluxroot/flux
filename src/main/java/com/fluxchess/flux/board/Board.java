@@ -34,21 +34,6 @@ public final class Board {
   // The size of the history stack
   private static final int STACKSIZE = Search.MAX_MOVES;
 
-  // Game phase thresholds
-  private static final int GAMEPHASE_OPENING_VALUE =
-    Evaluation.VALUE_KING
-      + 1 * Evaluation.VALUE_QUEEN
-      + 2 * Evaluation.VALUE_ROOK
-      + 2 * Evaluation.VALUE_BISHOP
-      + 2 * Evaluation.VALUE_KNIGHT
-      + 8 * Evaluation.VALUE_PAWN;
-  private static final int GAMEPHASE_ENDGAME_VALUE =
-    Evaluation.VALUE_KING
-      + 1 * Evaluation.VALUE_QUEEN
-      + 1 * Evaluation.VALUE_ROOK;
-  private static final int GAMEPHASE_INTERVAL = GAMEPHASE_OPENING_VALUE - GAMEPHASE_ENDGAME_VALUE;
-  private static final int GAMEPHASE_ENDGAME_COUNT = 2;
-
   private static final Random random = new Random(0);
 
   // The zobrist keys
@@ -100,15 +85,6 @@ public final class Board {
 
   // The active color
   public int activeColor = IntColor.WHITE;
-
-  // Material values of all pieces (pawns, knights, bishops, rooks, queens, king)
-  public final int[] materialValueAll = new int[IntColor.values.length];
-
-  // Material counters of minor and major pieces (knights, bishops, rooks, queens)
-  public final int[] materialCount = new int[IntColor.values.length];
-
-  // Material counters of all pieces without the king (pawns, knights, bishops, rooks, queens)
-  public final int[] materialCountAll = new int[IntColor.values.length];
 
   // Our repetition table
   private final RepetitionTable repetitionTable;
@@ -165,13 +141,6 @@ public final class Board {
       for (int j = 0; j < IntColor.values.length; j++) {
         attackHistory[i][j] = new Attack();
       }
-    }
-
-    // Initialize the material values and counters
-    for (int color : IntColor.values) {
-      materialValueAll[color] = 0;
-      materialCount[color] = 0;
-      materialCountAll[color] = 0;
     }
 
     // Initialize the board
@@ -245,30 +214,21 @@ public final class Board {
     switch (chessman) {
       case IntChessman.PAWN:
         pawnList[color].add(position);
-        materialCountAll[color]++;
         if (update) {
           pawnZobristCode ^= zobristChessman[IntChessman.PAWN][color][position];
         }
         break;
       case IntChessman.KNIGHT:
         knightList[color].add(position);
-        materialCount[color]++;
-        materialCountAll[color]++;
         break;
       case IntChessman.BISHOP:
         bishopList[color].add(position);
-        materialCount[color]++;
-        materialCountAll[color]++;
         break;
       case IntChessman.ROOK:
         rookList[color].add(position);
-        materialCount[color]++;
-        materialCountAll[color]++;
         break;
       case IntChessman.QUEEN:
         queenList[color].add(position);
-        materialCount[color]++;
-        materialCountAll[color]++;
         break;
       case IntChessman.KING:
         kingList[color].add(position);
@@ -280,7 +240,6 @@ public final class Board {
 
     // Update
     board[position] = piece;
-    materialValueAll[color] += Evaluation.getValueFromChessman(chessman);
     if (update) {
       zobristCode ^= zobristChessman[chessman][color][position];
     }
@@ -307,30 +266,21 @@ public final class Board {
     switch (chessman) {
       case IntChessman.PAWN:
         pawnList[color].remove(position);
-        materialCountAll[color]--;
         if (update) {
           pawnZobristCode ^= zobristChessman[IntChessman.PAWN][color][position];
         }
         break;
       case IntChessman.KNIGHT:
         knightList[color].remove(position);
-        materialCount[color]--;
-        materialCountAll[color]--;
         break;
       case IntChessman.BISHOP:
         bishopList[color].remove(position);
-        materialCount[color]--;
-        materialCountAll[color]--;
         break;
       case IntChessman.ROOK:
         rookList[color].remove(position);
-        materialCount[color]--;
-        materialCountAll[color]--;
         break;
       case IntChessman.QUEEN:
         queenList[color].remove(position);
-        materialCount[color]--;
-        materialCountAll[color]--;
         break;
       case IntChessman.KING:
         kingList[color].remove(position);
@@ -342,7 +292,6 @@ public final class Board {
 
     // Update
     board[position] = IntPiece.NOPIECE;
-    materialValueAll[color] -= Evaluation.getValueFromChessman(chessman);
     if (update) {
       zobristCode ^= zobristChessman[chessman][color][position];
     }
@@ -527,40 +476,6 @@ public final class Board {
     if (activeColor == IntColor.valueOf(GenericColor.BLACK)) {
       halfMoveNumber++;
     }
-  }
-
-  public int getGamePhase() {
-    if (materialValueAll[IntColor.WHITE] >= GAMEPHASE_OPENING_VALUE && materialValueAll[IntColor.BLACK] >= GAMEPHASE_OPENING_VALUE) {
-      return IntGamePhase.OPENING;
-    } else if (materialValueAll[IntColor.WHITE] <= GAMEPHASE_ENDGAME_VALUE || materialValueAll[IntColor.BLACK] <= GAMEPHASE_ENDGAME_VALUE
-      || materialCount[IntColor.WHITE] <= GAMEPHASE_ENDGAME_COUNT || materialCount[IntColor.BLACK] <= GAMEPHASE_ENDGAME_COUNT) {
-      return IntGamePhase.ENDGAME;
-    } else {
-      return IntGamePhase.MIDDLE;
-    }
-  }
-
-  /**
-   * Returns the evaluation value mix from the opening and endgame values depending on the current game phase.
-   * This allows us to make a smooth transition from the opening to the endgame.
-   *
-   * @param myColor the color.
-   * @param opening the opening evaluation value.
-   * @param endgame the endgame evaluation value.
-   * @return the evaluation value mix from the opening and endgame values depending on the current game phase.
-   */
-  public int getGamePhaseEvaluation(int myColor, int opening, int endgame) {
-    int intervalMaterial = materialValueAll[myColor];
-
-    if (intervalMaterial >= GAMEPHASE_OPENING_VALUE) {
-      intervalMaterial = GAMEPHASE_INTERVAL;
-    } else if (intervalMaterial <= GAMEPHASE_ENDGAME_VALUE) {
-      intervalMaterial = 0;
-    } else {
-      intervalMaterial -= GAMEPHASE_ENDGAME_VALUE;
-    }
-
-    return (((opening - endgame) * intervalMaterial) / GAMEPHASE_INTERVAL) + endgame;
   }
 
   /**

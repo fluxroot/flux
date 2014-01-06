@@ -137,7 +137,7 @@ public final class PawnPasserEvaluation {
         endgameMax -= myKingDistance * EVAL_PAWN_MYKING_DISTANCE;
         endgameMax += enemyKingDistance * EVAL_PAWN_ENEMYKING_DISTANCE;
 
-        if (board.materialCount[enemyColor] == 0) {
+        if (Evaluation.materialCount(enemyColor, board) == 0) {
           // Unstoppable passer
           if (myColor == IntColor.WHITE) {
             // Is a friendly chessman blocking our promotion path?
@@ -236,7 +236,7 @@ public final class PawnPasserEvaluation {
       }
     }
 
-    return board.getGamePhaseEvaluation(myColor, opening, endgame);
+    return Evaluation.getGamePhaseEvaluation(myColor, opening, endgame, board);
   }
 
 }

@@ -64,12 +64,12 @@ public class BoardTest {
     assertEquals(board.getFullMoveNumber(), testBoard.getFullMoveNumber());
 
     // Test game phase
-    assertEquals(IntGamePhase.OPENING, testBoard.getGamePhase());
+    assertEquals(IntGamePhase.OPENING, Evaluation.getGamePhase(testBoard));
 
     // Test material value
-    assertEquals(Evaluation.VALUE_KING + Evaluation.VALUE_QUEEN + 2 * Evaluation.VALUE_ROOK + 2 * Evaluation.VALUE_BISHOP + 2 * Evaluation.VALUE_KNIGHT + 8 * Evaluation.VALUE_PAWN, testBoard.materialValueAll[IntColor.WHITE]);
-    assertEquals(1 /* QUEEN */ + 2 /* ROOKS */ + 2 /* BISHOPS */ + 2 /* KNIGHTS */, testBoard.materialCount[IntColor.WHITE]);
-    assertEquals(1 /* QUEEN */ + 2 /* ROOKS */ + 2 /* BISHOPS */ + 2 /* KNIGHTS */ + 8 /* PAWNS */, testBoard.materialCountAll[IntColor.WHITE]);
+    assertEquals(Evaluation.VALUE_KING + Evaluation.VALUE_QUEEN + 2 * Evaluation.VALUE_ROOK + 2 * Evaluation.VALUE_BISHOP + 2 * Evaluation.VALUE_KNIGHT + 8 * Evaluation.VALUE_PAWN, Evaluation.materialValueAll(IntColor.WHITE, testBoard));
+    assertEquals(1 /* QUEEN */ + 2 /* ROOKS */ + 2 /* BISHOPS */ + 2 /* KNIGHTS */, Evaluation.materialCount(IntColor.WHITE, testBoard));
+    assertEquals(1 /* QUEEN */ + 2 /* ROOKS */ + 2 /* BISHOPS */ + 2 /* KNIGHTS */ + 8 /* PAWNS */, Evaluation.materialCountAll(IntColor.WHITE, testBoard));
   }
 
   @Test

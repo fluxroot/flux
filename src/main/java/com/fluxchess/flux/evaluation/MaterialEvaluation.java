@@ -31,7 +31,7 @@ public final class MaterialEvaluation {
   public static int evaluateMaterial(int myColor, Board board) {
     assert myColor != IntColor.NOCOLOR;
 
-    int total = board.materialValueAll[myColor];
+    int total = Evaluation.materialValueAll(myColor, board);
 
 //      if (Board.materialCount[myColor] == 1) {
 //          if (Board.knightList[myColor].size == 1) {

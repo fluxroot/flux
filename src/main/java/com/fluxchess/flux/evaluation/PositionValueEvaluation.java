@@ -315,7 +315,7 @@ public final class PositionValueEvaluation {
     endgame += positionValueEndgame[IntChessman.KING][position];
 
     // Return linear mix
-    return board.getGamePhaseEvaluation(myColor, opening, endgame);
+    return Evaluation.getGamePhaseEvaluation(myColor, opening, endgame, board);
   }
 
 }
