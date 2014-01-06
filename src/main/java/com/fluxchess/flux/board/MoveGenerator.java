@@ -80,7 +80,7 @@ public final class MoveGenerator {
 
   // Move list
   private final MoveList moveList;
-  private final MoveList tempMoveList;
+  private final MoveList tempList;
   private final MoveList nonCaptureMoveList;
 
   // Generator history
@@ -122,7 +122,7 @@ public final class MoveGenerator {
     moveRater = new MoveRater(historyTable);
 
     moveList = new MoveList();
-    tempMoveList = new MoveList();
+    tempList = new MoveList();
     nonCaptureMoveList = new MoveList();
 
     // Initialize generator
@@ -134,7 +134,7 @@ public final class MoveGenerator {
 
   public void initializeMain(Attack attack, int height, int transpositionMove) {
     moveList.newList();
-    tempMoveList.newList();
+    tempList.newList();
     nonCaptureMoveList.newList();
     generatorHistory++;
 
@@ -158,7 +158,7 @@ public final class MoveGenerator {
 
   public void initializeQuiescent(Attack attack, boolean generateCheckingMoves) {
     moveList.newList();
-    tempMoveList.newList();
+    tempList.newList();
     nonCaptureMoveList.newList();
     generatorHistory++;
 
@@ -185,7 +185,7 @@ public final class MoveGenerator {
   public void destroy() {
     generatorHistory--;
     nonCaptureMoveList.deleteList();
-    tempMoveList.deleteList();
+    tempList.deleteList();
     moveList.deleteList();
   }
 
@@ -208,7 +208,7 @@ public final class MoveGenerator {
             }
             assert Move.getTargetPiece(move) != IntPiece.NOPIECE;
             if (!isGoodCapture(move)) {
-              tempMoveList.move[tempMoveList.tail++] = move;
+              tempList.move[tempList.tail++] = move;
               continue;
             }
             break;
@@ -290,7 +290,7 @@ public final class MoveGenerator {
           break;
         case GEN_GOODCAPTURE:
           generateCaptures();
-          tempMoveList.clear();
+          tempList.clear();
           moveRater.rateFromMVVLVA(moveList);
 //              moveRater.rateFromMVPD(moveList);
           MoveSorter.sort(moveList);
@@ -319,8 +319,8 @@ public final class MoveGenerator {
           generator[generatorHistory].testState = GEN_NONCAPTURE;
           break;
         case GEN_BADCAPTURE:
-          System.arraycopy(tempMoveList.move, tempMoveList.head, moveList.move, moveList.tail, tempMoveList.size());
-          moveList.tail += tempMoveList.size();
+          System.arraycopy(tempList.move, tempList.head, moveList.move, moveList.tail, tempList.size());
+          moveList.tail += tempList.size();
           generator[generatorHistory].testState = GEN_BADCAPTURE;
           break;
         case GEN_GOODCAPTURE_QS:
@@ -376,7 +376,7 @@ public final class MoveGenerator {
       case Move.Type.NORMAL:
         break;
       case Move.Type.PAWNDOUBLE:
-        int delta = 0;
+        int delta;
         if (color == IntColor.WHITE) {
           delta = 16;
         } else {
@@ -462,7 +462,7 @@ public final class MoveGenerator {
 
     // Check pawn move
     if (chessman == IntChessman.PAWN) {
-      int delta = 0;
+      int delta;
       if (color == IntColor.WHITE) {
         delta = 16;
       } else {
@@ -532,9 +532,6 @@ public final class MoveGenerator {
   }
 
   private void generateNonCaptures() {
-    assert board != null;
-    assert moveList != null;
-
     int activeColor = board.activeColor;
 
     for (long positions = board.pawnList[activeColor].positions; positions != 0; positions &= positions - 1) {
@@ -550,9 +547,6 @@ public final class MoveGenerator {
   }
 
   private void generateCaptures() {
-    assert board != null;
-    assert moveList != null;
-
     int activeColor = board.activeColor;
     int oppositeColor = IntColor.opposite(activeColor);
 
@@ -582,9 +576,6 @@ public final class MoveGenerator {
   }
 
   private void generateEvasion(Attack attack) {
-    assert board != null;
-    assert moveList != null;
-
     int activeColor = board.activeColor;
     assert board.kingList[activeColor].size() == 1;
     int kingPosition = ChessmanList.next(board.kingList[activeColor].positions);
@@ -747,8 +738,6 @@ public final class MoveGenerator {
    * @param endPosition the target position.
    */
   private void addDefaultNonCaptureMovesTo(int piece, int position, int[] moveDelta, int endPosition) {
-    assert board != null;
-    assert moveList != null;
     assert moveDelta != null;
 
     boolean sliding = IntChessman.isSliding(IntPiece.getChessman(piece));
@@ -782,8 +771,6 @@ public final class MoveGenerator {
    * @param isPinned     whether the chessman is pinned.
    */
   private void addDefaultNonCaptureCheckMovesTo(int piece, int chessman, int chessmanColor, int chessmanPosition, int[] moveDelta, int kingPosition, boolean isPinned) {
-    assert board != null;
-    assert moveList != null;
     assert moveDelta != null;
 
     boolean sliding = IntChessman.isSliding(IntPiece.getChessman(piece));
@@ -826,8 +813,6 @@ public final class MoveGenerator {
   private void addDefaultCaptureMovesTo(int piece, int originPosition, boolean sliding, int[] moveDelta, int targetPosition, int oppositeColor) {
     assert piece != IntPiece.NOPIECE;
     assert moveDelta != null;
-    assert board != null;
-    assert moveList != null;
 
     assert IntChessman.isSliding(IntPiece.getChessman(piece)) == sliding;
     assert oppositeColor == IntColor.opposite(IntPiece.getColor(piece));
@@ -877,9 +862,7 @@ public final class MoveGenerator {
     assert IntPiece.getChessman(pawn) == IntChessman.PAWN;
     assert IntPiece.getColor(pawn) == pawnColor;
     assert (pawnPosition & 0x88) == 0;
-    assert board != null;
     assert board.board[pawnPosition] == pawn;
-    assert moveList != null;
 
     int delta = moveDeltaPawn[0];
     if (pawnColor == IntColor.BLACK) {
@@ -932,8 +915,6 @@ public final class MoveGenerator {
   private void addPawnNonCaptureMovesToTarget(int pawnColor, int targetPosition) {
     assert pawnColor == IntColor.WHITE || pawnColor == IntColor.BLACK;
     assert (targetPosition & 0x88) == 0;
-    assert board != null;
-    assert moveList != null;
     assert board.board[targetPosition] == IntPiece.NOPIECE;
 
     int delta = moveDeltaPawn[0];
@@ -1004,8 +985,6 @@ public final class MoveGenerator {
   private void addPawnNonCaptureCheckMovesTo(int pawn, int color, int pawnPosition, int kingPosition, boolean isPinned) {
     assert pawn != IntPiece.NOPIECE;
     assert (kingPosition & 0x88) == 0;
-    assert board != null;
-    assert moveList != null;
 
     int delta = moveDeltaPawn[0];
     if (color == IntColor.BLACK) {
@@ -1101,9 +1080,7 @@ public final class MoveGenerator {
     assert IntPiece.getChessman(pawn) == IntChessman.PAWN;
     assert IntPiece.getColor(pawn) == pawnColor;
     assert (pawnPosition & 0x88) == 0;
-    assert board != null;
     assert board.board[pawnPosition] == pawn;
-    assert moveList != null;
 
     for (int i = 1; i < moveDeltaPawn.length; i++) {
       int delta = moveDeltaPawn[i];
@@ -1147,8 +1124,6 @@ public final class MoveGenerator {
           if (pawnColor == IntColor.WHITE) {
             enPassantTargetPosition = targetPosition - 16;
           } else {
-            assert pawnColor == IntColor.BLACK;
-
             enPassantTargetPosition = targetPosition + 16;
           }
           target = board.board[enPassantTargetPosition];
@@ -1174,8 +1149,6 @@ public final class MoveGenerator {
     assert target != IntPiece.NOPIECE;
     assert IntPiece.getColor(target) == IntColor.opposite(pawnColor);
     assert (targetPosition & 0x88) == 0;
-    assert board != null;
-    assert moveList != null;
     assert board.board[targetPosition] != IntPiece.NOPIECE;
     assert board.board[targetPosition] == target;
     assert IntPiece.getChessman(board.board[targetPosition]) != IntChessman.KING;
@@ -1252,8 +1225,6 @@ public final class MoveGenerator {
   private void addCastlingMoveIfAllowed(int king, int kingPosition, int color) {
     assert king != IntPiece.NOPIECE;
     assert (kingPosition & 0x88) == 0;
-    assert board != null;
-    assert moveList != null;
 
     if (color == IntColor.WHITE) {
       // Do not test g1 whether it is attacked as we will test it in isLegal()
@@ -1317,8 +1288,6 @@ public final class MoveGenerator {
   private void addCastlingCheckMoveIfAllowed(int king, int kingPosition, int color, int targetPosition) {
     assert king != IntPiece.NOPIECE;
     assert (kingPosition & 0x88) == 0;
-    assert board != null;
-    assert moveList != null;
 
     if (color == IntColor.WHITE) {
       // Do not test g1 whether it is attacked as we will test it in isLegal()

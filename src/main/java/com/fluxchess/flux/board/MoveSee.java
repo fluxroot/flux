@@ -54,7 +54,7 @@ public final class MoveSee {
     enemyList.size = 0;
 
     // Get the attacker value
-    int attackerValue = 0;
+    int attackerValue;
     if (type == Move.Type.PAWNPROMOTION) {
       attackerValue = Evaluation.getValueFromChessman(Move.getPromotion(move));
     } else {
@@ -131,7 +131,7 @@ public final class MoveSee {
     }
 
     // Get the attacker value
-    int attackerValue = 0;
+    int attackerValue;
     int chessman = IntPiece.getChessman(attacker);
     if (chessman == IntChessman.PAWN
       && ((targetPosition > 111 && myColor == IntColor.WHITE)

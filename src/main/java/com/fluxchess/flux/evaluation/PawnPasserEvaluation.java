@@ -177,8 +177,6 @@ public final class PawnPasserEvaluation {
               }
             }
           } else {
-            assert myColor == IntColor.BLACK;
-
             // Is a friendly chessman blocking our promotion path?
             boolean pathClear = true;
             int targetPosition = pawnPosition - 16;

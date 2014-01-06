@@ -249,7 +249,7 @@ public final class Search implements Runnable {
 
     this.searchDepth = searchDepth;
     if (searchDepth > MAX_DEPTH) {
-      searchDepth = MAX_DEPTH;
+      this.searchDepth = MAX_DEPTH;
     }
     doTimeManagement = false;
   }
@@ -416,7 +416,7 @@ public final class Search implements Runnable {
     if (searchMoveList.size() == 0) {
       moveGenerator.initializeMain(attack, 0, transpositionMove);
 
-      int move = Move.NOMOVE;
+      int move;
       while ((move = moveGenerator.getNextMove()) != Move.NOMOVE) {
         rootMoveList.move[rootMoveList.tail++] = move;
       }

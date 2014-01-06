@@ -20,8 +20,6 @@ package com.fluxchess.flux.board;
 
 public final class IntGamePhase {
 
-  public static final int NOGAMEPHASE = -5;
-
   public static final int OPENING = 0;
   public static final int MIDDLE = 1;
   public static final int ENDGAME = 2;
@@ -31,8 +29,6 @@ public final class IntGamePhase {
     MIDDLE,
     ENDGAME
   };
-
-  public static final int MASK = 0x2;
 
   private IntGamePhase() {
   }

@@ -20,11 +20,11 @@ package com.fluxchess.flux.evaluation;
 
 import com.fluxchess.flux.Configuration;
 import com.fluxchess.flux.board.Board;
-import com.fluxchess.flux.board.ChessmanList;
 import com.fluxchess.flux.board.IntGamePhase;
-import com.fluxchess.flux.board.Position;
 import com.fluxchess.flux.search.Search;
-import com.fluxchess.jcpi.models.*;
+import com.fluxchess.jcpi.models.IntChessman;
+import com.fluxchess.jcpi.models.IntColor;
+import com.fluxchess.jcpi.models.IntPiece;
 
 public final class Evaluation {
 
@@ -224,7 +224,7 @@ public final class Evaluation {
    * @return the evaluation value mix from the opening and endgame values depending on the current game phase.
    */
   public static int getGamePhaseEvaluation(int myColor, int opening, int endgame, Board board) {
-    int intervalMaterial = materialValueAll(IntColor.WHITE, board);
+    int intervalMaterial = materialValueAll(myColor, board);
 
     if (intervalMaterial >= GAMEPHASE_OPENING_VALUE) {
       intervalMaterial = GAMEPHASE_INTERVAL;

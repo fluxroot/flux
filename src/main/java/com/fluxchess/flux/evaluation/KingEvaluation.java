@@ -62,7 +62,7 @@ public final class KingEvaluation {
     int kingPosition = ChessmanList.next(board.kingList[myColor].positions);
 
     // Evaluate king safety
-    int attackedSquare = Position.NOPOSITION;
+    int attackedSquare;
     int attackCount = 0;
     byte flag = 0;
 
@@ -187,8 +187,6 @@ public final class KingEvaluation {
     if (myColor == IntColor.BLACK) {
       castlingPositionKingside = Position.g8;
       castlingPositionQueenside = Position.c8;
-    } else {
-      assert myColor == IntColor.WHITE;
     }
 
     // Evaluate pawn shield

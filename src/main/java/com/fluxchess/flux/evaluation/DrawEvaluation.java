@@ -233,8 +233,6 @@ public final class DrawEvaluation {
           promotionDistance--;
         }
       } else {
-        assert myColor == IntColor.BLACK;
-
         delta = -16;
 
         promotionDistance = pawnRank;
@@ -279,8 +277,6 @@ public final class DrawEvaluation {
         if (myColor == IntColor.WHITE) {
           enemyKingInFrontPawn = pawnRank < enemyKingRank;
         } else {
-          assert myColor == IntColor.BLACK;
-
           enemyKingInFrontPawn = pawnRank > enemyKingRank;
         }
         if (enemyKingInFrontPawn

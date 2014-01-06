@@ -614,7 +614,7 @@ public final class Board {
     assert (attackerPosition & 0x88) == 0;
     assert (targetPosition & 0x88) == 0;
 
-    int attackVector = Attack.N;
+    int attackVector;
 
     switch (IntPiece.getChessman(attacker)) {
       case IntChessman.PAWN:
@@ -1190,7 +1190,7 @@ public final class Board {
 
     // Save the captured chessman
     int targetPosition = Move.getTargetPosition(move);
-    int targetPiece = IntPiece.NOPIECE;
+    int targetPiece;
     if (board[targetPosition] != IntPiece.NOPIECE) {
       // Save the castling rights
       castlingHistory[castlingHistorySize++] = castling;
@@ -1289,8 +1289,6 @@ public final class Board {
     if (pawnColor == IntColor.WHITE) {
       capturePosition = targetPosition - 16;
     } else {
-      assert pawnColor == IntColor.BLACK;
-
       capturePosition = targetPosition + 16;
     }
 
