@@ -18,17 +18,17 @@
  */
 package com.fluxchess.flux.evaluation;
 
-import com.fluxchess.flux.board.ChessmanList;
 import com.fluxchess.flux.board.Board;
-import com.fluxchess.flux.board.IntColor;
+import com.fluxchess.flux.board.ChessmanList;
 import com.fluxchess.flux.board.Position;
+import com.fluxchess.jcpi.models.IntColor;
 
 import java.util.Arrays;
 
 public final class PawnTableEvaluation {
 
   // Our pawn structure table. 8 + 2 -> 2 Sentinels for each side.
-  public final byte[][] pawnTable = new byte[IntColor.ARRAY_DIMENSION][10];
+  public final byte[][] pawnTable = new byte[IntColor.values.length][10];
 
   private static final PawnTableEvaluation instance = new PawnTableEvaluation();
 
@@ -49,7 +49,7 @@ public final class PawnTableEvaluation {
     byte[] myPawnTable = pawnTable[myColor];
 
     // Evaluate each pawn
-    for (long positions = board.pawnList[myColor].list; positions != 0; positions &= positions - 1) {
+    for (long positions = board.pawnList[myColor].positions; positions != 0; positions &= positions - 1) {
       int pawnPosition = ChessmanList.next(positions);
       int pawnFile = Position.getFile(pawnPosition);
       int pawnRank = Position.getRank(pawnPosition);

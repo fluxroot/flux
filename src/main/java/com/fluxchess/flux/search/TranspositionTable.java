@@ -21,7 +21,6 @@ package com.fluxchess.flux.search;
 import com.fluxchess.flux.board.Board;
 import com.fluxchess.flux.board.Move;
 import com.fluxchess.flux.board.Score;
-import com.fluxchess.flux.search.Search;
 import com.fluxchess.jcpi.models.GenericMove;
 
 import java.util.List;

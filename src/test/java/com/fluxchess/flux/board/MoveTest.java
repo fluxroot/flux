@@ -18,9 +18,6 @@
  */
 package com.fluxchess.flux.board;
 
-import com.fluxchess.flux.board.*;
-import com.fluxchess.flux.board.IntChessman;
-import com.fluxchess.flux.board.IntColor;
 import com.fluxchess.jcpi.models.*;
 import org.junit.Test;
 
@@ -30,55 +27,49 @@ public class MoveTest {
 
   @Test
   public void testIntMove() {
-    int move = Move.createMove(Move.NULL, Position.NOPOSITION, Position.NOPOSITION, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
-    assertEquals(Move.NULL, Move.getType(move));
-//      assertEquals(Position.NOPOSITION, Move.getStart(move));
-//      assertEquals(Position.NOPOSITION, Move.getEnd(move));
-//      assertEquals(IntChessman.NOCHESSMAN, Move.getChessman(move));
-//      assertEquals(IntColor.NOCOLOR, Move.getChessmanColor(move));
-//      assertEquals(IntChessman.NOCHESSMAN, Move.getTarget(move));
+    int move = Move.valueOf(Move.Type.NULL, Position.NOPOSITION, Position.NOPOSITION, IntPiece.NOPIECE, IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
+    assertEquals(Move.Type.NULL, Move.getType(move));
+//      assertEquals(Position.NOPOSITION, Move.getOriginPosition(move));
+//      assertEquals(Position.NOPOSITION, Move.getTargetPosition(move));
+//      assertEquals(IntChessman.NOCHESSMAN, Move.getOriginChessman(move));
+//      assertEquals(IntColor.NOCOLOR, Move.getOriginColor(move));
+//      assertEquals(IntChessman.NOCHESSMAN, Move.getTargetChessman(move));
 //      assertEquals(IntColor.NOCOLOR, Move.getTargetColor(move));
 //      assertEquals(IntChessman.NOCHESSMAN, Move.getPromotion(move));
 
-    move = Move.createMove(Move.NORMAL, 0, 16, IntChessman.createPiece(IntChessman.PAWN, IntColor.WHITE), IntChessman.createPiece(IntChessman.QUEEN, IntColor.BLACK), IntChessman.NOPIECE);
-    assertEquals(Move.NORMAL, Move.getType(move));
-    assertEquals(0, Move.getStart(move));
-    assertEquals(16, Move.getEnd(move));
-    assertEquals(IntChessman.PAWN, Move.getChessman(move));
-    assertEquals(IntColor.WHITE, Move.getChessmanColor(move));
-    assertEquals(IntChessman.WHITE_PAWN, Move.getChessmanPiece(move));
-    assertEquals(IntChessman.QUEEN, Move.getTarget(move));
-    assertEquals(IntColor.BLACK, Move.getTargetColor(move));
-    assertEquals(IntChessman.BLACK_QUEEN, Move.getTargetPiece(move));
+    move = Move.valueOf(Move.Type.NORMAL, 0, 16, IntPiece.WHITEPAWN, IntPiece.BLACKQUEEN, IntChessman.NOCHESSMAN);
+    assertEquals(Move.Type.NORMAL, Move.getType(move));
+    assertEquals(0, Move.getOriginPosition(move));
+    assertEquals(16, Move.getTargetPosition(move));
+    assertEquals(IntPiece.WHITEPAWN, Move.getOriginPiece(move));
+    assertEquals(IntPiece.BLACKQUEEN, Move.getTargetPiece(move));
 //      assertEquals(IntChessman.NOCHESSMAN, Move.getPromotion(move));
 
-    move = Move.createMove(Move.NORMAL, 0, 16, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.QUEEN);
+    move = Move.valueOf(Move.Type.NORMAL, 0, 16, IntPiece.WHITEROOK, IntPiece.NOPIECE, IntChessman.QUEEN);
     assertEquals(IntChessman.QUEEN, Move.getPromotion(move));
 
-    move = Move.createMove(Move.NORMAL, 0, 16, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.QUEEN);
-    int move2 = Move.createMove(Move.NORMAL, 0, 16, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.QUEEN);
+    move = Move.valueOf(Move.Type.NORMAL, 0, 16, IntPiece.WHITEROOK, IntPiece.NOPIECE, IntChessman.QUEEN);
+    int move2 = Move.valueOf(Move.Type.NORMAL, 0, 16, IntPiece.WHITEROOK, IntPiece.NOPIECE, IntChessman.QUEEN);
     assertEquals(move, move2);
 
     GenericMove genericMove = new GenericMove(GenericPosition.valueOf(GenericFile.Fa, GenericRank.R2), GenericPosition.valueOf(GenericFile.Fa, GenericRank.R4));
-    move = Move.convertMove(genericMove, new Board(new GenericBoard(GenericBoard.STANDARDSETUP)));
-    assertEquals(Move.PAWNDOUBLE, Move.getType(move));
-    assertEquals(16, Move.getStart(move));
-    assertEquals(48, Move.getEnd(move));
-    assertEquals(IntChessman.PAWN, Move.getChessman(move));
-    assertEquals(IntColor.WHITE, Move.getChessmanColor(move));
-    assertEquals(IntChessman.WHITE_PAWN, Move.getChessmanPiece(move));
-    assertEquals(IntChessman.NOPIECE, Move.getTarget(move));
-//      assertEquals(IntColor.NOCOLOR, Move.getTargetColor(move));
-//      assertEquals(IntChessman.NOCHESSMAN, Move.getPromotion(move));
+    move = Move.valueOf(genericMove, new Board(new GenericBoard(GenericBoard.STANDARDSETUP)));
+    assertEquals(Move.Type.PAWNDOUBLE, Move.getType(move));
+    assertEquals(16, Move.getOriginPosition(move));
+    assertEquals(48, Move.getTargetPosition(move));
+    assertEquals(IntChessman.PAWN, IntPiece.getChessman(Move.getOriginPiece(move)));
+    assertEquals(IntColor.WHITE, IntPiece.getColor(Move.getOriginPiece(move)));
+    assertEquals(IntPiece.WHITEPAWN, Move.getOriginPiece(move));
+    assertEquals(IntPiece.NOPIECE, Move.getTargetPiece(move));
   }
 
   @Test
   public void testSetEndPosition() {
-    int move = Move.createMove(Move.NORMAL, Position.a2, Position.a3, IntChessman.createPiece(IntChessman.PAWN, IntColor.WHITE), IntChessman.NOPIECE, IntChessman.NOPIECE);
-    assertEquals(Position.a3, Move.getEnd(move));
+    int move = Move.valueOf(Move.Type.NORMAL, Position.a2, Position.a3, IntPiece.WHITEPAWN, IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
+    assertEquals(Position.a3, Move.getTargetPosition(move));
 
-    move = Move.setEndPosition(move, Position.a4);
-    assertEquals(Position.a4, Move.getEnd(move));
+    move = Move.setTargetPosition(move, Position.a4);
+    assertEquals(Position.a4, Move.getTargetPosition(move));
   }
 
 }

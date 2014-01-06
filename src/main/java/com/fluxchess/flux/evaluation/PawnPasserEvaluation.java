@@ -19,8 +19,7 @@
 package com.fluxchess.flux.evaluation;
 
 import com.fluxchess.flux.board.*;
-import com.fluxchess.flux.board.Move;
-import com.fluxchess.flux.board.MoveSee;
+import com.fluxchess.jcpi.models.*;
 
 public final class PawnPasserEvaluation {
 
@@ -49,16 +48,16 @@ public final class PawnPasserEvaluation {
     byte[] enemyPawnTable = PawnTableEvaluation.getInstance().pawnTable[enemyColor];
 
     assert board.kingList[enemyColor].size() == 1;
-    int enemyKingPosition = ChessmanList.next(board.kingList[enemyColor].list);
+    int enemyKingPosition = ChessmanList.next(board.kingList[enemyColor].positions);
     int enemyKingFile = Position.getFile(enemyKingPosition);
     int enemyKingRank = Position.getRank(enemyKingPosition);
     assert board.kingList[myColor].size() == 1;
-    int myKingPosition = ChessmanList.next(board.kingList[myColor].list);
+    int myKingPosition = ChessmanList.next(board.kingList[myColor].positions);
     int myKingFile = Position.getFile(myKingPosition);
     int myKingRank = Position.getRank(myKingPosition);
 
     // Evaluate each pawn
-    for (long positions = board.pawnList[myColor].list; positions != 0; positions &= positions - 1) {
+    for (long positions = board.pawnList[myColor].positions; positions != 0; positions &= positions - 1) {
       int pawnPosition = ChessmanList.next(positions);
       int pawnFile = Position.getFile(pawnPosition);
       int pawnRank = Position.getRank(pawnPosition);
@@ -81,8 +80,8 @@ public final class PawnPasserEvaluation {
             int endPosition = pawnPosition + 16;
             for (int j = pawnRank + 1; j <= 7; j++) {
               int chessman = board.board[endPosition];
-              if (chessman != IntChessman.NOPIECE) {
-                if (IntChessman.getChessman(chessman) == IntChessman.ROOK && IntChessman.getColor(chessman) == myColor) {
+              if (chessman != IntPiece.NOPIECE) {
+                if (IntPiece.getChessman(chessman) == IntChessman.ROOK && IntPiece.getColor(chessman) == myColor) {
                   // We have no bad rook
                   isPasser = false;
                 }
@@ -105,17 +104,17 @@ public final class PawnPasserEvaluation {
           if ((myAttackTable[pawnPosition] & AttackTableEvaluation.BIT_ROOK) != 0) {
             // We are protected by a rook
             // Check whether the rook is in front of us
-            int endPosition = pawnPosition - 16;
+            int targetPosition = pawnPosition - 16;
             for (int j = pawnRank - 1; j >= 0; j--) {
-              int chessman = board.board[endPosition];
-              if (chessman != IntChessman.NOPIECE) {
-                if (IntChessman.getChessman(chessman) == IntChessman.ROOK && IntChessman.getColor(chessman) == myColor) {
+              int chessman = board.board[targetPosition];
+              if (chessman != IntPiece.NOPIECE) {
+                if (IntPiece.getChessman(chessman) == IntChessman.ROOK && IntPiece.getColor(chessman) == myColor) {
                   // We have no bad rook
                   isPasser = false;
                 }
                 break;
               }
-              endPosition -= 16;
+              targetPosition -= 16;
             }
           }
         }
@@ -138,18 +137,18 @@ public final class PawnPasserEvaluation {
         endgameMax -= myKingDistance * EVAL_PAWN_MYKING_DISTANCE;
         endgameMax += enemyKingDistance * EVAL_PAWN_ENEMYKING_DISTANCE;
 
-        if (board.materialCount[enemyColor] == 0) {
+        if (Evaluation.materialCount(enemyColor, board) == 0) {
           // Unstoppable passer
           if (myColor == IntColor.WHITE) {
             // Is a friendly chessman blocking our promotion path?
             boolean pathClear = true;
-            int endPosition = pawnPosition + 16;
+            int targetPosition = pawnPosition + 16;
             for (int j = pawnRank + 1; j <= 7; j++) {
-              int chessman = board.board[endPosition];
-              if (chessman != IntChessman.NOPIECE && IntChessman.getColor(chessman) == myColor) {
+              int chessman = board.board[targetPosition];
+              if (chessman != IntPiece.NOPIECE && IntPiece.getColor(chessman) == myColor) {
                 pathClear = false;
               }
-              endPosition += 16;
+              targetPosition += 16;
             }
 
             if (pathClear) {
@@ -170,25 +169,23 @@ public final class PawnPasserEvaluation {
               }
 
               // King protected passer
-              else if (Position.getRelativeRank(myKingPosition, myColor) == Position.rank7
+              else if (Position.getRelativeRank(myKingPosition, myColor) == IntRank.R7
                 && ((promotionDistance <= 2 && (myAttackTable[pawnPosition] & AttackTableEvaluation.BIT_KING) != 0)
                 || (promotionDistance <= 3 && (myAttackTable[pawnPosition + 16] & AttackTableEvaluation.BIT_KING) != 0 && board.activeColor == myColor))
-                && (myKingFile != pawnFile || (pawnFile != Position.fileA && pawnFile != Position.fileH))) {
+                && (myKingFile != pawnFile || (pawnFile != IntFile.Fa && pawnFile != IntFile.Fh))) {
                 endgameMax += EVAL_PAWN_PASSER_UNSTOPPABLE;
               }
             }
           } else {
-            assert myColor == IntColor.BLACK;
-
             // Is a friendly chessman blocking our promotion path?
             boolean pathClear = true;
-            int endPosition = pawnPosition - 16;
+            int targetPosition = pawnPosition - 16;
             for (int j = pawnRank - 1; j >= 0; j--) {
-              int chessman = board.board[endPosition];
-              if (chessman != IntChessman.NOPIECE && IntChessman.getColor(chessman) == myColor) {
+              int chessman = board.board[targetPosition];
+              if (chessman != IntPiece.NOPIECE && IntPiece.getColor(chessman) == myColor) {
                 pathClear = false;
               }
-              endPosition -= 16;
+              targetPosition -= 16;
             }
 
             if (pathClear) {
@@ -209,10 +206,10 @@ public final class PawnPasserEvaluation {
               }
 
               // King protected passer
-              else if (Position.getRelativeRank(myKingPosition, myColor) == Position.rank7
+              else if (Position.getRelativeRank(myKingPosition, myColor) == IntRank.R7
                 && ((promotionDistance <= 2 && (myAttackTable[pawnPosition] & AttackTableEvaluation.BIT_KING) != 0)
                 || (promotionDistance <= 3 && (myAttackTable[pawnPosition - 16] & AttackTableEvaluation.BIT_KING) != 0 && board.activeColor == myColor))
-                && (myKingFile != pawnFile || (pawnFile != Position.fileA && pawnFile != Position.fileH))) {
+                && (myKingFile != pawnFile || (pawnFile != IntFile.Fa && pawnFile != IntFile.Fh))) {
                 endgameMax += EVAL_PAWN_PASSER_UNSTOPPABLE;
               }
             }
@@ -220,9 +217,9 @@ public final class PawnPasserEvaluation {
         } else {
           // Free passer
           assert ((pawnPosition + sign * 16) & 0x88) == 0;
-          if (board.board[pawnPosition + sign * 16] == IntChessman.NOPIECE) {
+          if (board.board[pawnPosition + sign * 16] == IntPiece.NOPIECE) {
             // TODO: Do we have to consider promotion moves?
-            int move = Move.createMove(Move.NORMAL, pawnPosition, pawnPosition + sign * 16, pawn, IntChessman.NOPIECE, IntChessman.NOPIECE);
+            int move = Move.valueOf(Move.Type.NORMAL, pawnPosition, pawnPosition + sign * 16, pawn, IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
             if (MoveSee.seeMove(move, myColor) >= 0) {
               endgameMax += EVAL_PAWN_PASSER_FREE;
             }
@@ -237,7 +234,7 @@ public final class PawnPasserEvaluation {
       }
     }
 
-    return board.getGamePhaseEvaluation(myColor, opening, endgame);
+    return Evaluation.getGamePhaseEvaluation(myColor, opening, endgame, board);
   }
 
 }

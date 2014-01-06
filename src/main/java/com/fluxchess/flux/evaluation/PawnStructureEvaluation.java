@@ -18,7 +18,12 @@
  */
 package com.fluxchess.flux.evaluation;
 
-import com.fluxchess.flux.board.*;
+import com.fluxchess.flux.board.Board;
+import com.fluxchess.flux.board.ChessmanList;
+import com.fluxchess.flux.board.Position;
+import com.fluxchess.jcpi.models.IntChessman;
+import com.fluxchess.jcpi.models.IntColor;
+import com.fluxchess.jcpi.models.IntPiece;
 
 public final class PawnStructureEvaluation {
 
@@ -45,7 +50,7 @@ public final class PawnStructureEvaluation {
     byte[] myPawnTable = PawnTableEvaluation.getInstance().pawnTable[myColor];
 
     // Evaluate each pawn
-    for (long positions = board.pawnList[myColor].list; positions != 0; positions &= positions - 1) {
+    for (long positions = board.pawnList[myColor].positions; positions != 0; positions &= positions - 1) {
       int pawnPosition = ChessmanList.next(positions);
       int pawnFile = Position.getFile(pawnPosition);
       int pawnRank = Position.getRank(pawnPosition);
@@ -95,7 +100,7 @@ public final class PawnStructureEvaluation {
             // Check whether we can advance
             assert ((pawnPosition + sign * 16) & 0x88) == 0;
             int chessman = board.board[pawnPosition + sign * 16];
-            if ((chessman == IntChessman.NOPIECE || IntChessman.getChessman(chessman) != IntChessman.PAWN)
+            if ((chessman == IntPiece.NOPIECE || IntPiece.getChessman(chessman) != IntChessman.PAWN)
               && (enemyAttackTable[pawnPosition] & AttackTableEvaluation.BIT_PAWN) == 0
               && (enemyAttackTable[pawnPosition + sign * 16] & AttackTableEvaluation.BIT_PAWN) == 0) {
               backward = false;
@@ -107,8 +112,8 @@ public final class PawnStructureEvaluation {
             assert ((pawnPosition + sign * 32) & 0x88) == 0;
             int chessman1 = board.board[pawnPosition + sign * 16];
             int chessman2 = board.board[pawnPosition + sign * 32];
-            if ((chessman1 == IntChessman.NOPIECE || IntChessman.getChessman(chessman1) != IntChessman.PAWN)
-              && (chessman2 == IntChessman.NOPIECE || IntChessman.getChessman(chessman2) != IntChessman.PAWN)
+            if ((chessman1 == IntPiece.NOPIECE || IntPiece.getChessman(chessman1) != IntChessman.PAWN)
+              && (chessman2 == IntPiece.NOPIECE || IntPiece.getChessman(chessman2) != IntChessman.PAWN)
               && (enemyAttackTable[pawnPosition] & AttackTableEvaluation.BIT_PAWN) == 0
               && (enemyAttackTable[pawnPosition + sign * 16] & AttackTableEvaluation.BIT_PAWN) == 0
               && (enemyAttackTable[pawnPosition + sign * 32] & AttackTableEvaluation.BIT_PAWN) == 0) {
@@ -124,7 +129,7 @@ public final class PawnStructureEvaluation {
       }
     }
 
-    return board.getGamePhaseEvaluation(myColor, opening, endgame);
+    return Evaluation.getGamePhaseEvaluation(myColor, opening, endgame, board);
   }
 
 }

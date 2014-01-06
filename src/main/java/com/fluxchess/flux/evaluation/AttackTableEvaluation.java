@@ -18,11 +18,11 @@
  */
 package com.fluxchess.flux.evaluation;
 
-import com.fluxchess.flux.board.ChessmanList;
 import com.fluxchess.flux.board.Board;
-import com.fluxchess.flux.board.IntChessman;
-import com.fluxchess.flux.board.IntColor;
+import com.fluxchess.flux.board.ChessmanList;
 import com.fluxchess.flux.board.MoveGenerator;
+import com.fluxchess.jcpi.models.IntColor;
+import com.fluxchess.jcpi.models.IntPiece;
 
 import java.util.Arrays;
 
@@ -37,7 +37,7 @@ public final class AttackTableEvaluation {
   private static final AttackTableEvaluation instance = new AttackTableEvaluation();
 
   // Our attack table
-  public final byte[][] attackTable = new byte[IntColor.ARRAY_DIMENSION][Board.BOARDSIZE];
+  public final byte[][] attackTable = new byte[IntColor.values.length][Board.BOARDSIZE];
 
   private AttackTableEvaluation() {
   }
@@ -68,7 +68,7 @@ public final class AttackTableEvaluation {
     assert myAttackTable != null;
 
     // Evaluate each pawn
-    for (long positions = board.pawnList[myColor].list; positions != 0; positions &= positions - 1) {
+    for (long positions = board.pawnList[myColor].positions; positions != 0; positions &= positions - 1) {
       int pawnPosition = ChessmanList.next(positions);
 
       // Fill attack table
@@ -97,7 +97,7 @@ public final class AttackTableEvaluation {
     assert myAttackTable != null;
 
     // Evaluate each knight
-    for (long positions = board.knightList[myColor].list; positions != 0; positions &= positions - 1) {
+    for (long positions = board.knightList[myColor].positions; positions != 0; positions &= positions - 1) {
       int knightPosition = ChessmanList.next(positions);
 
       // Fill attack table
@@ -117,7 +117,7 @@ public final class AttackTableEvaluation {
     assert myAttackTable != null;
 
     // Evaluate each bishop
-    for (long positions = board.bishopList[myColor].list; positions != 0; positions &= positions - 1) {
+    for (long positions = board.bishopList[myColor].positions; positions != 0; positions &= positions - 1) {
       int bishopPosition = ChessmanList.next(positions);
 
       // Fill attack table
@@ -128,7 +128,7 @@ public final class AttackTableEvaluation {
           myAttackTable[targetPosition] |= BIT_MINOR;
 
           int target = board.board[targetPosition];
-          if (target == IntChessman.NOPIECE) {
+          if (target == IntPiece.NOPIECE) {
             targetPosition += delta;
           } else {
             break;
@@ -144,7 +144,7 @@ public final class AttackTableEvaluation {
     assert myAttackTable != null;
 
     // Evaluate each rook
-    for (long positions = board.rookList[myColor].list; positions != 0; positions &= positions - 1) {
+    for (long positions = board.rookList[myColor].positions; positions != 0; positions &= positions - 1) {
       int rookPosition = ChessmanList.next(positions);
 
       // Fill attack table
@@ -155,7 +155,7 @@ public final class AttackTableEvaluation {
           myAttackTable[targetPosition] |= BIT_ROOK;
 
           int target = board.board[targetPosition];
-          if (target == IntChessman.NOPIECE) {
+          if (target == IntPiece.NOPIECE) {
             targetPosition += delta;
           } else {
             break;
@@ -171,7 +171,7 @@ public final class AttackTableEvaluation {
     assert myAttackTable != null;
 
     // Evaluate the queen
-    for (long positions = board.queenList[myColor].list; positions != 0; positions &= positions - 1) {
+    for (long positions = board.queenList[myColor].positions; positions != 0; positions &= positions - 1) {
       int queenPosition = ChessmanList.next(positions);
 
       // Fill attack table
@@ -182,7 +182,7 @@ public final class AttackTableEvaluation {
           myAttackTable[targetPosition] |= BIT_QUEEN;
 
           int target = board.board[targetPosition];
-          if (target == IntChessman.NOPIECE) {
+          if (target == IntPiece.NOPIECE) {
             targetPosition += delta;
           } else {
             break;
@@ -199,7 +199,7 @@ public final class AttackTableEvaluation {
 
     // Evaluate the king
     assert board.kingList[myColor].size() == 1;
-    int kingPosition = ChessmanList.next(board.kingList[myColor].list);
+    int kingPosition = ChessmanList.next(board.kingList[myColor].positions);
 
     // Fill attack table
     for (int delta : MoveGenerator.moveDeltaKing) {

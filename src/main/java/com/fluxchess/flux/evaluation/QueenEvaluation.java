@@ -18,8 +18,12 @@
  */
 package com.fluxchess.flux.evaluation;
 
-import com.fluxchess.flux.board.*;
+import com.fluxchess.flux.board.Board;
+import com.fluxchess.flux.board.ChessmanList;
 import com.fluxchess.flux.board.MoveGenerator;
+import com.fluxchess.flux.board.Position;
+import com.fluxchess.jcpi.models.IntColor;
+import com.fluxchess.jcpi.models.IntPiece;
 
 public final class QueenEvaluation {
 
@@ -45,7 +49,7 @@ public final class QueenEvaluation {
     byte[] enemyPawnTable = PawnTableEvaluation.getInstance().pawnTable[enemyColor];
 
     // Evaluate the queen
-    for (long positions = board.queenList[myColor].list; positions != 0; positions &= positions - 1) {
+    for (long positions = board.queenList[myColor].positions; positions != 0; positions &= positions - 1) {
       int queenPosition = ChessmanList.next(positions);
       int queenRank = Position.getRank(queenPosition);
 
@@ -56,11 +60,11 @@ public final class QueenEvaluation {
         int targetPosition = queenPosition + delta;
         while ((targetPosition & 0x88) == 0) {
           int target = board.board[targetPosition];
-          if (target == IntChessman.NOPIECE) {
+          if (target == IntPiece.NOPIECE) {
             allMobility++;
             targetPosition += delta;
           } else {
-            if (IntChessman.getColor(target) == enemyColor) {
+            if (IntPiece.getColor(target) == enemyColor) {
               allMobility++;
             }
             break;
@@ -90,7 +94,7 @@ public final class QueenEvaluation {
         assert myColor == IntColor.WHITE;
       }
       if (queenRank == seventhRank) {
-        int kingPosition = ChessmanList.next(board.kingList[enemyColor].list);
+        int kingPosition = ChessmanList.next(board.kingList[enemyColor].positions);
         int kingRank = Position.getRank(kingPosition);
         boolean enemyPawnExists = false;
         for (int j = 1; j < enemyPawnTable.length - 1; j++) {
@@ -106,7 +110,7 @@ public final class QueenEvaluation {
       }
     }
 
-    return board.getGamePhaseEvaluation(myColor, opening, endgame);
+    return Evaluation.getGamePhaseEvaluation(myColor, opening, endgame, board);
   }
 
 }

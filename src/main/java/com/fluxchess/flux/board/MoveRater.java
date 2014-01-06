@@ -18,6 +18,9 @@
  */
 package com.fluxchess.flux.board;
 
+import com.fluxchess.flux.evaluation.Evaluation;
+import com.fluxchess.jcpi.models.IntPiece;
+
 public final class MoveRater {
 
   private final HistoryTable historyTable;
@@ -32,7 +35,7 @@ public final class MoveRater {
 
       if (move == transpositionMove) {
         moveList.value[i] = Integer.MAX_VALUE;
-      } else if (Move.getTarget(move) != IntChessman.NOPIECE) {
+      } else if (Move.getTargetPiece(move) != IntPiece.NOPIECE) {
         moveList.value[i] = getMVVLVARating(move);
       } else if (move == primaryKillerMove) {
         moveList.value[i] = 0;
@@ -63,7 +66,7 @@ public final class MoveRater {
    */
   public void rateFromSEE(MoveList moveList) {
     for (int i = moveList.head; i < moveList.tail; i++) {
-      moveList.value[i] = MoveSee.seeMove(moveList.move[i], Move.getChessmanColor(moveList.move[i]));
+      moveList.value[i] = MoveSee.seeMove(moveList.move[i], IntPiece.getColor(Move.getOriginPiece(moveList.move[i])));
     }
   }
 
@@ -98,15 +101,15 @@ public final class MoveRater {
   private int getMVVLVARating(int move) {
     int value = 0;
 
-    int chessman = Move.getChessman(move);
-    int target = Move.getTarget(move);
+    int chessman = IntPiece.getChessman(Move.getOriginPiece(move));
 
-    value += IntChessman.VALUE_KING / IntChessman.getValueFromChessman(chessman);
-    if (target != IntChessman.NOPIECE) {
-      value += 10 * IntChessman.getValueFromChessman(target);
+    value += Evaluation.VALUE_KING / Evaluation.getValueFromChessman(chessman);
+    int target = Move.getTargetPiece(move);
+    if (target != IntPiece.NOPIECE) {
+      value += 10 * Evaluation.getValueFromPiece(target);
     }
 
-    assert value >= (IntChessman.VALUE_KING / IntChessman.VALUE_KING) && value <= (IntChessman.VALUE_KING / IntChessman.VALUE_PAWN) + 10 * IntChessman.VALUE_QUEEN;
+    assert value >= (Evaluation.VALUE_KING / Evaluation.VALUE_KING) && value <= (Evaluation.VALUE_KING / Evaluation.VALUE_PAWN) + 10 * Evaluation.VALUE_QUEEN;
 
     return value;
   }
@@ -120,14 +123,14 @@ public final class MoveRater {
   private int getMVPDRating(int move) {
     int value = 0;
 
-    int chessman = Move.getChessman(move);
-    int target = Move.getTarget(move);
+    int chessman = IntPiece.getChessman(Move.getOriginPiece(move));
+    int target = Move.getTargetPiece(move);
 
-    if (target != IntChessman.NOPIECE) {
-      value += IntChessman.VALUE_KING * (IntChessman.getValueFromChessman(target) - IntChessman.getValueFromChessman(chessman));
-      value += IntChessman.getValueFromChessman(target);
+    if (target != IntPiece.NOPIECE) {
+      value += Evaluation.VALUE_KING * (Evaluation.getValueFromPiece(target) - Evaluation.getValueFromChessman(chessman));
+      value += Evaluation.getValueFromPiece(target);
     } else {
-      value -= IntChessman.getValueFromChessman(chessman);
+      value -= Evaluation.getValueFromChessman(chessman);
     }
 
     return value;

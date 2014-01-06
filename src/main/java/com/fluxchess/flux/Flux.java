@@ -19,19 +19,19 @@
 package com.fluxchess.flux;
 
 import com.fluxchess.flux.board.Board;
-import com.fluxchess.flux.board.IntColor;
-import com.fluxchess.flux.evaluation.Evaluation;
 import com.fluxchess.flux.board.Move;
+import com.fluxchess.flux.evaluation.Evaluation;
 import com.fluxchess.flux.evaluation.EvaluationTable;
 import com.fluxchess.flux.evaluation.PawnTable;
-import com.fluxchess.flux.search.TranspositionTable;
 import com.fluxchess.flux.search.InformationTimer;
 import com.fluxchess.flux.search.Search;
+import com.fluxchess.flux.search.TranspositionTable;
 import com.fluxchess.jcpi.AbstractEngine;
 import com.fluxchess.jcpi.commands.*;
 import com.fluxchess.jcpi.models.GenericBoard;
 import com.fluxchess.jcpi.models.GenericColor;
 import com.fluxchess.jcpi.models.GenericMove;
+import com.fluxchess.jcpi.models.IntColor;
 import com.fluxchess.jcpi.options.AbstractOption;
 import com.fluxchess.jcpi.protocols.IProtocolHandler;
 
@@ -238,7 +238,7 @@ public final class Flux extends AbstractEngine {
     // Make all moves
     List<GenericMove> moveList = command.moves;
     for (GenericMove move : moveList) {
-      int newMove = Move.convertMove(move, board);
+      int newMove = Move.valueOf(move, board);
       board.makeMove(newMove);
     }
   }
@@ -277,10 +277,10 @@ public final class Flux extends AbstractEngine {
         }
         for (GenericColor side : GenericColor.values()) {
           if (command.getClock(side) != null && command.getClock(side) > 0) {
-            search.setSearchClock(IntColor.valueOfColor(side), command.getClock(side));
+            search.setSearchClock(IntColor.valueOf(side), command.getClock(side));
           }
           if (command.getClockIncrement(side) != null && command.getClockIncrement(side) > 0) {
-            search.setSearchClockIncrement(IntColor.valueOfColor(side), command.getClockIncrement(side));
+            search.setSearchClockIncrement(IntColor.valueOf(side), command.getClockIncrement(side));
           }
         }
         if (command.getMovesToGo() != null && command.getMovesToGo() > 0) {

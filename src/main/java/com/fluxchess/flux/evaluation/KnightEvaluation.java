@@ -18,11 +18,11 @@
  */
 package com.fluxchess.flux.evaluation;
 
-import com.fluxchess.flux.board.ChessmanList;
 import com.fluxchess.flux.board.Board;
-import com.fluxchess.flux.board.IntChessman;
-import com.fluxchess.flux.board.IntColor;
+import com.fluxchess.flux.board.ChessmanList;
 import com.fluxchess.flux.board.MoveGenerator;
+import com.fluxchess.jcpi.models.IntColor;
+import com.fluxchess.jcpi.models.IntPiece;
 
 public final class KnightEvaluation {
 
@@ -43,7 +43,7 @@ public final class KnightEvaluation {
     byte[] enemyAttackTable = AttackTableEvaluation.getInstance().attackTable[enemyColor];
 
     // Evaluate each knight
-    for (long positions = board.knightList[myColor].list; positions != 0; positions &= positions - 1) {
+    for (long positions = board.knightList[myColor].positions; positions != 0; positions &= positions - 1) {
       int knightPosition = ChessmanList.next(positions);
 
       int allMobility = EVAL_KNIGHT_MOBILITY_BASE;
@@ -53,10 +53,10 @@ public final class KnightEvaluation {
         int targetPosition = knightPosition + delta;
         if ((targetPosition & 0x88) == 0) {
           int target = board.board[targetPosition];
-          if (target == IntChessman.NOPIECE) {
+          if (target == IntPiece.NOPIECE) {
             allMobility++;
           } else {
-            if (IntChessman.getColor(target) == enemyColor) {
+            if (IntPiece.getColor(target) == enemyColor) {
               allMobility++;
             }
           }

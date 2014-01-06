@@ -22,9 +22,7 @@ import com.fluxchess.flux.ChessLogger;
 import com.fluxchess.flux.Configuration;
 import com.fluxchess.flux.board.*;
 import com.fluxchess.flux.evaluation.Evaluation;
-import com.fluxchess.flux.board.HistoryTable;
-import com.fluxchess.flux.board.KillerTable;
-import com.fluxchess.jcpi.models.GenericMove;
+import com.fluxchess.jcpi.models.*;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -55,9 +53,9 @@ public final class Search implements Runnable {
   private static final int LMR_DEPTH = 3;
   private static final int LMR_MOVENUMBER_MINIMUM = 3;
 
-  private static final int FUTILITY_FRONTIERMARGIN = 2 * IntChessman.VALUE_PAWN;
-  private static final int FUTILITY_PREFRONTIERMARGIN = IntChessman.VALUE_ROOK;
-  private static final int FUTILITY_QUIESCENTMARGIN = IntChessman.VALUE_PAWN;
+  private static final int FUTILITY_FRONTIERMARGIN = 2 * Evaluation.VALUE_PAWN;
+  private static final int FUTILITY_PREFRONTIERMARGIN = Evaluation.VALUE_ROOK;
+  private static final int FUTILITY_QUIESCENTMARGIN = Evaluation.VALUE_PAWN;
 
   // Objects
   private final ChessLogger logger = ChessLogger.getLogger();
@@ -79,8 +77,8 @@ public final class Search implements Runnable {
   private long searchTime = 0;
   private long searchTimeHard = 0;
   private long searchTimeStart = 0;
-  private final long[] searchClock = new long[IntColor.ARRAY_DIMENSION];
-  private final long[] searchClockIncrement = new long[IntColor.ARRAY_DIMENSION];
+  private final long[] searchClock = new long[IntColor.values.length];
+  private final long[] searchClockIncrement = new long[IntColor.values.length];
   private int searchMovesToGo = 0;
   private final MoveList searchMoveList = new MoveList();
 
@@ -251,7 +249,7 @@ public final class Search implements Runnable {
 
     this.searchDepth = searchDepth;
     if (searchDepth > MAX_DEPTH) {
-      searchDepth = MAX_DEPTH;
+      this.searchDepth = MAX_DEPTH;
     }
     doTimeManagement = false;
   }
@@ -304,7 +302,7 @@ public final class Search implements Runnable {
 
   public void setSearchMoveList(List<GenericMove> moveList) {
     for (GenericMove move : moveList) {
-      searchMoveList.move[searchMoveList.tail++] = Move.convertMove(move, board);
+      searchMoveList.move[searchMoveList.tail++] = Move.valueOf(move, board);
     }
   }
 
@@ -415,10 +413,10 @@ public final class Search implements Runnable {
     Attack attack = board.getAttack(board.activeColor);
     boolean isCheck = attack.isCheck();
 
-    if (searchMoveList.getLength() == 0) {
+    if (searchMoveList.size() == 0) {
       moveGenerator.initializeMain(attack, 0, transpositionMove);
 
-      int move = Move.NOMOVE;
+      int move;
       while ((move = moveGenerator.getNextMove()) != Move.NOMOVE) {
         rootMoveList.move[rootMoveList.tail++] = move;
       }
@@ -431,15 +429,15 @@ public final class Search implements Runnable {
     }
 
     // Check if we cannot move
-    if (rootMoveList.getLength() == 0) {
+    if (rootMoveList.size() == 0) {
       // This position is a checkmate or stalemate
       return bestResult;
     }
 
     // Adjust pv number
     showPvNumber = Configuration.showPvNumber;
-    if (Configuration.showPvNumber > rootMoveList.getLength()) {
-      showPvNumber = rootMoveList.getLength();
+    if (Configuration.showPvNumber > rootMoveList.size()) {
+      showPvNumber = rootMoveList.size();
     }
     //## ENDOF Root Move List
 
@@ -457,7 +455,7 @@ public final class Search implements Runnable {
       bestResult.resultValue = transpositionValue;
       bestResult.value = transpositionType;
       bestResult.time = 0;
-      bestResult.moveNumber = rootMoveList.getLength();
+      bestResult.moveNumber = rootMoveList.size();
 
       initialDepth = transpositionDepth;
       equalResults = transpositionDepth - 2;
@@ -477,13 +475,13 @@ public final class Search implements Runnable {
       int value;
       if (currentDepth == initialDepth && initialDepth > 1) {
         value = transpositionValue;
-        pvList[0].resetList();
+        pvList[0].clear();
         sendInformation(pv, 1);
 
         moveResult.bestMove = transpositionMove;
         moveResult.resultValue = transpositionValue;
         moveResult.value = transpositionType;
-        moveResult.moveNumber = rootMoveList.getLength();
+        moveResult.moveNumber = rootMoveList.size();
       } else {
         // Do the Alpha-Beta search
         value = alphaBetaRoot(currentDepth, alpha, beta, 0, rootMoveList, isCheck, moveResult);
@@ -611,8 +609,8 @@ public final class Search implements Runnable {
 
           // Check if this is an easy recapture
           else if (!timeExtended
-            && Move.getEnd(moveResult.bestMove) == board.captureSquare
-            && IntChessman.getValueFromChessman(Move.getTarget(moveResult.bestMove)) >= IntChessman.VALUE_KNIGHT
+            && Move.getTargetPosition(moveResult.bestMove) == board.capturePosition
+            && Evaluation.getValueFromPiece(Move.getTargetPiece(moveResult.bestMove)) >= Evaluation.VALUE_KNIGHT
             && equalResults > 4) {
             stopFlag = true;
           }
@@ -675,7 +673,7 @@ public final class Search implements Runnable {
     }
 
     // Reset
-    pvList[height].resetList();
+    pvList[height].clear();
   }
 
   private int alphaBetaRoot(int depth, int alpha, int beta, int height, MoveList rootMoveList, boolean isCheck, Result moveResult) {
@@ -699,7 +697,7 @@ public final class Search implements Runnable {
     int currentMoveNumber = 0;
 
     // Initialize Single-Response Extension
-    boolean isSingleReply = isCheck && rootMoveList.getLength() == 1;
+    boolean isSingleReply = isCheck && rootMoveList.size() == 1;
 
     for (int j = rootMoveList.head; j < rootMoveList.tail; j++) {
       int move = rootMoveList.move[j];
@@ -971,7 +969,7 @@ public final class Search implements Runnable {
         && doNull
         && !isCheck
         && !mateThreat
-        && board.getGamePhase() != IntGamePhase.ENDGAME
+        && Evaluation.getGamePhase(board) != IntGamePhase.ENDGAME
         && (evalValue = evaluation.evaluate(board)) >= beta) {
         // Depth reduction
         int newDepth = depth - 1 - NULLMOVE_REDUCTION;
@@ -1051,7 +1049,7 @@ public final class Search implements Runnable {
         alpha = oldAlpha;
         beta = oldBeta;
 
-        if (pvList[height].getLength() > 0) {
+        if (pvList[height].size() > 0) {
           // Hopefully we have a transposition move now
           transpositionMove = pvList[height].move[pvList[height].head];
         }
@@ -1070,7 +1068,7 @@ public final class Search implements Runnable {
       //## BEGIN Minor Promotion Pruning
       if (Configuration.useMinorPromotionPruning
         && !analyzeMode
-        && Move.getType(move) == Move.PAWNPROMOTION
+        && Move.getType(move) == Move.Type.PAWNPROMOTION
         && Move.getPromotion(move) != IntChessman.QUEEN) {
         assert Move.getPromotion(move) == IntChessman.ROOK || Move.getPromotion(move) == IntChessman.BISHOP || Move.getPromotion(move) == IntChessman.KNIGHT;
         continue;
@@ -1090,7 +1088,7 @@ public final class Search implements Runnable {
           && (Configuration.useCheckExtension || !board.isCheckingMove(move))
           && !isDangerousMove(move)) {
           assert !board.isCheckingMove(move);
-          assert Move.getType(move) != Move.PAWNPROMOTION : board.getBoard() + ", " + Move.toString(move);
+          assert Move.getType(move) != Move.Type.PAWNPROMOTION : board.getBoard() + ", " + Move.toString(move);
 
           if (evalValue == INFINITY) {
             // Store evaluation
@@ -1099,9 +1097,9 @@ public final class Search implements Runnable {
           int value = evalValue + FUTILITY_PREFRONTIERMARGIN;
 
           // Add the target value to the eval
-          int target = Move.getTarget(move);
-          if (target != IntChessman.NOPIECE) {
-            value += IntChessman.getValueFromChessman(target);
+          int target = Move.getTargetPiece(move);
+          if (target != IntPiece.NOPIECE) {
+            value += Evaluation.getValueFromPiece(target);
           }
 
           // If we cannot reach alpha do not look at the move
@@ -1125,7 +1123,7 @@ public final class Search implements Runnable {
           && (Configuration.useCheckExtension || !board.isCheckingMove(move))
           && !isDangerousMove(move)) {
           assert !board.isCheckingMove(move);
-          assert Move.getType(move) != Move.PAWNPROMOTION : board.getBoard() + ", " + Move.toString(move);
+          assert Move.getType(move) != Move.Type.PAWNPROMOTION : board.getBoard() + ", " + Move.toString(move);
 
           if (evalValue == INFINITY) {
             // Store evaluation
@@ -1134,9 +1132,9 @@ public final class Search implements Runnable {
           int value = evalValue + FUTILITY_FRONTIERMARGIN;
 
           // Add the target value to the eval
-          int target = Move.getTarget(move);
-          if (target != IntChessman.NOPIECE) {
-            value += IntChessman.getValueFromChessman(target);
+          int target = Move.getTargetPiece(move);
+          if (target != IntPiece.NOPIECE) {
+            value += Evaluation.getValueFromPiece(target);
           }
 
           // If we cannot reach alpha do not look at the move
@@ -1160,10 +1158,10 @@ public final class Search implements Runnable {
           && newDepth < depth
           && !isCheck
           && (Configuration.useCheckExtension || !board.isCheckingMove(move))
-          && Move.getTarget(move) == IntChessman.NOPIECE
+          && Move.getTargetPiece(move) == IntPiece.NOPIECE
           && !isDangerousMove(move)) {
           assert !board.isCheckingMove(move);
-          assert Move.getType(move) != Move.PAWNPROMOTION : board.getBoard() + ", " + Move.toString(move);
+          assert Move.getType(move) != Move.Type.PAWNPROMOTION : board.getBoard() + ", " + Move.toString(move);
 
           newDepth--;
           reduced = true;
@@ -1375,13 +1373,13 @@ public final class Search implements Runnable {
           && !isCheck
           && !board.isCheckingMove(move)
           && !isDangerousMove(move)) {
-          assert Move.getTarget(move) != IntChessman.NOPIECE;
-          assert Move.getType(move) != Move.PAWNPROMOTION : board.getBoard() + ", " + Move.toString(move);
+          assert Move.getTargetPiece(move) != IntPiece.NOPIECE;
+          assert Move.getType(move) != Move.Type.PAWNPROMOTION : board.getBoard() + ", " + Move.toString(move);
 
           int value = evalValue + FUTILITY_QUIESCENTMARGIN;
 
           // Add the target value to the eval
-          value += IntChessman.getValueFromChessman(Move.getTarget(move));
+          value += Evaluation.getValueFromPiece(Move.getTargetPiece(move));
 
           // If we cannot reach alpha do not look at the move
           if (value <= alpha) {
@@ -1458,12 +1456,12 @@ public final class Search implements Runnable {
   private int getNewDepth(int depth, int move, boolean isSingleReply, boolean mateThreat) {
     int newDepth = depth - 1;
 
-    assert (Move.getEnd(move) != board.captureSquare) || (Move.getTarget(move) != IntChessman.NOPIECE);
+    assert (Move.getTargetPosition(move) != board.capturePosition) || (Move.getTargetPiece(move) != IntPiece.NOPIECE);
 
     //## Recapture Extension
     if (Configuration.useRecaptureExtension
-      && Move.getEnd(move) == board.captureSquare
-      && MoveSee.seeMove(move, Move.getChessmanColor(move)) > 0) {
+      && Move.getTargetPosition(move) == board.capturePosition
+      && MoveSee.seeMove(move, IntPiece.getColor(Move.getOriginPiece(move))) > 0) {
       newDepth++;
     }
 
@@ -1475,8 +1473,8 @@ public final class Search implements Runnable {
 
     //## Pawn Extension
     else if (Configuration.usePawnExtension
-      && Move.getChessman(move) == IntChessman.PAWN
-      && Position.getRelativeRank(Move.getEnd(move), board.activeColor) == Position.rank7) {
+      && IntPiece.getChessman(Move.getOriginPiece(move)) == IntChessman.PAWN
+      && Position.getRelativeRank(Move.getTargetPosition(move), board.activeColor) == IntRank.R7) {
       newDepth++;
     }
 
@@ -1493,10 +1491,10 @@ public final class Search implements Runnable {
     }
 
     // Extend another ply if we enter a pawn endgame
-    if (board.materialCount[board.activeColor] == 0
-      && board.materialCount[IntColor.switchColor(board.activeColor)] == 1
-      && Move.getTarget(move) != IntChessman.NOPIECE
-      && Move.getTarget(move) != IntChessman.PAWN) {
+    if (Evaluation.materialCount(board.activeColor, board) == 0
+      && Evaluation.materialCount(IntColor.opposite(board.activeColor), board) == 1
+      && Move.getTargetPiece(move) != IntPiece.NOPIECE
+      && IntPiece.getChessman(Move.getTargetPiece(move)) != IntChessman.PAWN) {
       newDepth++;
     }
 
@@ -1504,14 +1502,14 @@ public final class Search implements Runnable {
   }
 
   private static boolean isDangerousMove(int move) {
-    int chessman = Move.getChessman(move);
-    int relativeRank = Position.getRelativeRank(Move.getEnd(move), board.activeColor);
-    if (chessman == IntChessman.PAWN && relativeRank >= Position.rank7) {
+    int chessman = IntPiece.getChessman(Move.getOriginPiece(move));
+    int relativeRank = Position.getRelativeRank(Move.getTargetPosition(move), board.activeColor);
+    if (chessman == IntChessman.PAWN && relativeRank >= IntRank.R7) {
       return true;
     }
 
-    int target = Move.getTarget(move);
-    if (target == IntChessman.QUEEN) {
+    int target = Move.getTargetPiece(move);
+    if (target != IntPiece.NOPIECE && IntPiece.getChessman(target) == IntChessman.QUEEN) {
       return true;
     }
 
@@ -1523,7 +1521,7 @@ public final class Search implements Runnable {
     assert source != null;
     assert move != Move.NOMOVE;
 
-    destination.resetList();
+    destination.clear();
 
     destination.move[destination.tail++] = move;
 
@@ -1535,16 +1533,16 @@ public final class Search implements Runnable {
   private static void addGoodMove(int move, int depth, int height) {
     assert move != Move.NOMOVE;
 
-    if (Move.getTarget(move) != IntChessman.NOPIECE) {
+    if (Move.getTargetPiece(move) != IntPiece.NOPIECE) {
       return;
     }
 
     int type = Move.getType(move);
-    if (type == Move.PAWNPROMOTION || type == Move.NULL) {
+    if (type == Move.Type.PAWNPROMOTION || type == Move.Type.NULL) {
       return;
     }
 
-    assert type != Move.ENPASSANT;
+    assert type != Move.Type.ENPASSANT;
 
     killerTable.add(move, height);
     historyTable.add(move, depth);

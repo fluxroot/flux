@@ -20,16 +20,7 @@ package com.fluxchess.flux.board;
 
 public final class ChessmanList {
 
-  public long list = 0;
-
-  public ChessmanList() {
-  }
-
-  public ChessmanList(ChessmanList list) {
-    assert list != null;
-
-    this.list = list.list;
-  }
+  public long positions = 0;
 
   static int toX88Position(int position) {
     assert position >= 0 && position < Long.SIZE;
@@ -48,21 +39,21 @@ public final class ChessmanList {
   }
 
   public int size() {
-    return Long.bitCount(list);
+    return Long.bitCount(positions);
   }
 
   public void add(int position) {
     assert (position & 0x88) == 0;
-    assert (list & (1L << toBitPosition(position))) == 0 : String.format("list = %d, 0x88 position = %d, bit position = %d", list, position, toBitPosition(position));
+    assert (positions & (1L << toBitPosition(position))) == 0 : String.format("positions = %d, 0x88 position = %d, bit position = %d", positions, position, toBitPosition(position));
 
-    list |= 1L << toBitPosition(position);
+    positions |= 1L << toBitPosition(position);
   }
 
   public void remove(int position) {
     assert (position & 0x88) == 0;
-    assert (list & (1L << toBitPosition(position))) != 0 : String.format("list = %d, 0x88 position = %d, bit position = %d", list, position, toBitPosition(position));
+    assert (positions & (1L << toBitPosition(position))) != 0 : String.format("positions = %d, 0x88 position = %d, bit position = %d", positions, position, toBitPosition(position));
 
-    list &= ~(1L << toBitPosition(position));
+    positions &= ~(1L << toBitPosition(position));
   }
 
 }

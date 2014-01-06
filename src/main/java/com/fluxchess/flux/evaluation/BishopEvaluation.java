@@ -18,11 +18,11 @@
  */
 package com.fluxchess.flux.evaluation;
 
-import com.fluxchess.flux.board.ChessmanList;
 import com.fluxchess.flux.board.Board;
-import com.fluxchess.flux.board.IntChessman;
-import com.fluxchess.flux.board.IntColor;
+import com.fluxchess.flux.board.ChessmanList;
 import com.fluxchess.flux.board.MoveGenerator;
+import com.fluxchess.jcpi.models.IntColor;
+import com.fluxchess.jcpi.models.IntPiece;
 
 public final class BishopEvaluation {
 
@@ -44,7 +44,7 @@ public final class BishopEvaluation {
     byte[] enemyAttackTable = AttackTableEvaluation.getInstance().attackTable[enemyColor];
 
     // Evaluate each bishop
-    for (long positions = board.bishopList[myColor].list; positions != 0; positions &= positions - 1) {
+    for (long positions = board.bishopList[myColor].positions; positions != 0; positions &= positions - 1) {
       int bishopPosition = ChessmanList.next(positions);
 
       int allMobility = EVAL_BISHOP_MOBILITY_BASE;
@@ -54,11 +54,11 @@ public final class BishopEvaluation {
         int targetPosition = bishopPosition + delta;
         while ((targetPosition & 0x88) == 0) {
           int target = board.board[targetPosition];
-          if (target == IntChessman.NOPIECE) {
+          if (target == IntPiece.NOPIECE) {
             allMobility++;
             targetPosition += delta;
           } else {
-            if (IntChessman.getColor(target) == enemyColor) {
+            if (IntPiece.getColor(target) == enemyColor) {
               allMobility++;
             }
             break;

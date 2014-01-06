@@ -57,12 +57,12 @@ public final class MoveList {
     tail = historyTail[historyCount];
   }
 
-  public void resetList() {
+  public void clear() {
     tail = head;
     index = head;
   }
 
-  public int getLength() {
+  public int size() {
     return tail - head;
   }
 
