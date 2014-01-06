@@ -425,7 +425,7 @@ public final class Board {
     for (GenericColor color : GenericColor.values()) {
       int intColor = IntColor.valueOf(color);
 
-      for (long positions = pawnList[intColor].list; positions != 0; positions &= positions - 1) {
+      for (long positions = pawnList[intColor].positions; positions != 0; positions &= positions - 1) {
         int intPosition = ChessmanList.next(positions);
         assert intPosition != Position.NOPOSITION;
         assert IntPiece.getChessman(board[intPosition]) == IntChessman.PAWN;
@@ -435,7 +435,7 @@ public final class Board {
         newBoard.setPiece(GenericPiece.valueOf(color, GenericChessman.PAWN), position);
       }
 
-      for (long positions = knightList[intColor].list; positions != 0; positions &= positions - 1) {
+      for (long positions = knightList[intColor].positions; positions != 0; positions &= positions - 1) {
         int intPosition = ChessmanList.next(positions);
         assert intPosition != Position.NOPOSITION;
         assert IntPiece.getChessman(board[intPosition]) == IntChessman.KNIGHT;
@@ -445,7 +445,7 @@ public final class Board {
         newBoard.setPiece(GenericPiece.valueOf(color, GenericChessman.KNIGHT), position);
       }
 
-      for (long positions = bishopList[intColor].list; positions != 0; positions &= positions - 1) {
+      for (long positions = bishopList[intColor].positions; positions != 0; positions &= positions - 1) {
         int intPosition = ChessmanList.next(positions);
         assert intPosition != Position.NOPOSITION;
         assert IntPiece.getChessman(board[intPosition]) == IntChessman.BISHOP;
@@ -455,7 +455,7 @@ public final class Board {
         newBoard.setPiece(GenericPiece.valueOf(color, GenericChessman.BISHOP), position);
       }
 
-      for (long positions = rookList[intColor].list; positions != 0; positions &= positions - 1) {
+      for (long positions = rookList[intColor].positions; positions != 0; positions &= positions - 1) {
         int intPosition = ChessmanList.next(positions);
         assert intPosition != Position.NOPOSITION;
         assert IntPiece.getChessman(board[intPosition]) == IntChessman.ROOK;
@@ -465,7 +465,7 @@ public final class Board {
         newBoard.setPiece(GenericPiece.valueOf(color, GenericChessman.ROOK), position);
       }
 
-      for (long positions = queenList[intColor].list; positions != 0; positions &= positions - 1) {
+      for (long positions = queenList[intColor].positions; positions != 0; positions &= positions - 1) {
         int intPosition = ChessmanList.next(positions);
         assert intPosition != Position.NOPOSITION;
         assert IntPiece.getChessman(board[intPosition]) == IntChessman.QUEEN;
@@ -476,7 +476,7 @@ public final class Board {
       }
 
       assert kingList[intColor].size() == 1;
-      int intPosition = ChessmanList.next(kingList[intColor].list);
+      int intPosition = ChessmanList.next(kingList[intColor].positions);
       assert intPosition != Position.NOPOSITION;
       assert IntPiece.getChessman(board[intPosition]) == IntChessman.KING;
       assert IntPiece.getColor(board[intPosition]) == intColor;
@@ -584,7 +584,7 @@ public final class Board {
     int chessmanColor = IntPiece.getColor(Move.getOriginPiece(move));
     int endPosition = Move.getTargetPosition(move);
     int enemyKingColor = IntColor.opposite(chessmanColor);
-    int enemyKingPosition = ChessmanList.next(kingList[enemyKingColor].list);
+    int enemyKingPosition = ChessmanList.next(kingList[enemyKingColor].positions);
 
     switch (Move.getType(move)) {
       case Move.Type.NORMAL:
@@ -648,7 +648,7 @@ public final class Board {
     assert chessmanPosition != Position.NOPOSITION;
     assert kingColor != IntColor.NOCOLOR;
 
-    int myKingPosition = ChessmanList.next(kingList[kingColor].list);
+    int myKingPosition = ChessmanList.next(kingList[kingColor].positions);
 
     // We can only be pinned on an attack line
     int vector = Attack.vector[myKingPosition - chessmanPosition + 127];
@@ -765,7 +765,7 @@ public final class Board {
     assert kingList[color].size() == 1;
 
     int attackerColor = IntColor.opposite(color);
-    getAttack(attack, ChessmanList.next(kingList[color].list), attackerColor, false);
+    getAttack(attack, ChessmanList.next(kingList[color].positions), attackerColor, false);
 
     return attack;
   }
@@ -835,7 +835,7 @@ public final class Board {
         attack.count++;
       }
     }
-    for (long positions = knightList[attackerColor].list; positions != 0; positions &= positions - 1) {
+    for (long positions = knightList[attackerColor].positions; positions != 0; positions &= positions - 1) {
       int attackerPosition = ChessmanList.next(positions);
       assert IntPiece.getChessman(board[attackerPosition]) == IntChessman.KNIGHT;
       assert attackerPosition != Position.NOPOSITION;
@@ -852,7 +852,7 @@ public final class Board {
         attack.count++;
       }
     }
-    for (long positions = bishopList[attackerColor].list; positions != 0; positions &= positions - 1) {
+    for (long positions = bishopList[attackerColor].positions; positions != 0; positions &= positions - 1) {
       int attackerPosition = ChessmanList.next(positions);
       assert IntPiece.getChessman(board[attackerPosition]) == IntChessman.BISHOP;
       assert attackerPosition != Position.NOPOSITION;
@@ -869,7 +869,7 @@ public final class Board {
         attack.count++;
       }
     }
-    for (long positions = rookList[attackerColor].list; positions != 0; positions &= positions - 1) {
+    for (long positions = rookList[attackerColor].positions; positions != 0; positions &= positions - 1) {
       int attackerPosition = ChessmanList.next(positions);
       assert IntPiece.getChessman(board[attackerPosition]) == IntChessman.ROOK;
       assert attackerPosition != Position.NOPOSITION;
@@ -886,7 +886,7 @@ public final class Board {
         attack.count++;
       }
     }
-    for (long positions = queenList[attackerColor].list; positions != 0; positions &= positions - 1) {
+    for (long positions = queenList[attackerColor].positions; positions != 0; positions &= positions - 1) {
       int attackerPosition = ChessmanList.next(positions);
       assert IntPiece.getChessman(board[attackerPosition]) == IntChessman.QUEEN;
       assert attackerPosition != Position.NOPOSITION;
@@ -904,7 +904,7 @@ public final class Board {
       }
     }
     assert kingList[attackerColor].size() == 1;
-    int attackerPosition = ChessmanList.next(kingList[attackerColor].list);
+    int attackerPosition = ChessmanList.next(kingList[attackerColor].positions);
     assert IntPiece.getChessman(board[attackerPosition]) == IntChessman.KING;
     assert attackerPosition != Position.NOPOSITION;
     assert board[attackerPosition] != IntPiece.NOPIECE;

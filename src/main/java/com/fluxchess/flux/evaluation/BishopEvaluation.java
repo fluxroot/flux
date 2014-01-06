@@ -44,7 +44,7 @@ public final class BishopEvaluation {
     byte[] enemyAttackTable = AttackTableEvaluation.getInstance().attackTable[enemyColor];
 
     // Evaluate each bishop
-    for (long positions = board.bishopList[myColor].list; positions != 0; positions &= positions - 1) {
+    for (long positions = board.bishopList[myColor].positions; positions != 0; positions &= positions - 1) {
       int bishopPosition = ChessmanList.next(positions);
 
       int allMobility = EVAL_BISHOP_MOBILITY_BASE;

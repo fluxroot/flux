@@ -175,7 +175,7 @@ public final class MoveSee {
     }
 
     // Knight attacks
-    for (long positions = board.knightList[myColor].list; positions != 0; positions &= positions - 1) {
+    for (long positions = board.knightList[myColor].positions; positions != 0; positions &= positions - 1) {
       int position = ChessmanList.next(positions);
       if (board.canAttack(IntChessman.KNIGHT, myColor, position, targetPosition)) {
         list.chessman[list.size] = board.board[position];
@@ -185,7 +185,7 @@ public final class MoveSee {
     }
 
     // Bishop attacks
-    for (long positions = board.bishopList[myColor].list; positions != 0; positions &= positions - 1) {
+    for (long positions = board.bishopList[myColor].positions; positions != 0; positions &= positions - 1) {
       int position = ChessmanList.next(positions);
       if (board.canAttack(IntChessman.BISHOP, myColor, position, targetPosition)) {
         int bishop = board.board[position];
@@ -198,7 +198,7 @@ public final class MoveSee {
     }
 
     // Rook attacks
-    for (long positions = board.rookList[myColor].list; positions != 0; positions &= positions - 1) {
+    for (long positions = board.rookList[myColor].positions; positions != 0; positions &= positions - 1) {
       int position = ChessmanList.next(positions);
       if (board.canAttack(IntChessman.ROOK, myColor, position, targetPosition)) {
         int rook = board.board[position];
@@ -211,7 +211,7 @@ public final class MoveSee {
     }
 
     // Queen attacks
-    for (long positions = board.queenList[myColor].list; positions != 0; positions &= positions - 1) {
+    for (long positions = board.queenList[myColor].positions; positions != 0; positions &= positions - 1) {
       int position = ChessmanList.next(positions);
       if (board.canAttack(IntChessman.QUEEN, myColor, position, targetPosition)) {
         int queen = board.board[position];
@@ -225,7 +225,7 @@ public final class MoveSee {
 
     // King attacks
     assert board.kingList[myColor].size() == 1;
-    int position = ChessmanList.next(board.kingList[myColor].list);
+    int position = ChessmanList.next(board.kingList[myColor].positions);
     if (board.canAttack(IntChessman.KING, myColor, position, targetPosition)) {
       list.chessman[list.size] = board.board[position];
       list.position[list.size] = position;

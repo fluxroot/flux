@@ -54,7 +54,7 @@ public final class RookEvaluation {
     int totalRook7th = 0;
 
     // Evaluate each rook
-    for (long positions = board.rookList[myColor].list; positions != 0; positions &= positions - 1) {
+    for (long positions = board.rookList[myColor].positions; positions != 0; positions &= positions - 1) {
       int rookPosition = ChessmanList.next(positions);
       int rookFile = Position.getFile(rookPosition);
       int rookRank = Position.getRank(rookPosition);
@@ -98,7 +98,7 @@ public final class RookEvaluation {
         if (enemyPawnTable[tableFile] == 0) {
           totalOpenFile += EVAL_ROOK_OPENFILE / 2;
         }
-        int kingPosition = ChessmanList.next(board.kingList[enemyColor].list);
+        int kingPosition = ChessmanList.next(board.kingList[enemyColor].positions);
         int kingFile = Position.getFile(kingPosition);
         int delta = Math.abs(kingFile - rookFile);
         if (delta <= 1) {
@@ -120,7 +120,7 @@ public final class RookEvaluation {
         assert myColor == IntColor.WHITE;
       }
       if (rookRank == seventhRank) {
-        int kingPosition = ChessmanList.next(board.kingList[enemyColor].list);
+        int kingPosition = ChessmanList.next(board.kingList[enemyColor].positions);
         int kingRank = Position.getRank(kingPosition);
         boolean enemyPawnExists = false;
         for (int j = 1; j < enemyPawnTable.length - 1; j++) {

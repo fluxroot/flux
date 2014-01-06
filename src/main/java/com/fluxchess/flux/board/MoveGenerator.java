@@ -504,7 +504,7 @@ public final class MoveGenerator {
     assert board.kingList[chessmanColor].size() == 1;
     if (board.isPinned(Move.getOriginPosition(move), chessmanColor)) {
       // We are pinned. Test if we move on the line.
-      int kingPosition = ChessmanList.next(board.kingList[chessmanColor].list);
+      int kingPosition = ChessmanList.next(board.kingList[chessmanColor].positions);
       int attackDeltaStart = Attack.deltas[kingPosition - Move.getOriginPosition(move) + 127];
       int attackDeltaEnd = Attack.deltas[kingPosition - Move.getTargetPosition(move) + 127];
       return attackDeltaStart == attackDeltaEnd;
@@ -537,14 +537,14 @@ public final class MoveGenerator {
 
     int activeColor = board.activeColor;
 
-    for (long positions = board.pawnList[activeColor].list; positions != 0; positions &= positions - 1) {
+    for (long positions = board.pawnList[activeColor].positions; positions != 0; positions &= positions - 1) {
       int position = ChessmanList.next(positions);
       addPawnNonCaptureMovesTo(board.board[position], activeColor, position);
     }
     System.arraycopy(nonCaptureMoveList.move, nonCaptureMoveList.head, moveList.move, moveList.tail, nonCaptureMoveList.getLength());
     moveList.tail += nonCaptureMoveList.getLength();
     assert board.kingList[activeColor].size() == 1;
-    int position = ChessmanList.next(board.kingList[activeColor].list);
+    int position = ChessmanList.next(board.kingList[activeColor].positions);
     int king = board.board[position];
     addCastlingMoveIfAllowed(king, position, activeColor);
   }
@@ -556,28 +556,28 @@ public final class MoveGenerator {
     int activeColor = board.activeColor;
     int oppositeColor = IntColor.opposite(activeColor);
 
-    for (long positions = board.pawnList[activeColor].list; positions != 0; positions &= positions - 1) {
+    for (long positions = board.pawnList[activeColor].positions; positions != 0; positions &= positions - 1) {
       int position = ChessmanList.next(positions);
       addPawnCaptureMovesTo(board.board[position], activeColor, position);
     }
-    for (long positions = board.knightList[activeColor].list; positions != 0; positions &= positions - 1) {
+    for (long positions = board.knightList[activeColor].positions; positions != 0; positions &= positions - 1) {
       int position = ChessmanList.next(positions);
       addDefaultCaptureMovesTo(board.board[position], position, false, moveDeltaKnight, Position.NOPOSITION, oppositeColor);
     }
-    for (long positions = board.bishopList[activeColor].list; positions != 0; positions &= positions - 1) {
+    for (long positions = board.bishopList[activeColor].positions; positions != 0; positions &= positions - 1) {
       int position = ChessmanList.next(positions);
       addDefaultCaptureMovesTo(board.board[position], position, true, moveDeltaBishop, Position.NOPOSITION, oppositeColor);
     }
-    for (long positions = board.rookList[activeColor].list; positions != 0; positions &= positions - 1) {
+    for (long positions = board.rookList[activeColor].positions; positions != 0; positions &= positions - 1) {
       int position = ChessmanList.next(positions);
       addDefaultCaptureMovesTo(board.board[position], position, true, moveDeltaRook, Position.NOPOSITION, oppositeColor);
     }
-    for (long positions = board.queenList[activeColor].list; positions != 0; positions &= positions - 1) {
+    for (long positions = board.queenList[activeColor].positions; positions != 0; positions &= positions - 1) {
       int position = ChessmanList.next(positions);
       addDefaultCaptureMovesTo(board.board[position], position, true, moveDeltaQueen, Position.NOPOSITION, oppositeColor);
     }
     assert board.kingList[activeColor].size() == 1;
-    int position = ChessmanList.next(board.kingList[activeColor].list);
+    int position = ChessmanList.next(board.kingList[activeColor].positions);
     addDefaultCaptureMovesTo(board.board[position], position, false, moveDeltaKing, Position.NOPOSITION, oppositeColor);
   }
 
@@ -587,7 +587,7 @@ public final class MoveGenerator {
 
     int activeColor = board.activeColor;
     assert board.kingList[activeColor].size() == 1;
-    int kingPosition = ChessmanList.next(board.kingList[activeColor].list);
+    int kingPosition = ChessmanList.next(board.kingList[activeColor].positions);
     int king = board.board[kingPosition];
     int attackerColor = IntColor.opposite(activeColor);
     int oppositeColor = IntColor.opposite(IntPiece.getColor(king));
@@ -634,25 +634,25 @@ public final class MoveGenerator {
     // Capture the attacker
 
     addPawnCaptureMovesToTarget(activeColor, attacker, attackerPosition);
-    for (long positions = board.knightList[activeColor].list; positions != 0; positions &= positions - 1) {
+    for (long positions = board.knightList[activeColor].positions; positions != 0; positions &= positions - 1) {
       int position = ChessmanList.next(positions);
       if (!board.isPinned(position, activeColor)) {
         addDefaultCaptureMovesTo(board.board[position], position, false, moveDeltaKnight, attackerPosition, oppositeColor);
       }
     }
-    for (long positions = board.bishopList[activeColor].list; positions != 0; positions &= positions - 1) {
+    for (long positions = board.bishopList[activeColor].positions; positions != 0; positions &= positions - 1) {
       int position = ChessmanList.next(positions);
       if (!board.isPinned(position, activeColor)) {
         addDefaultCaptureMovesTo(board.board[position], position, true, moveDeltaBishop, attackerPosition, oppositeColor);
       }
     }
-    for (long positions = board.rookList[activeColor].list; positions != 0; positions &= positions - 1) {
+    for (long positions = board.rookList[activeColor].positions; positions != 0; positions &= positions - 1) {
       int position = ChessmanList.next(positions);
       if (!board.isPinned(position, activeColor)) {
         addDefaultCaptureMovesTo(board.board[position], position, true, moveDeltaRook, attackerPosition, oppositeColor);
       }
     }
-    for (long positions = board.queenList[activeColor].list; positions != 0; positions &= positions - 1) {
+    for (long positions = board.queenList[activeColor].positions; positions != 0; positions &= positions - 1) {
       int position = ChessmanList.next(positions);
       if (!board.isPinned(position, activeColor)) {
         addDefaultCaptureMovesTo(board.board[position], position, true, moveDeltaQueen, attackerPosition, oppositeColor);
@@ -669,25 +669,25 @@ public final class MoveGenerator {
         assert board.board[end] == IntPiece.NOPIECE;
 
         addPawnNonCaptureMovesToTarget(activeColor, end);
-        for (long positions = board.knightList[activeColor].list; positions != 0; positions &= positions - 1) {
+        for (long positions = board.knightList[activeColor].positions; positions != 0; positions &= positions - 1) {
           int position = ChessmanList.next(positions);
           if (!board.isPinned(position, activeColor)) {
             addDefaultNonCaptureMovesTo(board.board[position], position, moveDeltaKnight, end);
           }
         }
-        for (long positions = board.bishopList[activeColor].list; positions != 0; positions &= positions - 1) {
+        for (long positions = board.bishopList[activeColor].positions; positions != 0; positions &= positions - 1) {
           int position = ChessmanList.next(positions);
           if (!board.isPinned(position, activeColor)) {
             addDefaultNonCaptureMovesTo(board.board[position], position, moveDeltaBishop, end);
           }
         }
-        for (long positions = board.rookList[activeColor].list; positions != 0; positions &= positions - 1) {
+        for (long positions = board.rookList[activeColor].positions; positions != 0; positions &= positions - 1) {
           int position = ChessmanList.next(positions);
           if (!board.isPinned(position, activeColor)) {
             addDefaultNonCaptureMovesTo(board.board[position], position, moveDeltaRook, end);
           }
         }
-        for (long positions = board.queenList[activeColor].list; positions != 0; positions &= positions - 1) {
+        for (long positions = board.queenList[activeColor].positions; positions != 0; positions &= positions - 1) {
           int position = ChessmanList.next(positions);
           if (!board.isPinned(position, activeColor)) {
             addDefaultNonCaptureMovesTo(board.board[position], position, moveDeltaQueen, end);
@@ -704,35 +704,35 @@ public final class MoveGenerator {
 
     assert board.kingList[IntColor.opposite(activeColor)].size() == 1;
     int enemyKingColor = IntColor.opposite(activeColor);
-    int enemyKingPosition = ChessmanList.next(board.kingList[enemyKingColor].list);
+    int enemyKingPosition = ChessmanList.next(board.kingList[enemyKingColor].positions);
 
-    for (long positions = board.pawnList[activeColor].list; positions != 0; positions &= positions - 1) {
+    for (long positions = board.pawnList[activeColor].positions; positions != 0; positions &= positions - 1) {
       int position = ChessmanList.next(positions);
       boolean isPinned = board.isPinned(position, enemyKingColor);
       addPawnNonCaptureCheckMovesTo(board.board[position], activeColor, position, enemyKingPosition, isPinned);
     }
-    for (long positions = board.knightList[activeColor].list; positions != 0; positions &= positions - 1) {
+    for (long positions = board.knightList[activeColor].positions; positions != 0; positions &= positions - 1) {
       int position = ChessmanList.next(positions);
       boolean isPinned = board.isPinned(position, enemyKingColor);
       addDefaultNonCaptureCheckMovesTo(board.board[position], IntChessman.KNIGHT, activeColor, position, moveDeltaKnight, enemyKingPosition, isPinned);
     }
-    for (long positions = board.bishopList[activeColor].list; positions != 0; positions &= positions - 1) {
+    for (long positions = board.bishopList[activeColor].positions; positions != 0; positions &= positions - 1) {
       int position = ChessmanList.next(positions);
       boolean isPinned = board.isPinned(position, enemyKingColor);
       addDefaultNonCaptureCheckMovesTo(board.board[position], IntChessman.BISHOP, activeColor, position, moveDeltaBishop, enemyKingPosition, isPinned);
     }
-    for (long positions = board.rookList[activeColor].list; positions != 0; positions &= positions - 1) {
+    for (long positions = board.rookList[activeColor].positions; positions != 0; positions &= positions - 1) {
       int position = ChessmanList.next(positions);
       boolean isPinned = board.isPinned(position, enemyKingColor);
       addDefaultNonCaptureCheckMovesTo(board.board[position], IntChessman.ROOK, activeColor, position, moveDeltaRook, enemyKingPosition, isPinned);
     }
-    for (long positions = board.queenList[activeColor].list; positions != 0; positions &= positions - 1) {
+    for (long positions = board.queenList[activeColor].positions; positions != 0; positions &= positions - 1) {
       int position = ChessmanList.next(positions);
       boolean isPinned = board.isPinned(position, enemyKingColor);
       addDefaultNonCaptureCheckMovesTo(board.board[position], IntChessman.QUEEN, activeColor, position, moveDeltaQueen, enemyKingPosition, isPinned);
     }
     assert board.kingList[activeColor].size() == 1;
-    int position = ChessmanList.next(board.kingList[activeColor].list);
+    int position = ChessmanList.next(board.kingList[activeColor].positions);
     int king = board.board[position];
     boolean isPinned = board.isPinned(position, enemyKingColor);
     addDefaultNonCaptureCheckMovesTo(king, IntChessman.KING, activeColor, position, moveDeltaKing, enemyKingPosition, isPinned);

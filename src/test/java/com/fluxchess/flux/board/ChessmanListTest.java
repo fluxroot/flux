@@ -62,19 +62,19 @@ public class ChessmanListTest {
       list.add(x88position);
     }
 
-    assertEquals(-1, list.list);
+    assertEquals(-1, list.positions);
   }
 
   @Test
   public void testRemove() {
     ChessmanList list = new ChessmanList();
-    list.list = -1;
+    list.positions = -1;
 
     for (int x88position : pool) {
       list.remove(x88position);
     }
 
-    assertEquals(0, list.list);
+    assertEquals(0, list.positions);
   }
 
 }

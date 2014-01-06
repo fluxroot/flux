@@ -43,7 +43,7 @@ public final class KnightEvaluation {
     byte[] enemyAttackTable = AttackTableEvaluation.getInstance().attackTable[enemyColor];
 
     // Evaluate each knight
-    for (long positions = board.knightList[myColor].list; positions != 0; positions &= positions - 1) {
+    for (long positions = board.knightList[myColor].positions; positions != 0; positions &= positions - 1) {
       int knightPosition = ChessmanList.next(positions);
 
       int allMobility = EVAL_KNIGHT_MOBILITY_BASE;

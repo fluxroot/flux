@@ -236,7 +236,7 @@ public final class PositionValueEvaluation {
     // Pawns
     int[] chessmanValueOpening = positionValueOpening[IntChessman.PAWN];
     int[] chessmanValueEndgame = positionValueEndgame[IntChessman.PAWN];
-    for (long positions = board.pawnList[myColor].list; positions != 0; positions &= positions - 1) {
+    for (long positions = board.pawnList[myColor].positions; positions != 0; positions &= positions - 1) {
       int position = ChessmanList.next(positions);
       if (myColor == IntColor.BLACK) {
         position = 127 - 8 - position;
@@ -250,7 +250,7 @@ public final class PositionValueEvaluation {
     // Knights
     chessmanValueOpening = positionValueOpening[IntChessman.KNIGHT];
     chessmanValueEndgame = positionValueEndgame[IntChessman.KNIGHT];
-    for (long positions = board.knightList[myColor].list; positions != 0; positions &= positions - 1) {
+    for (long positions = board.knightList[myColor].positions; positions != 0; positions &= positions - 1) {
       int position = ChessmanList.next(positions);
       if (myColor == IntColor.BLACK) {
         position = 127 - 8 - position;
@@ -264,7 +264,7 @@ public final class PositionValueEvaluation {
     // Bishops
     chessmanValueOpening = positionValueOpening[IntChessman.BISHOP];
     chessmanValueEndgame = positionValueEndgame[IntChessman.BISHOP];
-    for (long positions = board.bishopList[myColor].list; positions != 0; positions &= positions - 1) {
+    for (long positions = board.bishopList[myColor].positions; positions != 0; positions &= positions - 1) {
       int position = ChessmanList.next(positions);
       if (myColor == IntColor.BLACK) {
         position = 127 - 8 - position;
@@ -278,7 +278,7 @@ public final class PositionValueEvaluation {
     // Rooks
     chessmanValueOpening = positionValueOpening[IntChessman.ROOK];
     chessmanValueEndgame = positionValueEndgame[IntChessman.ROOK];
-    for (long positions = board.rookList[myColor].list; positions != 0; positions &= positions - 1) {
+    for (long positions = board.rookList[myColor].positions; positions != 0; positions &= positions - 1) {
       int position = ChessmanList.next(positions);
       if (myColor == IntColor.BLACK) {
         position = 127 - 8 - position;
@@ -292,7 +292,7 @@ public final class PositionValueEvaluation {
     // Queens
     chessmanValueOpening = positionValueOpening[IntChessman.QUEEN];
     chessmanValueEndgame = positionValueEndgame[IntChessman.QUEEN];
-    for (long positions = board.queenList[myColor].list; positions != 0; positions &= positions - 1) {
+    for (long positions = board.queenList[myColor].positions; positions != 0; positions &= positions - 1) {
       int position = ChessmanList.next(positions);
       if (myColor == IntColor.BLACK) {
         position = 127 - 8 - position;
@@ -305,7 +305,7 @@ public final class PositionValueEvaluation {
 
     // King
     assert board.kingList[myColor].size() == 1;
-    int position = ChessmanList.next(board.kingList[myColor].list);
+    int position = ChessmanList.next(board.kingList[myColor].positions);
     if (myColor == IntColor.BLACK) {
       position = 127 - 8 - position;
     } else {
