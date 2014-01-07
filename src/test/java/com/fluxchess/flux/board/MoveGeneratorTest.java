@@ -18,243 +18,144 @@
  */
 package com.fluxchess.flux.board;
 
-import com.fluxchess.flux.evaluation.Evaluation;
 import com.fluxchess.jcpi.models.GenericBoard;
+import com.fluxchess.jcpi.models.GenericMove;
 import com.fluxchess.jcpi.models.IllegalNotationException;
-import com.fluxchess.jcpi.models.IntChessman;
-import com.fluxchess.jcpi.models.IntPiece;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 public class MoveGeneratorTest {
 
-  private static final Logger LOG = LoggerFactory.getLogger(MoveGeneratorTest.class);
-
-  private final TestPerftTable table = new TestPerftTable();
-
   @Test
-  public void testPerft() {
+  public void testPerft() throws IOException, IllegalNotationException {
     for (int i = 1; i < 4; i++) {
-//      for (int i = 1; i < 7; i++) {
-      try {
-        BufferedReader file = null;
-        try {
-          file = new BufferedReader(new FileReader("perftsuite.epd"));
-        } catch (FileNotFoundException e) {
-          file = new BufferedReader(new FileReader("src/test/resources/perftsuite.epd"));
-        }
+      try (InputStream inputStream = MoveGeneratorTest.class.getResourceAsStream("/perftsuite.epd")) {
+        BufferedReader file = new BufferedReader(new InputStreamReader(inputStream));
 
         String line = file.readLine();
         while (line != null) {
           String[] tokens = line.split(";");
 
-          // Setup a new board from fen
-          GenericBoard board = new GenericBoard(tokens[0].trim());
-
           if (tokens.length > i) {
             String[] data = tokens[i].trim().split(" ");
             int depth = Integer.parseInt(data[0].substring(1));
-            int nodesNumber = Integer.parseInt(data[1]);
+            int nodes = Integer.parseInt(data[1]);
 
-            Board testBoard = new Board(board);
-            new MoveSee(testBoard);
-            table.increaseAge();
+            GenericBoard genericBoard = new GenericBoard(tokens[0].trim());
+            Board board = new Board(genericBoard);
+            new MoveSee(board);
 
-            long startTime = System.currentTimeMillis();
-            int result = miniMax(testBoard, new MoveGenerator(testBoard, new KillerTable(), new HistoryTable()), depth, depth);
-            long endTime = System.currentTimeMillis();
-            assertEquals("Tested " + tokens[0].trim() + " depth " + depth + " with nodes number " + nodesNumber + ": " + String.format("%d", endTime - startTime), nodesNumber, result);
+            long result = miniMax(board, new MoveGenerator(board, new KillerTable(), new HistoryTable()), depth);
+            if (nodes != result) {
+              throw new AssertionError(findMissingMoves(board, new MoveGenerator(board, new KillerTable(), new HistoryTable()), depth));
+            }
           }
 
           line = file.readLine();
         }
-      } catch (IOException | IllegalNotationException e) {
-        fail();
       }
     }
   }
 
-  private int miniMax(Board board, MoveGenerator moveGenerator, int depth, int maxDepth) {
+  private long miniMax(Board board, MoveGenerator moveGenerator, int depth) {
     if (depth == 0) {
       return 1;
     }
 
-    int totalNodes = table.get(board.zobristCode);
-    if (totalNodes > 0) {
-      return totalNodes;
-    }
+    long totalNodes = 0;
 
     Attack attack = board.getAttack(board.activeColor);
     moveGenerator.initializeMain(attack, 0, Move.NOMOVE);
 
-    int nodes = 0;
     int move = moveGenerator.getNextMove();
     while (move != Move.NOMOVE) {
       boolean isCheckingMove = board.isCheckingMove(move);
       GenericBoard oldBoard = board.getBoard();
-
       int captureSquare = board.capturePosition;
+
       board.makeMove(move);
       boolean isCheckingMoveReal = board.getAttack(board.activeColor).isCheck();
       assertEquals(oldBoard.toString() + ", " + Move.toGenericMove(move).toString(), isCheckingMoveReal, isCheckingMove);
-      nodes = miniMax(board, moveGenerator, depth - 1, maxDepth);
+      totalNodes += miniMax(board, moveGenerator, depth - 1);
       board.undoMove(move);
+
       assert captureSquare == board.capturePosition;
 
-//          if (depth == maxDepth) {
-//              System.out.println(Move.toGenericMove(move).toLongAlgebraicNotation() + ": " + nodes);
-//          }
-      totalNodes += nodes;
       move = moveGenerator.getNextMove();
     }
 
     moveGenerator.destroy();
-
-    table.put(board.zobristCode, totalNodes);
 
     return totalNodes;
   }
 
-  @Test
-  public void testSpecialQuiescentCheckingMoves() {
-    // Setup a new board from fen
-    GenericBoard board;
-    try {
-      board = new GenericBoard("8/8/3K4/3Nn3/3nN3/4k3/8/8 b - - 0 1");
-      Board testBoard = new Board(board);
+  private String findMissingMoves(Board board, MoveGenerator moveGenerator, int depth) {
+    String message = "";
 
-      miniMaxQuiescentCheckingMoves(testBoard, new MoveGenerator(testBoard, new KillerTable(), new HistoryTable()), 3, 3);
-    } catch (IllegalNotationException e) {
-      fail();
-    }
-  }
+    // Get expected moves from JCPI
+    GenericBoard genericBoard = board.getBoard();
+    Collection<GenericMove> expectedMoves = new HashSet<>(Arrays.asList(
+      com.fluxchess.jcpi.utils.MoveGenerator.getGenericMoves(genericBoard)
+    ));
 
-  @Test
-  public void testQuiescentCheckingMoves() {
-    for (int i = 1; i < 3; i++) {
-//      for (int i = 1; i < 7; i++) {
-      try {
-        BufferedReader file = null;
-        try {
-          file = new BufferedReader(new FileReader("perftsuite.epd"));
-        } catch (FileNotFoundException e) {
-          file = new BufferedReader(new FileReader("src/test/resources/perftsuite.epd"));
-        }
-
-        String line = file.readLine();
-        while (line != null) {
-          String[] tokens = line.split(";");
-
-          // Setup a new board from fen
-          GenericBoard board = new GenericBoard(tokens[0].trim());
-
-          if (tokens.length > i) {
-            String[] data = tokens[i].trim().split(" ");
-            int depth = Integer.parseInt(data[0].substring(1));
-            int nodesNumber = Integer.parseInt(data[1]);
-
-            Board testBoard = new Board(board);
-            new MoveSee(testBoard);
-
-            miniMaxQuiescentCheckingMoves(testBoard, new MoveGenerator(testBoard, new KillerTable(), new HistoryTable()), depth, depth);
-          }
-
-          line = file.readLine();
-        }
-      } catch (IOException | IllegalNotationException e) {
-        fail();
-      }
-    }
-  }
-
-  private void miniMaxQuiescentCheckingMoves(Board board, MoveGenerator moveGenerator, int depth, int maxDepth) {
-    if (depth == 0) {
-      return;
-    }
+    // Get actual moves
+    Collection<GenericMove> actualMoves = new HashSet<>();
+    MoveList moves = new MoveList();
 
     Attack attack = board.getAttack(board.activeColor);
+    moveGenerator.initializeMain(attack, 0, Move.NOMOVE);
 
-    // Get quiescent move list
-    MoveList quiescentMoveList = new MoveList();
-    moveGenerator.initializeQuiescent(attack, true);
     int move = moveGenerator.getNextMove();
     while (move != Move.NOMOVE) {
-      quiescentMoveList.move[quiescentMoveList.tail++] = move;
+      moves.move[moves.tail++] = move;
+      actualMoves.add(Move.toGenericMove(move));
+
       move = moveGenerator.getNextMove();
     }
+
     moveGenerator.destroy();
 
-    // Do main moves and count
-    MoveList mainMoveList = new MoveList();
-    moveGenerator.initializeMain(attack, 0, Move.NOMOVE);
-    move = moveGenerator.getNextMove();
-    while (move != Move.NOMOVE) {
-      if (!attack.isCheck()) {
-        if ((Move.getTargetPiece(move) != IntPiece.NOPIECE && isGoodCapture(move)) || (Move.getTargetPiece(move) == IntPiece.NOPIECE && board.isCheckingMove(move)) && MoveSee.seeMove(move, IntPiece.getColor(Move.getOriginPiece(move))) >= 0) {
-          board.makeMove(move);
-          miniMaxQuiescentCheckingMoves(board, moveGenerator, depth - 1, maxDepth);
-          board.undoMove(move);
-          mainMoveList.move[mainMoveList.tail++] = move;
-        }
-      } else {
-        board.makeMove(move);
-        miniMaxQuiescentCheckingMoves(board, moveGenerator, depth - 1, maxDepth);
-        board.undoMove(move);
-        mainMoveList.move[mainMoveList.tail++] = move;
+    // Compare expected and actual moves
+    Collection<GenericMove> invalidMoves = new HashSet<>(actualMoves);
+    invalidMoves.removeAll(expectedMoves);
+
+    Collection<GenericMove> missingMoves = new HashSet<>(expectedMoves);
+    missingMoves.removeAll(actualMoves);
+
+    if (invalidMoves.isEmpty() && missingMoves.isEmpty()) {
+      if (depth <= 1) {
+        return message;
       }
-      move = moveGenerator.getNextMove();
-    }
-    moveGenerator.destroy();
 
-    assertEquals(printDifference(board, mainMoveList, quiescentMoveList), mainMoveList.size(), quiescentMoveList.size());
-  }
+      for (int i = moves.head; i < moves.tail; ++i) {
+        move = moves.move[i];
 
-  private String printDifference(Board board, MoveList main, MoveList quiescent) {
-    String result = board.getBoard().toString() + "\n";
+        board.makeMove(move);
+        message += miniMax(board, moveGenerator, depth - 1);
+        board.undoMove(move);
 
-    new MoveRater(new HistoryTable()).rateFromMVVLVA(main);
-    new MoveRater(new HistoryTable()).rateFromMVVLVA(quiescent);
-
-    result += "     Main:";
-    for (int i = 0; i < main.tail; i++) {
-      result += " " + Move.toGenericMove(main.move[i]).toString();
-    }
-    result += "\n";
-
-    result += "Quiescent:";
-    for (int i = 0; i < quiescent.tail; i++) {
-      result += " " + Move.toGenericMove(quiescent.move[i]).toString();
-    }
-    result += "\n";
-
-    return result;
-  }
-
-  private static boolean isGoodCapture(int move) {
-    if (Move.getType(move) == Move.Type.PAWNPROMOTION) {
-      return Move.getPromotion(move) == IntChessman.QUEEN;
+        if (!message.isEmpty()) {
+          break;
+        }
+      }
+    } else {
+      message += String.format("Failed check for board: %s%n", genericBoard);
+      message += String.format("Expected: %s%n", expectedMoves);
+      message += String.format("  Actual: %s%n", actualMoves);
+      message += String.format(" Missing: %s%n", missingMoves);
+      message += String.format(" Invalid: %s%n", invalidMoves);
     }
 
-    int chessman = IntPiece.getChessman(Move.getOriginPiece(move));
-    int target = Move.getTargetPiece(move);
-
-    assert chessman != IntChessman.NOCHESSMAN;
-    assert target != IntPiece.NOPIECE;
-
-    if (Evaluation.getValueFromChessman(chessman) <= Evaluation.getValueFromPiece(target)) {
-      return true;
-    }
-
-    return MoveSee.seeMove(move, IntPiece.getColor(Move.getOriginPiece(move))) >= 0;
+    return message;
   }
 
 }
