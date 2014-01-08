@@ -140,7 +140,7 @@ public class MoveGeneratorTest {
         move = moves.move[i];
 
         board.makeMove(move);
-        message += miniMax(board, moveGenerator, depth - 1);
+        message += findMissingMoves(board, moveGenerator, depth - 1);
         board.undoMove(move);
 
         if (!message.isEmpty()) {
