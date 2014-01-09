@@ -20,7 +20,6 @@ package com.fluxchess.flux.evaluation;
 
 import com.fluxchess.flux.Configuration;
 import com.fluxchess.flux.board.Board;
-import com.fluxchess.flux.board.IntGamePhase;
 import com.fluxchess.flux.search.Search;
 import com.fluxchess.jcpi.models.IntChessman;
 import com.fluxchess.jcpi.models.IntColor;
@@ -34,6 +33,10 @@ public final class Evaluation {
   public static final int VALUE_ROOK = 500;
   public static final int VALUE_QUEEN = 975;
   public static final int VALUE_KING = 20000;
+
+  public static final int OPENING = 0;
+  public static final int MIDDLE = 1;
+  public static final int ENDGAME = 2;
 
   // Game phase thresholds
   private static final int GAMEPHASE_OPENING_VALUE =
@@ -239,12 +242,12 @@ public final class Evaluation {
 
   public static int getGamePhase(Board board) {
     if (materialValueAll(IntColor.WHITE, board) >= GAMEPHASE_OPENING_VALUE && materialValueAll(IntColor.BLACK, board) >= GAMEPHASE_OPENING_VALUE) {
-      return IntGamePhase.OPENING;
+      return OPENING;
     } else if (materialValueAll(IntColor.WHITE, board) <= GAMEPHASE_ENDGAME_VALUE || materialValueAll(IntColor.BLACK, board) <= GAMEPHASE_ENDGAME_VALUE
       || materialCount(IntColor.WHITE, board) <= GAMEPHASE_ENDGAME_COUNT || materialCount(IntColor.BLACK, board) <= GAMEPHASE_ENDGAME_COUNT) {
-      return IntGamePhase.ENDGAME;
+      return ENDGAME;
     } else {
-      return IntGamePhase.MIDDLE;
+      return MIDDLE;
     }
   }
 

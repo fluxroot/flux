@@ -64,7 +64,7 @@ public class BoardTest {
     assertEquals(board.getFullMoveNumber(), testBoard.getFullMoveNumber());
 
     // Test game phase
-    assertEquals(IntGamePhase.OPENING, Evaluation.getGamePhase(testBoard));
+    assertEquals(Evaluation.OPENING, Evaluation.getGamePhase(testBoard));
 
     // Test material value
     assertEquals(Evaluation.VALUE_KING + Evaluation.VALUE_QUEEN + 2 * Evaluation.VALUE_ROOK + 2 * Evaluation.VALUE_BISHOP + 2 * Evaluation.VALUE_KNIGHT + 8 * Evaluation.VALUE_PAWN, Evaluation.materialValueAll(IntColor.WHITE, testBoard));
