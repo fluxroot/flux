@@ -19,7 +19,6 @@
 package com.fluxchess.flux.evaluation;
 
 import com.fluxchess.flux.board.Board;
-import com.fluxchess.flux.board.ChessmanList;
 import com.fluxchess.flux.board.MoveGenerator;
 import com.fluxchess.flux.board.Position;
 import com.fluxchess.jcpi.models.IntColor;
@@ -54,8 +53,8 @@ public final class RookEvaluation {
     int totalRook7th = 0;
 
     // Evaluate each rook
-    for (long positions = board.rookList[myColor].positions; positions != 0; positions &= positions - 1) {
-      int rookPosition = ChessmanList.next(positions);
+    for (long positions = board.rookList[myColor]; positions != 0; positions &= positions - 1) {
+      int rookPosition = Position.toX88Position(Long.numberOfTrailingZeros(positions));
       int rookFile = Position.getFile(rookPosition);
       int rookRank = Position.getRank(rookPosition);
       int tableFile = rookFile + 1;
@@ -98,7 +97,7 @@ public final class RookEvaluation {
         if (enemyPawnTable[tableFile] == 0) {
           totalOpenFile += EVAL_ROOK_OPENFILE / 2;
         }
-        int kingPosition = ChessmanList.next(board.kingList[enemyColor].positions);
+        int kingPosition = Position.toX88Position(Long.numberOfTrailingZeros(board.kingList[enemyColor]));
         int kingFile = Position.getFile(kingPosition);
         int delta = Math.abs(kingFile - rookFile);
         if (delta <= 1) {
@@ -120,7 +119,7 @@ public final class RookEvaluation {
         assert myColor == IntColor.WHITE;
       }
       if (rookRank == seventhRank) {
-        int kingPosition = ChessmanList.next(board.kingList[enemyColor].positions);
+        int kingPosition = Position.toX88Position(Long.numberOfTrailingZeros(board.kingList[enemyColor]));
         int kingRank = Position.getRank(kingPosition);
         boolean enemyPawnExists = false;
         for (int j = 1; j < enemyPawnTable.length - 1; j++) {

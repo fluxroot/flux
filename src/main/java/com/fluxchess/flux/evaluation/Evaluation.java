@@ -252,27 +252,27 @@ public final class Evaluation {
   }
 
   public static int materialValueAll(int color, Board board) {
-    return VALUE_PAWN * board.pawnList[color].size() +
-      VALUE_KNIGHT * board.knightList[color].size() +
-      VALUE_BISHOP * board.bishopList[color].size() +
-      VALUE_ROOK * board.rookList[color].size() +
-      VALUE_QUEEN * board.queenList[color].size() +
-      VALUE_KING * board.kingList[color].size();
+    return VALUE_PAWN * Long.bitCount(board.pawnList[color]) +
+      VALUE_KNIGHT * Long.bitCount(board.knightList[color]) +
+      VALUE_BISHOP * Long.bitCount(board.bishopList[color]) +
+      VALUE_ROOK * Long.bitCount(board.rookList[color]) +
+      VALUE_QUEEN * Long.bitCount(board.queenList[color]) +
+      VALUE_KING * Long.bitCount(board.kingList[color]);
   }
 
   public static int materialCount(int color, Board board) {
-    return board.knightList[color].size() +
-      board.bishopList[color].size() +
-      board.rookList[color].size() +
-      board.queenList[color].size();
+    return Long.bitCount(board.knightList[color]) +
+      Long.bitCount(board.bishopList[color]) +
+      Long.bitCount(board.rookList[color]) +
+      Long.bitCount(board.queenList[color]);
   }
 
   public static int materialCountAll(int color, Board board) {
-    return board.pawnList[color].size() +
-      board.knightList[color].size() +
-      board.bishopList[color].size() +
-      board.rookList[color].size() +
-      board.queenList[color].size();
+    return Long.bitCount(board.pawnList[color]) +
+      Long.bitCount(board.knightList[color]) +
+      Long.bitCount(board.bishopList[color]) +
+      Long.bitCount(board.rookList[color]) +
+      Long.bitCount(board.queenList[color]);
   }
 
 }

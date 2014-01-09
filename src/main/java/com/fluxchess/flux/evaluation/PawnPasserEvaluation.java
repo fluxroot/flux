@@ -18,7 +18,10 @@
  */
 package com.fluxchess.flux.evaluation;
 
-import com.fluxchess.flux.board.*;
+import com.fluxchess.flux.board.Board;
+import com.fluxchess.flux.board.Move;
+import com.fluxchess.flux.board.MoveSee;
+import com.fluxchess.flux.board.Position;
 import com.fluxchess.jcpi.models.*;
 
 public final class PawnPasserEvaluation {
@@ -47,18 +50,18 @@ public final class PawnPasserEvaluation {
     byte[] myAttackTable = AttackTableEvaluation.getInstance().attackTable[myColor];
     byte[] enemyPawnTable = PawnTableEvaluation.getInstance().pawnTable[enemyColor];
 
-    assert board.kingList[enemyColor].size() == 1;
-    int enemyKingPosition = ChessmanList.next(board.kingList[enemyColor].positions);
+    assert Long.bitCount(board.kingList[enemyColor]) == 1;
+    int enemyKingPosition = Position.toX88Position(Long.numberOfTrailingZeros(board.kingList[enemyColor]));
     int enemyKingFile = Position.getFile(enemyKingPosition);
     int enemyKingRank = Position.getRank(enemyKingPosition);
-    assert board.kingList[myColor].size() == 1;
-    int myKingPosition = ChessmanList.next(board.kingList[myColor].positions);
+    assert Long.bitCount(board.kingList[myColor]) == 1;
+    int myKingPosition = Position.toX88Position(Long.numberOfTrailingZeros(board.kingList[myColor]));
     int myKingFile = Position.getFile(myKingPosition);
     int myKingRank = Position.getRank(myKingPosition);
 
     // Evaluate each pawn
-    for (long positions = board.pawnList[myColor].positions; positions != 0; positions &= positions - 1) {
-      int pawnPosition = ChessmanList.next(positions);
+    for (long positions = board.pawnList[myColor]; positions != 0; positions &= positions - 1) {
+      int pawnPosition = Position.toX88Position(Long.numberOfTrailingZeros(positions));
       int pawnFile = Position.getFile(pawnPosition);
       int pawnRank = Position.getRank(pawnPosition);
       int pawn = board.board[pawnPosition];

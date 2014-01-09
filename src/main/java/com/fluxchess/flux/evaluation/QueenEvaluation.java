@@ -19,7 +19,6 @@
 package com.fluxchess.flux.evaluation;
 
 import com.fluxchess.flux.board.Board;
-import com.fluxchess.flux.board.ChessmanList;
 import com.fluxchess.flux.board.MoveGenerator;
 import com.fluxchess.flux.board.Position;
 import com.fluxchess.jcpi.models.IntColor;
@@ -49,8 +48,8 @@ public final class QueenEvaluation {
     byte[] enemyPawnTable = PawnTableEvaluation.getInstance().pawnTable[enemyColor];
 
     // Evaluate the queen
-    for (long positions = board.queenList[myColor].positions; positions != 0; positions &= positions - 1) {
-      int queenPosition = ChessmanList.next(positions);
+    for (long positions = board.queenList[myColor]; positions != 0; positions &= positions - 1) {
+      int queenPosition = Position.toX88Position(Long.numberOfTrailingZeros(positions));
       int queenRank = Position.getRank(queenPosition);
 
       int allMobility = EVAL_QUEEN_MOBILITY_BASE;
@@ -94,7 +93,7 @@ public final class QueenEvaluation {
         assert myColor == IntColor.WHITE;
       }
       if (queenRank == seventhRank) {
-        int kingPosition = ChessmanList.next(board.kingList[enemyColor].positions);
+        int kingPosition = Position.toX88Position(Long.numberOfTrailingZeros(board.kingList[enemyColor]));
         int kingRank = Position.getRank(kingPosition);
         boolean enemyPawnExists = false;
         for (int j = 1; j < enemyPawnTable.length - 1; j++) {

@@ -19,7 +19,6 @@
 package com.fluxchess.flux.evaluation;
 
 import com.fluxchess.flux.board.Board;
-import com.fluxchess.flux.board.ChessmanList;
 import com.fluxchess.flux.board.Position;
 import com.fluxchess.jcpi.models.IntChessman;
 import com.fluxchess.jcpi.models.IntColor;
@@ -50,8 +49,8 @@ public final class PawnStructureEvaluation {
     byte[] myPawnTable = PawnTableEvaluation.getInstance().pawnTable[myColor];
 
     // Evaluate each pawn
-    for (long positions = board.pawnList[myColor].positions; positions != 0; positions &= positions - 1) {
-      int pawnPosition = ChessmanList.next(positions);
+    for (long positions = board.pawnList[myColor]; positions != 0; positions &= positions - 1) {
+      int pawnPosition = Position.toX88Position(Long.numberOfTrailingZeros(positions));
       int pawnFile = Position.getFile(pawnPosition);
       int pawnRank = Position.getRank(pawnPosition);
       int tableFile = pawnFile + 1;

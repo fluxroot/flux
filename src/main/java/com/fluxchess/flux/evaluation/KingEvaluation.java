@@ -19,7 +19,6 @@
 package com.fluxchess.flux.evaluation;
 
 import com.fluxchess.flux.board.Board;
-import com.fluxchess.flux.board.ChessmanList;
 import com.fluxchess.flux.board.Position;
 import com.fluxchess.jcpi.models.IntCastling;
 import com.fluxchess.jcpi.models.IntColor;
@@ -59,8 +58,8 @@ public final class KingEvaluation {
     byte[] enemyAttackTable = AttackTableEvaluation.getInstance().attackTable[enemyColor];
 
     // Evaluate the king
-    assert board.kingList[myColor].size() == 1;
-    int kingPosition = ChessmanList.next(board.kingList[myColor].positions);
+    assert Long.bitCount(board.kingList[myColor]) == 1;
+    int kingPosition = Position.toX88Position(Long.numberOfTrailingZeros(board.kingList[myColor]));
 
     // Evaluate king safety
     int attackedSquare;

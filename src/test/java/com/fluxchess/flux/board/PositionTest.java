@@ -143,4 +143,14 @@ public class PositionTest {
     }
   }
 
+  @Test
+  public void testX88Positions() {
+    int bitposition = 0;
+    for (int x88position : Position.values) {
+      assertEquals(bitposition, Position.toBitPosition(x88position));
+      assertEquals(x88position, Position.toX88Position(bitposition));
+      ++bitposition;
+    }
+  }
+
 }

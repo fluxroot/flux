@@ -19,8 +19,8 @@
 package com.fluxchess.flux.evaluation;
 
 import com.fluxchess.flux.board.Board;
-import com.fluxchess.flux.board.ChessmanList;
 import com.fluxchess.flux.board.MoveGenerator;
+import com.fluxchess.flux.board.Position;
 import com.fluxchess.jcpi.models.IntColor;
 import com.fluxchess.jcpi.models.IntPiece;
 
@@ -44,8 +44,8 @@ public final class BishopEvaluation {
     byte[] enemyAttackTable = AttackTableEvaluation.getInstance().attackTable[enemyColor];
 
     // Evaluate each bishop
-    for (long positions = board.bishopList[myColor].positions; positions != 0; positions &= positions - 1) {
-      int bishopPosition = ChessmanList.next(positions);
+    for (long positions = board.bishopList[myColor]; positions != 0; positions &= positions - 1) {
+      int bishopPosition = Position.toX88Position(Long.numberOfTrailingZeros(positions));
 
       int allMobility = EVAL_BISHOP_MOBILITY_BASE;
 
@@ -76,7 +76,7 @@ public final class BishopEvaluation {
     }
 
     // Evaluate bishop pair
-    if (board.bishopList[myColor].size() >= 2) {
+    if (Long.bitCount(board.bishopList[myColor]) >= 2) {
       total += EVAL_BISHOP_PAIR;
     }
 

@@ -151,4 +151,16 @@ public final class Position {
     }
   }
 
+  public static int toX88Position(int position) {
+    assert position >= 0 && position < Long.SIZE;
+
+    return ((position & ~7) << 1) | (position & 7);
+  }
+
+  public static int toBitPosition(int position) {
+    assert (position & 0x88) == 0;
+
+    return ((position & ~7) >>> 1) | (position & 7);
+  }
+
 }
