@@ -84,8 +84,8 @@ public final class TranspositionTable {
     assert type != Score.NOSCORE;
     assert height >= 0;
 
-    int position = (int) (zobristCode % size);
-    TranspositionTableEntry currentEntry = entry[position];
+    int index = (int) (zobristCode % size);
+    TranspositionTableEntry currentEntry = entry[index];
 
     //## BEGIN "always replace" Scheme
     if (currentEntry.zobristCode == 0 || currentEntry.age != currentAge) {
@@ -126,8 +126,8 @@ public final class TranspositionTable {
    * @return the transposition table entry or null if there exists no entry.
    */
   public TranspositionTableEntry get(long zobristCode) {
-    int position = (int) (zobristCode % size);
-    TranspositionTableEntry currentEntry = entry[position];
+    int index = (int) (zobristCode % size);
+    TranspositionTableEntry currentEntry = entry[index];
 
     if (currentEntry.zobristCode == zobristCode && currentEntry.age == currentAge) {
       return currentEntry;

@@ -19,8 +19,7 @@
 package com.fluxchess.flux.evaluation;
 
 import com.fluxchess.flux.board.Board;
-import com.fluxchess.flux.board.ChessmanList;
-import com.fluxchess.flux.board.Position;
+import com.fluxchess.flux.board.Square;
 import com.fluxchess.jcpi.models.IntChessman;
 import com.fluxchess.jcpi.models.IntColor;
 import com.fluxchess.jcpi.models.IntPiece;
@@ -50,10 +49,10 @@ public final class PawnStructureEvaluation {
     byte[] myPawnTable = PawnTableEvaluation.getInstance().pawnTable[myColor];
 
     // Evaluate each pawn
-    for (long positions = board.pawnList[myColor].positions; positions != 0; positions &= positions - 1) {
-      int pawnPosition = ChessmanList.next(positions);
-      int pawnFile = Position.getFile(pawnPosition);
-      int pawnRank = Position.getRank(pawnPosition);
+    for (long squares = board.pawnList[myColor]; squares != 0; squares &= squares - 1) {
+      int pawnSquare = Square.toX88Square(Long.numberOfTrailingZeros(squares));
+      int pawnFile = Square.getFile(pawnSquare);
+      int pawnRank = Square.getRank(pawnSquare);
       int tableFile = pawnFile + 1;
 
       // Doubled pawns
@@ -69,7 +68,7 @@ public final class PawnStructureEvaluation {
       }
 
       // Backward pawn
-      else if ((myAttackTable[pawnPosition] & AttackTableEvaluation.BIT_PAWN) == 0) {
+      else if ((myAttackTable[pawnSquare] & AttackTableEvaluation.BIT_PAWN) == 0) {
         // We are not protected, check whether we have a backward pawn here
 
         boolean backward = false;
@@ -98,25 +97,25 @@ public final class PawnStructureEvaluation {
             || myPawnTable[tableFile - 1] == pawnRank + sign * 1) {
             // We are protecting a buddy on the left or right side
             // Check whether we can advance
-            assert ((pawnPosition + sign * 16) & 0x88) == 0;
-            int chessman = board.board[pawnPosition + sign * 16];
+            assert ((pawnSquare + sign * 16) & 0x88) == 0;
+            int chessman = board.board[pawnSquare + sign * 16];
             if ((chessman == IntPiece.NOPIECE || IntPiece.getChessman(chessman) != IntChessman.PAWN)
-              && (enemyAttackTable[pawnPosition] & AttackTableEvaluation.BIT_PAWN) == 0
-              && (enemyAttackTable[pawnPosition + sign * 16] & AttackTableEvaluation.BIT_PAWN) == 0) {
+              && (enemyAttackTable[pawnSquare] & AttackTableEvaluation.BIT_PAWN) == 0
+              && (enemyAttackTable[pawnSquare + sign * 16] & AttackTableEvaluation.BIT_PAWN) == 0) {
               backward = false;
             }
           } else if (pawnRank == 1
             && (myPawnTable[tableFile + 1] == pawnRank + sign * 2
             || myPawnTable[tableFile - 1] == pawnRank + sign * 2)) {
             // We can do a pawn double advance
-            assert ((pawnPosition + sign * 32) & 0x88) == 0;
-            int chessman1 = board.board[pawnPosition + sign * 16];
-            int chessman2 = board.board[pawnPosition + sign * 32];
+            assert ((pawnSquare + sign * 32) & 0x88) == 0;
+            int chessman1 = board.board[pawnSquare + sign * 16];
+            int chessman2 = board.board[pawnSquare + sign * 32];
             if ((chessman1 == IntPiece.NOPIECE || IntPiece.getChessman(chessman1) != IntChessman.PAWN)
               && (chessman2 == IntPiece.NOPIECE || IntPiece.getChessman(chessman2) != IntChessman.PAWN)
-              && (enemyAttackTable[pawnPosition] & AttackTableEvaluation.BIT_PAWN) == 0
-              && (enemyAttackTable[pawnPosition + sign * 16] & AttackTableEvaluation.BIT_PAWN) == 0
-              && (enemyAttackTable[pawnPosition + sign * 32] & AttackTableEvaluation.BIT_PAWN) == 0) {
+              && (enemyAttackTable[pawnSquare] & AttackTableEvaluation.BIT_PAWN) == 0
+              && (enemyAttackTable[pawnSquare + sign * 16] & AttackTableEvaluation.BIT_PAWN) == 0
+              && (enemyAttackTable[pawnSquare + sign * 32] & AttackTableEvaluation.BIT_PAWN) == 0) {
               backward = false;
             }
           }

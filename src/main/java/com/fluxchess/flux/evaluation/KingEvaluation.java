@@ -19,10 +19,10 @@
 package com.fluxchess.flux.evaluation;
 
 import com.fluxchess.flux.board.Board;
-import com.fluxchess.flux.board.ChessmanList;
-import com.fluxchess.flux.board.IntCastling;
-import com.fluxchess.flux.board.Position;
+import com.fluxchess.flux.board.Square;
+import com.fluxchess.jcpi.models.IntCastling;
 import com.fluxchess.jcpi.models.IntColor;
+import com.fluxchess.jcpi.models.IntFile;
 import com.fluxchess.jcpi.models.IntPiece;
 
 public final class KingEvaluation {
@@ -58,8 +58,8 @@ public final class KingEvaluation {
     byte[] enemyAttackTable = AttackTableEvaluation.getInstance().attackTable[enemyColor];
 
     // Evaluate the king
-    assert board.kingList[myColor].size() == 1;
-    int kingPosition = ChessmanList.next(board.kingList[myColor].positions);
+    assert Long.bitCount(board.kingList[myColor]) == 1;
+    int kingSquare = Square.toX88Square(Long.numberOfTrailingZeros(board.kingList[myColor]));
 
     // Evaluate king safety
     int attackedSquare;
@@ -67,16 +67,12 @@ public final class KingEvaluation {
     byte flag = 0;
 
     int sign = 1;
-    int castlingKingside = IntCastling.WHITE_KINGSIDE;
-    int castlingQueenside = IntCastling.WHITE_QUEENSIDE;
     if (myColor == IntColor.BLACK) {
       sign = -1;
-      castlingKingside = IntCastling.BLACK_KINGSIDE;
-      castlingQueenside = IntCastling.BLACK_QUEENSIDE;
     } else {
       assert myColor == IntColor.WHITE;
     }
-    attackedSquare = kingPosition + 1;
+    attackedSquare = kingSquare + 1;
     if ((attackedSquare & 0x88) == 0 && enemyAttackTable[attackedSquare] != 0) {
       attackCount += 4;
       flag |= enemyAttackTable[attackedSquare];
@@ -88,7 +84,7 @@ public final class KingEvaluation {
         attackCount += 1;
       }
     }
-    attackedSquare = kingPosition - 1;
+    attackedSquare = kingSquare - 1;
     if ((attackedSquare & 0x88) == 0 && enemyAttackTable[attackedSquare] != 0) {
       attackCount += 4;
       flag |= enemyAttackTable[attackedSquare];
@@ -100,7 +96,7 @@ public final class KingEvaluation {
         attackCount += 1;
       }
     }
-    attackedSquare = kingPosition - sign * 15;
+    attackedSquare = kingSquare - sign * 15;
     if ((attackedSquare & 0x88) == 0 && enemyAttackTable[attackedSquare] != 0) {
       attackCount += 4;
       flag |= enemyAttackTable[attackedSquare];
@@ -112,7 +108,7 @@ public final class KingEvaluation {
         attackCount += 1;
       }
     }
-    attackedSquare = kingPosition - sign * 16;
+    attackedSquare = kingSquare - sign * 16;
     if ((attackedSquare & 0x88) == 0 && enemyAttackTable[attackedSquare] != 0) {
       attackCount += 4;
       flag |= enemyAttackTable[attackedSquare];
@@ -124,7 +120,7 @@ public final class KingEvaluation {
         attackCount += 1;
       }
     }
-    attackedSquare = kingPosition - sign * 17;
+    attackedSquare = kingSquare - sign * 17;
     if ((attackedSquare & 0x88) == 0 && enemyAttackTable[attackedSquare] != 0) {
       attackCount += 4;
       flag |= enemyAttackTable[attackedSquare];
@@ -136,7 +132,7 @@ public final class KingEvaluation {
         attackCount += 1;
       }
     }
-    attackedSquare = kingPosition + sign * 17;
+    attackedSquare = kingSquare + sign * 17;
     if ((attackedSquare & 0x88) == 0 && enemyAttackTable[attackedSquare] != 0) {
       attackCount += 4;
       flag |= enemyAttackTable[attackedSquare];
@@ -148,7 +144,7 @@ public final class KingEvaluation {
         attackCount += 1;
       }
     }
-    attackedSquare = kingPosition + sign * 16;
+    attackedSquare = kingSquare + sign * 16;
     if ((attackedSquare & 0x88) == 0 && enemyAttackTable[attackedSquare] != 0) {
       attackCount += 4;
       flag |= enemyAttackTable[attackedSquare];
@@ -160,7 +156,7 @@ public final class KingEvaluation {
         attackCount += 1;
       }
     }
-    attackedSquare = kingPosition + sign * 15;
+    attackedSquare = kingSquare + sign * 15;
     if ((attackedSquare & 0x88) == 0 && enemyAttackTable[attackedSquare] != 0) {
       attackCount += 4;
       flag |= enemyAttackTable[attackedSquare];
@@ -182,46 +178,46 @@ public final class KingEvaluation {
 
     opening -= kingSafety;
 
-    int castlingPositionKingside = Position.g1;
-    int castlingPositionQueenside = Position.c1;
+    int castlingSquareKingside = Square.g1;
+    int castlingSquareQueenside = Square.c1;
     if (myColor == IntColor.BLACK) {
-      castlingPositionKingside = Position.g8;
-      castlingPositionQueenside = Position.c8;
+      castlingSquareKingside = Square.g8;
+      castlingSquareQueenside = Square.c8;
     }
 
     // Evaluate pawn shield
-    int positionPenalty = getPawnShieldPenalty(myColor, kingPosition);
-    int castlingPenalty = positionPenalty;
+    int squarePenalty = getPawnShieldPenalty(myColor, kingSquare);
+    int castlingPenalty = squarePenalty;
 
-    if ((board.castling & castlingKingside) != 0) {
-      int tempPenalty = getPawnShieldPenalty(myColor, castlingPositionKingside);
+    if (board.castling[myColor][IntCastling.KINGSIDE] != IntFile.NOFILE) {
+      int tempPenalty = getPawnShieldPenalty(myColor, castlingSquareKingside);
       if (tempPenalty < castlingPenalty) {
         castlingPenalty = tempPenalty;
       }
     }
-    if ((board.castling & castlingQueenside) != 0) {
-      int tempPenalty = getPawnShieldPenalty(myColor, castlingPositionQueenside);
+    if (board.castling[myColor][IntCastling.QUEENSIDE] != IntFile.NOFILE) {
+      int tempPenalty = getPawnShieldPenalty(myColor, castlingSquareQueenside);
       if (tempPenalty < castlingPenalty) {
         castlingPenalty = tempPenalty;
       }
     }
 
-    int pawnShieldPenalty = (positionPenalty + castlingPenalty) / 2;
+    int pawnShieldPenalty = (squarePenalty + castlingPenalty) / 2;
 
     opening -= pawnShieldPenalty;
 
     return Evaluation.getGamePhaseEvaluation(myColor, opening, endgame, board);
   }
 
-  private static int getPawnShieldPenalty(int myColor, int kingPosition) {
+  private static int getPawnShieldPenalty(int myColor, int kingSquare) {
     assert myColor != IntColor.NOCOLOR;
-    assert (kingPosition & 0x88) == 0;
+    assert (kingSquare & 0x88) == 0;
 
     // Initialize
     byte[] myPawnTable = PawnTableEvaluation.getInstance().pawnTable[myColor];
 
-    int kingFile = Position.getFile(kingPosition);
-    int kingRank = Position.getRank(kingPosition);
+    int kingFile = Square.getFile(kingSquare);
+    int kingRank = Square.getRank(kingSquare);
     int tableFile = kingFile + 1;
 
     // Evaluate pawn shield

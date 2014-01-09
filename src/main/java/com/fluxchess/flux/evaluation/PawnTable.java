@@ -42,10 +42,10 @@ public final class PawnTable {
    * @param value       the value.
    */
   public void put(long zobristCode, int value) {
-    int position = (int) (zobristCode % size);
+    int index = (int) (zobristCode % size);
 
-    this.zobristCode[position] = zobristCode;
-    this.value[position] = value;
+    this.zobristCode[index] = zobristCode;
+    this.value[index] = value;
   }
 
   /**
@@ -55,9 +55,9 @@ public final class PawnTable {
    * @return true if the zobrist code exists in the table, false otherwise.
    */
   public boolean exists(long zobristCode) {
-    int position = (int) (zobristCode % size);
+    int index = (int) (zobristCode % size);
 
-    return this.zobristCode[position] == zobristCode;
+    return this.zobristCode[index] == zobristCode;
   }
 
   /**
@@ -67,10 +67,10 @@ public final class PawnTable {
    * @return the value.
    */
   public int getValue(long zobristCode) {
-    int position = (int) (zobristCode % size);
+    int index = (int) (zobristCode % size);
 
-    if (this.zobristCode[position] == zobristCode) {
-      return value[position];
+    if (this.zobristCode[index] == zobristCode) {
+      return value[index];
     }
 
     throw new IllegalArgumentException();

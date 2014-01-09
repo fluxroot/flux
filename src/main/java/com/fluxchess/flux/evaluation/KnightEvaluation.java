@@ -19,8 +19,8 @@
 package com.fluxchess.flux.evaluation;
 
 import com.fluxchess.flux.board.Board;
-import com.fluxchess.flux.board.ChessmanList;
 import com.fluxchess.flux.board.MoveGenerator;
+import com.fluxchess.flux.board.Square;
 import com.fluxchess.jcpi.models.IntColor;
 import com.fluxchess.jcpi.models.IntPiece;
 
@@ -43,16 +43,16 @@ public final class KnightEvaluation {
     byte[] enemyAttackTable = AttackTableEvaluation.getInstance().attackTable[enemyColor];
 
     // Evaluate each knight
-    for (long positions = board.knightList[myColor].positions; positions != 0; positions &= positions - 1) {
-      int knightPosition = ChessmanList.next(positions);
+    for (long squares = board.knightList[myColor]; squares != 0; squares &= squares - 1) {
+      int knightSquare = Square.toX88Square(Long.numberOfTrailingZeros(squares));
 
       int allMobility = EVAL_KNIGHT_MOBILITY_BASE;
 
       // Evaluate mobility
       for (int delta : MoveGenerator.moveDeltaKnight) {
-        int targetPosition = knightPosition + delta;
-        if ((targetPosition & 0x88) == 0) {
-          int target = board.board[targetPosition];
+        int targetSquare = knightSquare + delta;
+        if ((targetSquare & 0x88) == 0) {
+          int target = board.board[targetSquare];
           if (target == IntPiece.NOPIECE) {
             allMobility++;
           } else {
@@ -67,7 +67,7 @@ public final class KnightEvaluation {
       total += EVAL_KNIGHT_MOBILITYFACTOR * allMobility;
 
       // Evaluate safety
-      if ((enemyAttackTable[knightPosition] & AttackTableEvaluation.BIT_PAWN) == 0) {
+      if ((enemyAttackTable[knightSquare] & AttackTableEvaluation.BIT_PAWN) == 0) {
         total += EVAL_KNIGHT_SAFETY;
       }
     }

@@ -609,7 +609,7 @@ public final class Search implements Runnable {
 
           // Check if this is an easy recapture
           else if (!timeExtended
-            && Move.getTargetPosition(moveResult.bestMove) == board.capturePosition
+            && Move.getTargetSquare(moveResult.bestMove) == board.captureSquare
             && Evaluation.getValueFromPiece(Move.getTargetPiece(moveResult.bestMove)) >= Evaluation.VALUE_KNIGHT
             && equalResults > 4) {
             stopFlag = true;
@@ -969,7 +969,7 @@ public final class Search implements Runnable {
         && doNull
         && !isCheck
         && !mateThreat
-        && Evaluation.getGamePhase(board) != IntGamePhase.ENDGAME
+        && Evaluation.getGamePhase(board) != Evaluation.ENDGAME
         && (evalValue = evaluation.evaluate(board)) >= beta) {
         // Depth reduction
         int newDepth = depth - 1 - NULLMOVE_REDUCTION;
@@ -1456,11 +1456,11 @@ public final class Search implements Runnable {
   private int getNewDepth(int depth, int move, boolean isSingleReply, boolean mateThreat) {
     int newDepth = depth - 1;
 
-    assert (Move.getTargetPosition(move) != board.capturePosition) || (Move.getTargetPiece(move) != IntPiece.NOPIECE);
+    assert (Move.getTargetSquare(move) != board.captureSquare) || (Move.getTargetPiece(move) != IntPiece.NOPIECE);
 
     //## Recapture Extension
     if (Configuration.useRecaptureExtension
-      && Move.getTargetPosition(move) == board.capturePosition
+      && Move.getTargetSquare(move) == board.captureSquare
       && MoveSee.seeMove(move, IntPiece.getColor(Move.getOriginPiece(move))) > 0) {
       newDepth++;
     }
@@ -1474,7 +1474,7 @@ public final class Search implements Runnable {
     //## Pawn Extension
     else if (Configuration.usePawnExtension
       && IntPiece.getChessman(Move.getOriginPiece(move)) == IntChessman.PAWN
-      && Position.getRelativeRank(Move.getTargetPosition(move), board.activeColor) == IntRank.R7) {
+      && Square.getRelativeRank(Move.getTargetSquare(move), board.activeColor) == IntRank.R7) {
       newDepth++;
     }
 
@@ -1503,7 +1503,7 @@ public final class Search implements Runnable {
 
   private static boolean isDangerousMove(int move) {
     int chessman = IntPiece.getChessman(Move.getOriginPiece(move));
-    int relativeRank = Position.getRelativeRank(Move.getTargetPosition(move), board.activeColor);
+    int relativeRank = Square.getRelativeRank(Move.getTargetSquare(move), board.activeColor);
     if (chessman == IntChessman.PAWN && relativeRank >= IntRank.R7) {
       return true;
     }

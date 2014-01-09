@@ -19,8 +19,7 @@
 package com.fluxchess.flux.evaluation;
 
 import com.fluxchess.flux.board.Board;
-import com.fluxchess.flux.board.ChessmanList;
-import com.fluxchess.flux.board.Position;
+import com.fluxchess.flux.board.Square;
 import com.fluxchess.jcpi.models.IntColor;
 import com.fluxchess.jcpi.models.IntFile;
 import com.fluxchess.jcpi.models.IntPiece;
@@ -46,20 +45,20 @@ public final class DrawEvaluation {
     for (int myColor : IntColor.values) {
       int enemyColor = IntColor.opposite(myColor);
 
-      assert board.kingList[myColor].size() != 0;
-      assert board.kingList[enemyColor].size() != 0;
+      assert Long.bitCount(board.kingList[myColor]) != 0;
+      assert Long.bitCount(board.kingList[enemyColor]) != 0;
 
-      int myMaterial = PAWN_VALUE * board.pawnList[myColor].size()
-        + KNIGHT_VALUE * board.knightList[myColor].size()
-        + BISHOP_VALUE * board.bishopList[myColor].size()
-        + ROOK_VALUE * board.rookList[myColor].size()
-        + QUEEN_VALUE * board.queenList[myColor].size();
+      int myMaterial = PAWN_VALUE * Long.bitCount(board.pawnList[myColor])
+        + KNIGHT_VALUE * Long.bitCount(board.knightList[myColor])
+        + BISHOP_VALUE * Long.bitCount(board.bishopList[myColor])
+        + ROOK_VALUE * Long.bitCount(board.rookList[myColor])
+        + QUEEN_VALUE * Long.bitCount(board.queenList[myColor]);
 
-      int enemyMaterial = PAWN_VALUE * board.pawnList[enemyColor].size()
-        + KNIGHT_VALUE * board.knightList[enemyColor].size()
-        + BISHOP_VALUE * board.bishopList[enemyColor].size()
-        + ROOK_VALUE * board.rookList[enemyColor].size()
-        + QUEEN_VALUE * board.queenList[enemyColor].size();
+      int enemyMaterial = PAWN_VALUE * Long.bitCount(board.pawnList[enemyColor])
+        + KNIGHT_VALUE * Long.bitCount(board.knightList[enemyColor])
+        + BISHOP_VALUE * Long.bitCount(board.bishopList[enemyColor])
+        + ROOK_VALUE * Long.bitCount(board.rookList[enemyColor])
+        + QUEEN_VALUE * Long.bitCount(board.queenList[enemyColor]);
 
       if (myMaterial == 0) {
         if (enemyMaterial == 0) {
@@ -111,8 +110,8 @@ public final class DrawEvaluation {
           return 0;
         } else if (enemyMaterial == BISHOP_VALUE) {
           // KBKB: insufficient material
-          if (Position.getFieldColor(ChessmanList.next(board.bishopList[myColor].positions))
-            == Position.getFieldColor(ChessmanList.next(board.bishopList[enemyColor].positions))) {
+          if (Square.getFieldColor(Square.toX88Square(Long.numberOfTrailingZeros(board.bishopList[myColor])))
+            == Square.getFieldColor(Square.toX88Square(Long.numberOfTrailingZeros(board.bishopList[enemyColor])))) {
             return 0;
           }
         } else if (enemyMaterial == BISHOP_VALUE + KNIGHT_VALUE) {
@@ -127,8 +126,8 @@ public final class DrawEvaluation {
         }
       } else if (myMaterial == BISHOP_VALUE + KNIGHT_VALUE && enemyMaterial == ROOK_VALUE + BISHOP_VALUE) {
         // KBNKRB
-        if (Position.getFieldColor(ChessmanList.next(board.bishopList[myColor].positions))
-          == Position.getFieldColor(ChessmanList.next(board.bishopList[enemyColor].positions))) {
+        if (Square.getFieldColor(Square.toX88Square(Long.numberOfTrailingZeros(board.bishopList[myColor])))
+          == Square.getFieldColor(Square.toX88Square(Long.numberOfTrailingZeros(board.bishopList[enemyColor])))) {
           return 0;
         }
       } else if (myMaterial == ROOK_VALUE) {
@@ -193,18 +192,18 @@ public final class DrawEvaluation {
     // Initialize
     byte[] myAttackTable = AttackTableEvaluation.getInstance().attackTable[myColor];
 
-    assert board.pawnList[myColor].size() == 1;
-    int pawnPosition = ChessmanList.next(board.pawnList[myColor].positions);
-    int pawnFile = Position.getFile(pawnPosition);
-    int pawnRank = Position.getRank(pawnPosition);
-    assert board.kingList[enemyColor].size() == 1;
-    int enemyKingPosition = ChessmanList.next(board.kingList[enemyColor].positions);
-    int enemyKingFile = Position.getFile(enemyKingPosition);
-    int enemyKingRank = Position.getRank(enemyKingPosition);
-    assert board.kingList[myColor].size() == 1;
-    int myKingPosition = ChessmanList.next(board.kingList[myColor].positions);
-    int myKingFile = Position.getFile(myKingPosition);
-    int myKingRank = Position.getRank(myKingPosition);
+    assert Long.bitCount(board.pawnList[myColor]) == 1;
+    int pawnSquare = Square.toX88Square(Long.numberOfTrailingZeros(board.pawnList[myColor]));
+    int pawnFile = Square.getFile(pawnSquare);
+    int pawnRank = Square.getRank(pawnSquare);
+    assert Long.bitCount(board.kingList[enemyColor]) == 1;
+    int enemyKingSquare = Square.toX88Square(Long.numberOfTrailingZeros(board.kingList[enemyColor]));
+    int enemyKingFile = Square.getFile(enemyKingSquare);
+    int enemyKingRank = Square.getRank(enemyKingSquare);
+    assert Long.bitCount(board.kingList[myColor]) == 1;
+    int myKingSquare = Square.toX88Square(Long.numberOfTrailingZeros(board.kingList[myColor]));
+    int myKingFile = Square.getFile(myKingSquare);
+    int myKingRank = Square.getRank(myKingSquare);
 
     int myKingPromotionDistance;
     int enemyKingPromotionDistance;
@@ -253,9 +252,9 @@ public final class DrawEvaluation {
       }
 
       // King protected passer
-      else if (Position.getRelativeRank(myKingPosition, myColor) == IntRank.R7
-        && ((promotionDistance <= 2 && (myAttackTable[pawnPosition] & AttackTableEvaluation.BIT_KING) != 0)
-        || (promotionDistance <= 3 && (myAttackTable[pawnPosition + delta] & AttackTableEvaluation.BIT_KING) != 0 && board.activeColor == myColor))
+      else if (Square.getRelativeRank(myKingSquare, myColor) == IntRank.R7
+        && ((promotionDistance <= 2 && (myAttackTable[pawnSquare] & AttackTableEvaluation.BIT_KING) != 0)
+        || (promotionDistance <= 3 && (myAttackTable[pawnSquare + delta] & AttackTableEvaluation.BIT_KING) != 0 && board.activeColor == myColor))
         && (myKingFile != pawnFile || (pawnFile != IntFile.Fa && pawnFile != IntFile.Fh))) {
         unstoppablePasser = true;
       }
@@ -304,13 +303,13 @@ public final class DrawEvaluation {
     } else {
       assert myColor == IntColor.WHITE;
     }
-    int targetPosition = ChessmanList.next(board.pawnList[myColor].positions) + delta;
-    while ((targetPosition & 0x88) == 0) {
-      int chessman = board.board[targetPosition];
-      if ((chessman != IntPiece.NOPIECE && IntPiece.getColor(chessman) == enemyColor) || (enemyAttackTable[targetPosition] & AttackTableEvaluation.BIT_MINOR) != 0) {
+    int targetSquare = Square.toX88Square(Long.numberOfTrailingZeros(board.pawnList[myColor])) + delta;
+    while ((targetSquare & 0x88) == 0) {
+      int chessman = board.board[targetSquare];
+      if ((chessman != IntPiece.NOPIECE && IntPiece.getColor(chessman) == enemyColor) || (enemyAttackTable[targetSquare] & AttackTableEvaluation.BIT_MINOR) != 0) {
         return 1;
       } else {
-        targetPosition += delta;
+        targetSquare += delta;
       }
     }
 
@@ -331,13 +330,13 @@ public final class DrawEvaluation {
     } else {
       assert myColor == IntColor.WHITE;
     }
-    int targetPosition = ChessmanList.next(board.pawnList[myColor].positions) + delta;
-    while ((targetPosition & 0x88) == 0) {
-      int chessman = board.board[targetPosition];
-      if ((chessman != IntPiece.NOPIECE && IntPiece.getColor(chessman) == enemyColor) || (enemyAttackTable[targetPosition] & AttackTableEvaluation.BIT_MINOR) != 0) {
+    int targetSquare = Square.toX88Square(Long.numberOfTrailingZeros(board.pawnList[myColor])) + delta;
+    while ((targetSquare & 0x88) == 0) {
+      int chessman = board.board[targetSquare];
+      if ((chessman != IntPiece.NOPIECE && IntPiece.getColor(chessman) == enemyColor) || (enemyAttackTable[targetSquare] & AttackTableEvaluation.BIT_MINOR) != 0) {
         return 1;
       } else {
-        targetPosition += delta;
+        targetSquare += delta;
       }
     }
 

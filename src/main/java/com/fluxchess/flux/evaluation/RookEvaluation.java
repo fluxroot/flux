@@ -19,9 +19,8 @@
 package com.fluxchess.flux.evaluation;
 
 import com.fluxchess.flux.board.Board;
-import com.fluxchess.flux.board.ChessmanList;
 import com.fluxchess.flux.board.MoveGenerator;
-import com.fluxchess.flux.board.Position;
+import com.fluxchess.flux.board.Square;
 import com.fluxchess.jcpi.models.IntColor;
 import com.fluxchess.jcpi.models.IntPiece;
 
@@ -54,22 +53,22 @@ public final class RookEvaluation {
     int totalRook7th = 0;
 
     // Evaluate each rook
-    for (long positions = board.rookList[myColor].positions; positions != 0; positions &= positions - 1) {
-      int rookPosition = ChessmanList.next(positions);
-      int rookFile = Position.getFile(rookPosition);
-      int rookRank = Position.getRank(rookPosition);
+    for (long squares = board.rookList[myColor]; squares != 0; squares &= squares - 1) {
+      int rookSquare = Square.toX88Square(Long.numberOfTrailingZeros(squares));
+      int rookFile = Square.getFile(rookSquare);
+      int rookRank = Square.getRank(rookSquare);
       int tableFile = rookFile + 1;
 
       int allMobility = EVAL_ROOK_MOBILITY_BASE;
 
       // Evaluate mobility
       for (int delta : MoveGenerator.moveDeltaRook) {
-        int targetPosition = rookPosition + delta;
-        while ((targetPosition & 0x88) == 0) {
-          int target = board.board[targetPosition];
+        int targetSquare = rookSquare + delta;
+        while ((targetSquare & 0x88) == 0) {
+          int target = board.board[targetSquare];
           if (target == IntPiece.NOPIECE) {
             allMobility++;
-            targetPosition += delta;
+            targetSquare += delta;
           } else {
             if (IntPiece.getColor(target) == enemyColor) {
               allMobility++;
@@ -84,8 +83,8 @@ public final class RookEvaluation {
       endgame += EVAL_ROOK_MOBILITYFACTOR_ENDGAME * allMobility;
 
       // Evaluate safety
-      if ((enemyAttackTable[rookPosition] & AttackTableEvaluation.BIT_PAWN) == 0
-        && (enemyAttackTable[rookPosition] & AttackTableEvaluation.BIT_MINOR) == 0) {
+      if ((enemyAttackTable[rookSquare] & AttackTableEvaluation.BIT_PAWN) == 0
+        && (enemyAttackTable[rookSquare] & AttackTableEvaluation.BIT_MINOR) == 0) {
         opening += EVAL_ROOK_SAFETY;
         endgame += EVAL_ROOK_SAFETY;
       }
@@ -98,8 +97,8 @@ public final class RookEvaluation {
         if (enemyPawnTable[tableFile] == 0) {
           totalOpenFile += EVAL_ROOK_OPENFILE / 2;
         }
-        int kingPosition = ChessmanList.next(board.kingList[enemyColor].positions);
-        int kingFile = Position.getFile(kingPosition);
+        int kingSquare = Square.toX88Square(Long.numberOfTrailingZeros(board.kingList[enemyColor]));
+        int kingFile = Square.getFile(kingSquare);
         int delta = Math.abs(kingFile - rookFile);
         if (delta <= 1) {
           opening += EVAL_ROOK_NEARKINGFILE;
@@ -120,8 +119,8 @@ public final class RookEvaluation {
         assert myColor == IntColor.WHITE;
       }
       if (rookRank == seventhRank) {
-        int kingPosition = ChessmanList.next(board.kingList[enemyColor].positions);
-        int kingRank = Position.getRank(kingPosition);
+        int kingSquare = Square.toX88Square(Long.numberOfTrailingZeros(board.kingList[enemyColor]));
+        int kingRank = Square.getRank(kingSquare);
         boolean enemyPawnExists = false;
         for (int j = 1; j < enemyPawnTable.length - 1; j++) {
           if (enemyPawnTable[j] == seventhRank) {

@@ -20,7 +20,6 @@ package com.fluxchess.flux.evaluation;
 
 import com.fluxchess.flux.Configuration;
 import com.fluxchess.flux.board.Board;
-import com.fluxchess.flux.board.IntGamePhase;
 import com.fluxchess.flux.search.Search;
 import com.fluxchess.jcpi.models.IntChessman;
 import com.fluxchess.jcpi.models.IntColor;
@@ -34,6 +33,10 @@ public final class Evaluation {
   public static final int VALUE_ROOK = 500;
   public static final int VALUE_QUEEN = 975;
   public static final int VALUE_KING = 20000;
+
+  public static final int OPENING = 0;
+  public static final int MIDDLE = 1;
+  public static final int ENDGAME = 2;
 
   // Game phase thresholds
   private static final int GAMEPHASE_OPENING_VALUE =
@@ -102,7 +105,7 @@ public final class Evaluation {
       total += material[myColor] - material[enemyColor];
 
       // Evaluate position
-      total += PositionValueEvaluation.evaluatePositionValue(myColor, board) - PositionValueEvaluation.evaluatePositionValue(enemyColor, board);
+      total += SquareValueEvaluation.evaluateSquareValue(myColor, board) - SquareValueEvaluation.evaluateSquareValue(enemyColor, board);
 
       // Evaluate knights
       total += KnightEvaluation.evaluateKnight(myColor, enemyColor, board) - KnightEvaluation.evaluateKnight(enemyColor, myColor, board);
@@ -239,37 +242,37 @@ public final class Evaluation {
 
   public static int getGamePhase(Board board) {
     if (materialValueAll(IntColor.WHITE, board) >= GAMEPHASE_OPENING_VALUE && materialValueAll(IntColor.BLACK, board) >= GAMEPHASE_OPENING_VALUE) {
-      return IntGamePhase.OPENING;
+      return OPENING;
     } else if (materialValueAll(IntColor.WHITE, board) <= GAMEPHASE_ENDGAME_VALUE || materialValueAll(IntColor.BLACK, board) <= GAMEPHASE_ENDGAME_VALUE
       || materialCount(IntColor.WHITE, board) <= GAMEPHASE_ENDGAME_COUNT || materialCount(IntColor.BLACK, board) <= GAMEPHASE_ENDGAME_COUNT) {
-      return IntGamePhase.ENDGAME;
+      return ENDGAME;
     } else {
-      return IntGamePhase.MIDDLE;
+      return MIDDLE;
     }
   }
 
   public static int materialValueAll(int color, Board board) {
-    return VALUE_PAWN * board.pawnList[color].size() +
-      VALUE_KNIGHT * board.knightList[color].size() +
-      VALUE_BISHOP * board.bishopList[color].size() +
-      VALUE_ROOK * board.rookList[color].size() +
-      VALUE_QUEEN * board.queenList[color].size() +
-      VALUE_KING * board.kingList[color].size();
+    return VALUE_PAWN * Long.bitCount(board.pawnList[color]) +
+      VALUE_KNIGHT * Long.bitCount(board.knightList[color]) +
+      VALUE_BISHOP * Long.bitCount(board.bishopList[color]) +
+      VALUE_ROOK * Long.bitCount(board.rookList[color]) +
+      VALUE_QUEEN * Long.bitCount(board.queenList[color]) +
+      VALUE_KING * Long.bitCount(board.kingList[color]);
   }
 
   public static int materialCount(int color, Board board) {
-    return board.knightList[color].size() +
-      board.bishopList[color].size() +
-      board.rookList[color].size() +
-      board.queenList[color].size();
+    return Long.bitCount(board.knightList[color]) +
+      Long.bitCount(board.bishopList[color]) +
+      Long.bitCount(board.rookList[color]) +
+      Long.bitCount(board.queenList[color]);
   }
 
   public static int materialCountAll(int color, Board board) {
-    return board.pawnList[color].size() +
-      board.knightList[color].size() +
-      board.bishopList[color].size() +
-      board.rookList[color].size() +
-      board.queenList[color].size();
+    return Long.bitCount(board.pawnList[color]) +
+      Long.bitCount(board.knightList[color]) +
+      Long.bitCount(board.bishopList[color]) +
+      Long.bitCount(board.rookList[color]) +
+      Long.bitCount(board.queenList[color]);
   }
 
 }
