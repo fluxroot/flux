@@ -21,9 +21,7 @@ package com.fluxchess.flux.board;
 import com.fluxchess.flux.Configuration;
 import com.fluxchess.flux.evaluation.Evaluation;
 import com.fluxchess.flux.search.Search;
-import com.fluxchess.jcpi.models.IntChessman;
-import com.fluxchess.jcpi.models.IntColor;
-import com.fluxchess.jcpi.models.IntPiece;
+import com.fluxchess.jcpi.models.*;
 
 /**
  * Notes: Ideas from Fruit. I specially like the Idea how to handle the state
@@ -399,7 +397,7 @@ public final class MoveGenerator {
         switch (targetPosition) {
           case Position.g1:
             // Do not test g1 whether it is attacked as we will test it in isLegal()
-            if ((board.castling & IntCastling.WHITE_KINGSIDE) != 0
+            if (board.castling[IntColor.WHITE][IntCastling.KINGSIDE] != IntFile.NOFILE
               && board.board[Position.f1] == IntPiece.NOPIECE
               && board.board[Position.g1] == IntPiece.NOPIECE
               && !board.isAttacked(Position.f1, IntColor.BLACK)) {
@@ -411,7 +409,7 @@ public final class MoveGenerator {
             break;
           case Position.c1:
             // Do not test c1 whether it is attacked as we will test it in isLegal()
-            if ((board.castling & IntCastling.WHITE_QUEENSIDE) != 0
+            if (board.castling[IntColor.WHITE][IntCastling.QUEENSIDE] != IntFile.NOFILE
               && board.board[Position.b1] == IntPiece.NOPIECE
               && board.board[Position.c1] == IntPiece.NOPIECE
               && board.board[Position.d1] == IntPiece.NOPIECE
@@ -424,7 +422,7 @@ public final class MoveGenerator {
             break;
           case Position.g8:
             // Do not test g8 whether it is attacked as we will test it in isLegal()
-            if ((board.castling & IntCastling.BLACK_KINGSIDE) != 0
+            if (board.castling[IntColor.BLACK][IntCastling.KINGSIDE] != IntFile.NOFILE
               && board.board[Position.f8] == IntPiece.NOPIECE
               && board.board[Position.g8] == IntPiece.NOPIECE
               && !board.isAttacked(Position.f8, IntColor.WHITE)) {
@@ -436,7 +434,7 @@ public final class MoveGenerator {
             break;
           case Position.c8:
             // Do not test c8 whether it is attacked as we will test it in isLegal()
-            if ((board.castling & IntCastling.BLACK_QUEENSIDE) != 0
+            if (board.castling[IntColor.BLACK][IntCastling.QUEENSIDE] != IntFile.NOFILE
               && board.board[Position.b8] == IntPiece.NOPIECE
               && board.board[Position.c8] == IntPiece.NOPIECE
               && board.board[Position.d8] == IntPiece.NOPIECE
@@ -1228,7 +1226,7 @@ public final class MoveGenerator {
 
     if (color == IntColor.WHITE) {
       // Do not test g1 whether it is attacked as we will test it in isLegal()
-      if ((board.castling & IntCastling.WHITE_KINGSIDE) != 0
+      if (board.castling[IntColor.WHITE][IntCastling.KINGSIDE] != IntFile.NOFILE
         && board.board[Position.f1] == IntPiece.NOPIECE
         && board.board[Position.g1] == IntPiece.NOPIECE
         && !board.isAttacked(Position.f1, IntColor.BLACK)) {
@@ -1239,7 +1237,7 @@ public final class MoveGenerator {
         moveList.move[moveList.tail++] = move;
       }
       // Do not test c1 whether it is attacked as we will test it in isLegal()
-      if ((board.castling & IntCastling.WHITE_QUEENSIDE) != 0
+      if (board.castling[IntColor.WHITE][IntCastling.QUEENSIDE] != IntFile.NOFILE
         && board.board[Position.b1] == IntPiece.NOPIECE
         && board.board[Position.c1] == IntPiece.NOPIECE
         && board.board[Position.d1] == IntPiece.NOPIECE
@@ -1254,7 +1252,7 @@ public final class MoveGenerator {
       assert color == IntColor.BLACK;
 
       // Do not test g8 whether it is attacked as we will test it in isLegal()
-      if ((board.castling & IntCastling.BLACK_KINGSIDE) != 0
+      if (board.castling[IntColor.BLACK][IntCastling.KINGSIDE] != IntFile.NOFILE
         && board.board[Position.f8] == IntPiece.NOPIECE
         && board.board[Position.g8] == IntPiece.NOPIECE
         && !board.isAttacked(Position.f8, IntColor.WHITE)) {
@@ -1265,7 +1263,7 @@ public final class MoveGenerator {
         moveList.move[moveList.tail++] = move;
       }
       // Do not test c8 whether it is attacked as we will test it in isLegal()
-      if ((board.castling & IntCastling.BLACK_QUEENSIDE) != 0
+      if (board.castling[IntColor.BLACK][IntCastling.QUEENSIDE] != IntFile.NOFILE
         && board.board[Position.b8] == IntPiece.NOPIECE
         && board.board[Position.c8] == IntPiece.NOPIECE
         && board.board[Position.d8] == IntPiece.NOPIECE
@@ -1291,7 +1289,7 @@ public final class MoveGenerator {
 
     if (color == IntColor.WHITE) {
       // Do not test g1 whether it is attacked as we will test it in isLegal()
-      if ((board.castling & IntCastling.WHITE_KINGSIDE) != 0
+      if (board.castling[IntColor.WHITE][IntCastling.KINGSIDE] != IntFile.NOFILE
         && board.board[Position.f1] == IntPiece.NOPIECE
         && board.board[Position.g1] == IntPiece.NOPIECE
         && !board.isAttacked(Position.f1, IntColor.BLACK)) {
@@ -1304,7 +1302,7 @@ public final class MoveGenerator {
         }
       }
       // Do not test c1 whether it is attacked as we will test it in isLegal()
-      if ((board.castling & IntCastling.WHITE_QUEENSIDE) != 0
+      if (board.castling[IntColor.WHITE][IntCastling.QUEENSIDE] != IntFile.NOFILE
         && board.board[Position.b1] == IntPiece.NOPIECE
         && board.board[Position.c1] == IntPiece.NOPIECE
         && board.board[Position.d1] == IntPiece.NOPIECE
@@ -1321,7 +1319,7 @@ public final class MoveGenerator {
       assert color == IntColor.BLACK;
 
       // Do not test g8 whether it is attacked as we will test it in isLegal()
-      if ((board.castling & IntCastling.BLACK_KINGSIDE) != 0
+      if (board.castling[IntColor.BLACK][IntCastling.KINGSIDE] != IntFile.NOFILE
         && board.board[Position.f8] == IntPiece.NOPIECE
         && board.board[Position.g8] == IntPiece.NOPIECE
         && !board.isAttacked(Position.f8, IntColor.WHITE)) {
@@ -1334,7 +1332,7 @@ public final class MoveGenerator {
         }
       }
       // Do not test c8 whether it is attacked as we will test it in isLegal()
-      if ((board.castling & IntCastling.BLACK_QUEENSIDE) != 0
+      if (board.castling[IntColor.BLACK][IntCastling.QUEENSIDE] != IntFile.NOFILE
         && board.board[Position.b8] == IntPiece.NOPIECE
         && board.board[Position.c8] == IntPiece.NOPIECE
         && board.board[Position.d8] == IntPiece.NOPIECE

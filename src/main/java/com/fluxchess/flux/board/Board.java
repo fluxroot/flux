@@ -38,7 +38,7 @@ public final class Board {
   // The zobrist keys
   private static final long zobristActiveColor;
   private static final long[][][] zobristChessman = new long[IntChessman.values.length][IntColor.values.length][BOARDSIZE];
-  private static final long[] zobristCastling = new long[IntCastling.ARRAY_DIMENSION];
+  private static final long[][] zobristCastling = new long[IntColor.values.length][IntCastling.values.length];
   private static final long[] zobristEnPassant = new long[BOARDSIZE];
 
   //## BEGIN 0x88 Board Representation
@@ -67,9 +67,7 @@ public final class Board {
   public int enPassantPosition = Position.NOPOSITION;
 
   // Castling
-  public int castling;
-  private final int[] castlingHistory = new int[STACKSIZE];
-  private int castlingHistorySize = 0;
+  public final int[][] castling = new int[IntColor.values.length][IntCastling.values.length];
 
   // Capture
   public int capturePosition = Position.NOPOSITION;
@@ -93,6 +91,23 @@ public final class Board {
   private int attackHistorySize = 0;
   private final Attack tempAttack = new Attack();
 
+  private final class StackEntry {
+    public long zobristCode = 0;
+    public long pawnZobristCode = 0;
+    public final int[][] castling = new int[IntColor.values.length][IntCastling.values.length];
+    public int halfMoveClock = 0;
+    public int enPassant = Position.NOPOSITION;
+    public int capturePosition = Position.NOPOSITION;
+
+    public StackEntry() {
+      for (int color : IntColor.values) {
+        for (int castling : IntCastling.values) {
+          this.castling[color][castling] = IntFile.NOFILE;
+        }
+      }
+    }
+  }
+
   // Initialize the zobrist keys
   static {
     zobristActiveColor = Math.abs(random.nextLong());
@@ -105,12 +120,10 @@ public final class Board {
       }
     }
 
-    zobristCastling[IntCastling.WHITE_KINGSIDE] = Math.abs(random.nextLong());
-    zobristCastling[IntCastling.WHITE_QUEENSIDE] = Math.abs(random.nextLong());
-    zobristCastling[IntCastling.BLACK_KINGSIDE] = Math.abs(random.nextLong());
-    zobristCastling[IntCastling.BLACK_QUEENSIDE] = Math.abs(random.nextLong());
-    zobristCastling[IntCastling.WHITE_KINGSIDE | IntCastling.WHITE_QUEENSIDE] = zobristCastling[IntCastling.WHITE_KINGSIDE] ^ zobristCastling[IntCastling.WHITE_QUEENSIDE];
-    zobristCastling[IntCastling.BLACK_KINGSIDE | IntCastling.BLACK_QUEENSIDE] = zobristCastling[IntCastling.BLACK_KINGSIDE] ^ zobristCastling[IntCastling.BLACK_QUEENSIDE];
+    zobristCastling[IntColor.WHITE][IntCastling.KINGSIDE] = Math.abs(random.nextLong());
+    zobristCastling[IntColor.WHITE][IntCastling.QUEENSIDE] = Math.abs(random.nextLong());
+    zobristCastling[IntColor.BLACK][IntCastling.KINGSIDE] = Math.abs(random.nextLong());
+    zobristCastling[IntColor.BLACK][IntCastling.QUEENSIDE] = Math.abs(random.nextLong());
 
     for (int i = 0; i < BOARDSIZE; i++) {
       zobristEnPassant[i] = Math.abs(random.nextLong());
@@ -160,22 +173,16 @@ public final class Board {
     }
 
     // Initialize castling
-    castling = 0;
-    if (newBoard.getCastling(GenericColor.WHITE, GenericCastling.KINGSIDE) != null) {
-      castling |= IntCastling.WHITE_KINGSIDE;
-      zobristCode ^= zobristCastling[IntCastling.WHITE_KINGSIDE];
-    }
-    if (newBoard.getCastling(GenericColor.WHITE, GenericCastling.QUEENSIDE) != null) {
-      castling |= IntCastling.WHITE_QUEENSIDE;
-      zobristCode ^= zobristCastling[IntCastling.WHITE_QUEENSIDE];
-    }
-    if (newBoard.getCastling(GenericColor.BLACK, GenericCastling.KINGSIDE) != null) {
-      castling |= IntCastling.BLACK_KINGSIDE;
-      zobristCode ^= zobristCastling[IntCastling.BLACK_KINGSIDE];
-    }
-    if (newBoard.getCastling(GenericColor.BLACK, GenericCastling.QUEENSIDE) != null) {
-      castling |= IntCastling.BLACK_QUEENSIDE;
-      zobristCode ^= zobristCastling[IntCastling.BLACK_QUEENSIDE];
+    for (int color : IntColor.values) {
+      for (int castling : IntCastling.values) {
+        GenericFile genericFile = newBoard.getCastling(IntColor.toGenericColor(color), IntCastling.toGenericCastling(castling));
+        if (genericFile != null) {
+          this.castling[color][castling] = IntFile.valueOf(genericFile);
+          zobristCode ^= zobristCastling[color][castling];
+        } else {
+          this.castling[color][castling] = IntFile.NOFILE;
+        }
+      }
     }
 
     // Initialize the active color
@@ -437,17 +444,12 @@ public final class Board {
     newBoard.setActiveColor(IntColor.toGenericColor(activeColor));
 
     // Set castling
-    if ((castling & IntCastling.WHITE_KINGSIDE) != 0) {
-      newBoard.setCastling(GenericColor.WHITE, GenericCastling.KINGSIDE, GenericFile.Fh);
-    }
-    if ((castling & IntCastling.WHITE_QUEENSIDE) != 0) {
-      newBoard.setCastling(GenericColor.WHITE, GenericCastling.QUEENSIDE, GenericFile.Fa);
-    }
-    if ((castling & IntCastling.BLACK_KINGSIDE) != 0) {
-      newBoard.setCastling(GenericColor.BLACK, GenericCastling.KINGSIDE, GenericFile.Fh);
-    }
-    if ((castling & IntCastling.BLACK_QUEENSIDE) != 0) {
-      newBoard.setCastling(GenericColor.BLACK, GenericCastling.QUEENSIDE, GenericFile.Fa);
+    for (int color : IntColor.values) {
+      for (int castling : IntCastling.values) {
+        if (this.castling[color][castling] != IntFile.NOFILE) {
+          newBoard.setCastling(IntColor.toGenericColor(color), IntCastling.toGenericCastling(castling), IntFile.toGenericFile(this.castling[color][castling]));
+        }
+      }
     }
 
     // Set en passant
@@ -960,16 +962,12 @@ public final class Board {
     currentStackEntry.enPassant = enPassantPosition;
     currentStackEntry.capturePosition = capturePosition;
 
-    // Update stack size
-    stackSize++;
-    assert stackSize < STACKSIZE;
-
     int type = Move.getType(move);
 
     switch (type) {
       case Move.Type.NORMAL:
         repetitionTable.put(zobristCode);
-        makeMoveNormal(move);
+        makeMoveNormal(move, currentStackEntry);
         break;
       case Move.Type.PAWNDOUBLE:
         repetitionTable.put(zobristCode);
@@ -977,7 +975,7 @@ public final class Board {
         break;
       case Move.Type.PAWNPROMOTION:
         repetitionTable.put(zobristCode);
-        makeMovePawnPromotion(move);
+        makeMovePawnPromotion(move, currentStackEntry);
         break;
       case Move.Type.ENPASSANT:
         repetitionTable.put(zobristCode);
@@ -985,7 +983,7 @@ public final class Board {
         break;
       case Move.Type.CASTLING:
         repetitionTable.put(zobristCode);
-        makeMoveCastling(move);
+        makeMoveCastling(move, currentStackEntry);
         break;
       case Move.Type.NULL:
         makeMoveNull();
@@ -1006,6 +1004,10 @@ public final class Board {
     attackHistorySize++;
     attackHistory[attackHistorySize][IntColor.WHITE].count = Attack.NOATTACK;
     attackHistory[attackHistorySize][IntColor.BLACK].count = Attack.NOATTACK;
+
+    // Update stack size
+    stackSize++;
+    assert stackSize < STACKSIZE;
   }
 
   public void undoMove(int move) {
@@ -1036,7 +1038,7 @@ public final class Board {
 
     switch (type) {
       case Move.Type.NORMAL:
-        undoMoveNormal(move);
+        undoMoveNormal(move, currentStackEntry);
         repetitionTable.remove(zobristCode);
         break;
       case Move.Type.PAWNDOUBLE:
@@ -1044,7 +1046,7 @@ public final class Board {
         repetitionTable.remove(zobristCode);
         break;
       case Move.Type.PAWNPROMOTION:
-        undoMovePawnPromotion(move);
+        undoMovePawnPromotion(move, currentStackEntry);
         repetitionTable.remove(zobristCode);
         break;
       case Move.Type.ENPASSANT:
@@ -1052,7 +1054,7 @@ public final class Board {
         repetitionTable.remove(zobristCode);
         break;
       case Move.Type.CASTLING:
-        undoMoveCastling(move);
+        undoMoveCastling(move, currentStackEntry);
         repetitionTable.remove(zobristCode);
         break;
       case Move.Type.NULL:
@@ -1062,10 +1064,13 @@ public final class Board {
     }
   }
 
-  private void makeMoveNormal(int move) {
-    // Save the castling rights
-    castlingHistory[castlingHistorySize++] = castling;
-    int newCastling = castling;
+  private void makeMoveNormal(int move, StackEntry entry) {
+    // Save castling rights
+    for (int color : IntColor.values) {
+      for (int castling : IntCastling.values) {
+        entry.castling[color][castling] = this.castling[color][castling];
+      }
+    }
 
     // Save the captured chessman
     int targetPosition = Move.getTargetPosition(move);
@@ -1078,35 +1083,35 @@ public final class Board {
 
       switch (targetPosition) {
         case Position.a1:
-          newCastling &= ~IntCastling.WHITE_QUEENSIDE;
+          if (castling[IntColor.WHITE][IntCastling.QUEENSIDE] != IntFile.NOFILE) {
+            assert target == IntPiece.WHITEROOK;
+            castling[IntColor.WHITE][IntCastling.QUEENSIDE] = IntFile.NOFILE;
+            zobristCode ^= zobristCastling[IntColor.WHITE][IntCastling.QUEENSIDE];
+          }
           break;
         case Position.a8:
-          newCastling &= ~IntCastling.BLACK_QUEENSIDE;
+          if (castling[IntColor.BLACK][IntCastling.QUEENSIDE] != IntFile.NOFILE) {
+            assert target == IntPiece.BLACKROOK;
+            castling[IntColor.BLACK][IntCastling.QUEENSIDE] = IntFile.NOFILE;
+            zobristCode ^= zobristCastling[IntColor.BLACK][IntCastling.QUEENSIDE];
+          }
           break;
         case Position.h1:
-          newCastling &= ~IntCastling.WHITE_KINGSIDE;
+          if (castling[IntColor.WHITE][IntCastling.KINGSIDE] != IntFile.NOFILE) {
+            assert target == IntPiece.WHITEROOK;
+            castling[IntColor.WHITE][IntCastling.KINGSIDE] = IntFile.NOFILE;
+            zobristCode ^= zobristCastling[IntColor.WHITE][IntCastling.KINGSIDE];
+          }
           break;
         case Position.h8:
-          newCastling &= ~IntCastling.BLACK_KINGSIDE;
-          break;
-        case Position.e1:
-          newCastling &= ~(IntCastling.WHITE_KINGSIDE | IntCastling.WHITE_QUEENSIDE);
-          break;
-        case Position.e8:
-          newCastling &= ~(IntCastling.BLACK_KINGSIDE | IntCastling.BLACK_QUEENSIDE);
+          if (castling[IntColor.BLACK][IntCastling.KINGSIDE] != IntFile.NOFILE) {
+            assert target == IntPiece.BLACKROOK;
+            castling[IntColor.BLACK][IntCastling.KINGSIDE] = IntFile.NOFILE;
+            zobristCode ^= zobristCastling[IntColor.BLACK][IntCastling.KINGSIDE];
+          }
           break;
         default:
           break;
-      }
-      if (newCastling != castling) {
-        assert (newCastling ^ castling) == IntCastling.WHITE_KINGSIDE
-          || (newCastling ^ castling) == IntCastling.WHITE_QUEENSIDE
-          || (newCastling ^ castling) == IntCastling.BLACK_KINGSIDE
-          || (newCastling ^ castling) == IntCastling.BLACK_QUEENSIDE
-          || (newCastling ^ castling) == (IntCastling.WHITE_KINGSIDE | IntCastling.WHITE_QUEENSIDE)
-          || (newCastling ^ castling) == (IntCastling.BLACK_KINGSIDE | IntCastling.BLACK_QUEENSIDE);
-        zobristCode ^= zobristCastling[newCastling ^ castling];
-        castling = newCastling;
       }
     } else {
       capturePosition = Position.NOPOSITION;
@@ -1119,35 +1124,59 @@ public final class Board {
     // Update castling
     switch (originPosition) {
       case Position.a1:
-        newCastling &= ~IntCastling.WHITE_QUEENSIDE;
+        if (castling[IntColor.WHITE][IntCastling.QUEENSIDE] != IntFile.NOFILE) {
+          assert Move.getOriginPiece(move) == IntPiece.WHITEROOK;
+          castling[IntColor.WHITE][IntCastling.QUEENSIDE] = IntFile.NOFILE;
+          zobristCode ^= zobristCastling[IntColor.WHITE][IntCastling.QUEENSIDE];
+        }
         break;
       case Position.a8:
-        newCastling &= ~IntCastling.BLACK_QUEENSIDE;
+        if (castling[IntColor.BLACK][IntCastling.QUEENSIDE] != IntFile.NOFILE) {
+          assert Move.getOriginPiece(move) == IntPiece.BLACKROOK;
+          castling[IntColor.BLACK][IntCastling.QUEENSIDE] = IntFile.NOFILE;
+          zobristCode ^= zobristCastling[IntColor.BLACK][IntCastling.QUEENSIDE];
+        }
         break;
       case Position.h1:
-        newCastling &= ~IntCastling.WHITE_KINGSIDE;
+        if (castling[IntColor.WHITE][IntCastling.KINGSIDE] != IntFile.NOFILE) {
+          assert Move.getOriginPiece(move) == IntPiece.WHITEROOK;
+          castling[IntColor.WHITE][IntCastling.KINGSIDE] = IntFile.NOFILE;
+          zobristCode ^= zobristCastling[IntColor.WHITE][IntCastling.KINGSIDE];
+        }
         break;
       case Position.h8:
-        newCastling &= ~IntCastling.BLACK_KINGSIDE;
+        if (castling[IntColor.BLACK][IntCastling.KINGSIDE] != IntFile.NOFILE) {
+          assert Move.getOriginPiece(move) == IntPiece.BLACKROOK;
+          castling[IntColor.BLACK][IntCastling.KINGSIDE] = IntFile.NOFILE;
+          zobristCode ^= zobristCastling[IntColor.BLACK][IntCastling.KINGSIDE];
+        }
         break;
       case Position.e1:
-        newCastling &= ~(IntCastling.WHITE_KINGSIDE | IntCastling.WHITE_QUEENSIDE);
+        if (castling[IntColor.WHITE][IntCastling.QUEENSIDE] != IntFile.NOFILE) {
+          assert Move.getOriginPiece(move) == IntPiece.WHITEKING;
+          castling[IntColor.WHITE][IntCastling.QUEENSIDE] = IntFile.NOFILE;
+          zobristCode ^= zobristCastling[IntColor.WHITE][IntCastling.QUEENSIDE];
+        }
+        if (castling[IntColor.WHITE][IntCastling.KINGSIDE] != IntFile.NOFILE) {
+          assert Move.getOriginPiece(move) == IntPiece.WHITEKING;
+          castling[IntColor.WHITE][IntCastling.KINGSIDE] = IntFile.NOFILE;
+          zobristCode ^= zobristCastling[IntColor.WHITE][IntCastling.KINGSIDE];
+        }
         break;
       case Position.e8:
-        newCastling &= ~(IntCastling.BLACK_KINGSIDE | IntCastling.BLACK_QUEENSIDE);
+        if (castling[IntColor.BLACK][IntCastling.QUEENSIDE] != IntFile.NOFILE) {
+          assert Move.getOriginPiece(move) == IntPiece.BLACKKING;
+          castling[IntColor.BLACK][IntCastling.QUEENSIDE] = IntFile.NOFILE;
+          zobristCode ^= zobristCastling[IntColor.BLACK][IntCastling.QUEENSIDE];
+        }
+        if (castling[IntColor.BLACK][IntCastling.KINGSIDE] != IntFile.NOFILE) {
+          assert Move.getOriginPiece(move) == IntPiece.BLACKKING;
+          castling[IntColor.BLACK][IntCastling.KINGSIDE] = IntFile.NOFILE;
+          zobristCode ^= zobristCastling[IntColor.BLACK][IntCastling.KINGSIDE];
+        }
         break;
       default:
         break;
-    }
-    if (newCastling != castling) {
-      assert (newCastling ^ castling) == IntCastling.WHITE_KINGSIDE
-        || (newCastling ^ castling) == IntCastling.WHITE_QUEENSIDE
-        || (newCastling ^ castling) == IntCastling.BLACK_KINGSIDE
-        || (newCastling ^ castling) == IntCastling.BLACK_QUEENSIDE
-        || (newCastling ^ castling) == (IntCastling.WHITE_KINGSIDE | IntCastling.WHITE_QUEENSIDE)
-        || (newCastling ^ castling) == (IntCastling.BLACK_KINGSIDE | IntCastling.BLACK_QUEENSIDE);
-      zobristCode ^= zobristCastling[newCastling ^ castling];
-      castling = newCastling;
     }
 
     // Update en passant
@@ -1164,7 +1193,7 @@ public final class Board {
     }
   }
 
-  private void undoMoveNormal(int move) {
+  private void undoMoveNormal(int move, StackEntry entry) {
     // Move the chessman
     int originPosition = Move.getOriginPosition(move);
     int targetPosition = Move.getTargetPosition(move);
@@ -1175,11 +1204,17 @@ public final class Board {
       put(captureHistory[--captureHistorySize], targetPosition, false);
     }
 
-    // Restore the castling rights
-    castling = castlingHistory[--castlingHistorySize];
+    // Restore castling rights
+    for (int color : IntColor.values) {
+      for (int castling : IntCastling.values) {
+        if (entry.castling[color][castling] != this.castling[color][castling]) {
+          this.castling[color][castling] = entry.castling[color][castling];
+        }
+      }
+    }
   }
 
-  private void makeMovePawnPromotion(int move) {
+  private void makeMovePawnPromotion(int move, StackEntry entry) {
     // Remove the pawn at the origin position
     int originPosition = Move.getOriginPosition(move);
     int pawnPiece = remove(originPosition, true);
@@ -1192,9 +1227,12 @@ public final class Board {
     int targetPosition = Move.getTargetPosition(move);
     int targetPiece;
     if (board[targetPosition] != IntPiece.NOPIECE) {
-      // Save the castling rights
-      castlingHistory[castlingHistorySize++] = castling;
-      int newCastling = castling;
+      // Save castling rights
+      for (int color : IntColor.values) {
+        for (int castling : IntCastling.values) {
+          entry.castling[color][castling] = this.castling[color][castling];
+        }
+      }
 
       targetPiece = remove(targetPosition, true);
       assert Move.getTargetPiece(move) != IntPiece.NOPIECE;
@@ -1203,35 +1241,35 @@ public final class Board {
 
       switch (targetPosition) {
         case Position.a1:
-          newCastling &= ~IntCastling.WHITE_QUEENSIDE;
+          if (castling[IntColor.WHITE][IntCastling.QUEENSIDE] != IntFile.NOFILE) {
+            assert targetPiece == IntPiece.WHITEROOK;
+            castling[IntColor.WHITE][IntCastling.QUEENSIDE] = IntFile.NOFILE;
+            zobristCode ^= zobristCastling[IntColor.WHITE][IntCastling.QUEENSIDE];
+          }
           break;
         case Position.a8:
-          newCastling &= ~IntCastling.BLACK_QUEENSIDE;
+          if (castling[IntColor.BLACK][IntCastling.QUEENSIDE] != IntFile.NOFILE) {
+            assert targetPiece == IntPiece.BLACKROOK;
+            castling[IntColor.BLACK][IntCastling.QUEENSIDE] = IntFile.NOFILE;
+            zobristCode ^= zobristCastling[IntColor.BLACK][IntCastling.QUEENSIDE];
+          }
           break;
         case Position.h1:
-          newCastling &= ~IntCastling.WHITE_KINGSIDE;
+          if (castling[IntColor.WHITE][IntCastling.KINGSIDE] != IntFile.NOFILE) {
+            assert targetPiece == IntPiece.WHITEROOK;
+            castling[IntColor.WHITE][IntCastling.KINGSIDE] = IntFile.NOFILE;
+            zobristCode ^= zobristCastling[IntColor.WHITE][IntCastling.KINGSIDE];
+          }
           break;
         case Position.h8:
-          newCastling &= ~IntCastling.BLACK_KINGSIDE;
-          break;
-        case Position.e1:
-          newCastling &= ~(IntCastling.WHITE_KINGSIDE | IntCastling.WHITE_QUEENSIDE);
-          break;
-        case Position.e8:
-          newCastling &= ~(IntCastling.BLACK_KINGSIDE | IntCastling.BLACK_QUEENSIDE);
+          if (castling[IntColor.BLACK][IntCastling.KINGSIDE] != IntFile.NOFILE) {
+            assert targetPiece == IntPiece.BLACKROOK;
+            castling[IntColor.BLACK][IntCastling.KINGSIDE] = IntFile.NOFILE;
+            zobristCode ^= zobristCastling[IntColor.BLACK][IntCastling.KINGSIDE];
+          }
           break;
         default:
           break;
-      }
-      if (newCastling != castling) {
-        assert (newCastling ^ castling) == IntCastling.WHITE_KINGSIDE
-          || (newCastling ^ castling) == IntCastling.WHITE_QUEENSIDE
-          || (newCastling ^ castling) == IntCastling.BLACK_KINGSIDE
-          || (newCastling ^ castling) == IntCastling.BLACK_QUEENSIDE
-          || (newCastling ^ castling) == (IntCastling.WHITE_KINGSIDE | IntCastling.WHITE_QUEENSIDE)
-          || (newCastling ^ castling) == (IntCastling.BLACK_KINGSIDE | IntCastling.BLACK_QUEENSIDE);
-        zobristCode ^= zobristCastling[newCastling ^ castling];
-        castling = newCastling;
       }
     } else {
       capturePosition = Position.NOPOSITION;
@@ -1252,7 +1290,7 @@ public final class Board {
     halfMoveClock = 0;
   }
 
-  private void undoMovePawnPromotion(int move) {
+  private void undoMovePawnPromotion(int move, StackEntry entry) {
     // Remove the promotion chessman at the end position
     int targetPosition = Move.getTargetPosition(move);
     remove(targetPosition, false);
@@ -1261,8 +1299,14 @@ public final class Board {
     if (Move.getTargetPiece(move) != IntPiece.NOPIECE) {
       put(captureHistory[--captureHistorySize], targetPosition, false);
 
-      // Restore the castling rights
-      castling = castlingHistory[--castlingHistorySize];
+      // Restore castling rights
+      for (int color : IntColor.values) {
+        for (int castling : IntCastling.values) {
+          if (entry.castling[color][castling] != this.castling[color][castling]) {
+            this.castling[color][castling] = entry.castling[color][castling];
+          }
+        }
+      }
     }
 
     // Put the pawn at the origin position
@@ -1312,10 +1356,13 @@ public final class Board {
     move(Move.getTargetPosition(move), Move.getOriginPosition(move), false);
   }
 
-  private void makeMoveCastling(int move) {
-    // Save the castling rights
-    castlingHistory[castlingHistorySize++] = castling;
-    int newCastling = castling;
+  private void makeMoveCastling(int move, StackEntry entry) {
+    // Save castling rights
+    for (int color : IntColor.values) {
+      for (int castling : IntCastling.values) {
+        entry.castling[color][castling] = this.castling[color][castling];
+      }
+    }
 
     // Move the king
     int kingOriginPosition = Move.getOriginPosition(move);
@@ -1330,22 +1377,50 @@ public final class Board {
       case Position.g1:
         rookOriginPosition = Position.h1;
         rookTargetPosition = Position.f1;
-        newCastling &= ~(IntCastling.WHITE_KINGSIDE | IntCastling.WHITE_QUEENSIDE);
+        if (castling[IntColor.WHITE][IntCastling.QUEENSIDE] != IntFile.NOFILE) {
+          castling[IntColor.WHITE][IntCastling.QUEENSIDE] = IntFile.NOFILE;
+          zobristCode ^= zobristCastling[IntColor.WHITE][IntCastling.QUEENSIDE];
+        }
+        if (castling[IntColor.WHITE][IntCastling.KINGSIDE] != IntFile.NOFILE) {
+          castling[IntColor.WHITE][IntCastling.KINGSIDE] = IntFile.NOFILE;
+          zobristCode ^= zobristCastling[IntColor.WHITE][IntCastling.KINGSIDE];
+        }
         break;
       case Position.c1:
         rookOriginPosition = Position.a1;
         rookTargetPosition = Position.d1;
-        newCastling &= ~(IntCastling.WHITE_KINGSIDE | IntCastling.WHITE_QUEENSIDE);
+        if (castling[IntColor.WHITE][IntCastling.QUEENSIDE] != IntFile.NOFILE) {
+          castling[IntColor.WHITE][IntCastling.QUEENSIDE] = IntFile.NOFILE;
+          zobristCode ^= zobristCastling[IntColor.WHITE][IntCastling.QUEENSIDE];
+        }
+        if (castling[IntColor.WHITE][IntCastling.KINGSIDE] != IntFile.NOFILE) {
+          castling[IntColor.WHITE][IntCastling.KINGSIDE] = IntFile.NOFILE;
+          zobristCode ^= zobristCastling[IntColor.WHITE][IntCastling.KINGSIDE];
+        }
         break;
       case Position.g8:
         rookOriginPosition = Position.h8;
         rookTargetPosition = Position.f8;
-        newCastling &= ~(IntCastling.BLACK_KINGSIDE | IntCastling.BLACK_QUEENSIDE);
+        if (castling[IntColor.BLACK][IntCastling.QUEENSIDE] != IntFile.NOFILE) {
+          castling[IntColor.BLACK][IntCastling.QUEENSIDE] = IntFile.NOFILE;
+          zobristCode ^= zobristCastling[IntColor.BLACK][IntCastling.QUEENSIDE];
+        }
+        if (castling[IntColor.BLACK][IntCastling.KINGSIDE] != IntFile.NOFILE) {
+          castling[IntColor.BLACK][IntCastling.KINGSIDE] = IntFile.NOFILE;
+          zobristCode ^= zobristCastling[IntColor.BLACK][IntCastling.KINGSIDE];
+        }
         break;
       case Position.c8:
         rookOriginPosition = Position.a8;
         rookTargetPosition = Position.d8;
-        newCastling &= ~(IntCastling.BLACK_KINGSIDE | IntCastling.BLACK_QUEENSIDE);
+        if (castling[IntColor.BLACK][IntCastling.QUEENSIDE] != IntFile.NOFILE) {
+          castling[IntColor.BLACK][IntCastling.QUEENSIDE] = IntFile.NOFILE;
+          zobristCode ^= zobristCastling[IntColor.BLACK][IntCastling.QUEENSIDE];
+        }
+        if (castling[IntColor.BLACK][IntCastling.KINGSIDE] != IntFile.NOFILE) {
+          castling[IntColor.BLACK][IntCastling.KINGSIDE] = IntFile.NOFILE;
+          zobristCode ^= zobristCastling[IntColor.BLACK][IntCastling.KINGSIDE];
+        }
         break;
       default:
         throw new IllegalArgumentException();
@@ -1354,16 +1429,6 @@ public final class Board {
     // Move the rook
     int rook = move(rookOriginPosition, rookTargetPosition, true);
     assert IntPiece.getChessman(rook) == IntChessman.ROOK;
-
-    // Update castling
-    assert (newCastling ^ castling) == IntCastling.WHITE_KINGSIDE
-      || (newCastling ^ castling) == IntCastling.WHITE_QUEENSIDE
-      || (newCastling ^ castling) == IntCastling.BLACK_KINGSIDE
-      || (newCastling ^ castling) == IntCastling.BLACK_QUEENSIDE
-      || (newCastling ^ castling) == (IntCastling.WHITE_KINGSIDE | IntCastling.WHITE_QUEENSIDE)
-      || (newCastling ^ castling) == (IntCastling.BLACK_KINGSIDE | IntCastling.BLACK_QUEENSIDE);
-    zobristCode ^= zobristCastling[newCastling ^ castling];
-    castling = newCastling;
 
     // Update the capture square
     capturePosition = Position.NOPOSITION;
@@ -1378,7 +1443,7 @@ public final class Board {
     halfMoveClock++;
   }
 
-  private void undoMoveCastling(int move) {
+  private void undoMoveCastling(int move, StackEntry entry) {
     int kingTargetPosition = Move.getTargetPosition(move);
 
     // Get the rook positions
@@ -1412,7 +1477,13 @@ public final class Board {
     move(kingTargetPosition, Move.getOriginPosition(move), false);
 
     // Restore the castling rights
-    castling = castlingHistory[--castlingHistorySize];
+    for (int color : IntColor.values) {
+      for (int castling : IntCastling.values) {
+        if (entry.castling[color][castling] != this.castling[color][castling]) {
+          this.castling[color][castling] = entry.castling[color][castling];
+        }
+      }
+    }
   }
 
   private void makeMoveEnPassant(int move) {
@@ -1489,28 +1560,6 @@ public final class Board {
 
   public String toString() {
     return getBoard().toString();
-  }
-
-  private final class StackEntry {
-
-    public long zobristCode = 0;
-    public long pawnZobristCode = 0;
-    public int halfMoveClock = 0;
-    public int enPassant = 0;
-    public int capturePosition = 0;
-
-    public StackEntry() {
-      clear();
-    }
-
-    public void clear() {
-      zobristCode = 0;
-      pawnZobristCode = 0;
-      halfMoveClock = 0;
-      enPassant = 0;
-      capturePosition = 0;
-    }
-
   }
 
 }

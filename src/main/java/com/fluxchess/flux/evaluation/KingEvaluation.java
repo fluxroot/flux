@@ -20,9 +20,10 @@ package com.fluxchess.flux.evaluation;
 
 import com.fluxchess.flux.board.Board;
 import com.fluxchess.flux.board.ChessmanList;
-import com.fluxchess.flux.board.IntCastling;
 import com.fluxchess.flux.board.Position;
+import com.fluxchess.jcpi.models.IntCastling;
 import com.fluxchess.jcpi.models.IntColor;
+import com.fluxchess.jcpi.models.IntFile;
 import com.fluxchess.jcpi.models.IntPiece;
 
 public final class KingEvaluation {
@@ -67,12 +68,8 @@ public final class KingEvaluation {
     byte flag = 0;
 
     int sign = 1;
-    int castlingKingside = IntCastling.WHITE_KINGSIDE;
-    int castlingQueenside = IntCastling.WHITE_QUEENSIDE;
     if (myColor == IntColor.BLACK) {
       sign = -1;
-      castlingKingside = IntCastling.BLACK_KINGSIDE;
-      castlingQueenside = IntCastling.BLACK_QUEENSIDE;
     } else {
       assert myColor == IntColor.WHITE;
     }
@@ -193,13 +190,13 @@ public final class KingEvaluation {
     int positionPenalty = getPawnShieldPenalty(myColor, kingPosition);
     int castlingPenalty = positionPenalty;
 
-    if ((board.castling & castlingKingside) != 0) {
+    if (board.castling[myColor][IntCastling.KINGSIDE] != IntFile.NOFILE) {
       int tempPenalty = getPawnShieldPenalty(myColor, castlingPositionKingside);
       if (tempPenalty < castlingPenalty) {
         castlingPenalty = tempPenalty;
       }
     }
-    if ((board.castling & castlingQueenside) != 0) {
+    if (board.castling[myColor][IntCastling.QUEENSIDE] != IntFile.NOFILE) {
       int tempPenalty = getPawnShieldPenalty(myColor, castlingPositionQueenside);
       if (tempPenalty < castlingPenalty) {
         castlingPenalty = tempPenalty;
