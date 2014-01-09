@@ -31,6 +31,15 @@ public final class MoveSee {
   private static Board board = null;
   private static final SeeList[] chessmanList = new SeeList[IntColor.values.length];
 
+  private final class SeeList {
+    private static final int MAXSIZE = 16;
+
+    public final int[] chessman = new int[MAXSIZE];
+    public final int[] position = new int[MAXSIZE];
+    public int head = 0;
+    public int size = 0;
+  }
+
   public MoveSee(Board newBoard) {
     board = newBoard;
     chessmanList[IntColor.WHITE] = new SeeList();
