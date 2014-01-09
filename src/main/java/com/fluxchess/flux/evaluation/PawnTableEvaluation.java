@@ -19,7 +19,7 @@
 package com.fluxchess.flux.evaluation;
 
 import com.fluxchess.flux.board.Board;
-import com.fluxchess.flux.board.Position;
+import com.fluxchess.flux.board.Square;
 import com.fluxchess.jcpi.models.IntColor;
 
 import java.util.Arrays;
@@ -48,10 +48,10 @@ public final class PawnTableEvaluation {
     byte[] myPawnTable = pawnTable[myColor];
 
     // Evaluate each pawn
-    for (long positions = board.pawnList[myColor]; positions != 0; positions &= positions - 1) {
-      int pawnPosition = Position.toX88Position(Long.numberOfTrailingZeros(positions));
-      int pawnFile = Position.getFile(pawnPosition);
-      int pawnRank = Position.getRank(pawnPosition);
+    for (long squares = board.pawnList[myColor]; squares != 0; squares &= squares - 1) {
+      int pawnSquare = Square.toX88Square(Long.numberOfTrailingZeros(squares));
+      int pawnFile = Square.getFile(pawnSquare);
+      int pawnRank = Square.getRank(pawnSquare);
 
       // Fill pawn table
       int tableFile = pawnFile + 1;

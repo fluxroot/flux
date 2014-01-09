@@ -77,7 +77,7 @@ public final class Attack {
 
   public int count = NOATTACK;
   public final int[] delta = new int[MAXATTACK];
-  public final int[] position = new int[MAXATTACK];
+  public final int[] square = new int[MAXATTACK];
   public int numberOfMoves = -1;
 
   public boolean isCheck() {

@@ -19,13 +19,13 @@
 package com.fluxchess.flux.evaluation;
 
 import com.fluxchess.flux.board.Board;
-import com.fluxchess.flux.board.Position;
+import com.fluxchess.flux.board.Square;
 import com.fluxchess.jcpi.models.IntChessman;
 import com.fluxchess.jcpi.models.IntColor;
 
-public final class PositionValueEvaluation {
+public final class SquareValueEvaluation {
 
-  private static final int[][] positionValueOpening = {
+  private static final int[][] squareValueOpening = {
     { // Empty
       //  a1,   b1,   c1,   d1,   e1,   f1,   g1,   h1
            0,    0,    0,    0,    0,    0,    0,    0,     0,0,0,0,0,0,0,0,
@@ -124,7 +124,7 @@ public final class PositionValueEvaluation {
     }
   };
 
-  private static final int[][] positionValueEndgame = {
+  private static final int[][] squareValueEndgame = {
     { // Empty
       //  a1,   b1,   c1,   d1,   e1,   f1,   g1,   h1
            0,    0,    0,    0,    0,    0,    0,    0,     0,0,0,0,0,0,0,0,
@@ -223,10 +223,10 @@ public final class PositionValueEvaluation {
     }
   };
 
-  private PositionValueEvaluation() {
+  private SquareValueEvaluation() {
   }
 
-  public static int evaluatePositionValue(int myColor, Board board) {
+  public static int evaluateSquareValue(int myColor, Board board) {
     assert myColor != IntColor.NOCOLOR;
 
     // Initialize
@@ -234,85 +234,85 @@ public final class PositionValueEvaluation {
     int endgame = 0;
 
     // Pawns
-    int[] chessmanValueOpening = positionValueOpening[IntChessman.PAWN];
-    int[] chessmanValueEndgame = positionValueEndgame[IntChessman.PAWN];
-    for (long positions = board.pawnList[myColor]; positions != 0; positions &= positions - 1) {
-      int position = Position.toX88Position(Long.numberOfTrailingZeros(positions));
+    int[] chessmanValueOpening = squareValueOpening[IntChessman.PAWN];
+    int[] chessmanValueEndgame = squareValueEndgame[IntChessman.PAWN];
+    for (long squares = board.pawnList[myColor]; squares != 0; squares &= squares - 1) {
+      int square = Square.toX88Square(Long.numberOfTrailingZeros(squares));
       if (myColor == IntColor.BLACK) {
-        position = 127 - 8 - position;
+        square = 127 - 8 - square;
       } else {
         assert myColor == IntColor.WHITE;
       }
-      opening += chessmanValueOpening[position];
-      endgame += chessmanValueEndgame[position];
+      opening += chessmanValueOpening[square];
+      endgame += chessmanValueEndgame[square];
     }
 
     // Knights
-    chessmanValueOpening = positionValueOpening[IntChessman.KNIGHT];
-    chessmanValueEndgame = positionValueEndgame[IntChessman.KNIGHT];
-    for (long positions = board.knightList[myColor]; positions != 0; positions &= positions - 1) {
-      int position = Position.toX88Position(Long.numberOfTrailingZeros(positions));
+    chessmanValueOpening = squareValueOpening[IntChessman.KNIGHT];
+    chessmanValueEndgame = squareValueEndgame[IntChessman.KNIGHT];
+    for (long squares = board.knightList[myColor]; squares != 0; squares &= squares - 1) {
+      int square = Square.toX88Square(Long.numberOfTrailingZeros(squares));
       if (myColor == IntColor.BLACK) {
-        position = 127 - 8 - position;
+        square = 127 - 8 - square;
       } else {
         assert myColor == IntColor.WHITE;
       }
-      opening += chessmanValueOpening[position];
-      endgame += chessmanValueEndgame[position];
+      opening += chessmanValueOpening[square];
+      endgame += chessmanValueEndgame[square];
     }
 
     // Bishops
-    chessmanValueOpening = positionValueOpening[IntChessman.BISHOP];
-    chessmanValueEndgame = positionValueEndgame[IntChessman.BISHOP];
-    for (long positions = board.bishopList[myColor]; positions != 0; positions &= positions - 1) {
-      int position = Position.toX88Position(Long.numberOfTrailingZeros(positions));
+    chessmanValueOpening = squareValueOpening[IntChessman.BISHOP];
+    chessmanValueEndgame = squareValueEndgame[IntChessman.BISHOP];
+    for (long squares = board.bishopList[myColor]; squares != 0; squares &= squares - 1) {
+      int square = Square.toX88Square(Long.numberOfTrailingZeros(squares));
       if (myColor == IntColor.BLACK) {
-        position = 127 - 8 - position;
+        square = 127 - 8 - square;
       } else {
         assert myColor == IntColor.WHITE;
       }
-      opening += chessmanValueOpening[position];
-      endgame += chessmanValueEndgame[position];
+      opening += chessmanValueOpening[square];
+      endgame += chessmanValueEndgame[square];
     }
 
     // Rooks
-    chessmanValueOpening = positionValueOpening[IntChessman.ROOK];
-    chessmanValueEndgame = positionValueEndgame[IntChessman.ROOK];
-    for (long positions = board.rookList[myColor]; positions != 0; positions &= positions - 1) {
-      int position = Position.toX88Position(Long.numberOfTrailingZeros(positions));
+    chessmanValueOpening = squareValueOpening[IntChessman.ROOK];
+    chessmanValueEndgame = squareValueEndgame[IntChessman.ROOK];
+    for (long squares = board.rookList[myColor]; squares != 0; squares &= squares - 1) {
+      int square = Square.toX88Square(Long.numberOfTrailingZeros(squares));
       if (myColor == IntColor.BLACK) {
-        position = 127 - 8 - position;
+        square = 127 - 8 - square;
       } else {
         assert myColor == IntColor.WHITE;
       }
-      opening += chessmanValueOpening[position];
-      endgame += chessmanValueEndgame[position];
+      opening += chessmanValueOpening[square];
+      endgame += chessmanValueEndgame[square];
     }
 
     // Queens
-    chessmanValueOpening = positionValueOpening[IntChessman.QUEEN];
-    chessmanValueEndgame = positionValueEndgame[IntChessman.QUEEN];
-    for (long positions = board.queenList[myColor]; positions != 0; positions &= positions - 1) {
-      int position = Position.toX88Position(Long.numberOfTrailingZeros(positions));
+    chessmanValueOpening = squareValueOpening[IntChessman.QUEEN];
+    chessmanValueEndgame = squareValueEndgame[IntChessman.QUEEN];
+    for (long squares = board.queenList[myColor]; squares != 0; squares &= squares - 1) {
+      int square = Square.toX88Square(Long.numberOfTrailingZeros(squares));
       if (myColor == IntColor.BLACK) {
-        position = 127 - 8 - position;
+        square = 127 - 8 - square;
       } else {
         assert myColor == IntColor.WHITE;
       }
-      opening += chessmanValueOpening[position];
-      endgame += chessmanValueEndgame[position];
+      opening += chessmanValueOpening[square];
+      endgame += chessmanValueEndgame[square];
     }
 
     // King
     assert Long.bitCount(board.kingList[myColor]) == 1;
-    int position = Position.toX88Position(Long.numberOfTrailingZeros(board.kingList[myColor]));
+    int square = Square.toX88Square(Long.numberOfTrailingZeros(board.kingList[myColor]));
     if (myColor == IntColor.BLACK) {
-      position = 127 - 8 - position;
+      square = 127 - 8 - square;
     } else {
       assert myColor == IntColor.WHITE;
     }
-    opening += positionValueOpening[IntChessman.KING][position];
-    endgame += positionValueEndgame[IntChessman.KING][position];
+    opening += squareValueOpening[IntChessman.KING][square];
+    endgame += squareValueEndgame[IntChessman.KING][square];
 
     // Return linear mix
     return Evaluation.getGamePhaseEvaluation(myColor, opening, endgame, board);

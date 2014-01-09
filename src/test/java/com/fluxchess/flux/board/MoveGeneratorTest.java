@@ -80,7 +80,7 @@ public class MoveGeneratorTest {
     while (move != Move.NOMOVE) {
       boolean isCheckingMove = board.isCheckingMove(move);
       GenericBoard oldBoard = board.getBoard();
-      int captureSquare = board.capturePosition;
+      int captureSquare = board.captureSquare;
 
       board.makeMove(move);
       boolean isCheckingMoveReal = board.getAttack(board.activeColor).isCheck();
@@ -88,7 +88,7 @@ public class MoveGeneratorTest {
       totalNodes += miniMax(board, moveGenerator, depth - 1);
       board.undoMove(move);
 
-      assert captureSquare == board.capturePosition;
+      assert captureSquare == board.captureSquare;
 
       move = moveGenerator.getNextMove();
     }

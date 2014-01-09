@@ -37,7 +37,7 @@ public class BoardTest {
     for (GenericFile file : GenericFile.values()) {
       for (GenericRank rank : GenericRank.values()) {
         GenericPiece piece = board.getPiece(GenericPosition.valueOf(file, rank));
-        int testChessman = testBoard.board[Position.valueOf(GenericPosition.valueOf(file, rank))];
+        int testChessman = testBoard.board[Square.valueOf(GenericPosition.valueOf(file, rank))];
         if (piece == null) {
           assertEquals(IntPiece.NOPIECE, testChessman);
         } else {
@@ -52,9 +52,9 @@ public class BoardTest {
 
     // Test en passant
     if (board.getEnPassant() == null) {
-      assertEquals(Position.NOPOSITION, testBoard.enPassantPosition);
+      assertEquals(Square.NOSQUARE, testBoard.enPassantSquare);
     } else {
-      assertEquals(Position.valueOf(board.getEnPassant()), testBoard.enPassantPosition);
+      assertEquals(Square.valueOf(board.getEnPassant()), testBoard.enPassantSquare);
     }
 
     // Test half move clock
@@ -148,7 +148,7 @@ public class BoardTest {
     Board testBoard = new Board(board);
 
     // Make en passant move
-    int move = Move.valueOf(Move.Type.ENPASSANT, Position.e4, Position.d3, IntPiece.BLACKPAWN, IntPiece.WHITEPAWN, IntChessman.NOCHESSMAN);
+    int move = Move.valueOf(Move.Type.ENPASSANT, Square.e4, Square.d3, IntPiece.BLACKPAWN, IntPiece.WHITEPAWN, IntChessman.NOCHESSMAN);
     testBoard.makeMove(move);
     testBoard.undoMove(move);
 
@@ -160,7 +160,7 @@ public class BoardTest {
     GenericBoard board = new GenericBoard(GenericBoard.STANDARDSETUP);
     Board testBoard = new Board(board);
 
-    int move = Move.valueOf(Move.Type.NULL, Position.NOPOSITION, Position.NOPOSITION, IntPiece.NOPIECE, IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
+    int move = Move.valueOf(Move.Type.NULL, Square.NOSQUARE, Square.NOSQUARE, IntPiece.NOPIECE, IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
     testBoard.makeMove(move);
     testBoard.undoMove(move);
 
@@ -179,38 +179,38 @@ public class BoardTest {
 
     Board testBoard = new Board(board);
     // Move white bishop
-    int move = Move.valueOf(Move.Type.NORMAL, Position.d2, Position.e3, IntPiece.WHITEBISHOP, IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
+    int move = Move.valueOf(Move.Type.NORMAL, Square.d2, Square.e3, IntPiece.WHITEBISHOP, IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
     testBoard.makeMove(move);
     // Castling black KINGSIDE
-    move = Move.valueOf(Move.Type.CASTLING, Position.e8, Position.g8, IntPiece.BLACKKING, IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
+    move = Move.valueOf(Move.Type.CASTLING, Square.e8, Square.g8, IntPiece.BLACKKING, IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
     testBoard.makeMove(move);
     // Move white pawn
-    move = Move.valueOf(Move.Type.PAWNDOUBLE, Position.c2, Position.c4, IntPiece.WHITEPAWN, IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
+    move = Move.valueOf(Move.Type.PAWNDOUBLE, Square.c2, Square.c4, IntPiece.WHITEPAWN, IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
     testBoard.makeMove(move);
     // Move black pawn
-    move = Move.valueOf(Move.Type.ENPASSANT, Position.d4, Position.c3, IntPiece.BLACKPAWN, IntPiece.WHITEPAWN, IntChessman.NOCHESSMAN);
+    move = Move.valueOf(Move.Type.ENPASSANT, Square.d4, Square.c3, IntPiece.BLACKPAWN, IntPiece.WHITEPAWN, IntChessman.NOCHESSMAN);
     testBoard.makeMove(move);
     // Move white pawn
-    move = Move.valueOf(Move.Type.PAWNPROMOTION, Position.c7, Position.c8, IntPiece.WHITEPAWN, IntPiece.NOPIECE, IntChessman.QUEEN);
+    move = Move.valueOf(Move.Type.PAWNPROMOTION, Square.c7, Square.c8, IntPiece.WHITEPAWN, IntPiece.NOPIECE, IntChessman.QUEEN);
     testBoard.makeMove(move);
     long zobrist1 = testBoard.zobristCode;
     long pawnZobrist1 = testBoard.pawnZobristCode;
 
     testBoard = new Board(board);
     // Move white pawn
-    move = Move.valueOf(Move.Type.PAWNDOUBLE, Position.c2, Position.c4, IntPiece.WHITEPAWN, IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
+    move = Move.valueOf(Move.Type.PAWNDOUBLE, Square.c2, Square.c4, IntPiece.WHITEPAWN, IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
     testBoard.makeMove(move);
     // Move black pawn
-    move = Move.valueOf(Move.Type.ENPASSANT, Position.d4, Position.c3, IntPiece.BLACKPAWN, IntPiece.WHITEPAWN, IntChessman.NOCHESSMAN);
+    move = Move.valueOf(Move.Type.ENPASSANT, Square.d4, Square.c3, IntPiece.BLACKPAWN, IntPiece.WHITEPAWN, IntChessman.NOCHESSMAN);
     testBoard.makeMove(move);
     // Move white bishop
-    move = Move.valueOf(Move.Type.NORMAL, Position.d2, Position.e3, IntPiece.WHITEBISHOP, IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
+    move = Move.valueOf(Move.Type.NORMAL, Square.d2, Square.e3, IntPiece.WHITEBISHOP, IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
     testBoard.makeMove(move);
     // Castling black KINGSIDE
-    move = Move.valueOf(Move.Type.CASTLING, Position.e8, Position.g8, IntPiece.BLACKKING, IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
+    move = Move.valueOf(Move.Type.CASTLING, Square.e8, Square.g8, IntPiece.BLACKKING, IntPiece.NOPIECE, IntChessman.NOCHESSMAN);
     testBoard.makeMove(move);
     // Move white pawn
-    move = Move.valueOf(Move.Type.PAWNPROMOTION, Position.c7, Position.c8, IntPiece.WHITEPAWN, IntPiece.NOPIECE, IntChessman.QUEEN);
+    move = Move.valueOf(Move.Type.PAWNPROMOTION, Square.c7, Square.c8, IntPiece.WHITEPAWN, IntPiece.NOPIECE, IntChessman.QUEEN);
     testBoard.makeMove(move);
     long zobrist2 = testBoard.zobristCode;
     long pawnZobrist2 = testBoard.pawnZobristCode;

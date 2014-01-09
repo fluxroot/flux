@@ -35,7 +35,7 @@ public final class MoveSee {
     private static final int MAXSIZE = 16;
 
     public final int[] chessman = new int[MAXSIZE];
-    public final int[] position = new int[MAXSIZE];
+    public final int[] square = new int[MAXSIZE];
     public int head = 0;
     public int size = 0;
   }
@@ -47,8 +47,8 @@ public final class MoveSee {
   }
 
   public static int seeMove(int move, int myColor) {
-    int originPosition = Move.getOriginPosition(move);
-    int targetPosition = Move.getTargetPosition(move);
+    int originSquare = Move.getOriginSquare(move);
+    int targetSquare = Move.getTargetSquare(move);
     int type = Move.getType(move);
 
     // Get the enemy color
@@ -83,49 +83,49 @@ public final class MoveSee {
     }
 
     // Find all attackers
-    addAllAttackers(myList, targetPosition, myColor);
-    addAllAttackers(enemyList, targetPosition, enemyColor);
+    addAllAttackers(myList, targetSquare, myColor);
+    addAllAttackers(enemyList, targetSquare, enemyColor);
 
     // Find the attacker hiding behind the en-passant
     if (type == Move.Type.ENPASSANT) {
       if (myColor == IntColor.WHITE) {
-        addHiddenAttacker(targetPosition - 16, targetPosition);
+        addHiddenAttacker(targetSquare - 16, targetSquare);
       } else {
         assert myColor == IntColor.BLACK;
 
-        addHiddenAttacker(targetPosition + 16, targetPosition);
+        addHiddenAttacker(targetSquare + 16, targetSquare);
       }
     }
 
     // Remove the chessman from the attackers
-    int position = -1;
+    int square = -1;
     for (int i = 0; i < myList.size; i++) {
-      if (originPosition == myList.position[i]) {
-        position = i;
+      if (originSquare == myList.square[i]) {
+        square = i;
         break;
       }
     }
-    if (position != -1) {
-      for (int i = position; i < myList.size - 1; i++) {
+    if (square != -1) {
+      for (int i = square; i < myList.size - 1; i++) {
         myList.chessman[i] = myList.chessman[i + 1];
-        myList.position[i] = myList.position[i + 1];
+        myList.square[i] = myList.square[i + 1];
       }
       myList.size--;
     }
 
     // Add the hidden attacker
-    addHiddenAttacker(originPosition, targetPosition);
+    addHiddenAttacker(originSquare, targetSquare);
 
     // Make the capture
-    value -= makeCapture(targetPosition, enemyColor, myColor, attackerValue);
+    value -= makeCapture(targetSquare, enemyColor, myColor, attackerValue);
 
     return value;
   }
 
-  private static int makeCapture(int targetPosition, int myColor, int enemyColor, int targetValue) {
+  private static int makeCapture(int targetSquare, int myColor, int enemyColor, int targetValue) {
     // Get the next attacker
     int attacker = chessmanList[myColor].chessman[0];
-    int attackerPosition = chessmanList[myColor].position[0];
+    int attackerSquare = chessmanList[myColor].square[0];
     if (!shiftAttacker(chessmanList[myColor])) {
       // We have no attacker left
       return 0;
@@ -143,8 +143,8 @@ public final class MoveSee {
     int attackerValue;
     int chessman = IntPiece.getChessman(attacker);
     if (chessman == IntChessman.PAWN
-      && ((targetPosition > 111 && myColor == IntColor.WHITE)
-      || (targetPosition < 8 && myColor == IntColor.BLACK))) {
+      && ((targetSquare > 111 && myColor == IntColor.WHITE)
+      || (targetSquare < 8 && myColor == IntColor.BLACK))) {
       // Adjust on promotion
       value += Evaluation.VALUE_QUEEN - Evaluation.VALUE_PAWN;
       attackerValue = Evaluation.VALUE_QUEEN;
@@ -153,14 +153,14 @@ public final class MoveSee {
     }
 
     // Add the hidden attacker
-    addHiddenAttacker(attackerPosition, targetPosition);
+    addHiddenAttacker(attackerSquare, targetSquare);
 
-    value -= makeCapture(targetPosition, enemyColor, myColor, attackerValue);
+    value -= makeCapture(targetSquare, enemyColor, myColor, attackerValue);
 
     return value;
   }
 
-  private static void addAllAttackers(SeeList list, int targetPosition, int myColor) {
+  private static void addAllAttackers(SeeList list, int targetSquare, int myColor) {
     // Pawn attacks
     int sign = 1;
     int pawn = IntPiece.WHITEPAWN;
@@ -170,100 +170,100 @@ public final class MoveSee {
     } else {
       assert myColor == IntColor.WHITE;
     }
-    int pawnPosition = targetPosition - sign * 15;
-    if ((pawnPosition & 0x88) == 0 && board.board[pawnPosition] == pawn) {
+    int pawnSquare = targetSquare - sign * 15;
+    if ((pawnSquare & 0x88) == 0 && board.board[pawnSquare] == pawn) {
       list.chessman[list.size] = pawn;
-      list.position[list.size] = pawnPosition;
+      list.square[list.size] = pawnSquare;
       list.size++;
     }
-    pawnPosition = targetPosition - sign * 17;
-    if ((pawnPosition & 0x88) == 0 && board.board[pawnPosition] == pawn) {
+    pawnSquare = targetSquare - sign * 17;
+    if ((pawnSquare & 0x88) == 0 && board.board[pawnSquare] == pawn) {
       list.chessman[list.size] = pawn;
-      list.position[list.size] = pawnPosition;
+      list.square[list.size] = pawnSquare;
       list.size++;
     }
 
     // Knight attacks
-    for (long positions = board.knightList[myColor]; positions != 0; positions &= positions - 1) {
-      int position = Position.toX88Position(Long.numberOfTrailingZeros(positions));
-      if (board.canAttack(IntChessman.KNIGHT, myColor, position, targetPosition)) {
-        list.chessman[list.size] = board.board[position];
-        list.position[list.size] = position;
+    for (long squares = board.knightList[myColor]; squares != 0; squares &= squares - 1) {
+      int square = Square.toX88Square(Long.numberOfTrailingZeros(squares));
+      if (board.canAttack(IntChessman.KNIGHT, myColor, square, targetSquare)) {
+        list.chessman[list.size] = board.board[square];
+        list.square[list.size] = square;
         list.size++;
       }
     }
 
     // Bishop attacks
-    for (long positions = board.bishopList[myColor]; positions != 0; positions &= positions - 1) {
-      int position = Position.toX88Position(Long.numberOfTrailingZeros(positions));
-      if (board.canAttack(IntChessman.BISHOP, myColor, position, targetPosition)) {
-        int bishop = board.board[position];
-        if (hasHiddenAttacker(position, targetPosition)) {
-          addAttacker(list, bishop, position, true);
+    for (long squares = board.bishopList[myColor]; squares != 0; squares &= squares - 1) {
+      int square = Square.toX88Square(Long.numberOfTrailingZeros(squares));
+      if (board.canAttack(IntChessman.BISHOP, myColor, square, targetSquare)) {
+        int bishop = board.board[square];
+        if (hasHiddenAttacker(square, targetSquare)) {
+          addAttacker(list, bishop, square, true);
         } else {
-          addAttacker(list, bishop, position, false);
+          addAttacker(list, bishop, square, false);
         }
       }
     }
 
     // Rook attacks
-    for (long positions = board.rookList[myColor]; positions != 0; positions &= positions - 1) {
-      int position = Position.toX88Position(Long.numberOfTrailingZeros(positions));
-      if (board.canAttack(IntChessman.ROOK, myColor, position, targetPosition)) {
-        int rook = board.board[position];
-        if (hasHiddenAttacker(position, targetPosition)) {
-          addAttacker(list, rook, position, true);
+    for (long squares = board.rookList[myColor]; squares != 0; squares &= squares - 1) {
+      int square = Square.toX88Square(Long.numberOfTrailingZeros(squares));
+      if (board.canAttack(IntChessman.ROOK, myColor, square, targetSquare)) {
+        int rook = board.board[square];
+        if (hasHiddenAttacker(square, targetSquare)) {
+          addAttacker(list, rook, square, true);
         } else {
-          addAttacker(list, rook, position, false);
+          addAttacker(list, rook, square, false);
         }
       }
     }
 
     // Queen attacks
-    for (long positions = board.queenList[myColor]; positions != 0; positions &= positions - 1) {
-      int position = Position.toX88Position(Long.numberOfTrailingZeros(positions));
-      if (board.canAttack(IntChessman.QUEEN, myColor, position, targetPosition)) {
-        int queen = board.board[position];
-        if (hasHiddenAttacker(position, targetPosition)) {
-          addAttacker(list, queen, position, true);
+    for (long squares = board.queenList[myColor]; squares != 0; squares &= squares - 1) {
+      int square = Square.toX88Square(Long.numberOfTrailingZeros(squares));
+      if (board.canAttack(IntChessman.QUEEN, myColor, square, targetSquare)) {
+        int queen = board.board[square];
+        if (hasHiddenAttacker(square, targetSquare)) {
+          addAttacker(list, queen, square, true);
         } else {
-          addAttacker(list, queen, position, false);
+          addAttacker(list, queen, square, false);
         }
       }
     }
 
     // King attacks
     assert Long.bitCount(board.kingList[myColor]) == 1;
-    int position = Position.toX88Position(Long.numberOfTrailingZeros(board.kingList[myColor]));
-    if (board.canAttack(IntChessman.KING, myColor, position, targetPosition)) {
-      list.chessman[list.size] = board.board[position];
-      list.position[list.size] = position;
+    int square = Square.toX88Square(Long.numberOfTrailingZeros(board.kingList[myColor]));
+    if (board.canAttack(IntChessman.KING, myColor, square, targetSquare)) {
+      list.chessman[list.size] = board.board[square];
+      list.square[list.size] = square;
       list.size++;
     }
   }
 
-  private static void addHiddenAttacker(int chessmanPosition, int targetPosition) {
-    int vector = Attack.vector[targetPosition - chessmanPosition + 127];
+  private static void addHiddenAttacker(int chessmanSquare, int targetSquare) {
+    int vector = Attack.vector[targetSquare - chessmanSquare + 127];
     if (vector == Attack.N || vector == Attack.K) {
       // No line
       return;
     }
 
     // Get the reverse delta
-    int delta = Attack.deltas[chessmanPosition - targetPosition + 127];
+    int delta = Attack.deltas[chessmanSquare - targetSquare + 127];
 
     // Find the hidden attacker
-    int attackerPosition = chessmanPosition + delta;
-    while ((attackerPosition & 0x88) == 0) {
-      int attacker = board.board[attackerPosition];
+    int attackerSquare = chessmanSquare + delta;
+    while ((attackerSquare & 0x88) == 0) {
+      int attacker = board.board[attackerSquare];
       if (attacker == IntPiece.NOPIECE) {
-        attackerPosition += delta;
+        attackerSquare += delta;
       } else {
-        if (board.canSliderPseudoAttack(attacker, attackerPosition, targetPosition)) {
-          if (hasHiddenAttacker(attackerPosition, targetPosition)) {
-            addAttacker(chessmanList[IntPiece.getColor(attacker)], attacker, attackerPosition, true);
+        if (board.canSliderPseudoAttack(attacker, attackerSquare, targetSquare)) {
+          if (hasHiddenAttacker(attackerSquare, targetSquare)) {
+            addAttacker(chessmanList[IntPiece.getColor(attacker)], attacker, attackerSquare, true);
           } else {
-            addAttacker(chessmanList[IntPiece.getColor(attacker)], attacker, attackerPosition, false);
+            addAttacker(chessmanList[IntPiece.getColor(attacker)], attacker, attackerSquare, false);
           }
         }
         break;
@@ -271,24 +271,24 @@ public final class MoveSee {
     }
   }
 
-  private static boolean hasHiddenAttacker(int chessmanPosition, int endPosition) {
-    int vector = Attack.vector[endPosition - chessmanPosition + 127];
+  private static boolean hasHiddenAttacker(int chessmanSquare, int endSquare) {
+    int vector = Attack.vector[endSquare - chessmanSquare + 127];
     if (vector == Attack.N || vector == Attack.K) {
       // No line
       return false;
     }
 
     // Get the reverse delta
-    int delta = Attack.deltas[chessmanPosition - endPosition + 127];
+    int delta = Attack.deltas[chessmanSquare - endSquare + 127];
 
     // Find the hidden attacker
-    int targetPosition = chessmanPosition + delta;
-    while ((targetPosition & 0x88) == 0) {
-      int chessman = board.board[targetPosition];
+    int targetSquare = chessmanSquare + delta;
+    while ((targetSquare & 0x88) == 0) {
+      int chessman = board.board[targetSquare];
       if (chessman == IntPiece.NOPIECE) {
-        targetPosition += delta;
+        targetSquare += delta;
       } else {
-        if (board.canSliderPseudoAttack(chessman, targetPosition, endPosition)) {
+        if (board.canSliderPseudoAttack(chessman, targetSquare, endSquare)) {
           return true;
         }
         break;
@@ -305,7 +305,7 @@ public final class MoveSee {
       // Shift all other attackers
       for (int i = 0; i < list.size - 1; i++) {
         list.chessman[i] = list.chessman[i + 1];
-        list.position[i] = list.position[i + 1];
+        list.square[i] = list.square[i + 1];
       }
       list.size--;
 
@@ -313,19 +313,19 @@ public final class MoveSee {
     }
   }
 
-  private static void addAttacker(SeeList list, int attacker, int attackerPosition, boolean hasHiddenAttacker) {
+  private static void addAttacker(SeeList list, int attacker, int attackerSquare, boolean hasHiddenAttacker) {
     int attackerValue = Evaluation.getValueFromPiece(attacker);
     int index = -1;
     for (int i = 0; i < list.size; i++) {
       int chessman = list.chessman[i];
-      int position = list.position[i];
+      int square = list.square[i];
       if ((!hasHiddenAttacker && Evaluation.getValueFromPiece(chessman) > attackerValue)
         || (hasHiddenAttacker && Evaluation.getValueFromPiece(chessman) >= attackerValue)) {
-        // Insert the attacker at this position
+        // Insert the attacker at this square
         list.chessman[i] = attacker;
-        list.position[i] = attackerPosition;
+        list.square[i] = attackerSquare;
         attacker = chessman;
-        attackerPosition = position;
+        attackerSquare = square;
         index = i + 1;
         break;
       }
@@ -334,15 +334,15 @@ public final class MoveSee {
       // Shift all other attackers
       for (int i = index; i < list.size; i++) {
         int chessman = list.chessman[i];
-        int position = list.position[i];
+        int square = list.square[i];
         list.chessman[i] = attacker;
-        list.position[i] = attackerPosition;
+        list.square[i] = attackerSquare;
         attacker = chessman;
-        attackerPosition = position;
+        attackerSquare = square;
       }
     }
     list.chessman[list.size] = attacker;
-    list.position[list.size] = attackerPosition;
+    list.square[list.size] = attackerSquare;
     list.size++;
   }
 

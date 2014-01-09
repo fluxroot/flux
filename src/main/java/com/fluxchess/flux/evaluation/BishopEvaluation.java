@@ -20,7 +20,7 @@ package com.fluxchess.flux.evaluation;
 
 import com.fluxchess.flux.board.Board;
 import com.fluxchess.flux.board.MoveGenerator;
-import com.fluxchess.flux.board.Position;
+import com.fluxchess.flux.board.Square;
 import com.fluxchess.jcpi.models.IntColor;
 import com.fluxchess.jcpi.models.IntPiece;
 
@@ -44,19 +44,19 @@ public final class BishopEvaluation {
     byte[] enemyAttackTable = AttackTableEvaluation.getInstance().attackTable[enemyColor];
 
     // Evaluate each bishop
-    for (long positions = board.bishopList[myColor]; positions != 0; positions &= positions - 1) {
-      int bishopPosition = Position.toX88Position(Long.numberOfTrailingZeros(positions));
+    for (long squares = board.bishopList[myColor]; squares != 0; squares &= squares - 1) {
+      int bishopSquare = Square.toX88Square(Long.numberOfTrailingZeros(squares));
 
       int allMobility = EVAL_BISHOP_MOBILITY_BASE;
 
       // Evaluate mobility
       for (int delta : MoveGenerator.moveDeltaBishop) {
-        int targetPosition = bishopPosition + delta;
-        while ((targetPosition & 0x88) == 0) {
-          int target = board.board[targetPosition];
+        int targetSquare = bishopSquare + delta;
+        while ((targetSquare & 0x88) == 0) {
+          int target = board.board[targetSquare];
           if (target == IntPiece.NOPIECE) {
             allMobility++;
-            targetPosition += delta;
+            targetSquare += delta;
           } else {
             if (IntPiece.getColor(target) == enemyColor) {
               allMobility++;
@@ -70,7 +70,7 @@ public final class BishopEvaluation {
       total += EVAL_BISHOP_MOBILITYFACTOR * allMobility;
 
       // Evaluate safety
-      if ((enemyAttackTable[bishopPosition] & AttackTableEvaluation.BIT_PAWN) == 0) {
+      if ((enemyAttackTable[bishopSquare] & AttackTableEvaluation.BIT_PAWN) == 0) {
         total += EVAL_BISHOP_SAFETY;
       }
     }

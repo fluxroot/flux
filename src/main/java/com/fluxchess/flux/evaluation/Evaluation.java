@@ -105,7 +105,7 @@ public final class Evaluation {
       total += material[myColor] - material[enemyColor];
 
       // Evaluate position
-      total += PositionValueEvaluation.evaluatePositionValue(myColor, board) - PositionValueEvaluation.evaluatePositionValue(enemyColor, board);
+      total += SquareValueEvaluation.evaluateSquareValue(myColor, board) - SquareValueEvaluation.evaluateSquareValue(enemyColor, board);
 
       // Evaluate knights
       total += KnightEvaluation.evaluateKnight(myColor, enemyColor, board) - KnightEvaluation.evaluateKnight(enemyColor, myColor, board);

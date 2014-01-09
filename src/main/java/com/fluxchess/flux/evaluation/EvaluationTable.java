@@ -48,8 +48,8 @@ public final class EvaluationTable {
    * @param value       the evaluation value.
    */
   public void put(long zobristCode, int value) {
-    int position = (int) (zobristCode % size);
-    EvaluationTableEntry currentEntry = entry[position];
+    int index = (int) (zobristCode % size);
+    EvaluationTableEntry currentEntry = entry[index];
 
     currentEntry.zobristCode = zobristCode;
     currentEntry.evaluation = value;
@@ -62,8 +62,8 @@ public final class EvaluationTable {
    * @return the evaluation table entry or null if there exists no entry.
    */
   public EvaluationTableEntry get(long zobristCode) {
-    int position = (int) (zobristCode % size);
-    EvaluationTableEntry currentEntry = entry[position];
+    int index = (int) (zobristCode % size);
+    EvaluationTableEntry currentEntry = entry[index];
 
     if (currentEntry.zobristCode == zobristCode) {
       return currentEntry;

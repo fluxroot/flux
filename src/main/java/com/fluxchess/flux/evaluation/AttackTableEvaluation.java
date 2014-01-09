@@ -20,7 +20,7 @@ package com.fluxchess.flux.evaluation;
 
 import com.fluxchess.flux.board.Board;
 import com.fluxchess.flux.board.MoveGenerator;
-import com.fluxchess.flux.board.Position;
+import com.fluxchess.flux.board.Square;
 import com.fluxchess.jcpi.models.IntColor;
 import com.fluxchess.jcpi.models.IntPiece;
 
@@ -68,24 +68,24 @@ public final class AttackTableEvaluation {
     assert myAttackTable != null;
 
     // Evaluate each pawn
-    for (long positions = board.pawnList[myColor]; positions != 0; positions &= positions - 1) {
-      int pawnPosition = Position.toX88Position(Long.numberOfTrailingZeros(positions));
+    for (long squares = board.pawnList[myColor]; squares != 0; squares &= squares - 1) {
+      int pawnSquare = Square.toX88Square(Long.numberOfTrailingZeros(squares));
 
       // Fill attack table
       for (int j = 1; j < MoveGenerator.moveDeltaPawn.length; j++) {
         int delta = MoveGenerator.moveDeltaPawn[j];
 
-        int targetPosition = pawnPosition;
+        int targetSquare = pawnSquare;
         if (myColor == IntColor.WHITE) {
-          targetPosition += delta;
+          targetSquare += delta;
         } else {
           assert myColor == IntColor.BLACK;
 
-          targetPosition -= delta;
+          targetSquare -= delta;
         }
-        if ((targetPosition & 0x88) == 0) {
-          myAttackTable[targetPosition]++;
-          myAttackTable[targetPosition] |= BIT_PAWN;
+        if ((targetSquare & 0x88) == 0) {
+          myAttackTable[targetSquare]++;
+          myAttackTable[targetSquare] |= BIT_PAWN;
         }
       }
     }
@@ -97,15 +97,15 @@ public final class AttackTableEvaluation {
     assert myAttackTable != null;
 
     // Evaluate each knight
-    for (long positions = board.knightList[myColor]; positions != 0; positions &= positions - 1) {
-      int knightPosition = Position.toX88Position(Long.numberOfTrailingZeros(positions));
+    for (long squares = board.knightList[myColor]; squares != 0; squares &= squares - 1) {
+      int knightSquare = Square.toX88Square(Long.numberOfTrailingZeros(squares));
 
       // Fill attack table
       for (int delta : MoveGenerator.moveDeltaKnight) {
-        int targetPosition = knightPosition + delta;
-        if ((targetPosition & 0x88) == 0) {
-          myAttackTable[targetPosition]++;
-          myAttackTable[targetPosition] |= BIT_MINOR;
+        int targetSquare = knightSquare + delta;
+        if ((targetSquare & 0x88) == 0) {
+          myAttackTable[targetSquare]++;
+          myAttackTable[targetSquare] |= BIT_MINOR;
         }
       }
     }
@@ -117,19 +117,19 @@ public final class AttackTableEvaluation {
     assert myAttackTable != null;
 
     // Evaluate each bishop
-    for (long positions = board.bishopList[myColor]; positions != 0; positions &= positions - 1) {
-      int bishopPosition = Position.toX88Position(Long.numberOfTrailingZeros(positions));
+    for (long squares = board.bishopList[myColor]; squares != 0; squares &= squares - 1) {
+      int bishopSquare = Square.toX88Square(Long.numberOfTrailingZeros(squares));
 
       // Fill attack table
       for (int delta : MoveGenerator.moveDeltaBishop) {
-        int targetPosition = bishopPosition + delta;
-        while ((targetPosition & 0x88) == 0) {
-          myAttackTable[targetPosition]++;
-          myAttackTable[targetPosition] |= BIT_MINOR;
+        int targetSquare = bishopSquare + delta;
+        while ((targetSquare & 0x88) == 0) {
+          myAttackTable[targetSquare]++;
+          myAttackTable[targetSquare] |= BIT_MINOR;
 
-          int target = board.board[targetPosition];
+          int target = board.board[targetSquare];
           if (target == IntPiece.NOPIECE) {
-            targetPosition += delta;
+            targetSquare += delta;
           } else {
             break;
           }
@@ -144,19 +144,19 @@ public final class AttackTableEvaluation {
     assert myAttackTable != null;
 
     // Evaluate each rook
-    for (long positions = board.rookList[myColor]; positions != 0; positions &= positions - 1) {
-      int rookPosition = Position.toX88Position(Long.numberOfTrailingZeros(positions));
+    for (long squares = board.rookList[myColor]; squares != 0; squares &= squares - 1) {
+      int rookSquare = Square.toX88Square(Long.numberOfTrailingZeros(squares));
 
       // Fill attack table
       for (int delta : MoveGenerator.moveDeltaRook) {
-        int targetPosition = rookPosition + delta;
-        while ((targetPosition & 0x88) == 0) {
-          myAttackTable[targetPosition]++;
-          myAttackTable[targetPosition] |= BIT_ROOK;
+        int targetSquare = rookSquare + delta;
+        while ((targetSquare & 0x88) == 0) {
+          myAttackTable[targetSquare]++;
+          myAttackTable[targetSquare] |= BIT_ROOK;
 
-          int target = board.board[targetPosition];
+          int target = board.board[targetSquare];
           if (target == IntPiece.NOPIECE) {
-            targetPosition += delta;
+            targetSquare += delta;
           } else {
             break;
           }
@@ -171,19 +171,19 @@ public final class AttackTableEvaluation {
     assert myAttackTable != null;
 
     // Evaluate the queen
-    for (long positions = board.queenList[myColor]; positions != 0; positions &= positions - 1) {
-      int queenPosition = Position.toX88Position(Long.numberOfTrailingZeros(positions));
+    for (long squares = board.queenList[myColor]; squares != 0; squares &= squares - 1) {
+      int queenSquare = Square.toX88Square(Long.numberOfTrailingZeros(squares));
 
       // Fill attack table
       for (int delta : MoveGenerator.moveDeltaQueen) {
-        int targetPosition = queenPosition + delta;
-        while ((targetPosition & 0x88) == 0) {
-          myAttackTable[targetPosition]++;
-          myAttackTable[targetPosition] |= BIT_QUEEN;
+        int targetSquare = queenSquare + delta;
+        while ((targetSquare & 0x88) == 0) {
+          myAttackTable[targetSquare]++;
+          myAttackTable[targetSquare] |= BIT_QUEEN;
 
-          int target = board.board[targetPosition];
+          int target = board.board[targetSquare];
           if (target == IntPiece.NOPIECE) {
-            targetPosition += delta;
+            targetSquare += delta;
           } else {
             break;
           }
@@ -199,14 +199,14 @@ public final class AttackTableEvaluation {
 
     // Evaluate the king
     assert Long.bitCount(board.kingList[myColor]) == 1;
-    int kingPosition = Position.toX88Position(Long.numberOfTrailingZeros(board.kingList[myColor]));
+    int kingSquare = Square.toX88Square(Long.numberOfTrailingZeros(board.kingList[myColor]));
 
     // Fill attack table
     for (int delta : MoveGenerator.moveDeltaKing) {
-      int targetPosition = kingPosition + delta;
-      if ((targetPosition & 0x88) == 0) {
-        myAttackTable[targetPosition]++;
-        myAttackTable[targetPosition] |= BIT_KING;
+      int targetSquare = kingSquare + delta;
+      if ((targetSquare & 0x88) == 0) {
+        myAttackTable[targetSquare]++;
+        myAttackTable[targetSquare] |= BIT_KING;
       }
     }
   }

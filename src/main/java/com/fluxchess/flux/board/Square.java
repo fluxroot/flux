@@ -23,7 +23,7 @@ import com.fluxchess.jcpi.models.IntColor;
 import com.fluxchess.jcpi.models.IntFile;
 import com.fluxchess.jcpi.models.IntRank;
 
-public final class Position {
+public final class Square {
 
   public static final int MASK = 0x7F;
 
@@ -63,7 +63,7 @@ public final class Position {
   public static final int g7 = 102; public static final int g8 = 118;
   public static final int h7 = 103; public static final int h8 = 119;
 
-  public static final int NOPOSITION = 127;
+  public static final int NOSQUARE = 127;
 
   public static final int[] values = {
     a1, b1, c1, d1, e1, f1, g1, h1,
@@ -76,7 +76,7 @@ public final class Position {
     a8, b8, c8, d8, e8, f8, g8, h8
   };
 
-  private Position() {
+  private Square() {
   }
 
   public static int valueOf(GenericPosition genericPosition) {
@@ -85,48 +85,48 @@ public final class Position {
     return IntRank.valueOf(genericPosition.rank) * 16 + IntFile.valueOf(genericPosition.file);
   }
 
-  public static GenericPosition toGenericPosition(int position) {
-    assert (position & 0x88) == 0;
+  public static GenericPosition toGenericPosition(int square) {
+    assert (square & 0x88) == 0;
 
-    return GenericPosition.valueOf(IntFile.toGenericFile(getFile(position)), IntRank.toGenericRank(getRank(position)));
+    return GenericPosition.valueOf(IntFile.toGenericFile(getFile(square)), IntRank.toGenericRank(getRank(square)));
   }
 
   /**
-   * Returns the file of the position.
+   * Returns the file of the square.
    *
-   * @param position the position.
+   * @param square the square.
    * @return the file (0 - 7).
    */
-  public static int getFile(int position) {
-    assert position != NOPOSITION;
+  public static int getFile(int square) {
+    assert square != NOSQUARE;
 
-    return position % 16;
+    return square % 16;
   }
 
   /**
-   * Returns the rank of the position.
+   * Returns the rank of the square.
    *
-   * @param position the position.
+   * @param square the square.
    * @return the rank (0 - 7).
    */
-  public static int getRank(int position) {
-    assert position != NOPOSITION;
+  public static int getRank(int square) {
+    assert square != NOSQUARE;
 
-    return position >>> 4;
+    return square >>> 4;
   }
 
   /**
-   * Returns the relative rank of the position. That is the rank from the
+   * Returns the relative rank of the square. That is the rank from the
    * point of view of the color.
    *
-   * @param position the position.
+   * @param square the square.
    * @param color    the color.
    * @return the relative rank (0 - 7).
    */
-  public static int getRelativeRank(int position, int color) {
-    assert position != NOPOSITION;
+  public static int getRelativeRank(int square, int color) {
+    assert square != NOSQUARE;
 
-    int rank = position >>> 4;
+    int rank = square >>> 4;
     if (color == IntColor.BLACK) {
       rank = 7 - rank;
     }
@@ -135,32 +135,32 @@ public final class Position {
   }
 
   /**
-   * Returns the field color of the position. We return an IntColor for now.
+   * Returns the field color of the square. We return an IntColor for now.
    * Maybe this should be a IntFieldColor.
    *
-   * @param position the position
-   * @return the IntColor of the field.
+   * @param square the square.
+   * @return the IntColor of the square.
    */
-  public static int getFieldColor(int position) {
-    assert position != NOPOSITION;
+  public static int getFieldColor(int square) {
+    assert square != NOSQUARE;
 
-    if ((((position % 16) + ((position >>> 4) % 2)) % 2) == 0) {
+    if ((((square % 16) + ((square >>> 4) % 2)) % 2) == 0) {
       return IntColor.BLACK;
     } else {
       return IntColor.WHITE;
     }
   }
 
-  public static int toX88Position(int position) {
-    assert position >= 0 && position < Long.SIZE;
+  public static int toX88Square(int square) {
+    assert square >= 0 && square < Long.SIZE;
 
-    return ((position & ~7) << 1) | (position & 7);
+    return ((square & ~7) << 1) | (square & 7);
   }
 
-  public static int toBitPosition(int position) {
-    assert (position & 0x88) == 0;
+  public static int toBitSquare(int square) {
+    assert (square & 0x88) == 0;
 
-    return ((position & ~7) >>> 1) | (position & 7);
+    return ((square & ~7) >>> 1) | (square & 7);
   }
 
 }

@@ -19,7 +19,7 @@
 package com.fluxchess.flux.evaluation;
 
 import com.fluxchess.flux.board.Board;
-import com.fluxchess.flux.board.Position;
+import com.fluxchess.flux.board.Square;
 import com.fluxchess.jcpi.models.IntColor;
 import com.fluxchess.jcpi.models.IntFile;
 import com.fluxchess.jcpi.models.IntPiece;
@@ -110,8 +110,8 @@ public final class DrawEvaluation {
           return 0;
         } else if (enemyMaterial == BISHOP_VALUE) {
           // KBKB: insufficient material
-          if (Position.getFieldColor(Position.toX88Position(Long.numberOfTrailingZeros(board.bishopList[myColor])))
-            == Position.getFieldColor(Position.toX88Position(Long.numberOfTrailingZeros(board.bishopList[enemyColor])))) {
+          if (Square.getFieldColor(Square.toX88Square(Long.numberOfTrailingZeros(board.bishopList[myColor])))
+            == Square.getFieldColor(Square.toX88Square(Long.numberOfTrailingZeros(board.bishopList[enemyColor])))) {
             return 0;
           }
         } else if (enemyMaterial == BISHOP_VALUE + KNIGHT_VALUE) {
@@ -126,8 +126,8 @@ public final class DrawEvaluation {
         }
       } else if (myMaterial == BISHOP_VALUE + KNIGHT_VALUE && enemyMaterial == ROOK_VALUE + BISHOP_VALUE) {
         // KBNKRB
-        if (Position.getFieldColor(Position.toX88Position(Long.numberOfTrailingZeros(board.bishopList[myColor])))
-          == Position.getFieldColor(Position.toX88Position(Long.numberOfTrailingZeros(board.bishopList[enemyColor])))) {
+        if (Square.getFieldColor(Square.toX88Square(Long.numberOfTrailingZeros(board.bishopList[myColor])))
+          == Square.getFieldColor(Square.toX88Square(Long.numberOfTrailingZeros(board.bishopList[enemyColor])))) {
           return 0;
         }
       } else if (myMaterial == ROOK_VALUE) {
@@ -193,17 +193,17 @@ public final class DrawEvaluation {
     byte[] myAttackTable = AttackTableEvaluation.getInstance().attackTable[myColor];
 
     assert Long.bitCount(board.pawnList[myColor]) == 1;
-    int pawnPosition = Position.toX88Position(Long.numberOfTrailingZeros(board.pawnList[myColor]));
-    int pawnFile = Position.getFile(pawnPosition);
-    int pawnRank = Position.getRank(pawnPosition);
+    int pawnSquare = Square.toX88Square(Long.numberOfTrailingZeros(board.pawnList[myColor]));
+    int pawnFile = Square.getFile(pawnSquare);
+    int pawnRank = Square.getRank(pawnSquare);
     assert Long.bitCount(board.kingList[enemyColor]) == 1;
-    int enemyKingPosition = Position.toX88Position(Long.numberOfTrailingZeros(board.kingList[enemyColor]));
-    int enemyKingFile = Position.getFile(enemyKingPosition);
-    int enemyKingRank = Position.getRank(enemyKingPosition);
+    int enemyKingSquare = Square.toX88Square(Long.numberOfTrailingZeros(board.kingList[enemyColor]));
+    int enemyKingFile = Square.getFile(enemyKingSquare);
+    int enemyKingRank = Square.getRank(enemyKingSquare);
     assert Long.bitCount(board.kingList[myColor]) == 1;
-    int myKingPosition = Position.toX88Position(Long.numberOfTrailingZeros(board.kingList[myColor]));
-    int myKingFile = Position.getFile(myKingPosition);
-    int myKingRank = Position.getRank(myKingPosition);
+    int myKingSquare = Square.toX88Square(Long.numberOfTrailingZeros(board.kingList[myColor]));
+    int myKingFile = Square.getFile(myKingSquare);
+    int myKingRank = Square.getRank(myKingSquare);
 
     int myKingPromotionDistance;
     int enemyKingPromotionDistance;
@@ -252,9 +252,9 @@ public final class DrawEvaluation {
       }
 
       // King protected passer
-      else if (Position.getRelativeRank(myKingPosition, myColor) == IntRank.R7
-        && ((promotionDistance <= 2 && (myAttackTable[pawnPosition] & AttackTableEvaluation.BIT_KING) != 0)
-        || (promotionDistance <= 3 && (myAttackTable[pawnPosition + delta] & AttackTableEvaluation.BIT_KING) != 0 && board.activeColor == myColor))
+      else if (Square.getRelativeRank(myKingSquare, myColor) == IntRank.R7
+        && ((promotionDistance <= 2 && (myAttackTable[pawnSquare] & AttackTableEvaluation.BIT_KING) != 0)
+        || (promotionDistance <= 3 && (myAttackTable[pawnSquare + delta] & AttackTableEvaluation.BIT_KING) != 0 && board.activeColor == myColor))
         && (myKingFile != pawnFile || (pawnFile != IntFile.Fa && pawnFile != IntFile.Fh))) {
         unstoppablePasser = true;
       }
@@ -303,13 +303,13 @@ public final class DrawEvaluation {
     } else {
       assert myColor == IntColor.WHITE;
     }
-    int targetPosition = Position.toX88Position(Long.numberOfTrailingZeros(board.pawnList[myColor])) + delta;
-    while ((targetPosition & 0x88) == 0) {
-      int chessman = board.board[targetPosition];
-      if ((chessman != IntPiece.NOPIECE && IntPiece.getColor(chessman) == enemyColor) || (enemyAttackTable[targetPosition] & AttackTableEvaluation.BIT_MINOR) != 0) {
+    int targetSquare = Square.toX88Square(Long.numberOfTrailingZeros(board.pawnList[myColor])) + delta;
+    while ((targetSquare & 0x88) == 0) {
+      int chessman = board.board[targetSquare];
+      if ((chessman != IntPiece.NOPIECE && IntPiece.getColor(chessman) == enemyColor) || (enemyAttackTable[targetSquare] & AttackTableEvaluation.BIT_MINOR) != 0) {
         return 1;
       } else {
-        targetPosition += delta;
+        targetSquare += delta;
       }
     }
 
@@ -330,13 +330,13 @@ public final class DrawEvaluation {
     } else {
       assert myColor == IntColor.WHITE;
     }
-    int targetPosition = Position.toX88Position(Long.numberOfTrailingZeros(board.pawnList[myColor])) + delta;
-    while ((targetPosition & 0x88) == 0) {
-      int chessman = board.board[targetPosition];
-      if ((chessman != IntPiece.NOPIECE && IntPiece.getColor(chessman) == enemyColor) || (enemyAttackTable[targetPosition] & AttackTableEvaluation.BIT_MINOR) != 0) {
+    int targetSquare = Square.toX88Square(Long.numberOfTrailingZeros(board.pawnList[myColor])) + delta;
+    while ((targetSquare & 0x88) == 0) {
+      int chessman = board.board[targetSquare];
+      if ((chessman != IntPiece.NOPIECE && IntPiece.getColor(chessman) == enemyColor) || (enemyAttackTable[targetSquare] & AttackTableEvaluation.BIT_MINOR) != 0) {
         return 1;
       } else {
-        targetPosition += delta;
+        targetSquare += delta;
       }
     }
 

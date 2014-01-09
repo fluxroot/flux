@@ -20,7 +20,7 @@ package com.fluxchess.flux.evaluation;
 
 import com.fluxchess.flux.board.Board;
 import com.fluxchess.flux.board.MoveGenerator;
-import com.fluxchess.flux.board.Position;
+import com.fluxchess.flux.board.Square;
 import com.fluxchess.jcpi.models.IntColor;
 import com.fluxchess.jcpi.models.IntPiece;
 
@@ -48,20 +48,20 @@ public final class QueenEvaluation {
     byte[] enemyPawnTable = PawnTableEvaluation.getInstance().pawnTable[enemyColor];
 
     // Evaluate the queen
-    for (long positions = board.queenList[myColor]; positions != 0; positions &= positions - 1) {
-      int queenPosition = Position.toX88Position(Long.numberOfTrailingZeros(positions));
-      int queenRank = Position.getRank(queenPosition);
+    for (long squares = board.queenList[myColor]; squares != 0; squares &= squares - 1) {
+      int queenSquare = Square.toX88Square(Long.numberOfTrailingZeros(squares));
+      int queenRank = Square.getRank(queenSquare);
 
       int allMobility = EVAL_QUEEN_MOBILITY_BASE;
 
       // Evaluate mobility
       for (int delta : MoveGenerator.moveDeltaQueen) {
-        int targetPosition = queenPosition + delta;
-        while ((targetPosition & 0x88) == 0) {
-          int target = board.board[targetPosition];
+        int targetSquare = queenSquare + delta;
+        while ((targetSquare & 0x88) == 0) {
+          int target = board.board[targetSquare];
           if (target == IntPiece.NOPIECE) {
             allMobility++;
-            targetPosition += delta;
+            targetSquare += delta;
           } else {
             if (IntPiece.getColor(target) == enemyColor) {
               allMobility++;
@@ -76,9 +76,9 @@ public final class QueenEvaluation {
       endgame += EVAL_QUEEN_MOBILITYFACTOR_ENDGAME * allMobility;
 
       // Evaluate safety
-      if ((enemyAttackTable[queenPosition] & AttackTableEvaluation.BIT_PAWN) == 0
-        && (enemyAttackTable[queenPosition] & AttackTableEvaluation.BIT_MINOR) == 0
-        && (enemyAttackTable[queenPosition] & AttackTableEvaluation.BIT_ROOK) == 0) {
+      if ((enemyAttackTable[queenSquare] & AttackTableEvaluation.BIT_PAWN) == 0
+        && (enemyAttackTable[queenSquare] & AttackTableEvaluation.BIT_MINOR) == 0
+        && (enemyAttackTable[queenSquare] & AttackTableEvaluation.BIT_ROOK) == 0) {
         opening += EVAL_QUEEN_SAFETY;
         endgame += EVAL_QUEEN_SAFETY;
       }
@@ -93,8 +93,8 @@ public final class QueenEvaluation {
         assert myColor == IntColor.WHITE;
       }
       if (queenRank == seventhRank) {
-        int kingPosition = Position.toX88Position(Long.numberOfTrailingZeros(board.kingList[enemyColor]));
-        int kingRank = Position.getRank(kingPosition);
+        int kingSquare = Square.toX88Square(Long.numberOfTrailingZeros(board.kingList[enemyColor]));
+        int kingRank = Square.getRank(kingSquare);
         boolean enemyPawnExists = false;
         for (int j = 1; j < enemyPawnTable.length - 1; j++) {
           if (enemyPawnTable[j] == seventhRank) {
