@@ -23,7 +23,7 @@ import com.fluxchess.flux.board.Square;
 import com.fluxchess.jcpi.models.IntChessman;
 import com.fluxchess.jcpi.models.IntColor;
 
-public final class SquareValueEvaluation {
+final class SquareValueEvaluation {
 
   private static final int[][] squareValueOpening = {
     { // Empty

@@ -16,13 +16,13 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Flux Chess.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.fluxchess.flux.board;
+package com.fluxchess.flux.search;
 
 import com.fluxchess.jcpi.models.GenericMove;
 
 import java.util.List;
 
-public final class PrincipalVariation implements Comparable<PrincipalVariation> {
+final class PrincipalVariation implements Comparable<PrincipalVariation> {
 
   public final int moveNumber;
   public final int value;

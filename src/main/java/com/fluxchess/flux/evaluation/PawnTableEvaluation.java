@@ -24,7 +24,7 @@ import com.fluxchess.jcpi.models.IntColor;
 
 import java.util.Arrays;
 
-public final class PawnTableEvaluation {
+final class PawnTableEvaluation {
 
   // Our pawn structure table. 8 + 2 -> 2 Sentinels for each side.
   public final byte[][] pawnTable = new byte[IntColor.values.length][10];

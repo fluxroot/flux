@@ -20,7 +20,7 @@ package com.fluxchess.flux.search;
 
 import com.fluxchess.flux.board.Board;
 import com.fluxchess.flux.board.Move;
-import com.fluxchess.flux.board.Score;
+import com.fluxchess.flux.evaluation.Evaluation;
 import com.fluxchess.jcpi.models.GenericMove;
 
 import java.util.List;
@@ -180,7 +180,7 @@ public final class TranspositionTable {
     public long zobristCode = 0;
     public int age = -1;
     public int depth = -1;
-    private int value = -Search.INFINITY;
+    private int value = -Evaluation.INFINITY;
     public int type = Score.NOSCORE;
     public int move = Move.NOMOVE;
     public boolean mateThreat = false;
@@ -189,7 +189,7 @@ public final class TranspositionTable {
       zobristCode = 0;
       age = -1;
       depth = -1;
-      value = -Search.INFINITY;
+      value = -Evaluation.INFINITY;
       type = Score.NOSCORE;
       move = Move.NOMOVE;
       mateThreat = false;
@@ -197,9 +197,9 @@ public final class TranspositionTable {
 
     public int getValue(int height) {
       int value = this.value;
-      if (value < -Search.CHECKMATE_THRESHOLD) {
+      if (value < -Evaluation.CHECKMATE_THRESHOLD) {
         value += height;
-      } else if (value > Search.CHECKMATE_THRESHOLD) {
+      } else if (value > Evaluation.CHECKMATE_THRESHOLD) {
         value -= height;
       }
 
@@ -208,12 +208,12 @@ public final class TranspositionTable {
 
     public void setValue(int value, int height) {
       // Normalize mate values
-      if (value < -Search.CHECKMATE_THRESHOLD) {
+      if (value < -Evaluation.CHECKMATE_THRESHOLD) {
         value -= height;
-      } else if (value > Search.CHECKMATE_THRESHOLD) {
+      } else if (value > Evaluation.CHECKMATE_THRESHOLD) {
         value += height;
       }
-      assert value <= Search.CHECKMATE || value >= -Search.CHECKMATE;
+      assert value <= Evaluation.CHECKMATE || value >= -Evaluation.CHECKMATE;
 
       this.value = value;
     }

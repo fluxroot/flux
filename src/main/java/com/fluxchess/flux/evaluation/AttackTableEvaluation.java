@@ -26,7 +26,7 @@ import com.fluxchess.jcpi.models.IntPiece;
 
 import java.util.Arrays;
 
-public final class AttackTableEvaluation {
+final class AttackTableEvaluation {
 
   public static final byte BIT_PAWN = 1 << 3;
   public static final byte BIT_MINOR = 1 << 4;

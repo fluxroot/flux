@@ -24,7 +24,7 @@ import com.fluxchess.flux.board.Square;
 import com.fluxchess.jcpi.models.IntColor;
 import com.fluxchess.jcpi.models.IntPiece;
 
-public final class KnightEvaluation {
+final class KnightEvaluation {
 
   public static int EVAL_KNIGHT_MOBILITY_BASE = -4;
   public static int EVAL_KNIGHT_MOBILITYFACTOR = 4;

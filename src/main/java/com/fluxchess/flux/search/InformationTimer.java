@@ -19,8 +19,6 @@
 package com.fluxchess.flux.search;
 
 import com.fluxchess.flux.Configuration;
-import com.fluxchess.flux.board.PrincipalVariation;
-import com.fluxchess.flux.board.Score;
 import com.fluxchess.jcpi.commands.IProtocol;
 import com.fluxchess.jcpi.commands.ProtocolBestMoveCommand;
 import com.fluxchess.jcpi.commands.ProtocolInformationCommand;

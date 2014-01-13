@@ -24,7 +24,7 @@ import com.fluxchess.flux.board.MoveSee;
 import com.fluxchess.flux.board.Square;
 import com.fluxchess.jcpi.models.*;
 
-public final class PawnPasserEvaluation {
+final class PawnPasserEvaluation {
 
   private static final int EVAL_PAWN_PASSER_MAXBONUS = 6 * 6 * 6;
   private static final int EVAL_PAWN_PASSER_OPENING_MIN = 10;

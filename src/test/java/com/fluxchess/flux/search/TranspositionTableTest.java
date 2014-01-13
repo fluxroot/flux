@@ -20,7 +20,7 @@ package com.fluxchess.flux.search;
 
 import com.fluxchess.flux.board.Move;
 import com.fluxchess.flux.board.Square;
-import com.fluxchess.flux.board.Score;
+import com.fluxchess.flux.evaluation.Evaluation;
 import com.fluxchess.jcpi.models.IntChessman;
 import com.fluxchess.jcpi.models.IntPiece;
 import org.junit.Ignore;
@@ -64,13 +64,13 @@ public class TranspositionTableTest {
     assertEquals(100, table.getPermillUsed());
 
     // Put an mate entry into the table
-    table.put(2L, 0, Search.CHECKMATE - 5, Score.EXACT, move1, false, 3);
+    table.put(2L, 0, Evaluation.CHECKMATE - 5, Score.EXACT, move1, false, 3);
 
     entry = table.get(2L);
     assertNotNull(entry);
 
     assertEquals(0, entry.depth);
-    assertEquals(Search.CHECKMATE - 4, entry.getValue(2));
+    assertEquals(Evaluation.CHECKMATE - 4, entry.getValue(2));
     assertEquals(Score.EXACT, entry.type);
     assertEquals(move1, entry.move);
     assertEquals(200, table.getPermillUsed());

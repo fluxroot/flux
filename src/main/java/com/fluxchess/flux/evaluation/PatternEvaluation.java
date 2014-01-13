@@ -23,7 +23,7 @@ import com.fluxchess.flux.board.Square;
 import com.fluxchess.jcpi.models.IntColor;
 import com.fluxchess.jcpi.models.IntPiece;
 
-public final class PatternEvaluation {
+final class PatternEvaluation {
 
   private PatternEvaluation() {
   }

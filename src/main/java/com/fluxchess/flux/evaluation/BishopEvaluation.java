@@ -24,7 +24,7 @@ import com.fluxchess.flux.board.Square;
 import com.fluxchess.jcpi.models.IntColor;
 import com.fluxchess.jcpi.models.IntPiece;
 
-public final class BishopEvaluation {
+final class BishopEvaluation {
 
   public static int EVAL_BISHOP_MOBILITY_BASE = -6;
   public static int EVAL_BISHOP_MOBILITYFACTOR = 5;

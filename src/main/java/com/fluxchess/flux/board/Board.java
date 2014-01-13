@@ -54,7 +54,7 @@ public final class Board {
   public final long[] kingList = new long[IntColor.values.length];
 
   // Board stack
-  private final StackEntry[] stack = new StackEntry[STACKSIZE];
+  private final State[] stack = new State[STACKSIZE];
   private int stackSize = 0;
 
   // Zobrist code
@@ -91,7 +91,7 @@ public final class Board {
   private int attackHistorySize = 0;
   private final Attack tempAttack = new Attack();
 
-  private final class StackEntry {
+  private final class State {
     public long zobristCode = 0;
     public long pawnZobristCode = 0;
     public final int[][] castling = new int[IntColor.values.length][IntCastling.values.length];
@@ -99,7 +99,7 @@ public final class Board {
     public int enPassant = Square.NOSQUARE;
     public int captureSquare = Square.NOSQUARE;
 
-    public StackEntry() {
+    public State() {
       for (int color : IntColor.values) {
         for (int castling : IntCastling.values) {
           this.castling[color][castling] = IntFile.NOFILE;
@@ -135,7 +135,7 @@ public final class Board {
     repetitionTable = new RepetitionTable();
 
     for (int i = 0; i < stack.length; i++) {
-      stack[i] = new StackEntry();
+      stack[i] = new State();
     }
 
     // Initialize the attack list
@@ -189,6 +189,125 @@ public final class Board {
     // Initialize the full move number
     assert newBoard.getFullMoveNumber() > 0;
     setFullMoveNumber(newBoard.getFullMoveNumber());
+  }
+
+  public GenericBoard getBoard() {
+    GenericBoard newBoard = new GenericBoard();
+
+    // Set chessmen
+    for (GenericColor color : GenericColor.values()) {
+      int intColor = IntColor.valueOf(color);
+
+      for (long squares = pawnList[intColor]; squares != 0; squares &= squares - 1) {
+        int square = Square.toX88Square(Long.numberOfTrailingZeros(squares));
+        assert square != Square.NOSQUARE;
+        assert IntPiece.getChessman(board[square]) == IntChessman.PAWN;
+        assert IntPiece.getColor(board[square]) == intColor;
+
+        GenericPosition genericPosition = Square.toGenericPosition(square);
+        newBoard.setPiece(GenericPiece.valueOf(color, GenericChessman.PAWN), genericPosition);
+      }
+
+      for (long squares = knightList[intColor]; squares != 0; squares &= squares - 1) {
+        int square = Square.toX88Square(Long.numberOfTrailingZeros(squares));
+        assert square != Square.NOSQUARE;
+        assert IntPiece.getChessman(board[square]) == IntChessman.KNIGHT;
+        assert IntPiece.getColor(board[square]) == intColor;
+
+        GenericPosition genericPosition = Square.toGenericPosition(square);
+        newBoard.setPiece(GenericPiece.valueOf(color, GenericChessman.KNIGHT), genericPosition);
+      }
+
+      for (long squares = bishopList[intColor]; squares != 0; squares &= squares - 1) {
+        int square = Square.toX88Square(Long.numberOfTrailingZeros(squares));
+        assert square != Square.NOSQUARE;
+        assert IntPiece.getChessman(board[square]) == IntChessman.BISHOP;
+        assert IntPiece.getColor(board[square]) == intColor;
+
+        GenericPosition genericPosition = Square.toGenericPosition(square);
+        newBoard.setPiece(GenericPiece.valueOf(color, GenericChessman.BISHOP), genericPosition);
+      }
+
+      for (long squares = rookList[intColor]; squares != 0; squares &= squares - 1) {
+        int square = Square.toX88Square(Long.numberOfTrailingZeros(squares));
+        assert square != Square.NOSQUARE;
+        assert IntPiece.getChessman(board[square]) == IntChessman.ROOK;
+        assert IntPiece.getColor(board[square]) == intColor;
+
+        GenericPosition genericPosition = Square.toGenericPosition(square);
+        newBoard.setPiece(GenericPiece.valueOf(color, GenericChessman.ROOK), genericPosition);
+      }
+
+      for (long squares = queenList[intColor]; squares != 0; squares &= squares - 1) {
+        int square = Square.toX88Square(Long.numberOfTrailingZeros(squares));
+        assert square != Square.NOSQUARE;
+        assert IntPiece.getChessman(board[square]) == IntChessman.QUEEN;
+        assert IntPiece.getColor(board[square]) == intColor;
+
+        GenericPosition genericPosition = Square.toGenericPosition(square);
+        newBoard.setPiece(GenericPiece.valueOf(color, GenericChessman.QUEEN), genericPosition);
+      }
+
+      assert Long.bitCount(kingList[intColor]) == 1;
+      int square = Square.toX88Square(Long.numberOfTrailingZeros(kingList[intColor]));
+      assert square != Square.NOSQUARE;
+      assert IntPiece.getChessman(board[square]) == IntChessman.KING;
+      assert IntPiece.getColor(board[square]) == intColor;
+
+      GenericPosition genericPosition = Square.toGenericPosition(square);
+      newBoard.setPiece(GenericPiece.valueOf(color, GenericChessman.KING), genericPosition);
+    }
+
+    // Set active color
+    newBoard.setActiveColor(IntColor.toGenericColor(activeColor));
+
+    // Set castling
+    for (int color : IntColor.values) {
+      for (int castling : IntCastling.values) {
+        if (this.castling[color][castling] != IntFile.NOFILE) {
+          newBoard.setCastling(IntColor.toGenericColor(color), IntCastling.toGenericCastling(castling), IntFile.toGenericFile(this.castling[color][castling]));
+        }
+      }
+    }
+
+    // Set en passant
+    if (enPassantSquare != Square.NOSQUARE) {
+      newBoard.setEnPassant(Square.toGenericPosition(enPassantSquare));
+    }
+
+    // Set half move clock
+    newBoard.setHalfMoveClock(halfMoveClock);
+
+    // Set full move number
+    newBoard.setFullMoveNumber(getFullMoveNumber());
+
+    return newBoard;
+  }
+
+  public String toString() {
+    return getBoard().toString();
+  }
+
+  public int getFullMoveNumber() {
+    return halfMoveNumber / 2;
+  }
+
+  private void setFullMoveNumber(int fullMoveNumber) {
+    assert fullMoveNumber > 0;
+
+    halfMoveNumber = fullMoveNumber * 2;
+    if (activeColor == IntColor.valueOf(GenericColor.BLACK)) {
+      halfMoveNumber++;
+    }
+  }
+
+  /**
+   * Returns whether this board state is a repetition.
+   *
+   * @return true if this board state is a repetition, false otherwise.
+   */
+  public boolean isRepetition() {
+    return repetitionTable.exists(zobristCode);
   }
 
   /**
@@ -295,187 +414,622 @@ public final class Board {
     return piece;
   }
 
-  /**
-   * Moves the piece from the origin square to the target square.
-   *
-   * @param originSquare  the origin square.
-   * @param targetSquare    the target square.
-   * @param update true if we should update, false otherwise.
-   * @return the moved piece.
-   */
-  private int move(int originSquare, int targetSquare, boolean update) {
-    assert (originSquare & 0x88) == 0;
-    assert (targetSquare & 0x88) == 0;
-    assert board[originSquare] != IntPiece.NOPIECE;
-    assert board[targetSquare] == IntPiece.NOPIECE;
+  public void makeMove(int move) {
+    // Get current stack entry
+    State currentState = stack[stackSize];
 
-    // Get the piece
-    int originPiece = board[originSquare];
+    // Save history
+    currentState.zobristCode = zobristCode;
+    currentState.pawnZobristCode = pawnZobristCode;
+    currentState.halfMoveClock = halfMoveClock;
+    currentState.enPassant = enPassantSquare;
+    currentState.captureSquare = captureSquare;
 
-    // Store some variables for later use
-    int originChessman = IntPiece.getChessman(originPiece);
-    int originColor = IntPiece.getColor(originPiece);
+    int type = Move.getType(move);
 
-    switch (originChessman) {
-      case IntChessman.PAWN:
-        pawnList[originColor] &= ~(1L << Square.toBitSquare(originSquare));
-        pawnList[originColor] |= 1L << Square.toBitSquare(targetSquare);
-        if (update) {
-          long[] tempZobristChessman = zobristChessman[IntChessman.PAWN][originColor];
-          pawnZobristCode ^= tempZobristChessman[originSquare];
-          pawnZobristCode ^= tempZobristChessman[targetSquare];
-        }
+    switch (type) {
+      case Move.Type.NORMAL:
+        repetitionTable.put(zobristCode);
+        makeMoveNormal(move, currentState);
         break;
-      case IntChessman.KNIGHT:
-        knightList[originColor] &= ~(1L << Square.toBitSquare(originSquare));
-        knightList[originColor] |= 1L << Square.toBitSquare(targetSquare);
+      case Move.Type.PAWNDOUBLE:
+        repetitionTable.put(zobristCode);
+        makeMovePawnDouble(move);
         break;
-      case IntChessman.BISHOP:
-        bishopList[originColor] &= ~(1L << Square.toBitSquare(originSquare));
-        bishopList[originColor] |= 1L << Square.toBitSquare(targetSquare);
+      case Move.Type.PAWNPROMOTION:
+        repetitionTable.put(zobristCode);
+        makeMovePawnPromotion(move, currentState);
         break;
-      case IntChessman.ROOK:
-        rookList[originColor] &= ~(1L << Square.toBitSquare(originSquare));
-        rookList[originColor] |= 1L << Square.toBitSquare(targetSquare);
+      case Move.Type.ENPASSANT:
+        repetitionTable.put(zobristCode);
+        makeMoveEnPassant(move);
         break;
-      case IntChessman.QUEEN:
-        queenList[originColor] &= ~(1L << Square.toBitSquare(originSquare));
-        queenList[originColor] |= 1L << Square.toBitSquare(targetSquare);
+      case Move.Type.CASTLING:
+        repetitionTable.put(zobristCode);
+        makeMoveCastling(move, currentState);
         break;
-      case IntChessman.KING:
-        kingList[originColor] &= ~(1L << Square.toBitSquare(originSquare));
-        kingList[originColor] |= 1L << Square.toBitSquare(targetSquare);
+      case Move.Type.NULL:
+        makeMoveNull();
         break;
       default:
-        assert false : originChessman;
+        throw new IllegalArgumentException();
+    }
+
+    // Update half move number
+    halfMoveNumber++;
+
+    // Update active color
+    activeColor = IntColor.opposite(activeColor);
+    zobristCode ^= zobristActiveColor;
+    pawnZobristCode ^= zobristActiveColor;
+
+    // Update attack list
+    attackHistorySize++;
+    attackHistory[attackHistorySize][IntColor.WHITE].count = Attack.NOATTACK;
+    attackHistory[attackHistorySize][IntColor.BLACK].count = Attack.NOATTACK;
+
+    // Update stack size
+    stackSize++;
+    assert stackSize < STACKSIZE;
+  }
+
+  public void undoMove(int move) {
+    int type = Move.getType(move);
+
+    // Update attack list
+    attackHistorySize--;
+
+    // Update active color
+    activeColor = IntColor.opposite(activeColor);
+
+    // Update half move number
+    halfMoveNumber--;
+
+    // Update stack size
+    stackSize--;
+    assert stackSize >= 0;
+
+    // Get current stack entry
+    State currentState = stack[stackSize];
+
+    // Restore zobrist history
+    zobristCode = currentState.zobristCode;
+    pawnZobristCode = currentState.pawnZobristCode;
+    halfMoveClock = currentState.halfMoveClock;
+    enPassantSquare = currentState.enPassant;
+    captureSquare = currentState.captureSquare;
+
+    switch (type) {
+      case Move.Type.NORMAL:
+        undoMoveNormal(move, currentState);
+        repetitionTable.remove(zobristCode);
+        break;
+      case Move.Type.PAWNDOUBLE:
+        undoMovePawnDouble(move);
+        repetitionTable.remove(zobristCode);
+        break;
+      case Move.Type.PAWNPROMOTION:
+        undoMovePawnPromotion(move, currentState);
+        repetitionTable.remove(zobristCode);
+        break;
+      case Move.Type.ENPASSANT:
+        undoMoveEnPassant(move);
+        repetitionTable.remove(zobristCode);
+        break;
+      case Move.Type.CASTLING:
+        undoMoveCastling(move, currentState);
+        repetitionTable.remove(zobristCode);
+        break;
+      case Move.Type.NULL:
+        break;
+      default:
+        throw new IllegalArgumentException();
+    }
+  }
+
+  private void makeMoveNormal(int move, State entry) {
+    // Save castling rights
+    for (int color : IntColor.values) {
+      for (int castling : IntCastling.values) {
+        entry.castling[color][castling] = this.castling[color][castling];
+      }
+    }
+
+    // Save the captured chessman
+    int targetSquare = Move.getTargetSquare(move);
+    int target = IntPiece.NOPIECE;
+    if (board[targetSquare] != IntPiece.NOPIECE) {
+      target = remove(targetSquare, true);
+      assert Move.getTargetPiece(move) != IntPiece.NOPIECE : Move.toString(move);
+      captureHistory[captureHistorySize++] = target;
+      captureSquare = targetSquare;
+
+      switch (targetSquare) {
+        case Square.a1:
+          if (castling[IntColor.WHITE][IntCastling.QUEENSIDE] != IntFile.NOFILE) {
+            assert target == IntPiece.WHITEROOK;
+            castling[IntColor.WHITE][IntCastling.QUEENSIDE] = IntFile.NOFILE;
+            zobristCode ^= zobristCastling[IntColor.WHITE][IntCastling.QUEENSIDE];
+          }
+          break;
+        case Square.a8:
+          if (castling[IntColor.BLACK][IntCastling.QUEENSIDE] != IntFile.NOFILE) {
+            assert target == IntPiece.BLACKROOK;
+            castling[IntColor.BLACK][IntCastling.QUEENSIDE] = IntFile.NOFILE;
+            zobristCode ^= zobristCastling[IntColor.BLACK][IntCastling.QUEENSIDE];
+          }
+          break;
+        case Square.h1:
+          if (castling[IntColor.WHITE][IntCastling.KINGSIDE] != IntFile.NOFILE) {
+            assert target == IntPiece.WHITEROOK;
+            castling[IntColor.WHITE][IntCastling.KINGSIDE] = IntFile.NOFILE;
+            zobristCode ^= zobristCastling[IntColor.WHITE][IntCastling.KINGSIDE];
+          }
+          break;
+        case Square.h8:
+          if (castling[IntColor.BLACK][IntCastling.KINGSIDE] != IntFile.NOFILE) {
+            assert target == IntPiece.BLACKROOK;
+            castling[IntColor.BLACK][IntCastling.KINGSIDE] = IntFile.NOFILE;
+            zobristCode ^= zobristCastling[IntColor.BLACK][IntCastling.KINGSIDE];
+          }
+          break;
+        default:
+          break;
+      }
+    } else {
+      captureSquare = Square.NOSQUARE;
+    }
+
+    // Move the piece
+    int originSquare = Move.getOriginSquare(move);
+
+    int originPiece = remove(originSquare, true);
+    put(originPiece, targetSquare, true);
+
+    // Update castling
+    switch (originSquare) {
+      case Square.a1:
+        if (castling[IntColor.WHITE][IntCastling.QUEENSIDE] != IntFile.NOFILE) {
+          assert Move.getOriginPiece(move) == IntPiece.WHITEROOK;
+          castling[IntColor.WHITE][IntCastling.QUEENSIDE] = IntFile.NOFILE;
+          zobristCode ^= zobristCastling[IntColor.WHITE][IntCastling.QUEENSIDE];
+        }
+        break;
+      case Square.a8:
+        if (castling[IntColor.BLACK][IntCastling.QUEENSIDE] != IntFile.NOFILE) {
+          assert Move.getOriginPiece(move) == IntPiece.BLACKROOK;
+          castling[IntColor.BLACK][IntCastling.QUEENSIDE] = IntFile.NOFILE;
+          zobristCode ^= zobristCastling[IntColor.BLACK][IntCastling.QUEENSIDE];
+        }
+        break;
+      case Square.h1:
+        if (castling[IntColor.WHITE][IntCastling.KINGSIDE] != IntFile.NOFILE) {
+          assert Move.getOriginPiece(move) == IntPiece.WHITEROOK;
+          castling[IntColor.WHITE][IntCastling.KINGSIDE] = IntFile.NOFILE;
+          zobristCode ^= zobristCastling[IntColor.WHITE][IntCastling.KINGSIDE];
+        }
+        break;
+      case Square.h8:
+        if (castling[IntColor.BLACK][IntCastling.KINGSIDE] != IntFile.NOFILE) {
+          assert Move.getOriginPiece(move) == IntPiece.BLACKROOK;
+          castling[IntColor.BLACK][IntCastling.KINGSIDE] = IntFile.NOFILE;
+          zobristCode ^= zobristCastling[IntColor.BLACK][IntCastling.KINGSIDE];
+        }
+        break;
+      case Square.e1:
+        if (castling[IntColor.WHITE][IntCastling.QUEENSIDE] != IntFile.NOFILE) {
+          assert Move.getOriginPiece(move) == IntPiece.WHITEKING;
+          castling[IntColor.WHITE][IntCastling.QUEENSIDE] = IntFile.NOFILE;
+          zobristCode ^= zobristCastling[IntColor.WHITE][IntCastling.QUEENSIDE];
+        }
+        if (castling[IntColor.WHITE][IntCastling.KINGSIDE] != IntFile.NOFILE) {
+          assert Move.getOriginPiece(move) == IntPiece.WHITEKING;
+          castling[IntColor.WHITE][IntCastling.KINGSIDE] = IntFile.NOFILE;
+          zobristCode ^= zobristCastling[IntColor.WHITE][IntCastling.KINGSIDE];
+        }
+        break;
+      case Square.e8:
+        if (castling[IntColor.BLACK][IntCastling.QUEENSIDE] != IntFile.NOFILE) {
+          assert Move.getOriginPiece(move) == IntPiece.BLACKKING;
+          castling[IntColor.BLACK][IntCastling.QUEENSIDE] = IntFile.NOFILE;
+          zobristCode ^= zobristCastling[IntColor.BLACK][IntCastling.QUEENSIDE];
+        }
+        if (castling[IntColor.BLACK][IntCastling.KINGSIDE] != IntFile.NOFILE) {
+          assert Move.getOriginPiece(move) == IntPiece.BLACKKING;
+          castling[IntColor.BLACK][IntCastling.KINGSIDE] = IntFile.NOFILE;
+          zobristCode ^= zobristCastling[IntColor.BLACK][IntCastling.KINGSIDE];
+        }
+        break;
+      default:
         break;
     }
 
-    // Update
-    board[originSquare] = IntPiece.NOPIECE;
-    board[targetSquare] = originPiece;
-    if (update) {
-      long[] tempZobristChessman = zobristChessman[originChessman][originColor];
-      zobristCode ^= tempZobristChessman[originSquare];
-      zobristCode ^= tempZobristChessman[targetSquare];
+    // Update en passant
+    if (enPassantSquare != Square.NOSQUARE) {
+      zobristCode ^= zobristEnPassant[enPassantSquare];
+      enPassantSquare = Square.NOSQUARE;
     }
 
-    return originPiece;
+    // Update half move clock
+    if (IntPiece.getChessman(originPiece) == IntChessman.PAWN || target != IntPiece.NOPIECE) {
+      halfMoveClock = 0;
+    } else {
+      halfMoveClock++;
+    }
   }
 
-  public GenericBoard getBoard() {
-    GenericBoard newBoard = new GenericBoard();
+  private void undoMoveNormal(int move, State entry) {
+    // Move the chessman
+    int originSquare = Move.getOriginSquare(move);
+    int targetSquare = Move.getTargetSquare(move);
+    int piece = remove(targetSquare, false);
+    put(piece, originSquare, false);
 
-    // Set chessmen
-    for (GenericColor color : GenericColor.values()) {
-      int intColor = IntColor.valueOf(color);
-
-      for (long squares = pawnList[intColor]; squares != 0; squares &= squares - 1) {
-        int square = Square.toX88Square(Long.numberOfTrailingZeros(squares));
-        assert square != Square.NOSQUARE;
-        assert IntPiece.getChessman(board[square]) == IntChessman.PAWN;
-        assert IntPiece.getColor(board[square]) == intColor;
-
-        GenericPosition genericPosition = Square.toGenericPosition(square);
-        newBoard.setPiece(GenericPiece.valueOf(color, GenericChessman.PAWN), genericPosition);
-      }
-
-      for (long squares = knightList[intColor]; squares != 0; squares &= squares - 1) {
-        int square = Square.toX88Square(Long.numberOfTrailingZeros(squares));
-        assert square != Square.NOSQUARE;
-        assert IntPiece.getChessman(board[square]) == IntChessman.KNIGHT;
-        assert IntPiece.getColor(board[square]) == intColor;
-
-        GenericPosition genericPosition = Square.toGenericPosition(square);
-        newBoard.setPiece(GenericPiece.valueOf(color, GenericChessman.KNIGHT), genericPosition);
-      }
-
-      for (long squares = bishopList[intColor]; squares != 0; squares &= squares - 1) {
-        int square = Square.toX88Square(Long.numberOfTrailingZeros(squares));
-        assert square != Square.NOSQUARE;
-        assert IntPiece.getChessman(board[square]) == IntChessman.BISHOP;
-        assert IntPiece.getColor(board[square]) == intColor;
-
-        GenericPosition genericPosition = Square.toGenericPosition(square);
-        newBoard.setPiece(GenericPiece.valueOf(color, GenericChessman.BISHOP), genericPosition);
-      }
-
-      for (long squares = rookList[intColor]; squares != 0; squares &= squares - 1) {
-        int square = Square.toX88Square(Long.numberOfTrailingZeros(squares));
-        assert square != Square.NOSQUARE;
-        assert IntPiece.getChessman(board[square]) == IntChessman.ROOK;
-        assert IntPiece.getColor(board[square]) == intColor;
-
-        GenericPosition genericPosition = Square.toGenericPosition(square);
-        newBoard.setPiece(GenericPiece.valueOf(color, GenericChessman.ROOK), genericPosition);
-      }
-
-      for (long squares = queenList[intColor]; squares != 0; squares &= squares - 1) {
-        int square = Square.toX88Square(Long.numberOfTrailingZeros(squares));
-        assert square != Square.NOSQUARE;
-        assert IntPiece.getChessman(board[square]) == IntChessman.QUEEN;
-        assert IntPiece.getColor(board[square]) == intColor;
-
-        GenericPosition genericPosition = Square.toGenericPosition(square);
-        newBoard.setPiece(GenericPiece.valueOf(color, GenericChessman.QUEEN), genericPosition);
-      }
-
-      assert Long.bitCount(kingList[intColor]) == 1;
-      int square = Square.toX88Square(Long.numberOfTrailingZeros(kingList[intColor]));
-      assert square != Square.NOSQUARE;
-      assert IntPiece.getChessman(board[square]) == IntChessman.KING;
-      assert IntPiece.getColor(board[square]) == intColor;
-
-      GenericPosition genericPosition = Square.toGenericPosition(square);
-      newBoard.setPiece(GenericPiece.valueOf(color, GenericChessman.KING), genericPosition);
+    // Restore the captured chessman
+    if (Move.getTargetPiece(move) != IntPiece.NOPIECE) {
+      put(captureHistory[--captureHistorySize], targetSquare, false);
     }
 
-    // Set active color
-    newBoard.setActiveColor(IntColor.toGenericColor(activeColor));
-
-    // Set castling
+    // Restore castling rights
     for (int color : IntColor.values) {
       for (int castling : IntCastling.values) {
-        if (this.castling[color][castling] != IntFile.NOFILE) {
-          newBoard.setCastling(IntColor.toGenericColor(color), IntCastling.toGenericCastling(castling), IntFile.toGenericFile(this.castling[color][castling]));
+        if (entry.castling[color][castling] != this.castling[color][castling]) {
+          this.castling[color][castling] = entry.castling[color][castling];
+        }
+      }
+    }
+  }
+
+  private void makeMovePawnPromotion(int move, State entry) {
+    // Remove the pawn at the origin square
+    int originSquare = Move.getOriginSquare(move);
+    int pawnPiece = remove(originSquare, true);
+    assert IntPiece.getChessman(pawnPiece) == IntChessman.PAWN;
+    int pawnColor = IntPiece.getColor(pawnPiece);
+    assert IntPiece.getChessman(pawnPiece) == IntPiece.getChessman(Move.getOriginPiece(move));
+    assert pawnColor == IntPiece.getColor(Move.getOriginPiece(move));
+
+    // Save the captured chessman
+    int targetSquare = Move.getTargetSquare(move);
+    int targetPiece;
+    if (board[targetSquare] != IntPiece.NOPIECE) {
+      // Save castling rights
+      for (int color : IntColor.values) {
+        for (int castling : IntCastling.values) {
+          entry.castling[color][castling] = this.castling[color][castling];
+        }
+      }
+
+      targetPiece = remove(targetSquare, true);
+      assert Move.getTargetPiece(move) != IntPiece.NOPIECE;
+      captureHistory[captureHistorySize++] = targetPiece;
+      captureSquare = targetSquare;
+
+      switch (targetSquare) {
+        case Square.a1:
+          if (castling[IntColor.WHITE][IntCastling.QUEENSIDE] != IntFile.NOFILE) {
+            assert targetPiece == IntPiece.WHITEROOK;
+            castling[IntColor.WHITE][IntCastling.QUEENSIDE] = IntFile.NOFILE;
+            zobristCode ^= zobristCastling[IntColor.WHITE][IntCastling.QUEENSIDE];
+          }
+          break;
+        case Square.a8:
+          if (castling[IntColor.BLACK][IntCastling.QUEENSIDE] != IntFile.NOFILE) {
+            assert targetPiece == IntPiece.BLACKROOK;
+            castling[IntColor.BLACK][IntCastling.QUEENSIDE] = IntFile.NOFILE;
+            zobristCode ^= zobristCastling[IntColor.BLACK][IntCastling.QUEENSIDE];
+          }
+          break;
+        case Square.h1:
+          if (castling[IntColor.WHITE][IntCastling.KINGSIDE] != IntFile.NOFILE) {
+            assert targetPiece == IntPiece.WHITEROOK;
+            castling[IntColor.WHITE][IntCastling.KINGSIDE] = IntFile.NOFILE;
+            zobristCode ^= zobristCastling[IntColor.WHITE][IntCastling.KINGSIDE];
+          }
+          break;
+        case Square.h8:
+          if (castling[IntColor.BLACK][IntCastling.KINGSIDE] != IntFile.NOFILE) {
+            assert targetPiece == IntPiece.BLACKROOK;
+            castling[IntColor.BLACK][IntCastling.KINGSIDE] = IntFile.NOFILE;
+            zobristCode ^= zobristCastling[IntColor.BLACK][IntCastling.KINGSIDE];
+          }
+          break;
+        default:
+          break;
+      }
+    } else {
+      captureSquare = Square.NOSQUARE;
+    }
+
+    // Create the promotion chessman
+    int promotion = Move.getPromotion(move);
+    int promotionPiece = IntPiece.valueOf(promotion, pawnColor);
+    put(promotionPiece, targetSquare, true);
+
+    // Update en passant
+    if (enPassantSquare != Square.NOSQUARE) {
+      zobristCode ^= zobristEnPassant[enPassantSquare];
+      enPassantSquare = Square.NOSQUARE;
+    }
+
+    // Update half move clock
+    halfMoveClock = 0;
+  }
+
+  private void undoMovePawnPromotion(int move, State entry) {
+    // Remove the promotion chessman at the end square
+    int targetSquare = Move.getTargetSquare(move);
+    remove(targetSquare, false);
+
+    // Restore the captured chessman
+    if (Move.getTargetPiece(move) != IntPiece.NOPIECE) {
+      put(captureHistory[--captureHistorySize], targetSquare, false);
+
+      // Restore castling rights
+      for (int color : IntColor.values) {
+        for (int castling : IntCastling.values) {
+          if (entry.castling[color][castling] != this.castling[color][castling]) {
+            this.castling[color][castling] = entry.castling[color][castling];
+          }
         }
       }
     }
 
-    // Set en passant
+    // Put the pawn at the origin square
+    put(Move.getOriginPiece(move), Move.getOriginSquare(move), false);
+  }
+
+  private void makeMovePawnDouble(int move) {
+    // Move the pawn
+    int originSquare = Move.getOriginSquare(move);
+    int targetSquare = Move.getTargetSquare(move);
+    int pawnPiece = remove(originSquare, true);
+    put(pawnPiece, targetSquare, true);
+    int pawnColor = IntPiece.getColor(pawnPiece);
+
+    assert IntPiece.getChessman(pawnPiece) == IntChessman.PAWN;
+    assert (originSquare >>> 4 == 1 && pawnColor == IntColor.WHITE) || (originSquare >>> 4 == 6 && pawnColor == IntColor.BLACK) : getBoard().toString() + ":" + Move.toString(move);
+    assert (targetSquare >>> 4 == 3 && pawnColor == IntColor.WHITE) || (targetSquare >>> 4 == 4 && pawnColor == IntColor.BLACK);
+    assert Math.abs(originSquare - targetSquare) == 32;
+
+    // Update the capture square
+    captureSquare = Square.NOSQUARE;
+
+    // Calculate the en passant square
+    int captureSquare;
+    if (pawnColor == IntColor.WHITE) {
+      captureSquare = targetSquare - 16;
+    } else {
+      captureSquare = targetSquare + 16;
+    }
+
+    assert (captureSquare & 0x88) == 0;
+    assert Math.abs(originSquare - captureSquare) == 16;
+
+    // Update en passant
     if (enPassantSquare != Square.NOSQUARE) {
-      newBoard.setEnPassant(Square.toGenericPosition(enPassantSquare));
+      zobristCode ^= zobristEnPassant[enPassantSquare];
     }
 
-    // Set half move clock
-    newBoard.setHalfMoveClock(halfMoveClock);
+    enPassantSquare = captureSquare;
+    zobristCode ^= zobristEnPassant[captureSquare];
 
-    // Set full move number
-    newBoard.setFullMoveNumber(getFullMoveNumber());
-
-    return newBoard;
+    // Update half move clock
+    halfMoveClock = 0;
   }
 
-  public int getFullMoveNumber() {
-    return halfMoveNumber / 2;
+  private void undoMovePawnDouble(int move) {
+    // Move the pawn
+    int piece = remove(Move.getTargetSquare(move), false);
+    put(piece, Move.getOriginSquare(move), false);
   }
 
-  private void setFullMoveNumber(int fullMoveNumber) {
-    assert fullMoveNumber > 0;
+  private void makeMoveCastling(int move, State entry) {
+    // Save castling rights
+    for (int color : IntColor.values) {
+      for (int castling : IntCastling.values) {
+        entry.castling[color][castling] = this.castling[color][castling];
+      }
+    }
 
-    halfMoveNumber = fullMoveNumber * 2;
-    if (activeColor == IntColor.valueOf(GenericColor.BLACK)) {
-      halfMoveNumber++;
+    // Move the king
+    int kingOriginSquare = Move.getOriginSquare(move);
+    int kingTargetSquare = Move.getTargetSquare(move);
+    int king = remove(kingOriginSquare, true);
+    put(king, kingTargetSquare, true);
+    assert IntPiece.getChessman(king) == IntChessman.KING;
+
+    // Get the rook squares
+    int rookOriginSquare;
+    int rookTargetSquare;
+    switch (kingTargetSquare) {
+      case Square.g1:
+        rookOriginSquare = Square.h1;
+        rookTargetSquare = Square.f1;
+        if (castling[IntColor.WHITE][IntCastling.QUEENSIDE] != IntFile.NOFILE) {
+          castling[IntColor.WHITE][IntCastling.QUEENSIDE] = IntFile.NOFILE;
+          zobristCode ^= zobristCastling[IntColor.WHITE][IntCastling.QUEENSIDE];
+        }
+        if (castling[IntColor.WHITE][IntCastling.KINGSIDE] != IntFile.NOFILE) {
+          castling[IntColor.WHITE][IntCastling.KINGSIDE] = IntFile.NOFILE;
+          zobristCode ^= zobristCastling[IntColor.WHITE][IntCastling.KINGSIDE];
+        }
+        break;
+      case Square.c1:
+        rookOriginSquare = Square.a1;
+        rookTargetSquare = Square.d1;
+        if (castling[IntColor.WHITE][IntCastling.QUEENSIDE] != IntFile.NOFILE) {
+          castling[IntColor.WHITE][IntCastling.QUEENSIDE] = IntFile.NOFILE;
+          zobristCode ^= zobristCastling[IntColor.WHITE][IntCastling.QUEENSIDE];
+        }
+        if (castling[IntColor.WHITE][IntCastling.KINGSIDE] != IntFile.NOFILE) {
+          castling[IntColor.WHITE][IntCastling.KINGSIDE] = IntFile.NOFILE;
+          zobristCode ^= zobristCastling[IntColor.WHITE][IntCastling.KINGSIDE];
+        }
+        break;
+      case Square.g8:
+        rookOriginSquare = Square.h8;
+        rookTargetSquare = Square.f8;
+        if (castling[IntColor.BLACK][IntCastling.QUEENSIDE] != IntFile.NOFILE) {
+          castling[IntColor.BLACK][IntCastling.QUEENSIDE] = IntFile.NOFILE;
+          zobristCode ^= zobristCastling[IntColor.BLACK][IntCastling.QUEENSIDE];
+        }
+        if (castling[IntColor.BLACK][IntCastling.KINGSIDE] != IntFile.NOFILE) {
+          castling[IntColor.BLACK][IntCastling.KINGSIDE] = IntFile.NOFILE;
+          zobristCode ^= zobristCastling[IntColor.BLACK][IntCastling.KINGSIDE];
+        }
+        break;
+      case Square.c8:
+        rookOriginSquare = Square.a8;
+        rookTargetSquare = Square.d8;
+        if (castling[IntColor.BLACK][IntCastling.QUEENSIDE] != IntFile.NOFILE) {
+          castling[IntColor.BLACK][IntCastling.QUEENSIDE] = IntFile.NOFILE;
+          zobristCode ^= zobristCastling[IntColor.BLACK][IntCastling.QUEENSIDE];
+        }
+        if (castling[IntColor.BLACK][IntCastling.KINGSIDE] != IntFile.NOFILE) {
+          castling[IntColor.BLACK][IntCastling.KINGSIDE] = IntFile.NOFILE;
+          zobristCode ^= zobristCastling[IntColor.BLACK][IntCastling.KINGSIDE];
+        }
+        break;
+      default:
+        throw new IllegalArgumentException();
+    }
+
+    // Move the rook
+    int rook = remove(rookOriginSquare, true);
+    put(rook, rookTargetSquare, true);
+    assert IntPiece.getChessman(rook) == IntChessman.ROOK;
+
+    // Update the capture square
+    captureSquare = Square.NOSQUARE;
+
+    // Update en passant
+    if (enPassantSquare != Square.NOSQUARE) {
+      zobristCode ^= zobristEnPassant[enPassantSquare];
+      enPassantSquare = Square.NOSQUARE;
+    }
+
+    // Update half move clock
+    halfMoveClock++;
+  }
+
+  private void undoMoveCastling(int move, State entry) {
+    int kingTargetSquare = Move.getTargetSquare(move);
+
+    // Get the rook squares
+    int rookOriginSquare;
+    int rookTargetSquare;
+    switch (kingTargetSquare) {
+      case Square.g1:
+        rookOriginSquare = Square.h1;
+        rookTargetSquare = Square.f1;
+        break;
+      case Square.c1:
+        rookOriginSquare = Square.a1;
+        rookTargetSquare = Square.d1;
+        break;
+      case Square.g8:
+        rookOriginSquare = Square.h8;
+        rookTargetSquare = Square.f8;
+        break;
+      case Square.c8:
+        rookOriginSquare = Square.a8;
+        rookTargetSquare = Square.d8;
+        break;
+      default:
+        throw new IllegalArgumentException();
+    }
+
+    // Move the rook
+    int rook = remove(rookTargetSquare, false);
+    put(rook, rookOriginSquare, false);
+
+    // Move the king
+    int king = remove(kingTargetSquare, false);
+    put(king, Move.getOriginSquare(move), false);
+
+    // Restore the castling rights
+    for (int color : IntColor.values) {
+      for (int castling : IntCastling.values) {
+        if (entry.castling[color][castling] != this.castling[color][castling]) {
+          this.castling[color][castling] = entry.castling[color][castling];
+        }
+      }
     }
   }
 
-  /**
-   * Returns whether this board state is a repetition.
-   *
-   * @return true if this board state is a repetition, false otherwise.
-   */
-  public boolean isRepetition() {
-    return repetitionTable.exists(zobristCode);
+  private void makeMoveEnPassant(int move) {
+    // Move the pawn
+    int originSquare = Move.getOriginSquare(move);
+    int targetSquare = Move.getTargetSquare(move);
+    int pawn = remove(originSquare, true);
+    put(pawn, targetSquare, true);
+    assert IntPiece.getChessman(pawn) == IntChessman.PAWN;
+    int pawnColor = IntPiece.getColor(pawn);
+
+    // Calculate the en passant square
+    int captureSquare;
+    if (pawnColor == IntColor.WHITE) {
+      captureSquare = targetSquare - 16;
+    } else {
+      assert pawnColor == IntColor.BLACK;
+
+      captureSquare = targetSquare + 16;
+    }
+
+    // Remove the captured pawn
+    int target = remove(captureSquare, true);
+    assert Move.getTargetPiece(move) != IntPiece.NOPIECE;
+    assert IntPiece.getChessman(target) == IntChessman.PAWN;
+    assert IntPiece.getColor(target) == IntColor.opposite(pawnColor);
+    captureHistory[captureHistorySize++] = target;
+
+    // Update the capture square
+    // This is the target square of the move, not the en passant square
+    this.captureSquare = targetSquare;
+
+    // Update en passant
+    if (enPassantSquare != Square.NOSQUARE) {
+      zobristCode ^= zobristEnPassant[enPassantSquare];
+      enPassantSquare = Square.NOSQUARE;
+    }
+
+    // Update half move clock
+    halfMoveClock = 0;
+  }
+
+  private void undoMoveEnPassant(int move) {
+    // Move the pawn
+    int targetSquare = Move.getTargetSquare(move);
+    int pawnPiece = remove(targetSquare, false);
+    put(pawnPiece, Move.getOriginSquare(move), false);
+
+    // Calculate the en passant square
+    int captureSquare;
+    if (IntPiece.getColor(pawnPiece) == IntColor.WHITE) {
+      captureSquare = targetSquare - 16;
+    } else {
+      assert IntPiece.getColor(pawnPiece) == IntColor.BLACK;
+
+      captureSquare = targetSquare + 16;
+    }
+
+    // Restore the captured pawn
+    put(captureHistory[--captureHistorySize], captureSquare, false);
+  }
+
+  private void makeMoveNull() {
+    // Update the capture square
+    captureSquare = Square.NOSQUARE;
+
+    // Update en passant
+    if (enPassantSquare != Square.NOSQUARE) {
+      zobristCode ^= zobristEnPassant[enPassantSquare];
+      enPassantSquare = Square.NOSQUARE;
+    }
+
+    // Update half move clock
+    halfMoveClock++;
   }
 
   /**
@@ -939,617 +1493,6 @@ public final class Board {
     }
 
     return square == targetSquare;
-  }
-
-  public void makeMove(int move) {
-    // Get current stack entry
-    StackEntry currentStackEntry = stack[stackSize];
-
-    // Save history
-    currentStackEntry.zobristCode = zobristCode;
-    currentStackEntry.pawnZobristCode = pawnZobristCode;
-    currentStackEntry.halfMoveClock = halfMoveClock;
-    currentStackEntry.enPassant = enPassantSquare;
-    currentStackEntry.captureSquare = captureSquare;
-
-    int type = Move.getType(move);
-
-    switch (type) {
-      case Move.Type.NORMAL:
-        repetitionTable.put(zobristCode);
-        makeMoveNormal(move, currentStackEntry);
-        break;
-      case Move.Type.PAWNDOUBLE:
-        repetitionTable.put(zobristCode);
-        makeMovePawnDouble(move);
-        break;
-      case Move.Type.PAWNPROMOTION:
-        repetitionTable.put(zobristCode);
-        makeMovePawnPromotion(move, currentStackEntry);
-        break;
-      case Move.Type.ENPASSANT:
-        repetitionTable.put(zobristCode);
-        makeMoveEnPassant(move);
-        break;
-      case Move.Type.CASTLING:
-        repetitionTable.put(zobristCode);
-        makeMoveCastling(move, currentStackEntry);
-        break;
-      case Move.Type.NULL:
-        makeMoveNull();
-        break;
-      default:
-        throw new IllegalArgumentException();
-    }
-
-    // Update half move number
-    halfMoveNumber++;
-
-    // Update active color
-    activeColor = IntColor.opposite(activeColor);
-    zobristCode ^= zobristActiveColor;
-    pawnZobristCode ^= zobristActiveColor;
-
-    // Update attack list
-    attackHistorySize++;
-    attackHistory[attackHistorySize][IntColor.WHITE].count = Attack.NOATTACK;
-    attackHistory[attackHistorySize][IntColor.BLACK].count = Attack.NOATTACK;
-
-    // Update stack size
-    stackSize++;
-    assert stackSize < STACKSIZE;
-  }
-
-  public void undoMove(int move) {
-    int type = Move.getType(move);
-
-    // Update attack list
-    attackHistorySize--;
-
-    // Update active color
-    activeColor = IntColor.opposite(activeColor);
-
-    // Update half move number
-    halfMoveNumber--;
-
-    // Update stack size
-    stackSize--;
-    assert stackSize >= 0;
-
-    // Get current stack entry
-    StackEntry currentStackEntry = stack[stackSize];
-
-    // Restore zobrist history
-    zobristCode = currentStackEntry.zobristCode;
-    pawnZobristCode = currentStackEntry.pawnZobristCode;
-    halfMoveClock = currentStackEntry.halfMoveClock;
-    enPassantSquare = currentStackEntry.enPassant;
-    captureSquare = currentStackEntry.captureSquare;
-
-    switch (type) {
-      case Move.Type.NORMAL:
-        undoMoveNormal(move, currentStackEntry);
-        repetitionTable.remove(zobristCode);
-        break;
-      case Move.Type.PAWNDOUBLE:
-        undoMovePawnDouble(move);
-        repetitionTable.remove(zobristCode);
-        break;
-      case Move.Type.PAWNPROMOTION:
-        undoMovePawnPromotion(move, currentStackEntry);
-        repetitionTable.remove(zobristCode);
-        break;
-      case Move.Type.ENPASSANT:
-        undoMoveEnPassant(move);
-        repetitionTable.remove(zobristCode);
-        break;
-      case Move.Type.CASTLING:
-        undoMoveCastling(move, currentStackEntry);
-        repetitionTable.remove(zobristCode);
-        break;
-      case Move.Type.NULL:
-        break;
-      default:
-        throw new IllegalArgumentException();
-    }
-  }
-
-  private void makeMoveNormal(int move, StackEntry entry) {
-    // Save castling rights
-    for (int color : IntColor.values) {
-      for (int castling : IntCastling.values) {
-        entry.castling[color][castling] = this.castling[color][castling];
-      }
-    }
-
-    // Save the captured chessman
-    int targetSquare = Move.getTargetSquare(move);
-    int target = IntPiece.NOPIECE;
-    if (board[targetSquare] != IntPiece.NOPIECE) {
-      target = remove(targetSquare, true);
-      assert Move.getTargetPiece(move) != IntPiece.NOPIECE : Move.toString(move);
-      captureHistory[captureHistorySize++] = target;
-      captureSquare = targetSquare;
-
-      switch (targetSquare) {
-        case Square.a1:
-          if (castling[IntColor.WHITE][IntCastling.QUEENSIDE] != IntFile.NOFILE) {
-            assert target == IntPiece.WHITEROOK;
-            castling[IntColor.WHITE][IntCastling.QUEENSIDE] = IntFile.NOFILE;
-            zobristCode ^= zobristCastling[IntColor.WHITE][IntCastling.QUEENSIDE];
-          }
-          break;
-        case Square.a8:
-          if (castling[IntColor.BLACK][IntCastling.QUEENSIDE] != IntFile.NOFILE) {
-            assert target == IntPiece.BLACKROOK;
-            castling[IntColor.BLACK][IntCastling.QUEENSIDE] = IntFile.NOFILE;
-            zobristCode ^= zobristCastling[IntColor.BLACK][IntCastling.QUEENSIDE];
-          }
-          break;
-        case Square.h1:
-          if (castling[IntColor.WHITE][IntCastling.KINGSIDE] != IntFile.NOFILE) {
-            assert target == IntPiece.WHITEROOK;
-            castling[IntColor.WHITE][IntCastling.KINGSIDE] = IntFile.NOFILE;
-            zobristCode ^= zobristCastling[IntColor.WHITE][IntCastling.KINGSIDE];
-          }
-          break;
-        case Square.h8:
-          if (castling[IntColor.BLACK][IntCastling.KINGSIDE] != IntFile.NOFILE) {
-            assert target == IntPiece.BLACKROOK;
-            castling[IntColor.BLACK][IntCastling.KINGSIDE] = IntFile.NOFILE;
-            zobristCode ^= zobristCastling[IntColor.BLACK][IntCastling.KINGSIDE];
-          }
-          break;
-        default:
-          break;
-      }
-    } else {
-      captureSquare = Square.NOSQUARE;
-    }
-
-    // Move the piece
-    int originSquare = Move.getOriginSquare(move);
-    int originPiece = move(originSquare, targetSquare, true);
-
-    // Update castling
-    switch (originSquare) {
-      case Square.a1:
-        if (castling[IntColor.WHITE][IntCastling.QUEENSIDE] != IntFile.NOFILE) {
-          assert Move.getOriginPiece(move) == IntPiece.WHITEROOK;
-          castling[IntColor.WHITE][IntCastling.QUEENSIDE] = IntFile.NOFILE;
-          zobristCode ^= zobristCastling[IntColor.WHITE][IntCastling.QUEENSIDE];
-        }
-        break;
-      case Square.a8:
-        if (castling[IntColor.BLACK][IntCastling.QUEENSIDE] != IntFile.NOFILE) {
-          assert Move.getOriginPiece(move) == IntPiece.BLACKROOK;
-          castling[IntColor.BLACK][IntCastling.QUEENSIDE] = IntFile.NOFILE;
-          zobristCode ^= zobristCastling[IntColor.BLACK][IntCastling.QUEENSIDE];
-        }
-        break;
-      case Square.h1:
-        if (castling[IntColor.WHITE][IntCastling.KINGSIDE] != IntFile.NOFILE) {
-          assert Move.getOriginPiece(move) == IntPiece.WHITEROOK;
-          castling[IntColor.WHITE][IntCastling.KINGSIDE] = IntFile.NOFILE;
-          zobristCode ^= zobristCastling[IntColor.WHITE][IntCastling.KINGSIDE];
-        }
-        break;
-      case Square.h8:
-        if (castling[IntColor.BLACK][IntCastling.KINGSIDE] != IntFile.NOFILE) {
-          assert Move.getOriginPiece(move) == IntPiece.BLACKROOK;
-          castling[IntColor.BLACK][IntCastling.KINGSIDE] = IntFile.NOFILE;
-          zobristCode ^= zobristCastling[IntColor.BLACK][IntCastling.KINGSIDE];
-        }
-        break;
-      case Square.e1:
-        if (castling[IntColor.WHITE][IntCastling.QUEENSIDE] != IntFile.NOFILE) {
-          assert Move.getOriginPiece(move) == IntPiece.WHITEKING;
-          castling[IntColor.WHITE][IntCastling.QUEENSIDE] = IntFile.NOFILE;
-          zobristCode ^= zobristCastling[IntColor.WHITE][IntCastling.QUEENSIDE];
-        }
-        if (castling[IntColor.WHITE][IntCastling.KINGSIDE] != IntFile.NOFILE) {
-          assert Move.getOriginPiece(move) == IntPiece.WHITEKING;
-          castling[IntColor.WHITE][IntCastling.KINGSIDE] = IntFile.NOFILE;
-          zobristCode ^= zobristCastling[IntColor.WHITE][IntCastling.KINGSIDE];
-        }
-        break;
-      case Square.e8:
-        if (castling[IntColor.BLACK][IntCastling.QUEENSIDE] != IntFile.NOFILE) {
-          assert Move.getOriginPiece(move) == IntPiece.BLACKKING;
-          castling[IntColor.BLACK][IntCastling.QUEENSIDE] = IntFile.NOFILE;
-          zobristCode ^= zobristCastling[IntColor.BLACK][IntCastling.QUEENSIDE];
-        }
-        if (castling[IntColor.BLACK][IntCastling.KINGSIDE] != IntFile.NOFILE) {
-          assert Move.getOriginPiece(move) == IntPiece.BLACKKING;
-          castling[IntColor.BLACK][IntCastling.KINGSIDE] = IntFile.NOFILE;
-          zobristCode ^= zobristCastling[IntColor.BLACK][IntCastling.KINGSIDE];
-        }
-        break;
-      default:
-        break;
-    }
-
-    // Update en passant
-    if (enPassantSquare != Square.NOSQUARE) {
-      zobristCode ^= zobristEnPassant[enPassantSquare];
-      enPassantSquare = Square.NOSQUARE;
-    }
-
-    // Update half move clock
-    if (IntPiece.getChessman(originPiece) == IntChessman.PAWN || target != IntPiece.NOPIECE) {
-      halfMoveClock = 0;
-    } else {
-      halfMoveClock++;
-    }
-  }
-
-  private void undoMoveNormal(int move, StackEntry entry) {
-    // Move the chessman
-    int originSquare = Move.getOriginSquare(move);
-    int targetSquare = Move.getTargetSquare(move);
-    move(targetSquare, originSquare, false);
-
-    // Restore the captured chessman
-    if (Move.getTargetPiece(move) != IntPiece.NOPIECE) {
-      put(captureHistory[--captureHistorySize], targetSquare, false);
-    }
-
-    // Restore castling rights
-    for (int color : IntColor.values) {
-      for (int castling : IntCastling.values) {
-        if (entry.castling[color][castling] != this.castling[color][castling]) {
-          this.castling[color][castling] = entry.castling[color][castling];
-        }
-      }
-    }
-  }
-
-  private void makeMovePawnPromotion(int move, StackEntry entry) {
-    // Remove the pawn at the origin square
-    int originSquare = Move.getOriginSquare(move);
-    int pawnPiece = remove(originSquare, true);
-    assert IntPiece.getChessman(pawnPiece) == IntChessman.PAWN;
-    int pawnColor = IntPiece.getColor(pawnPiece);
-    assert IntPiece.getChessman(pawnPiece) == IntPiece.getChessman(Move.getOriginPiece(move));
-    assert pawnColor == IntPiece.getColor(Move.getOriginPiece(move));
-
-    // Save the captured chessman
-    int targetSquare = Move.getTargetSquare(move);
-    int targetPiece;
-    if (board[targetSquare] != IntPiece.NOPIECE) {
-      // Save castling rights
-      for (int color : IntColor.values) {
-        for (int castling : IntCastling.values) {
-          entry.castling[color][castling] = this.castling[color][castling];
-        }
-      }
-
-      targetPiece = remove(targetSquare, true);
-      assert Move.getTargetPiece(move) != IntPiece.NOPIECE;
-      captureHistory[captureHistorySize++] = targetPiece;
-      captureSquare = targetSquare;
-
-      switch (targetSquare) {
-        case Square.a1:
-          if (castling[IntColor.WHITE][IntCastling.QUEENSIDE] != IntFile.NOFILE) {
-            assert targetPiece == IntPiece.WHITEROOK;
-            castling[IntColor.WHITE][IntCastling.QUEENSIDE] = IntFile.NOFILE;
-            zobristCode ^= zobristCastling[IntColor.WHITE][IntCastling.QUEENSIDE];
-          }
-          break;
-        case Square.a8:
-          if (castling[IntColor.BLACK][IntCastling.QUEENSIDE] != IntFile.NOFILE) {
-            assert targetPiece == IntPiece.BLACKROOK;
-            castling[IntColor.BLACK][IntCastling.QUEENSIDE] = IntFile.NOFILE;
-            zobristCode ^= zobristCastling[IntColor.BLACK][IntCastling.QUEENSIDE];
-          }
-          break;
-        case Square.h1:
-          if (castling[IntColor.WHITE][IntCastling.KINGSIDE] != IntFile.NOFILE) {
-            assert targetPiece == IntPiece.WHITEROOK;
-            castling[IntColor.WHITE][IntCastling.KINGSIDE] = IntFile.NOFILE;
-            zobristCode ^= zobristCastling[IntColor.WHITE][IntCastling.KINGSIDE];
-          }
-          break;
-        case Square.h8:
-          if (castling[IntColor.BLACK][IntCastling.KINGSIDE] != IntFile.NOFILE) {
-            assert targetPiece == IntPiece.BLACKROOK;
-            castling[IntColor.BLACK][IntCastling.KINGSIDE] = IntFile.NOFILE;
-            zobristCode ^= zobristCastling[IntColor.BLACK][IntCastling.KINGSIDE];
-          }
-          break;
-        default:
-          break;
-      }
-    } else {
-      captureSquare = Square.NOSQUARE;
-    }
-
-    // Create the promotion chessman
-    int promotion = Move.getPromotion(move);
-    int promotionPiece = IntPiece.valueOf(promotion, pawnColor);
-    put(promotionPiece, targetSquare, true);
-
-    // Update en passant
-    if (enPassantSquare != Square.NOSQUARE) {
-      zobristCode ^= zobristEnPassant[enPassantSquare];
-      enPassantSquare = Square.NOSQUARE;
-    }
-
-    // Update half move clock
-    halfMoveClock = 0;
-  }
-
-  private void undoMovePawnPromotion(int move, StackEntry entry) {
-    // Remove the promotion chessman at the end square
-    int targetSquare = Move.getTargetSquare(move);
-    remove(targetSquare, false);
-
-    // Restore the captured chessman
-    if (Move.getTargetPiece(move) != IntPiece.NOPIECE) {
-      put(captureHistory[--captureHistorySize], targetSquare, false);
-
-      // Restore castling rights
-      for (int color : IntColor.values) {
-        for (int castling : IntCastling.values) {
-          if (entry.castling[color][castling] != this.castling[color][castling]) {
-            this.castling[color][castling] = entry.castling[color][castling];
-          }
-        }
-      }
-    }
-
-    // Put the pawn at the origin square
-    put(Move.getOriginPiece(move), Move.getOriginSquare(move), false);
-  }
-
-  private void makeMovePawnDouble(int move) {
-    // Move the pawn
-    int originSquare = Move.getOriginSquare(move);
-    int targetSquare = Move.getTargetSquare(move);
-    int pawnPiece = move(originSquare, targetSquare, true);
-    int pawnColor = IntPiece.getColor(pawnPiece);
-
-    assert IntPiece.getChessman(pawnPiece) == IntChessman.PAWN;
-    assert (originSquare >>> 4 == 1 && pawnColor == IntColor.WHITE) || (originSquare >>> 4 == 6 && pawnColor == IntColor.BLACK) : getBoard().toString() + ":" + Move.toString(move);
-    assert (targetSquare >>> 4 == 3 && pawnColor == IntColor.WHITE) || (targetSquare >>> 4 == 4 && pawnColor == IntColor.BLACK);
-    assert Math.abs(originSquare - targetSquare) == 32;
-
-    // Update the capture square
-    captureSquare = Square.NOSQUARE;
-
-    // Calculate the en passant square
-    int captureSquare;
-    if (pawnColor == IntColor.WHITE) {
-      captureSquare = targetSquare - 16;
-    } else {
-      captureSquare = targetSquare + 16;
-    }
-
-    assert (captureSquare & 0x88) == 0;
-    assert Math.abs(originSquare - captureSquare) == 16;
-
-    // Update en passant
-    if (enPassantSquare != Square.NOSQUARE) {
-      zobristCode ^= zobristEnPassant[enPassantSquare];
-    }
-
-    enPassantSquare = captureSquare;
-    zobristCode ^= zobristEnPassant[captureSquare];
-
-    // Update half move clock
-    halfMoveClock = 0;
-  }
-
-  private void undoMovePawnDouble(int move) {
-    // Move the pawn
-    move(Move.getTargetSquare(move), Move.getOriginSquare(move), false);
-  }
-
-  private void makeMoveCastling(int move, StackEntry entry) {
-    // Save castling rights
-    for (int color : IntColor.values) {
-      for (int castling : IntCastling.values) {
-        entry.castling[color][castling] = this.castling[color][castling];
-      }
-    }
-
-    // Move the king
-    int kingOriginSquare = Move.getOriginSquare(move);
-    int kingTargetSquare = Move.getTargetSquare(move);
-    int king = move(kingOriginSquare, kingTargetSquare, true);
-    assert IntPiece.getChessman(king) == IntChessman.KING;
-
-    // Get the rook squares
-    int rookOriginSquare;
-    int rookTargetSquare;
-    switch (kingTargetSquare) {
-      case Square.g1:
-        rookOriginSquare = Square.h1;
-        rookTargetSquare = Square.f1;
-        if (castling[IntColor.WHITE][IntCastling.QUEENSIDE] != IntFile.NOFILE) {
-          castling[IntColor.WHITE][IntCastling.QUEENSIDE] = IntFile.NOFILE;
-          zobristCode ^= zobristCastling[IntColor.WHITE][IntCastling.QUEENSIDE];
-        }
-        if (castling[IntColor.WHITE][IntCastling.KINGSIDE] != IntFile.NOFILE) {
-          castling[IntColor.WHITE][IntCastling.KINGSIDE] = IntFile.NOFILE;
-          zobristCode ^= zobristCastling[IntColor.WHITE][IntCastling.KINGSIDE];
-        }
-        break;
-      case Square.c1:
-        rookOriginSquare = Square.a1;
-        rookTargetSquare = Square.d1;
-        if (castling[IntColor.WHITE][IntCastling.QUEENSIDE] != IntFile.NOFILE) {
-          castling[IntColor.WHITE][IntCastling.QUEENSIDE] = IntFile.NOFILE;
-          zobristCode ^= zobristCastling[IntColor.WHITE][IntCastling.QUEENSIDE];
-        }
-        if (castling[IntColor.WHITE][IntCastling.KINGSIDE] != IntFile.NOFILE) {
-          castling[IntColor.WHITE][IntCastling.KINGSIDE] = IntFile.NOFILE;
-          zobristCode ^= zobristCastling[IntColor.WHITE][IntCastling.KINGSIDE];
-        }
-        break;
-      case Square.g8:
-        rookOriginSquare = Square.h8;
-        rookTargetSquare = Square.f8;
-        if (castling[IntColor.BLACK][IntCastling.QUEENSIDE] != IntFile.NOFILE) {
-          castling[IntColor.BLACK][IntCastling.QUEENSIDE] = IntFile.NOFILE;
-          zobristCode ^= zobristCastling[IntColor.BLACK][IntCastling.QUEENSIDE];
-        }
-        if (castling[IntColor.BLACK][IntCastling.KINGSIDE] != IntFile.NOFILE) {
-          castling[IntColor.BLACK][IntCastling.KINGSIDE] = IntFile.NOFILE;
-          zobristCode ^= zobristCastling[IntColor.BLACK][IntCastling.KINGSIDE];
-        }
-        break;
-      case Square.c8:
-        rookOriginSquare = Square.a8;
-        rookTargetSquare = Square.d8;
-        if (castling[IntColor.BLACK][IntCastling.QUEENSIDE] != IntFile.NOFILE) {
-          castling[IntColor.BLACK][IntCastling.QUEENSIDE] = IntFile.NOFILE;
-          zobristCode ^= zobristCastling[IntColor.BLACK][IntCastling.QUEENSIDE];
-        }
-        if (castling[IntColor.BLACK][IntCastling.KINGSIDE] != IntFile.NOFILE) {
-          castling[IntColor.BLACK][IntCastling.KINGSIDE] = IntFile.NOFILE;
-          zobristCode ^= zobristCastling[IntColor.BLACK][IntCastling.KINGSIDE];
-        }
-        break;
-      default:
-        throw new IllegalArgumentException();
-    }
-
-    // Move the rook
-    int rook = move(rookOriginSquare, rookTargetSquare, true);
-    assert IntPiece.getChessman(rook) == IntChessman.ROOK;
-
-    // Update the capture square
-    captureSquare = Square.NOSQUARE;
-
-    // Update en passant
-    if (enPassantSquare != Square.NOSQUARE) {
-      zobristCode ^= zobristEnPassant[enPassantSquare];
-      enPassantSquare = Square.NOSQUARE;
-    }
-
-    // Update half move clock
-    halfMoveClock++;
-  }
-
-  private void undoMoveCastling(int move, StackEntry entry) {
-    int kingTargetSquare = Move.getTargetSquare(move);
-
-    // Get the rook squares
-    int rookOriginSquare;
-    int rookTargetSquare;
-    switch (kingTargetSquare) {
-      case Square.g1:
-        rookOriginSquare = Square.h1;
-        rookTargetSquare = Square.f1;
-        break;
-      case Square.c1:
-        rookOriginSquare = Square.a1;
-        rookTargetSquare = Square.d1;
-        break;
-      case Square.g8:
-        rookOriginSquare = Square.h8;
-        rookTargetSquare = Square.f8;
-        break;
-      case Square.c8:
-        rookOriginSquare = Square.a8;
-        rookTargetSquare = Square.d8;
-        break;
-      default:
-        throw new IllegalArgumentException();
-    }
-
-    // Move the rook
-    move(rookTargetSquare, rookOriginSquare, false);
-
-    // Move the king
-    move(kingTargetSquare, Move.getOriginSquare(move), false);
-
-    // Restore the castling rights
-    for (int color : IntColor.values) {
-      for (int castling : IntCastling.values) {
-        if (entry.castling[color][castling] != this.castling[color][castling]) {
-          this.castling[color][castling] = entry.castling[color][castling];
-        }
-      }
-    }
-  }
-
-  private void makeMoveEnPassant(int move) {
-    // Move the pawn
-    int originSquare = Move.getOriginSquare(move);
-    int targetSquare = Move.getTargetSquare(move);
-    int pawn = move(originSquare, targetSquare, true);
-    assert IntPiece.getChessman(pawn) == IntChessman.PAWN;
-    int pawnColor = IntPiece.getColor(pawn);
-
-    // Calculate the en passant square
-    int captureSquare;
-    if (pawnColor == IntColor.WHITE) {
-      captureSquare = targetSquare - 16;
-    } else {
-      assert pawnColor == IntColor.BLACK;
-
-      captureSquare = targetSquare + 16;
-    }
-
-    // Remove the captured pawn
-    int target = remove(captureSquare, true);
-    assert Move.getTargetPiece(move) != IntPiece.NOPIECE;
-    assert IntPiece.getChessman(target) == IntChessman.PAWN;
-    assert IntPiece.getColor(target) == IntColor.opposite(pawnColor);
-    captureHistory[captureHistorySize++] = target;
-
-    // Update the capture square
-    // This is the target square of the move, not the en passant square
-    this.captureSquare = targetSquare;
-
-    // Update en passant
-    if (enPassantSquare != Square.NOSQUARE) {
-      zobristCode ^= zobristEnPassant[enPassantSquare];
-      enPassantSquare = Square.NOSQUARE;
-    }
-
-    // Update half move clock
-    halfMoveClock = 0;
-  }
-
-  private void undoMoveEnPassant(int move) {
-    // Move the pawn
-    int targetSquare = Move.getTargetSquare(move);
-    int pawnPiece = move(targetSquare, Move.getOriginSquare(move), false);
-
-    // Calculate the en passant square
-    int captureSquare;
-    if (IntPiece.getColor(pawnPiece) == IntColor.WHITE) {
-      captureSquare = targetSquare - 16;
-    } else {
-      assert IntPiece.getColor(pawnPiece) == IntColor.BLACK;
-
-      captureSquare = targetSquare + 16;
-    }
-
-    // Restore the captured pawn
-    put(captureHistory[--captureHistorySize], captureSquare, false);
-  }
-
-  private void makeMoveNull() {
-    // Update the capture square
-    captureSquare = Square.NOSQUARE;
-
-    // Update en passant
-    if (enPassantSquare != Square.NOSQUARE) {
-      zobristCode ^= zobristEnPassant[enPassantSquare];
-      enPassantSquare = Square.NOSQUARE;
-    }
-
-    // Update half move clock
-    halfMoveClock++;
-  }
-
-  public String toString() {
-    return getBoard().toString();
   }
 
 }

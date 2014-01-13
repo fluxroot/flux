@@ -25,7 +25,7 @@ import com.fluxchess.jcpi.models.IntColor;
 import com.fluxchess.jcpi.models.IntFile;
 import com.fluxchess.jcpi.models.IntPiece;
 
-public final class KingEvaluation {
+final class KingEvaluation {
 
   private static final byte MASK_ATTACKERS = 31;
   private static final int EVAL_KING_ATTACK = 40;
