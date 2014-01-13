@@ -20,7 +20,7 @@ package com.fluxchess.flux.board;
 
 import com.fluxchess.flux.search.Search;
 
-public final class RepetitionTable {
+final class RepetitionTable {
 
   private static final int MAXSIZE = Search.MAX_MOVES;
 

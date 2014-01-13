@@ -24,7 +24,7 @@ import com.fluxchess.flux.board.Square;
 import com.fluxchess.jcpi.models.IntColor;
 import com.fluxchess.jcpi.models.IntPiece;
 
-public final class QueenEvaluation {
+final class QueenEvaluation {
 
   public static int EVAL_QUEEN_MOBILITY_BASE = -13;
   public static int EVAL_QUEEN_MOBILITYFACTOR_OPENING = 1;

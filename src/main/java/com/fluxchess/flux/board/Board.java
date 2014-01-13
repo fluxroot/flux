@@ -54,7 +54,7 @@ public final class Board {
   public final long[] kingList = new long[IntColor.values.length];
 
   // Board stack
-  private final StackEntry[] stack = new StackEntry[STACKSIZE];
+  private final State[] stack = new State[STACKSIZE];
   private int stackSize = 0;
 
   // Zobrist code
@@ -91,7 +91,7 @@ public final class Board {
   private int attackHistorySize = 0;
   private final Attack tempAttack = new Attack();
 
-  private final class StackEntry {
+  private final class State {
     public long zobristCode = 0;
     public long pawnZobristCode = 0;
     public final int[][] castling = new int[IntColor.values.length][IntCastling.values.length];
@@ -99,7 +99,7 @@ public final class Board {
     public int enPassant = Square.NOSQUARE;
     public int captureSquare = Square.NOSQUARE;
 
-    public StackEntry() {
+    public State() {
       for (int color : IntColor.values) {
         for (int castling : IntCastling.values) {
           this.castling[color][castling] = IntFile.NOFILE;
@@ -135,7 +135,7 @@ public final class Board {
     repetitionTable = new RepetitionTable();
 
     for (int i = 0; i < stack.length; i++) {
-      stack[i] = new StackEntry();
+      stack[i] = new State();
     }
 
     // Initialize the attack list
@@ -943,21 +943,21 @@ public final class Board {
 
   public void makeMove(int move) {
     // Get current stack entry
-    StackEntry currentStackEntry = stack[stackSize];
+    State currentState = stack[stackSize];
 
     // Save history
-    currentStackEntry.zobristCode = zobristCode;
-    currentStackEntry.pawnZobristCode = pawnZobristCode;
-    currentStackEntry.halfMoveClock = halfMoveClock;
-    currentStackEntry.enPassant = enPassantSquare;
-    currentStackEntry.captureSquare = captureSquare;
+    currentState.zobristCode = zobristCode;
+    currentState.pawnZobristCode = pawnZobristCode;
+    currentState.halfMoveClock = halfMoveClock;
+    currentState.enPassant = enPassantSquare;
+    currentState.captureSquare = captureSquare;
 
     int type = Move.getType(move);
 
     switch (type) {
       case Move.Type.NORMAL:
         repetitionTable.put(zobristCode);
-        makeMoveNormal(move, currentStackEntry);
+        makeMoveNormal(move, currentState);
         break;
       case Move.Type.PAWNDOUBLE:
         repetitionTable.put(zobristCode);
@@ -965,7 +965,7 @@ public final class Board {
         break;
       case Move.Type.PAWNPROMOTION:
         repetitionTable.put(zobristCode);
-        makeMovePawnPromotion(move, currentStackEntry);
+        makeMovePawnPromotion(move, currentState);
         break;
       case Move.Type.ENPASSANT:
         repetitionTable.put(zobristCode);
@@ -973,7 +973,7 @@ public final class Board {
         break;
       case Move.Type.CASTLING:
         repetitionTable.put(zobristCode);
-        makeMoveCastling(move, currentStackEntry);
+        makeMoveCastling(move, currentState);
         break;
       case Move.Type.NULL:
         makeMoveNull();
@@ -1017,18 +1017,18 @@ public final class Board {
     assert stackSize >= 0;
 
     // Get current stack entry
-    StackEntry currentStackEntry = stack[stackSize];
+    State currentState = stack[stackSize];
 
     // Restore zobrist history
-    zobristCode = currentStackEntry.zobristCode;
-    pawnZobristCode = currentStackEntry.pawnZobristCode;
-    halfMoveClock = currentStackEntry.halfMoveClock;
-    enPassantSquare = currentStackEntry.enPassant;
-    captureSquare = currentStackEntry.captureSquare;
+    zobristCode = currentState.zobristCode;
+    pawnZobristCode = currentState.pawnZobristCode;
+    halfMoveClock = currentState.halfMoveClock;
+    enPassantSquare = currentState.enPassant;
+    captureSquare = currentState.captureSquare;
 
     switch (type) {
       case Move.Type.NORMAL:
-        undoMoveNormal(move, currentStackEntry);
+        undoMoveNormal(move, currentState);
         repetitionTable.remove(zobristCode);
         break;
       case Move.Type.PAWNDOUBLE:
@@ -1036,7 +1036,7 @@ public final class Board {
         repetitionTable.remove(zobristCode);
         break;
       case Move.Type.PAWNPROMOTION:
-        undoMovePawnPromotion(move, currentStackEntry);
+        undoMovePawnPromotion(move, currentState);
         repetitionTable.remove(zobristCode);
         break;
       case Move.Type.ENPASSANT:
@@ -1044,7 +1044,7 @@ public final class Board {
         repetitionTable.remove(zobristCode);
         break;
       case Move.Type.CASTLING:
-        undoMoveCastling(move, currentStackEntry);
+        undoMoveCastling(move, currentState);
         repetitionTable.remove(zobristCode);
         break;
       case Move.Type.NULL:
@@ -1054,7 +1054,7 @@ public final class Board {
     }
   }
 
-  private void makeMoveNormal(int move, StackEntry entry) {
+  private void makeMoveNormal(int move, State entry) {
     // Save castling rights
     for (int color : IntColor.values) {
       for (int castling : IntCastling.values) {
@@ -1183,7 +1183,7 @@ public final class Board {
     }
   }
 
-  private void undoMoveNormal(int move, StackEntry entry) {
+  private void undoMoveNormal(int move, State entry) {
     // Move the chessman
     int originSquare = Move.getOriginSquare(move);
     int targetSquare = Move.getTargetSquare(move);
@@ -1204,7 +1204,7 @@ public final class Board {
     }
   }
 
-  private void makeMovePawnPromotion(int move, StackEntry entry) {
+  private void makeMovePawnPromotion(int move, State entry) {
     // Remove the pawn at the origin square
     int originSquare = Move.getOriginSquare(move);
     int pawnPiece = remove(originSquare, true);
@@ -1280,7 +1280,7 @@ public final class Board {
     halfMoveClock = 0;
   }
 
-  private void undoMovePawnPromotion(int move, StackEntry entry) {
+  private void undoMovePawnPromotion(int move, State entry) {
     // Remove the promotion chessman at the end square
     int targetSquare = Move.getTargetSquare(move);
     remove(targetSquare, false);
@@ -1346,7 +1346,7 @@ public final class Board {
     move(Move.getTargetSquare(move), Move.getOriginSquare(move), false);
   }
 
-  private void makeMoveCastling(int move, StackEntry entry) {
+  private void makeMoveCastling(int move, State entry) {
     // Save castling rights
     for (int color : IntColor.values) {
       for (int castling : IntCastling.values) {
@@ -1433,7 +1433,7 @@ public final class Board {
     halfMoveClock++;
   }
 
-  private void undoMoveCastling(int move, StackEntry entry) {
+  private void undoMoveCastling(int move, State entry) {
     int kingTargetSquare = Move.getTargetSquare(move);
 
     // Get the rook squares

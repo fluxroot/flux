@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Flux Chess.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.fluxchess.flux.board;
+package com.fluxchess.flux.search;
 
 import com.fluxchess.jcpi.models.GenericScore;
 
-public final class Score {
+final class Score {
 
   public static final int NOSCORE = -9;
 

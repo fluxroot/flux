@@ -24,7 +24,7 @@ import com.fluxchess.jcpi.models.IntChessman;
 import com.fluxchess.jcpi.models.IntColor;
 import com.fluxchess.jcpi.models.IntPiece;
 
-public final class PawnStructureEvaluation {
+final class PawnStructureEvaluation {
 
   private static final int EVAL_PAWN_DOUBLED_OPENING = 10;
   private static final int EVAL_PAWN_DOUBLED_ENDGAME = 20;

@@ -25,7 +25,7 @@ import com.fluxchess.jcpi.models.IntFile;
 import com.fluxchess.jcpi.models.IntPiece;
 import com.fluxchess.jcpi.models.IntRank;
 
-public final class DrawEvaluation {
+final class DrawEvaluation {
 
   // Draw values
   public static final int DRAW_FACTOR = 16;

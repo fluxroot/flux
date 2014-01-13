@@ -21,7 +21,7 @@ package com.fluxchess.flux.evaluation;
 import com.fluxchess.flux.board.Board;
 import com.fluxchess.jcpi.models.IntColor;
 
-public final class MaterialEvaluation {
+final class MaterialEvaluation {
 
 //  private static final int EVAL_MATERIAL_QUEEN_BONUS = 2 * IntChessman.VALUE_ROOK - IntChessman.VALUE_QUEEN;
 

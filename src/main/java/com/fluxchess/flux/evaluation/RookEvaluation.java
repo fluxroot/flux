@@ -24,7 +24,7 @@ import com.fluxchess.flux.board.Square;
 import com.fluxchess.jcpi.models.IntColor;
 import com.fluxchess.jcpi.models.IntPiece;
 
-public final class RookEvaluation {
+final class RookEvaluation {
 
   public static int EVAL_ROOK_MOBILITY_BASE = -7;
   public static int EVAL_ROOK_MOBILITYFACTOR_OPENING = 2;

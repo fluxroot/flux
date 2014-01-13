@@ -33,14 +33,8 @@ public final class Search implements Runnable {
   public static final int MAX_DEPTH = 64;
   public static final int MAX_MOVES = 4096;
 
-  // Constants
-  public static final int INFINITY = 200000;
-  public static final int DRAW = 0;
-  public static final int CHECKMATE = 100000;
-  public static final int CHECKMATE_THRESHOLD = CHECKMATE - 1000;
-
   private static final int ASPIRATIONWINDOW = 20;
-  private static final int[] ASPIRATIONWINDOW_ADJUSTMENT = new int[]{20, 20, 40, 80, 160, 320, CHECKMATE};
+  private static final int[] ASPIRATIONWINDOW_ADJUSTMENT = new int[]{20, 20, 40, 80, 160, 320, Evaluation.CHECKMATE};
 
   private static final int TIMEEXTENSION_MARGIN = 30;
 
@@ -93,14 +87,26 @@ public final class Search implements Runnable {
 
   // Search tables
   private TranspositionTable transpositionTable;
-  private static KillerTable killerTable;
-  private static HistoryTable historyTable;
+  private KillerTable killerTable;
+  private HistoryTable historyTable;
 
   // Search information
   private static final MoveList[] pvList = new MoveList[MAX_HEIGHT + 1];
   private static final HashMap<Integer, PrincipalVariation> multiPvMap = new HashMap<>(MAX_MOVES);
   private Result bestResult = null;
   private final int[] timeTable;
+
+  private static final class Result {
+
+    public int bestMove = Move.NOMOVE;
+    public int ponderMove = Move.NOMOVE;
+    public int value = Score.NOSCORE;
+    public int resultValue = -Evaluation.INFINITY;
+    public long time = -1;
+    public int moveNumber = 0;
+    public int depth = 0;
+
+  }
 
   // Static initialization
   static {
@@ -228,8 +234,8 @@ public final class Search implements Runnable {
       canStop = true;
 
       // Check if we have a checkmate
-      if (Math.abs(bestResult.resultValue) > CHECKMATE_THRESHOLD
-        && bestResult.depth >= (CHECKMATE - Math.abs(bestResult.resultValue))) {
+      if (Math.abs(bestResult.resultValue) > Evaluation.CHECKMATE_THRESHOLD
+        && bestResult.depth >= (Evaluation.CHECKMATE - Math.abs(bestResult.resultValue))) {
         stopped = true;
       }
 
@@ -365,9 +371,9 @@ public final class Search implements Runnable {
   }
 
   private void sendInformation(PrincipalVariation pv, int pvNumber) {
-    if (Math.abs(pv.value) > CHECKMATE_THRESHOLD) {
+    if (Math.abs(pv.value) > Evaluation.CHECKMATE_THRESHOLD) {
       // Calculate the mate distance
-      int mateDepth = CHECKMATE - Math.abs(pv.value);
+      int mateDepth = Evaluation.CHECKMATE - Math.abs(pv.value);
       info.sendInformationMate(pv, Integer.signum(pv.value) * (mateDepth + 1) / 2, pvNumber);
       logger.debug("Mate value: " + pv.value + ", Mate depth: " + mateDepth);
     } else {
@@ -441,15 +447,15 @@ public final class Search implements Runnable {
     }
     //## ENDOF Root Move List
 
-    int alpha = -CHECKMATE;
-    int beta = CHECKMATE;
+    int alpha = -Evaluation.CHECKMATE;
+    int beta = Evaluation.CHECKMATE;
 
     int initialDepth = 1;
     int equalResults = 0;
     if (!analyzeMode
       && transpositionDepth > 1
       && transpositionType == Score.EXACT
-      && Math.abs(transpositionValue) < CHECKMATE_THRESHOLD
+      && Math.abs(transpositionValue) < Evaluation.CHECKMATE_THRESHOLD
       && pv != null) {
       bestResult.bestMove = transpositionMove;
       bestResult.resultValue = transpositionValue;
@@ -495,11 +501,11 @@ public final class Search implements Runnable {
 
           alpha -= newAspirationWindow;
           beta += newAspirationWindow;
-          if (alpha < -CHECKMATE) {
-            alpha = -CHECKMATE;
+          if (alpha < -Evaluation.CHECKMATE) {
+            alpha = -Evaluation.CHECKMATE;
           }
-          if (beta > CHECKMATE) {
-            beta = CHECKMATE;
+          if (beta > Evaluation.CHECKMATE) {
+            beta = Evaluation.CHECKMATE;
           }
 
           Result moveResultAdjustment = new Result();
@@ -520,11 +526,11 @@ public final class Search implements Runnable {
         // Adjust aspiration window
         alpha = value - ASPIRATIONWINDOW;
         beta = value + ASPIRATIONWINDOW;
-        if (alpha < -CHECKMATE) {
-          alpha = -CHECKMATE;
+        if (alpha < -Evaluation.CHECKMATE) {
+          alpha = -Evaluation.CHECKMATE;
         }
-        if (beta > CHECKMATE) {
-          beta = CHECKMATE;
+        if (beta > Evaluation.CHECKMATE) {
+          beta = Evaluation.CHECKMATE;
         }
       }
       //## ENDOF Aspiration Windows
@@ -616,8 +622,8 @@ public final class Search implements Runnable {
           }
 
           // Check if we have a checkmate
-          else if (Math.abs(value) > CHECKMATE_THRESHOLD
-            && currentDepth >= (CHECKMATE - Math.abs(value))) {
+          else if (Math.abs(value) > Evaluation.CHECKMATE_THRESHOLD
+            && currentDepth >= (Evaluation.CHECKMATE - Math.abs(value))) {
             stopFlag = true;
           }
 
@@ -686,7 +692,7 @@ public final class Search implements Runnable {
 
     // Initialize
     int hashType = Score.ALPHA;
-    int bestValue = -INFINITY;
+    int bestValue = -Evaluation.INFINITY;
     int bestMove = Move.NOMOVE;
     int oldAlpha = alpha;
     PrincipalVariation lastMultiPv = null;
@@ -714,7 +720,7 @@ public final class Search implements Runnable {
 
       //## BEGIN Principal Variation Search
       int value;
-      if (bestValue == -INFINITY) {
+      if (bestValue == -Evaluation.INFINITY) {
         // First move
         value = -alphaBeta(newDepth, -beta, -alpha, height + 1, true, true);
       } else {
@@ -740,12 +746,12 @@ public final class Search implements Runnable {
         value = alpha;
         moveType = Score.ALPHA;
         rootMoveList.value[j] = oldAlpha;
-        sortValue = -INFINITY;
+        sortValue = -Evaluation.INFINITY;
       } else if (value >= beta) {
         value = beta;
         moveType = Score.BETA;
         rootMoveList.value[j] = beta;
-        sortValue = INFINITY;
+        sortValue = Evaluation.INFINITY;
       } else {
         moveType = Score.EXACT;
         rootMoveList.value[j] = value;
@@ -825,7 +831,7 @@ public final class Search implements Runnable {
 
       if (showPvNumber > 1) {
         // Reset alpha to get the real value of the next move
-        assert oldAlpha == -CHECKMATE;
+        assert oldAlpha == -Evaluation.CHECKMATE;
         alpha = oldAlpha;
       }
     }
@@ -870,7 +876,7 @@ public final class Search implements Runnable {
       if (entry != null) {
         for (int i = rootMoveList.head; i < rootMoveList.tail; i++) {
           if (rootMoveList.move[i] == entry.move) {
-            rootMoveList.value[i] = INFINITY;
+            rootMoveList.value[i] = Evaluation.INFINITY;
             break;
           }
         }
@@ -898,19 +904,19 @@ public final class Search implements Runnable {
 
     // Check the repetition table and fifty move rule
     if (board.isRepetition() || board.halfMoveClock >= 100) {
-      return DRAW;
+      return Evaluation.DRAW;
     }
 
     //## BEGIN Mate Distance Pruning
     if (Configuration.useMateDistancePruning) {
-      int value = -CHECKMATE + height;
+      int value = -Evaluation.CHECKMATE + height;
       if (value > alpha) {
         alpha = value;
         if (value >= beta) {
           return value;
         }
       }
-      value = -(-CHECKMATE + height + 1);
+      value = -(-Evaluation.CHECKMATE + height + 1);
       if (value < beta) {
         beta = value;
         if (value <= alpha) {
@@ -962,7 +968,7 @@ public final class Search implements Runnable {
 
     //## BEGIN Null-Move Pruning
     // Notes: Ideas from http://www.cs.biu.ac.il/~davoudo/pubs/vrfd_null.html
-    int evalValue = INFINITY;
+    int evalValue = Evaluation.INFINITY;
     if (Configuration.useNullMovePruning) {
       if (!pvNode
         && depth >= NULLMOVE_DEPTH
@@ -998,14 +1004,14 @@ public final class Search implements Runnable {
         }
 
         // Check for mate threat
-        if (value < -CHECKMATE_THRESHOLD) {
+        if (value < -Evaluation.CHECKMATE_THRESHOLD) {
           mateThreat = true;
         }
 
         if (value >= beta) {
           // Do not return unproven mate values
-          if (value > CHECKMATE_THRESHOLD) {
-            value = CHECKMATE_THRESHOLD;
+          if (value > Evaluation.CHECKMATE_THRESHOLD) {
+            value = Evaluation.CHECKMATE_THRESHOLD;
           }
 
           if (!(stopped && canStop)) {
@@ -1021,7 +1027,7 @@ public final class Search implements Runnable {
 
     // Initialize
     int hashType = Score.ALPHA;
-    int bestValue = -INFINITY;
+    int bestValue = -Evaluation.INFINITY;
     int bestMove = Move.NOMOVE;
     int searchedMoves = 0;
 
@@ -1032,11 +1038,11 @@ public final class Search implements Runnable {
         && transpositionMove == Move.NOMOVE
         // alpha is not equal the initial -CHECKMATE anymore, because of depth >= IID_DEPTH
         // so alpha has a real value. Don't do IID if it's a checkmate value
-        && Math.abs(alpha) < CHECKMATE_THRESHOLD) {
+        && Math.abs(alpha) < Evaluation.CHECKMATE_THRESHOLD) {
         int oldAlpha = alpha;
         int oldBeta = beta;
-        alpha = -CHECKMATE;
-        beta = CHECKMATE;
+        alpha = -Evaluation.CHECKMATE;
+        beta = Evaluation.CHECKMATE;
 
         for (int newDepth = 1; newDepth < depth; newDepth++) {
           alphaBeta(newDepth, alpha, beta, height, true, false);
@@ -1090,7 +1096,7 @@ public final class Search implements Runnable {
           assert !board.isCheckingMove(move);
           assert Move.getType(move) != Move.Type.PAWNPROMOTION : board.getBoard() + ", " + Move.toString(move);
 
-          if (evalValue == INFINITY) {
+          if (evalValue == Evaluation.INFINITY) {
             // Store evaluation
             evalValue = evaluation.evaluate(board);
           }
@@ -1125,7 +1131,7 @@ public final class Search implements Runnable {
           assert !board.isCheckingMove(move);
           assert Move.getType(move) != Move.Type.PAWNPROMOTION : board.getBoard() + ", " + Move.toString(move);
 
-          if (evalValue == INFINITY) {
+          if (evalValue == Evaluation.INFINITY) {
             // Store evaluation
             evalValue = evaluation.evaluate(board);
           }
@@ -1174,7 +1180,7 @@ public final class Search implements Runnable {
 
       //## BEGIN Principal Variation Search
       int value;
-      if (!pvNode || bestValue == -INFINITY) {
+      if (!pvNode || bestValue == -Evaluation.INFINITY) {
         // First move
         value = -alphaBeta(newDepth, -beta, -alpha, height + 1, pvNode, true);
       } else {
@@ -1235,15 +1241,15 @@ public final class Search implements Runnable {
     moveGenerator.destroy();
 
     // If we cannot move, check for checkmate and stalemate.
-    if (bestValue == -INFINITY) {
+    if (bestValue == -Evaluation.INFINITY) {
       if (isCheck) {
         // We have a check mate. This is bad for us, so return a -CHECKMATE.
         hashType = Score.EXACT;
-        bestValue = -CHECKMATE + height;
+        bestValue = -Evaluation.CHECKMATE + height;
       } else {
         // We have a stale mate. Return the draw value.
         hashType = Score.EXACT;
-        bestValue = DRAW;
+        bestValue = Evaluation.DRAW;
       }
     }
 
@@ -1267,19 +1273,19 @@ public final class Search implements Runnable {
 
     // Check the repetition table and fifty move rule
     if (board.isRepetition() || board.halfMoveClock >= 100) {
-      return DRAW;
+      return Evaluation.DRAW;
     }
 
     //## BEGIN Mate Distance Pruning
     if (Configuration.useMateDistancePruning) {
-      int value = -CHECKMATE + height;
+      int value = -Evaluation.CHECKMATE + height;
       if (value > alpha) {
         alpha = value;
         if (value >= beta) {
           return value;
         }
       }
-      value = -(-CHECKMATE + height + 1);
+      value = -(-Evaluation.CHECKMATE + height + 1);
       if (value < beta) {
         beta = value;
         if (value <= alpha) {
@@ -1325,8 +1331,8 @@ public final class Search implements Runnable {
 
     // Initialize
     int hashType = Score.ALPHA;
-    int bestValue = -INFINITY;
-    int evalValue = INFINITY;
+    int bestValue = -Evaluation.INFINITY;
+    int evalValue = Evaluation.INFINITY;
 
     if (!isCheck) {
       // Stand pat
@@ -1428,11 +1434,11 @@ public final class Search implements Runnable {
 
     moveGenerator.destroy();
 
-    if (bestValue == -INFINITY) {
+    if (bestValue == -Evaluation.INFINITY) {
       assert isCheck;
 
       // We have a check mate. This is bad for us, so return a -CHECKMATE.
-      bestValue = -CHECKMATE + height;
+      bestValue = -Evaluation.CHECKMATE + height;
     }
 
     if (useTranspositionTable) {
@@ -1530,7 +1536,7 @@ public final class Search implements Runnable {
     }
   }
 
-  private static void addGoodMove(int move, int depth, int height) {
+  private void addGoodMove(int move, int depth, int height) {
     assert move != Move.NOMOVE;
 
     if (Move.getTargetPiece(move) != IntPiece.NOPIECE) {
