@@ -877,7 +877,7 @@ public final class Search implements Runnable {
       }
     }
 
-    MoveSorter.sort(rootMoveList);
+    rootMoveList.sort();
 
     return bestValue;
   }
