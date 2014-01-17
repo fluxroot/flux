@@ -23,7 +23,6 @@ import com.fluxchess.flux.board.Move;
 import com.fluxchess.flux.evaluation.Evaluation;
 import com.fluxchess.flux.evaluation.EvaluationTable;
 import com.fluxchess.flux.evaluation.PawnTable;
-import com.fluxchess.flux.search.InformationTimer;
 import com.fluxchess.flux.search.Search;
 import com.fluxchess.flux.search.TranspositionTable;
 import com.fluxchess.jcpi.AbstractEngine;
@@ -70,7 +69,7 @@ public final class Flux extends AbstractEngine {
     initializePawnTable();
 
     // Create a new search
-    search = new Search(new Evaluation(evaluationTable, pawnTable), new Board(new GenericBoard(GenericBoard.STANDARDSETUP)), transpositionTable, new InformationTimer(getProtocol(), transpositionTable), timeTable);
+    search = new Search(getProtocol(), new Evaluation(evaluationTable, pawnTable), new Board(new GenericBoard(GenericBoard.STANDARDSETUP)), transpositionTable, timeTable);
   }
 
   private void initializeTranspositionTable() {
@@ -263,7 +262,7 @@ public final class Flux extends AbstractEngine {
     if (board != null) {
       if (search.isStopped()) {
         // Create a new search
-        search = new Search(new Evaluation(evaluationTable, pawnTable), board, transpositionTable, new InformationTimer(getProtocol(), transpositionTable), timeTable);
+        search = new Search(getProtocol(), new Evaluation(evaluationTable, pawnTable), board, transpositionTable, timeTable);
 
         // Set all search parameters
         if (command.getDepth() != null && command.getDepth() > 0) {

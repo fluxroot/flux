@@ -22,6 +22,9 @@ import com.fluxchess.flux.ChessLogger;
 import com.fluxchess.flux.Configuration;
 import com.fluxchess.flux.board.*;
 import com.fluxchess.flux.evaluation.Evaluation;
+import com.fluxchess.jcpi.commands.IProtocol;
+import com.fluxchess.jcpi.commands.ProtocolBestMoveCommand;
+import com.fluxchess.jcpi.commands.ProtocolInformationCommand;
 import com.fluxchess.jcpi.models.*;
 
 import java.util.*;
@@ -53,9 +56,9 @@ public final class Search implements Runnable {
 
   // Objects
   private final ChessLogger logger = ChessLogger.getLogger();
-  private InformationTimer info;
   private final Thread thread = new Thread(this);
   private final Semaphore semaphore = new Semaphore(0);
+  private final IProtocol protocol;
 
   // Search control
   private Timer timer = null;
@@ -96,8 +99,15 @@ public final class Search implements Runnable {
   private Result bestResult = null;
   private final int[] timeTable;
 
-  private static final class Result {
+  private long startTime = 0;
+  private long statusStartTime = 0;
+  private long totalNodes = 0;
+  private int currentDepth = 0;
+  private int currentMaxDepth = 0;
+  private int currentMove = Move.NOMOVE;
+  private int currentMoveNumber = 0;
 
+  private static final class Result {
     public int bestMove = Move.NOMOVE;
     public int ponderMove = Move.NOMOVE;
     public int value = Score.NOSCORE;
@@ -105,7 +115,6 @@ public final class Search implements Runnable {
     public long time = -1;
     public int moveNumber = 0;
     public int depth = 0;
-
   }
 
   // Static initialization
@@ -121,11 +130,13 @@ public final class Search implements Runnable {
     }
   }
 
-  public Search(Evaluation newEvaluation, Board newBoard, TranspositionTable newTranspositionTable, InformationTimer newInfo, int[] timeTable) {
+  public Search(IProtocol protocol, Evaluation newEvaluation, Board newBoard, TranspositionTable newTranspositionTable, int[] timeTable) {
+    assert protocol != null;
     assert newEvaluation != null;
     assert newBoard != null;
     assert newTranspositionTable != null;
-    assert newInfo != null;
+
+    this.protocol = protocol;
 
     analyzeMode = Configuration.analyzeMode;
 
@@ -143,15 +154,15 @@ public final class Search implements Runnable {
     moveGenerator = new MoveGenerator(newBoard, killerTable, historyTable);
     new MoveSee(newBoard);
 
-    info = newInfo;
-    info.setSearch(this);
-
     this.timeTable = timeTable;
 
     multiPvMap.clear();
   }
 
   public void run() {
+    startTime = System.currentTimeMillis();
+    statusStartTime = startTime;
+
     logger.debug("Analyzing fen " + board.getBoard().toString());
     stopped = false;
     canStop = false;
@@ -168,9 +179,7 @@ public final class Search implements Runnable {
 
     // Go...
     semaphore.release();
-    info.start();
     Result moveResult = getBestMove();
-    info.stop();
 
     // Cancel the timer
     if (timer != null) {
@@ -180,17 +189,16 @@ public final class Search implements Runnable {
     // Send the result
     if (moveResult.bestMove != Move.NOMOVE) {
       if (moveResult.ponderMove != Move.NOMOVE) {
-        info.sendBestMove(Move.toGenericMove(moveResult.bestMove), Move.toGenericMove(moveResult.ponderMove));
+        protocol.send(new ProtocolBestMoveCommand(Move.toGenericMove(moveResult.bestMove), Move.toGenericMove(moveResult.ponderMove)));
       } else {
-        info.sendBestMove(Move.toGenericMove(moveResult.bestMove), null);
+        protocol.send(new ProtocolBestMoveCommand(Move.toGenericMove(moveResult.bestMove), null));
       }
     } else {
-      info.sendBestMove(null, null);
+      protocol.send(new ProtocolBestMoveCommand(null, null));
     }
 
     // Cleanup manually
     transpositionTable = null;
-    info = null;
     evaluation = null;
   }
 
@@ -370,17 +378,6 @@ public final class Search implements Runnable {
     }
   }
 
-  private void sendInformation(PrincipalVariation pv, int pvNumber) {
-    if (Math.abs(pv.value) > Evaluation.CHECKMATE_THRESHOLD) {
-      // Calculate the mate distance
-      int mateDepth = Evaluation.CHECKMATE - Math.abs(pv.value);
-      info.sendInformationMate(pv, Integer.signum(pv.value) * (mateDepth + 1) / 2, pvNumber);
-      logger.debug("Mate value: " + pv.value + ", Mate depth: " + mateDepth);
-    } else {
-      info.sendInformationCentipawns(pv, pvNumber);
-    }
-  }
-
   private Result getBestMove() {
     //## BEGIN Root Move List
     MoveList rootMoveList = new MoveList();
@@ -468,9 +465,9 @@ public final class Search implements Runnable {
     }
 
     //## BEGIN Iterative Deepening
-    for (int currentDepth = initialDepth; currentDepth <= searchDepth; currentDepth++) {
-      info.setCurrentDepth(currentDepth);
-      info.sendInformationDepth();
+    for (currentDepth = initialDepth; currentDepth <= searchDepth; currentDepth++) {
+      currentMaxDepth = currentDepth;
+      sendInformationDepth();
 
       // Create a new result
       Result moveResult = new Result();
@@ -661,7 +658,7 @@ public final class Search implements Runnable {
     //## ENDOF Iterative Deepening
 
     // Update all stats
-    info.sendInformationSummary();
+    sendInformationSummary();
 
     return bestResult;
   }
@@ -669,11 +666,13 @@ public final class Search implements Runnable {
   private void updateSearch(int height) {
     assert transpositionTable.getPermillUsed() >= 0 && transpositionTable.getPermillUsed() <= 1000;
 
-    info.totalNodes++;
-    info.setCurrentMaxDepth(height);
-    info.sendInformationStatus();
+    totalNodes++;
+    if (height > currentMaxDepth) {
+      currentMaxDepth = height;
+    }
+    sendInformationStatus();
 
-    if (searchNodes > 0 && searchNodes <= info.totalNodes) {
+    if (searchNodes > 0 && searchNodes <= totalNodes) {
       // Hard stop on number of nodes
       stopped = true;
     }
@@ -700,7 +699,7 @@ public final class Search implements Runnable {
     PrincipalVariation firstPv = null;
 
     // Initialize the move number
-    int currentMoveNumber = 0;
+    currentMoveNumber = 0;
 
     // Initialize Single-Response Extension
     boolean isSingleReply = isCheck && rootMoveList.size() == 1;
@@ -709,8 +708,9 @@ public final class Search implements Runnable {
       int move = rootMoveList.move[j];
 
       // Update the information if we evaluate a new move.
+      currentMove = move;
       currentMoveNumber++;
-      info.sendInformationMove(Move.toGenericMove(move), currentMoveNumber);
+      sendInformationMove();
 
       // Extension
       int newDepth = getNewDepth(depth, move, isSingleReply, false);
@@ -770,12 +770,12 @@ public final class Search implements Runnable {
         moveType,
         sortValue,
         genericMoveList,
-        info.currentDepth,
-        info.currentMaxDepth,
+        currentDepth,
+        currentMaxDepth,
         transpositionTable.getPermillUsed(),
-        info.getCurrentNps(),
-        System.currentTimeMillis() - info.totalTimeStart,
-        info.totalNodes);
+        System.currentTimeMillis() - startTime >= 1000 ? totalNodes * 1000 / (System.currentTimeMillis() - startTime) : 0,
+        System.currentTimeMillis() - startTime,
+        totalNodes);
       multiPvMap.put(move, pv);
 
       // Save first pv
@@ -785,7 +785,7 @@ public final class Search implements Runnable {
 
       // Show refutations
       if (Configuration.showRefutations) {
-        info.sendInformationRefutations(genericMoveList);
+        sendInformationRefutations(genericMoveList);
       }
 
       // Show multi pv
@@ -851,19 +851,19 @@ public final class Search implements Runnable {
       // We have a fail low
       assert oldAlpha == alpha;
 
-      PrincipalVariation resultPv = new PrincipalVariation(
+      sendInformation(new PrincipalVariation(
         firstPv.moveNumber,
         firstPv.value,
         firstPv.type,
         firstPv.sortValue,
         firstPv.pv,
         firstPv.depth,
-        info.currentMaxDepth,
+        currentMaxDepth,
         transpositionTable.getPermillUsed(),
-        info.getCurrentNps(),
-        System.currentTimeMillis() - info.totalTimeStart,
-        info.totalNodes);
-      sendInformation(resultPv, 1);
+        System.currentTimeMillis() - startTime >= 1000 ? totalNodes * 1000 / (System.currentTimeMillis() - startTime) : 0,
+        System.currentTimeMillis() - startTime,
+        totalNodes
+      ), 1);
     }
 
     moveResult.bestMove = bestMove;
@@ -1552,6 +1552,151 @@ public final class Search implements Runnable {
 
     killerTable.add(move, height);
     historyTable.add(move, depth);
+  }
+
+  private void sendInformationDepth() {
+    // Safety guard: Reduce output pollution
+    if (System.currentTimeMillis() - startTime >= 1000) {
+      ProtocolInformationCommand command = new ProtocolInformationCommand();
+
+      command.setDepth(currentDepth);
+      command.setMaxDepth(currentMaxDepth);
+
+      protocol.send(command);
+    }
+  }
+
+  private void sendInformationMove() {
+    // Safety guard: Reduce output pollution
+    if (System.currentTimeMillis() - startTime >= 1000) {
+      ProtocolInformationCommand command = new ProtocolInformationCommand();
+
+      command.setCurrentMove(Move.toGenericMove(currentMove));
+      command.setCurrentMoveNumber(currentMoveNumber);
+
+      protocol.send(command);
+    }
+  }
+
+  private void sendInformationRefutations(List<GenericMove> refutationList) {
+    assert refutationList != null;
+
+    // Safety guard: Reduce output pollution
+    if (System.currentTimeMillis() - startTime >= 1000) {
+      ProtocolInformationCommand command = new ProtocolInformationCommand();
+
+      command.setRefutationList(refutationList);
+
+      protocol.send(command);
+    }
+  }
+
+  private void sendInformationStatus() {
+    // Safety guard: Reduce output pollution
+    long currentTime = System.currentTimeMillis();
+    if (currentTime - statusStartTime >= 1000) {
+      ProtocolInformationCommand command = new ProtocolInformationCommand();
+
+      command.setDepth(currentDepth);
+      command.setMaxDepth(currentMaxDepth);
+      command.setNodes(totalNodes);
+      command.setTime(currentTime - startTime);
+      command.setNps(totalNodes * 1000 / (currentTime - startTime));
+      command.setHash(transpositionTable.getPermillUsed());
+
+      if (currentMove != Move.NOMOVE) {
+        command.setCurrentMove(Move.toGenericMove(currentMove));
+        command.setCurrentMoveNumber(currentMoveNumber);
+      }
+
+      protocol.send(command);
+
+      statusStartTime = System.currentTimeMillis();
+    }
+  }
+
+  private void sendInformationSummary() {
+    long timeDelta = System.currentTimeMillis() - startTime;
+
+    ProtocolInformationCommand command = new ProtocolInformationCommand();
+
+    command.setDepth(currentDepth);
+    command.setMaxDepth(currentMaxDepth);
+    command.setNodes(totalNodes);
+    command.setTime(timeDelta);
+    command.setNps(timeDelta >= 1000 ? totalNodes * 1000 / timeDelta : 0);
+    command.setHash(transpositionTable.getPermillUsed());
+
+    protocol.send(command);
+
+    statusStartTime = System.currentTimeMillis();
+  }
+
+  private void sendInformation(PrincipalVariation pv, int pvNumber) {
+    if (Math.abs(pv.value) > Evaluation.CHECKMATE_THRESHOLD) {
+      // Calculate the mate distance
+      int mateDepth = Evaluation.CHECKMATE - Math.abs(pv.value);
+      sendInformationMate(pv, Integer.signum(pv.value) * (mateDepth + 1) / 2, pvNumber);
+      logger.debug("Mate value: " + pv.value + ", Mate depth: " + mateDepth);
+    } else {
+      sendInformationCentipawns(pv, pvNumber);
+    }
+  }
+
+  private void sendInformationCentipawns(PrincipalVariation pv, int pvNumber) {
+    assert pv != null;
+    assert pvNumber >= 1;
+
+    if (pvNumber <= Configuration.showPvNumber) {
+      ProtocolInformationCommand command = new ProtocolInformationCommand();
+
+      command.setDepth(pv.depth);
+      command.setMaxDepth(pv.maxDepth);
+      command.setNodes(pv.totalNodes);
+      command.setTime(pv.time);
+      command.setNps(pv.nps);
+      command.setHash(pv.hash);
+
+      command.setCentipawns(pv.value);
+      command.setValue(Score.valueOfIntScore(pv.type));
+      command.setMoveList(pv.pv);
+
+      if (Configuration.showPvNumber > 1) {
+        command.setPvNumber(pvNumber);
+      }
+
+      protocol.send(command);
+
+      statusStartTime = System.currentTimeMillis();
+    }
+  }
+
+  private void sendInformationMate(PrincipalVariation pv, int currentMateDepth, int pvNumber) {
+    assert pv != null;
+    assert pvNumber >= 1;
+
+    if (pvNumber <= Configuration.showPvNumber) {
+      ProtocolInformationCommand command = new ProtocolInformationCommand();
+
+      command.setDepth(pv.depth);
+      command.setMaxDepth(pv.maxDepth);
+      command.setNodes(pv.totalNodes);
+      command.setTime(pv.time);
+      command.setNps(pv.nps);
+      command.setHash(pv.hash);
+
+      command.setMate(currentMateDepth);
+      command.setValue(Score.valueOfIntScore(pv.type));
+      command.setMoveList(pv.pv);
+
+      if (Configuration.showPvNumber > 1) {
+        command.setPvNumber(pvNumber);
+      }
+
+      protocol.send(command);
+
+      statusStartTime = System.currentTimeMillis();
+    }
   }
 
 }
