@@ -18,7 +18,6 @@
  */
 package com.fluxchess.flux.search;
 
-import com.fluxchess.flux.ChessLogger;
 import com.fluxchess.flux.Configuration;
 import com.fluxchess.flux.board.*;
 import com.fluxchess.flux.evaluation.Evaluation;
@@ -55,7 +54,6 @@ public final class Search implements Runnable {
   private static final int FUTILITY_QUIESCENTMARGIN = Evaluation.VALUE_PAWN;
 
   // Objects
-  private final ChessLogger logger = ChessLogger.getLogger();
   private final Thread thread = new Thread(this);
   private final Semaphore semaphore = new Semaphore(0);
   private final IProtocol protocol;
@@ -163,7 +161,6 @@ public final class Search implements Runnable {
     startTime = System.currentTimeMillis();
     statusStartTime = startTime;
 
-    logger.debug("Analyzing fen " + board.getBoard().toString());
     stopped = false;
     canStop = false;
     bestResult = new Result();
@@ -208,7 +205,6 @@ public final class Search implements Runnable {
       // Wait for initialization
       semaphore.acquire();
     } catch (InterruptedException e) {
-      logger.debug(e.getMessage());
       // Do nothing
     }
   }
@@ -220,7 +216,6 @@ public final class Search implements Runnable {
       // Wait for the thread to die
       thread.join();
     } catch (InterruptedException e) {
-      logger.debug(e.getMessage());
       // Do nothing
     }
   }
@@ -1637,7 +1632,6 @@ public final class Search implements Runnable {
       // Calculate the mate distance
       int mateDepth = Evaluation.CHECKMATE - Math.abs(pv.value);
       sendInformationMate(pv, Integer.signum(pv.value) * (mateDepth + 1) / 2, pvNumber);
-      logger.debug("Mate value: " + pv.value + ", Mate depth: " + mateDepth);
     } else {
       sendInformationCentipawns(pv, pvNumber);
     }

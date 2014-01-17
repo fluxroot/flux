@@ -61,9 +61,6 @@ public final class Flux extends AbstractEngine {
   }
 
   private void initialize() {
-    // Set the protocol
-    ChessLogger.setProtocol(getProtocol());
-
     initializeTranspositionTable();
     initializeEvaluationTable();
     initializePawnTable();
@@ -73,34 +70,27 @@ public final class Flux extends AbstractEngine {
   }
 
   private void initializeTranspositionTable() {
-    ChessLogger.getLogger().debug("Using Transposition Table size of " + Configuration.transpositionTableSize + " MB");
     int numberOfEntries = Configuration.transpositionTableSize * 1024 * 1024 / TranspositionTable.ENTRYSIZE;
     transpositionTable = new TranspositionTable(numberOfEntries);
   }
 
   private void initializeEvaluationTable() {
-    ChessLogger.getLogger().debug("Using Evaluation Table size of " + Configuration.evaluationTableSize + " MB");
     int numberOfEntries = Configuration.evaluationTableSize * 1024 * 1024 / EvaluationTable.ENTRYSIZE;
     evaluationTable = new EvaluationTable(numberOfEntries);
   }
 
   private void initializePawnTable() {
-    ChessLogger.getLogger().debug("Using Pawn Table size of " + Configuration.pawnTableSize + " MB");
     int numberOfEntries = Configuration.pawnTableSize * 1024 * 1024 / PawnTable.ENTRYSIZE;
     pawnTable = new PawnTable(numberOfEntries);
   }
 
   protected void quit() {
-    ChessLogger.getLogger().debug("Received Quit command.");
-
     // Stop calculating
     new EngineStopCalculatingCommand().accept(this);
   }
 
   public void receive(EngineInitializeRequestCommand command) {
     if (command == null) throw new IllegalArgumentException();
-
-    ChessLogger.getLogger().debug("Received Protocol command.");
 
     // Stop calculating
     new EngineStopCalculatingCommand().accept(this);
@@ -119,8 +109,6 @@ public final class Flux extends AbstractEngine {
 
   public void receive(EngineSetOptionCommand command) {
     if (command == null) throw new IllegalArgumentException();
-
-    ChessLogger.getLogger().debug("Received SetOption command.");
 
     if (command.name.equalsIgnoreCase(Configuration.ponderOption.name)) {
       if (command.value == null) throw new IllegalArgumentException();
@@ -177,31 +165,11 @@ public final class Flux extends AbstractEngine {
   public void receive(EngineDebugCommand command) {
     if (command == null) throw new IllegalArgumentException();
 
-    ChessLogger.getLogger().debug("Received Debug command.");
-
-    ProtocolInformationCommand infoCommand = new ProtocolInformationCommand();
-
-    boolean state = ChessLogger.getDebug();
-    if (command.toggle) {
-      state = !state;
-    } else {
-      state = command.debug;
-    }
-
-    if (state) {
-      infoCommand.setString("Turning on debugging mode");
-    } else {
-      infoCommand.setString("Turning off debugging mode");
-    }
-    getProtocol().send(infoCommand);
-
-    ChessLogger.setDebug(state);
+    // Do nothing
   }
 
   public void receive(EngineReadyRequestCommand command) {
     if (command == null) throw new IllegalArgumentException();
-
-    ChessLogger.getLogger().debug("Received ReadyRequest command.");
 
     // Send a pong back
     getProtocol().send(new ProtocolReadyAnswerCommand(command.token));
@@ -209,8 +177,6 @@ public final class Flux extends AbstractEngine {
 
   public void receive(EngineNewGameCommand command) {
     if (command == null) throw new IllegalArgumentException();
-
-    ChessLogger.getLogger().debug("Received New command.");
 
     // Stop calculating
     new EngineStopCalculatingCommand().accept(this);
@@ -224,8 +190,6 @@ public final class Flux extends AbstractEngine {
 
   public void receive(EngineAnalyzeCommand command) {
     if (command == null) throw new IllegalArgumentException();
-
-    ChessLogger.getLogger().debug("Received Analyze command.");
 
     if (!search.isStopped()) {
       search.stop();
@@ -245,19 +209,13 @@ public final class Flux extends AbstractEngine {
   public void receive(EnginePonderHitCommand command) {
     if (command == null) throw new IllegalArgumentException();
 
-    ChessLogger.getLogger().debug("Received PonderHit command.");
-
     if (!search.isStopped()) {
       search.ponderhit();
-    } else {
-      ChessLogger.getLogger().debug("There is no search active.");
     }
   }
 
   public void receive(EngineStartCalculatingCommand command) {
     if (command == null) throw new IllegalArgumentException();
-
-    ChessLogger.getLogger().debug("Received StartCalculating command.");
 
     if (board != null) {
       if (search.isStopped()) {
@@ -298,24 +256,16 @@ public final class Flux extends AbstractEngine {
         // Go...
         search.start();
         board = null;
-      } else {
-        ChessLogger.getLogger().debug("There is already a search running.");
       }
-    } else {
-      ChessLogger.getLogger().debug("Please do a position command first.");
     }
   }
 
   public void receive(EngineStopCalculatingCommand command) {
     if (command == null) throw new IllegalArgumentException();
 
-    ChessLogger.getLogger().debug("Received StopCalculating command.");
-
     if (!search.isStopped()) {
       // Stop the search
       search.stop();
-    } else {
-      ChessLogger.getLogger().debug("There is no search active.");
     }
   }
 
