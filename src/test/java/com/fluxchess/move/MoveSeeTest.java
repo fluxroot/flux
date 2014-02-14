@@ -32,11 +32,6 @@ import com.fluxchess.board.IntPosition;
 import com.fluxchess.move.IntMove;
 import com.fluxchess.move.MoveSee;
 
-/**
- * MoveSeeTest
- *
- * @author Phokham Nonava
- */
 public class MoveSeeTest {
 
 	@Test

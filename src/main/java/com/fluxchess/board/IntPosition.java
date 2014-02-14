@@ -24,11 +24,6 @@ import jcpi.data.GenericFile;
 import jcpi.data.GenericPosition;
 import jcpi.data.GenericRank;
 
-/**
- * IntPosition
- *
- * @author Phokham Nonava
- */
 public final class IntPosition {
 
 	/**

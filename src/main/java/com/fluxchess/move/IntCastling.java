@@ -18,11 +18,6 @@
  */
 package com.fluxchess.move;
 
-/**
- * IntCastling
- *
- * @author Phokham Nonava
- */
 public final class IntCastling {
 
 	/**

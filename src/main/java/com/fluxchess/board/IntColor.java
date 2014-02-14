@@ -20,11 +20,6 @@ package com.fluxchess.board;
 
 import jcpi.data.GenericColor;
 
-/**
- * IntColor
- *
- * @author Phokham Nonava
- */
 public final class IntColor {
 
 	/**

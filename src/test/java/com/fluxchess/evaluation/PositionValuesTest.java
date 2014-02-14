@@ -29,11 +29,6 @@ import com.fluxchess.board.IntColor;
 import com.fluxchess.board.IntGamePhase;
 import com.fluxchess.evaluation.PositionValues;
 
-/**
- * PositionValuesTest
- *
- * @author Phokham Nonava
- */
 public class PositionValuesTest {
 
 	@Test

@@ -18,11 +18,6 @@
  */
 package com.fluxchess.board;
 
-/**
- * IntGamePhase
- *
- * @author Phokham Nonava
- */
 public class IntGamePhase {
 
 	/**

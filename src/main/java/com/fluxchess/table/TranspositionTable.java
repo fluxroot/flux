@@ -26,11 +26,6 @@ import com.fluxchess.board.Hex88Board;
 import com.fluxchess.move.IntMove;
 import com.fluxchess.move.IntValue;
 
-/**
- * TranspositionTable
- *
- * @author Phokham Nonava
- */
 public final class TranspositionTable {
 
 	// Size of one transposition entry

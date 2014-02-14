@@ -25,11 +25,6 @@ import org.junit.Test;
 
 import com.fluxchess.table.EvaluationTable;
 
-/**
- * EvaluationTableTest
- *
- * @author Phokham Nonava
- */
 public class EvaluationTableTest {
 
 	@Test

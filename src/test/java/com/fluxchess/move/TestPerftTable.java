@@ -18,11 +18,6 @@
  */
 package com.fluxchess.move;
 
-/**
- * TestPerftTable
- *
- * @author Phokham Nonava
- */
 public final class TestPerftTable {
 
 	private final int size = 4194304;

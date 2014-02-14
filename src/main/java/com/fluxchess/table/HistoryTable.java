@@ -24,11 +24,6 @@ import com.fluxchess.board.IntColor;
 import com.fluxchess.board.IntPosition;
 import com.fluxchess.move.IntMove;
 
-/**
- * HistoryTable
- *
- * @author Phokham Nonava
- */
 public final class HistoryTable {
 
 	public static final int MAX_HISTORYVALUE = 65536;

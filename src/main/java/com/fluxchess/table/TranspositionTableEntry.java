@@ -22,11 +22,6 @@ import com.fluxchess.Search;
 import com.fluxchess.move.IntMove;
 import com.fluxchess.move.IntValue;
 
-/**
- * TranspositionTableEntry
- *
- * @author Phokham Nonava
- */
 public final class TranspositionTableEntry {
 
 	public long zobristCode = 0;

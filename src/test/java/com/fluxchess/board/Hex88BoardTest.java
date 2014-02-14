@@ -36,11 +36,6 @@ import com.fluxchess.board.IntGamePhase;
 import com.fluxchess.board.IntPosition;
 import com.fluxchess.move.IntMove;
 
-/**
- * Hex88BoardTest
- *
- * @author Phokham Nonava
- */
 public class Hex88BoardTest {
 
 	@Test

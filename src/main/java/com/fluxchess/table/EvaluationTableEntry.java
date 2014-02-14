@@ -20,11 +20,6 @@ package com.fluxchess.table;
 
 import com.fluxchess.Search;
 
-/**
- * EvaluationTableEntry
- *
- * @author Phokham Nonava
- */
 public final class EvaluationTableEntry {
 
 	public long zobristCode = 0;

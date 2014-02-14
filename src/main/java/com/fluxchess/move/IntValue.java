@@ -20,12 +20,6 @@ package com.fluxchess.move;
 
 import jcpi.data.GenericScore;
 
-
-/**
- * IntValue
- *
- * @author Phokham Nonava
- */
 public class IntValue {
 
 	/**

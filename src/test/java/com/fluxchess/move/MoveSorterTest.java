@@ -25,11 +25,6 @@ import org.junit.Test;
 import com.fluxchess.move.MoveList;
 import com.fluxchess.move.MoveSorter;
 
-/**
- * MoveSorterTest
- *
- * @author Phokham Nonava
- */
 public class MoveSorterTest {
 
 	@Test

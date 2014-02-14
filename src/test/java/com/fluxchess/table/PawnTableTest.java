@@ -25,11 +25,6 @@ import org.junit.Test;
 
 import com.fluxchess.table.PawnTable;
 
-/**
- * PawnTableTest
- *
- * @author Phokham Nonava
- */
 public class PawnTableTest {
 
 	@Test

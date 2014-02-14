@@ -18,11 +18,6 @@
  */
 package com.fluxchess.table;
 
-/**
- * PawnTable
- *
- * @author Phokham Nonava
- */
 public final class PawnTable {
 
 	public static final int ENTRYSIZE = 16;

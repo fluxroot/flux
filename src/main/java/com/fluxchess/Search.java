@@ -47,11 +47,6 @@ import com.fluxchess.table.KillerTable;
 import com.fluxchess.table.TranspositionTable;
 import com.fluxchess.table.TranspositionTableEntry;
 
-/**
- * Search
- * 
- * @author Phokham Nonava
- */
 public final class Search implements ISearch, Runnable {
 
 	// Constants

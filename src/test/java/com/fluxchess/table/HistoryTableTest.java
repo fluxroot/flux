@@ -26,11 +26,6 @@ import com.fluxchess.board.IntChessman;
 import com.fluxchess.move.IntMove;
 import com.fluxchess.table.HistoryTable;
 
-/**
- * HistoryTableTest
- *
- * @author Phokham Nonava
- */
 public class HistoryTableTest {
 
 	@Test

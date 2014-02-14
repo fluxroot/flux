@@ -34,11 +34,6 @@ import com.fluxchess.move.IntValue;
 import com.fluxchess.table.TranspositionTable;
 import com.fluxchess.table.TranspositionTableEntry;
 
-/**
- * TranspositionTableTest
- *
- * @author Phokham Nonava
- */
 public class TranspositionTableTest {
 
 	@Test

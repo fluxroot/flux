@@ -18,11 +18,6 @@
  */
 package com.fluxchess.board;
 
-/**
- * Hex88BoardStackEntry
- *
- * @author Phokham Nonava
- */
 public final class Hex88BoardStackEntry {
 
 	public long zobristHistory = 0;

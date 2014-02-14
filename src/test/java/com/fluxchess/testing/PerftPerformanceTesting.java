@@ -33,11 +33,6 @@ import com.fluxchess.move.MoveSee;
 import com.fluxchess.table.HistoryTable;
 import com.fluxchess.table.KillerTable;
 
-/**
- * PerftPerformanceTesting
- *
- * @author Phokham Nonava
- */
 public class PerftPerformanceTesting {
 
 	private static long miniMax(Hex88Board board, MoveGenerator generator, int depth, int maxDepth) {

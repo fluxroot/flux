@@ -26,11 +26,6 @@ import java.util.Properties;
 
 import jcpi.data.Option;
 
-/**
- * Configuration
- *
- * @author Phokham Nonava
- */
 public final class Configuration {
 
 	public static final String name = "Flux 2.2.1";

@@ -22,11 +22,6 @@ import org.junit.Test;
 
 import com.fluxchess.ChessLogger;
 
-/**
- * ChessLoggerTest
- *
- * @author Phokham Nonava
- */
 public class ChessLoggerTest {
 
 	@Test

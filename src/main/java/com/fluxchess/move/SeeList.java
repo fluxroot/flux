@@ -18,11 +18,6 @@
  */
 package com.fluxchess.move;
 
-/**
- * SeeList
- *
- * @author Phokham Nonava
- */
 public final class SeeList {
 
 	private static final int MAXSIZE = 16;

@@ -19,11 +19,7 @@
 package com.fluxchess.board;
 
 /**
- * AttackVector
- * 
  * Notes: Ideas from Mediocre Chess and Bruce Moreland
- *
- * @author Phokham Nonava
  */
 public final class AttackVector {
 

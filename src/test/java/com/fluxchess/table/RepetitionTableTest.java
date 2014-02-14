@@ -25,11 +25,6 @@ import org.junit.Test;
 
 import com.fluxchess.table.RepetitionTable;
 
-/**
- * RepetitionTableTest
- *
- * @author Phokham Nonava
- */
 public class RepetitionTableTest {
 
 	@Test

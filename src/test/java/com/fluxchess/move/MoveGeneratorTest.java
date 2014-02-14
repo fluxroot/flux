@@ -42,11 +42,6 @@ import com.fluxchess.move.MoveSee;
 import com.fluxchess.table.HistoryTable;
 import com.fluxchess.table.KillerTable;
 
-/**
- * MoveGeneratorTest
- *
- * @author Phokham Nonava
- */
 public class MoveGeneratorTest {
 
 	private TestPerftTable table = new TestPerftTable();

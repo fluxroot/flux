@@ -35,11 +35,6 @@ import com.fluxchess.table.EvaluationTable;
 import com.fluxchess.table.EvaluationTableEntry;
 import com.fluxchess.table.PawnTable;
 
-/**
- * Evaluation
- * 
- * @author Phokham Nonava
- */
 public final class Evaluation implements IEvaluation {
 
 	// Our evaluation constants

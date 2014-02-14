@@ -18,11 +18,6 @@
  */
 package com.fluxchess;
 
-/**
- * SearchStackEntry
- *
- * @author Phokham Nonava
- */
 public final class SearchStackEntry {
 
 	public int totalNodes;

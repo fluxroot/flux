@@ -29,11 +29,6 @@ import com.fluxchess.move.IntValue;
 import com.fluxchess.move.PrincipalVariation;
 import com.fluxchess.table.TranspositionTable;
 
-/**
- * InformationTimer
- *
- * @author Phokham Nonava
- */
 public final class InformationTimer {
 
 	private final AbstractCommunication protocol;

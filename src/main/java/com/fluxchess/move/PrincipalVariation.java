@@ -22,11 +22,6 @@ import java.util.List;
 
 import jcpi.data.GenericMove;
 
-/**
- * PrincipalVariation
- *
- * @author Phokham Nonava
- */
 public final class PrincipalVariation implements Comparable<PrincipalVariation> {
 
 	public final int moveNumber;

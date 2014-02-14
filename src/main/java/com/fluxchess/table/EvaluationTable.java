@@ -18,11 +18,6 @@
  */
 package com.fluxchess.table;
 
-/**
- * EvaluationTable
- *
- * @author Phokham Nonava
- */
 public final class EvaluationTable {
 
 	// Size of one evaluation entry

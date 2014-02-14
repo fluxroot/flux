@@ -20,11 +20,6 @@ package com.fluxchess.evaluation;
 
 import com.fluxchess.board.Hex88Board;
 
-/**
- * IEvaluation
- *
- * @author Phokham Nonava
- */
 public interface IEvaluation {
 
 	public abstract void print(Hex88Board board);

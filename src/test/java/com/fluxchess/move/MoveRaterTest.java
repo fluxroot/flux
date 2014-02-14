@@ -27,11 +27,6 @@ import com.fluxchess.move.MoveRater;
 import com.fluxchess.move.MoveSorter;
 import com.fluxchess.table.HistoryTable;
 
-/**
- * MoveRaterTest
- *
- * @author Phokham Nonava
- */
 public class MoveRaterTest {
 
 //	@Test

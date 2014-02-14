@@ -19,11 +19,7 @@
 package com.fluxchess.board;
 
 /**
- * Attack
- * 
  * Notes: Ideas from Fruit
- *
- * @author Phokham Nonava
  */
 public final class Attack {
 

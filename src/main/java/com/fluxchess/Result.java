@@ -21,11 +21,6 @@ package com.fluxchess;
 import com.fluxchess.move.IntMove;
 import com.fluxchess.move.IntValue;
 
-/**
- * Result
- *
- * @author Phokham Nonava
- */
 public final class Result {
 
 	public int bestMove = IntMove.NOMOVE;

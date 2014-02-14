@@ -33,11 +33,6 @@ import com.fluxchess.board.IntColor;
 import com.fluxchess.board.IntPosition;
 import com.fluxchess.move.IntMove;
 
-/**
- * IntMoveTest
- *
- * @author Phokham Nonava
- */
 public class IntMoveTest {
 
 	@Test

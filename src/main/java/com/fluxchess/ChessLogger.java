@@ -21,12 +21,6 @@ package com.fluxchess;
 import jcpi.AbstractCommunication;
 import jcpi.commands.GuiInformationCommand;
 
-
-/**
- * ChessLogger
- *
- * @author Phokham Nonava
- */
 public class ChessLogger {
 
 	// Singleton Pattern

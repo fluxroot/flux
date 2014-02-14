@@ -45,11 +45,6 @@ import jcpi.data.GenericMove;
 
 import com.fluxchess.Flux;
 
-/**
- * FluxTesting
- *
- * @author Phokham Nonava
- */
 public class FluxTesting extends AbstractCommunication implements ICommunication {
 
 	BlockingQueue<IEngineCommand> commandQueue = new LinkedBlockingQueue<IEngineCommand>();

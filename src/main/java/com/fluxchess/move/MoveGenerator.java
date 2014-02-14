@@ -31,12 +31,8 @@ import com.fluxchess.table.HistoryTable;
 import com.fluxchess.table.KillerTable;
 
 /**
- * MoveGenerator
- * 
  * Notes: Ideas from Fruit. I specially like the Idea how to handle the state
  * list.
- * 
- * @author Phokham Nonava
  */
 public final class MoveGenerator {
 

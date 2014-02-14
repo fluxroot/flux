@@ -20,11 +20,6 @@ package com.fluxchess.table;
 
 import com.fluxchess.ISearch;
 
-/**
- * RepetitionTable
- *
- * @author Phokham Nonava
- */
 public final class RepetitionTable {
 
 	private static final int MAXSIZE = ISearch.MAX_MOVES;

@@ -21,11 +21,6 @@ package com.fluxchess.move;
 import com.fluxchess.board.IntChessman;
 import com.fluxchess.table.HistoryTable;
 
-/**
- * MoveRater
- * 
- * @author Phokham Nonava
- */
 public final class MoveRater {
 
 	private static HistoryTable historyTable;

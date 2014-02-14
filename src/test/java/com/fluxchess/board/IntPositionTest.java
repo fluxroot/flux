@@ -28,11 +28,6 @@ import org.junit.Test;
 import com.fluxchess.board.IntColor;
 import com.fluxchess.board.IntPosition;
 
-/**
- * IntPositionTest
- *
- * @author Phokham Nonava
- */
 public class IntPositionTest {
 
 	@Test

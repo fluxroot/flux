@@ -18,11 +18,6 @@
  */
 package com.fluxchess.board;
 
-/**
- * ChessmanList
- *
- * @author Phokham Nonava
- */
 public final class ChessmanList {
 
 	private static final int MAXSIZE = 16;

@@ -27,7 +27,6 @@ import jcpi.data.GenericChessman;
  * <code>0 -  2</code>: the type (required)<br/>
  * <code>     3</code>: the color (required)<br/>
  *<br/>
- * @author Phokham Nonava
  */
 public final class IntChessman {
 

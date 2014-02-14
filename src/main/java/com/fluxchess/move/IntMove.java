@@ -40,8 +40,6 @@ import com.fluxchess.board.IntPosition;
  *      21: the target color (optional)
  * 22 - 24: the promotion chessman (optional)
  * 25 - 27: the type (required)
- *
- * @author Phokham Nonava
  */
 public final class IntMove {
 

@@ -46,11 +46,6 @@ import org.junit.Test;
 
 import com.fluxchess.Flux;
 
-/**
- * SearchTest
- *
- * @author Phokham Nonava
- */
 public class SearchTest extends AbstractCommunication implements ICommunication {
 
 	BlockingQueue<IEngineCommand> commandQueue = new LinkedBlockingQueue<IEngineCommand>();

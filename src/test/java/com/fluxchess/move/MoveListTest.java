@@ -24,11 +24,6 @@ import org.junit.Test;
 
 import com.fluxchess.move.MoveList;
 
-/**
- * MoveListTest
- *
- * @author Phokham Nonava
- */
 public class MoveListTest {
 
 	@Test

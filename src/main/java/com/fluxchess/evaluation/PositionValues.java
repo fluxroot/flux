@@ -21,11 +21,6 @@ package com.fluxchess.evaluation;
 import com.fluxchess.board.IntColor;
 import com.fluxchess.board.IntGamePhase;
 
-/**
- * PositionValues
- *
- * @author Phokham Nonava
- */
 public final class PositionValues {
 
 	private static final int[][] positionValueOpening = {

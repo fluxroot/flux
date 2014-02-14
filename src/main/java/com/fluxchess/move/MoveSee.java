@@ -25,11 +25,7 @@ import com.fluxchess.board.IntColor;
 import com.fluxchess.board.PositionList;
 
 /**
- * MoveSee
- * 
  * Notes: Ideas from Fruit
- *
- * @author Phokham Nonava
  */
 public final class MoveSee {
 

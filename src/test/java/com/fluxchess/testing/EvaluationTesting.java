@@ -32,11 +32,6 @@ import com.fluxchess.move.MoveSee;
 import com.fluxchess.table.EvaluationTable;
 import com.fluxchess.table.PawnTable;
 
-/**
- * EvaluationTesting
- *
- * @author Phokham Nonava
- */
 public class EvaluationTesting {
 
 	public static void main(String[] args) {

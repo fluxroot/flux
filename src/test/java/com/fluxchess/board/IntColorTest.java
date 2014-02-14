@@ -25,11 +25,6 @@ import org.junit.Test;
 
 import com.fluxchess.board.IntColor;
 
-/**
- * IntColorTest
- *
- * @author Phokham Nonava
- */
 public class IntColorTest {
 
 	@Test

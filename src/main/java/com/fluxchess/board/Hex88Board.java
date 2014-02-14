@@ -34,11 +34,6 @@ import com.fluxchess.move.IntCastling;
 import com.fluxchess.move.IntMove;
 import com.fluxchess.table.RepetitionTable;
 
-/**
- * Hex88Board
- *
- * @author Phokham Nonava
- */
 public final class Hex88Board {
 
 	/**
