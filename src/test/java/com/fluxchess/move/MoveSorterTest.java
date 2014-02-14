@@ -18,12 +18,9 @@
  */
 package com.fluxchess.move;
 
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Test;
 
-import com.fluxchess.move.MoveList;
-import com.fluxchess.move.MoveSorter;
+import static org.junit.Assert.assertEquals;
 
 public class MoveSorterTest {
 

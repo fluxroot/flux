@@ -18,18 +18,15 @@
  */
 package com.fluxchess.evaluation;
 
-import static org.junit.Assert.assertEquals;
-import jcpi.data.GenericBoard;
-import jcpi.data.IllegalNotationException;
-
-import org.junit.Test;
-
 import com.fluxchess.board.Hex88Board;
-import com.fluxchess.evaluation.Evaluation;
-import com.fluxchess.evaluation.IEvaluation;
+import com.fluxchess.jcpi.models.GenericBoard;
+import com.fluxchess.jcpi.models.IllegalNotationException;
 import com.fluxchess.move.MoveSee;
 import com.fluxchess.table.EvaluationTable;
 import com.fluxchess.table.PawnTable;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class EvaluationTest {
 

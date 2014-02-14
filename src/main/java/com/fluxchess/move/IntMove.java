@@ -18,15 +18,14 @@
  */
 package com.fluxchess.move;
 
-import jcpi.data.GenericFile;
-import jcpi.data.GenericMove;
-import jcpi.data.GenericPosition;
-import jcpi.data.GenericRank;
-
 import com.fluxchess.board.Hex88Board;
 import com.fluxchess.board.IntChessman;
 import com.fluxchess.board.IntColor;
 import com.fluxchess.board.IntPosition;
+import com.fluxchess.jcpi.models.GenericFile;
+import com.fluxchess.jcpi.models.GenericMove;
+import com.fluxchess.jcpi.models.GenericPosition;
+import com.fluxchess.jcpi.models.GenericRank;
 
 /**
  * This class represents a move as a int value. The fields are represented by

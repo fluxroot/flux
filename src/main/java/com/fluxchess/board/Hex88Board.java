@@ -18,21 +18,14 @@
  */
 package com.fluxchess.board;
 
-import java.util.Random;
-
-import jcpi.data.GenericBoard;
-import jcpi.data.GenericCastling;
-import jcpi.data.GenericChessman;
-import jcpi.data.GenericColor;
-import jcpi.data.GenericFile;
-import jcpi.data.GenericPiece;
-import jcpi.data.GenericPosition;
-
 import com.fluxchess.ISearch;
 import com.fluxchess.evaluation.PositionValues;
+import com.fluxchess.jcpi.models.*;
 import com.fluxchess.move.IntCastling;
 import com.fluxchess.move.IntMove;
 import com.fluxchess.table.RepetitionTable;
+
+import java.util.Random;
 
 public final class Hex88Board {
 

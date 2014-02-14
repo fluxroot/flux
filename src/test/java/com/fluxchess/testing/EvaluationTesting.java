@@ -18,19 +18,18 @@
  */
 package com.fluxchess.testing;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-
-import jcpi.data.GenericBoard;
-import jcpi.data.IllegalNotationException;
-
 import com.fluxchess.board.Hex88Board;
 import com.fluxchess.evaluation.Evaluation;
 import com.fluxchess.evaluation.IEvaluation;
+import com.fluxchess.jcpi.models.GenericBoard;
+import com.fluxchess.jcpi.models.IllegalNotationException;
 import com.fluxchess.move.MoveSee;
 import com.fluxchess.table.EvaluationTable;
 import com.fluxchess.table.PawnTable;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class EvaluationTesting {
 

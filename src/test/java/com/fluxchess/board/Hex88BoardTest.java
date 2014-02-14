@@ -18,23 +18,12 @@
  */
 package com.fluxchess.board;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-import jcpi.data.GenericBoard;
-import jcpi.data.GenericFile;
-import jcpi.data.GenericPiece;
-import jcpi.data.GenericPosition;
-import jcpi.data.GenericRank;
-import jcpi.data.IllegalNotationException;
-
+import com.fluxchess.jcpi.models.*;
+import com.fluxchess.move.IntMove;
 import org.junit.Test;
 
-import com.fluxchess.board.Hex88Board;
-import com.fluxchess.board.IntChessman;
-import com.fluxchess.board.IntColor;
-import com.fluxchess.board.IntGamePhase;
-import com.fluxchess.board.IntPosition;
-import com.fluxchess.move.IntMove;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class Hex88BoardTest {
 

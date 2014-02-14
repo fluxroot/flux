@@ -18,21 +18,15 @@
  */
 package com.fluxchess.table;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-
-import org.junit.Ignore;
-import org.junit.Test;
-
 import com.fluxchess.Search;
 import com.fluxchess.board.IntChessman;
 import com.fluxchess.board.IntColor;
 import com.fluxchess.board.IntPosition;
 import com.fluxchess.move.IntMove;
 import com.fluxchess.move.IntValue;
-import com.fluxchess.table.TranspositionTable;
-import com.fluxchess.table.TranspositionTableEntry;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 public class TranspositionTableTest {
 
@@ -85,8 +79,7 @@ public class TranspositionTableTest {
 		assertEquals(0, table.getPermillUsed());
 	}
 
-	@Ignore("Enable this method and increase the heap size if you want to test memory consumption")
-//	@Test
+	@Test
 	public void testSize() {
 		System.out.println("Testing Transposition Table size:");
 		int[] megabytes = { 4, 8, 16, 32, 64, 128, 256 };

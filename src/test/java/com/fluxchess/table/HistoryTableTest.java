@@ -18,13 +18,11 @@
  */
 package com.fluxchess.table;
 
-import static org.junit.Assert.assertEquals;
-
-import org.junit.Test;
-
 import com.fluxchess.board.IntChessman;
 import com.fluxchess.move.IntMove;
-import com.fluxchess.table.HistoryTable;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class HistoryTableTest {
 

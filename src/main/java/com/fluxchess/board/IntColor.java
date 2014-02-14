@@ -18,7 +18,7 @@
  */
 package com.fluxchess.board;
 
-import jcpi.data.GenericColor;
+import com.fluxchess.jcpi.models.GenericColor;
 
 public final class IntColor {
 

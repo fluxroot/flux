@@ -18,15 +18,9 @@
  */
 package com.fluxchess.evaluation;
 
-import java.util.Arrays;
-
 import com.fluxchess.Configuration;
 import com.fluxchess.Search;
-import com.fluxchess.board.Hex88Board;
-import com.fluxchess.board.IntChessman;
-import com.fluxchess.board.IntColor;
-import com.fluxchess.board.IntPosition;
-import com.fluxchess.board.PositionList;
+import com.fluxchess.board.*;
 import com.fluxchess.move.IntCastling;
 import com.fluxchess.move.IntMove;
 import com.fluxchess.move.MoveGenerator;
@@ -34,6 +28,8 @@ import com.fluxchess.move.MoveSee;
 import com.fluxchess.table.EvaluationTable;
 import com.fluxchess.table.EvaluationTableEntry;
 import com.fluxchess.table.PawnTable;
+
+import java.util.Arrays;
 
 public final class Evaluation implements IEvaluation {
 

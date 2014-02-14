@@ -18,17 +18,11 @@
  */
 package com.fluxchess;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.Hashtable;
-import java.util.Properties;
-
-import jcpi.data.Option;
+import com.fluxchess.jcpi.options.*;
 
 public final class Configuration {
 
-	public static final String name = "Flux 2.2.1";
+	public static final String name = "Flux 2.2.2";
 	public static final String author = "Phokham Nonava";
 	
 	// Search
@@ -60,102 +54,45 @@ public final class Configuration {
 	public static final boolean usePawnExtension = true;
 	public static final boolean useMateThreatExtension = true;
 	
-	// Options
+	public static boolean ponder = true;
+	public static final CheckboxOption ponderOption = Options.newPonderOption(ponder);
+	
+	public static final int defaultShowPvNumber = 1;
+	public static int showPvNumber = defaultShowPvNumber;
+	public static final SpinnerOption multiPVOption = Options.newMultiPVOption(showPvNumber, 1, 256);
+	
+	public static final int defaultTranspositionTableSize = 16;
+	public static int transpositionTableSize = defaultTranspositionTableSize;
+	public static final SpinnerOption hashOption = Options.newHashOption(transpositionTableSize, 4, 256);
+
+	public static final ButtonOption clearHashOption = new ButtonOption("Clear Hash");
+
+	public static final int defaultEvaluationTableSize = 4;
+	public static int evaluationTableSize = defaultEvaluationTableSize;
+	public static final SpinnerOption evaluationTableOption = new SpinnerOption("Evaluation Table", evaluationTableSize, 4, 64);
+	
+	public static final int defaultPawnTableSize = 4;
+	public static int pawnTableSize = defaultPawnTableSize;
+	public static final SpinnerOption pawnTableOption = new SpinnerOption("Pawn Table", pawnTableSize, 4, 64);
+
 	public static boolean showRefutations = false;
-	public static int showPvNumber = 1;
+	public static final CheckboxOption uciShowRefutationsOption = Options.newUciShowRefutationsOption(showRefutations);
+
 	public static boolean analyzeMode = false;
-	
-	public static final String KEY_Ponder = "Ponder";
-	public static final String KEY_MultiPv = "MultiPV";
-	public static final String KEY_Hash = "Hash";
-	public static final String KEY_ClearHash = "Clear Hash";
-	public static final String KEY_HashEvaluation = "Evaluation Table";
-	public static final String KEY_HashPawn = "Pawn Table";
-	public static final String KEY_UCIShowRefutations = "UCI_ShowRefutations";
-	public static final String KEY_UCIAnalyseMode = "UCI_AnalyseMode";
-	
-	private static final String TYPE_Check = "check";
-	private static final String TYPE_Spin = "spin";
-	private static final String TYPE_Button = "button";
+	public static final CheckboxOption uciAnalyzeModeOption = Options.newUciAnalyseModeOption(analyzeMode);
 
-	public static final Hashtable<String, Option> configuration = new Hashtable<String, Option>();
+	public static final AbstractOption[] options = new AbstractOption[]{
+			ponderOption,
+			multiPVOption,
+			hashOption,
+			clearHashOption,
+			evaluationTableOption,
+			pawnTableOption,
+			uciShowRefutationsOption,
+			uciAnalyzeModeOption
+	};
 
-	private static final String configurationFile = "Flux.ini";
-	
-	static {
-		configuration.put(KEY_Ponder, new Option(KEY_Ponder, TYPE_Check, "true", null, null, null));
-		configuration.put(KEY_MultiPv, new Option(KEY_MultiPv, TYPE_Spin, "1", "1", "256", null));
-		configuration.put(KEY_Hash, new Option(KEY_Hash, TYPE_Spin, "16", "4", "256", null));
-		configuration.put(KEY_ClearHash, new Option(KEY_ClearHash, TYPE_Button, null, null, null, null));
-		configuration.put(KEY_HashEvaluation, new Option(KEY_HashEvaluation, TYPE_Spin, "4", "4", "64", null));
-		configuration.put(KEY_HashPawn, new Option(KEY_HashPawn, TYPE_Spin, "4", "4", "16", null));
-		configuration.put(KEY_UCIShowRefutations, new Option(KEY_UCIShowRefutations, TYPE_Check, "false", null, null, null));
-		configuration.put(KEY_UCIAnalyseMode, new Option(KEY_UCIAnalyseMode, TYPE_Check, "false", null, null, null));
-	}
-
-	public Configuration() {
-	}
-
-	public static void setOption(String name, String value) {
-		assert name != null;
-
-		if (configuration.get(name) != null && !configuration.get(name).type.equals(TYPE_Button)) {
-			assert value != null;
-			configuration.get(name).setValue(value);
-			
-			if (name.equals(KEY_UCIShowRefutations)) {
-				if (value.equalsIgnoreCase("true")) {
-					showRefutations = true;
-				} else {
-					showRefutations = false;
-				}
-			} else if (name.equals(KEY_UCIAnalyseMode)) {
-				if (value.equalsIgnoreCase("true")) {
-					analyzeMode = true;
-				} else {
-					analyzeMode = false;
-				}
-			} else if (name.equals(KEY_MultiPv)) {
-				try {
-					showPvNumber = new Integer(value);
-				} catch (NumberFormatException e) {
-					showPvNumber = 1;
-				}
-			}
-		}
-	}
-
-	public static void loadConfiguration() {
-		// Get the default properties
-		Properties defaultProperties = new Properties();
-		for (Option option : configuration.values()) {
-			assert option.name != null;
-			
-			if (!option.type.equals(TYPE_Button)) {
-				assert option.defaultValue != null;
-				defaultProperties.setProperty(option.name, option.defaultValue);
-			}
-		}
-
-		// Read the properties file
-		try {
-			Properties properties = new Properties(defaultProperties);
-			FileInputStream file = new FileInputStream(configurationFile);
-			properties.load(file);
-			file.close();
-			
-			// For each property set the value
-			for (Option option : configuration.values()) {
-				assert option.name != null;
-				setOption(option.name, properties.getProperty(option.name));
-			}
-			
-			ChessLogger.getLogger().debug("Loaded settings from " + configurationFile + " file.");
-		} catch (FileNotFoundException e) {
-			ChessLogger.getLogger().debug(configurationFile + " file not found. Using application defaults.");
-		} catch (IOException e) {
-			ChessLogger.getLogger().debug("An I/O exception occurred. Using application defaults.");
-		}
+	private Configuration() {
 	}
 
 }

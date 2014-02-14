@@ -18,16 +18,14 @@
  */
 package com.fluxchess.evaluation;
 
-import static org.junit.Assert.assertEquals;
-import jcpi.data.GenericChessman;
-
-import org.junit.Test;
-
 import com.fluxchess.board.Hex88Board;
 import com.fluxchess.board.IntChessman;
 import com.fluxchess.board.IntColor;
 import com.fluxchess.board.IntGamePhase;
-import com.fluxchess.evaluation.PositionValues;
+import com.fluxchess.jcpi.models.GenericChessman;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class PositionValuesTest {
 

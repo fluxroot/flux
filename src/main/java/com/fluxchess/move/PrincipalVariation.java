@@ -18,9 +18,9 @@
  */
 package com.fluxchess.move;
 
-import java.util.List;
+import com.fluxchess.jcpi.models.GenericMove;
 
-import jcpi.data.GenericMove;
+import java.util.List;
 
 public final class PrincipalVariation implements Comparable<PrincipalVariation> {
 

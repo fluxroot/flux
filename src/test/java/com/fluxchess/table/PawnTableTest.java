@@ -18,12 +18,10 @@
  */
 package com.fluxchess.table;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import org.junit.Test;
 
-import com.fluxchess.table.PawnTable;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class PawnTableTest {
 

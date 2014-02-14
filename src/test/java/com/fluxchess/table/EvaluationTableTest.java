@@ -18,12 +18,10 @@
  */
 package com.fluxchess.table;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 import org.junit.Test;
 
-import com.fluxchess.table.EvaluationTable;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class EvaluationTableTest {
 

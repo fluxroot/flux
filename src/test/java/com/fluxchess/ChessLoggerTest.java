@@ -20,8 +20,6 @@ package com.fluxchess;
 
 import org.junit.Test;
 
-import com.fluxchess.ChessLogger;
-
 public class ChessLoggerTest {
 
 	@Test

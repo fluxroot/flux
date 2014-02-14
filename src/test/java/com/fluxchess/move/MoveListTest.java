@@ -18,11 +18,9 @@
  */
 package com.fluxchess.move;
 
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Test;
 
-import com.fluxchess.move.MoveList;
+import static org.junit.Assert.assertEquals;
 
 public class MoveListTest {
 

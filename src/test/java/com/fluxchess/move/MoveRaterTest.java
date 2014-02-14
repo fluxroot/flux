@@ -18,14 +18,10 @@
  */
 package com.fluxchess.move;
 
-import static org.junit.Assert.assertEquals;
-
 import com.fluxchess.board.IntChessman;
-import com.fluxchess.move.IntMove;
-import com.fluxchess.move.MoveList;
-import com.fluxchess.move.MoveRater;
-import com.fluxchess.move.MoveSorter;
 import com.fluxchess.table.HistoryTable;
+
+import static org.junit.Assert.assertEquals;
 
 public class MoveRaterTest {
 

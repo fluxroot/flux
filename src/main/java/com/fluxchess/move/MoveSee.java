@@ -18,11 +18,7 @@
  */
 package com.fluxchess.move;
 
-import com.fluxchess.board.AttackVector;
-import com.fluxchess.board.Hex88Board;
-import com.fluxchess.board.IntChessman;
-import com.fluxchess.board.IntColor;
-import com.fluxchess.board.PositionList;
+import com.fluxchess.board.*;
 
 /**
  * Notes: Ideas from Fruit

@@ -18,34 +18,17 @@
  */
 package com.fluxchess;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.PriorityQueue;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.Semaphore;
-
-import jcpi.data.GenericMove;
-
-import com.fluxchess.board.Attack;
-import com.fluxchess.board.Hex88Board;
-import com.fluxchess.board.IntChessman;
-import com.fluxchess.board.IntColor;
-import com.fluxchess.board.IntGamePhase;
-import com.fluxchess.board.IntPosition;
+import com.fluxchess.board.*;
 import com.fluxchess.evaluation.IEvaluation;
-import com.fluxchess.move.IntMove;
-import com.fluxchess.move.IntValue;
-import com.fluxchess.move.MoveGenerator;
-import com.fluxchess.move.MoveList;
-import com.fluxchess.move.MoveSee;
-import com.fluxchess.move.MoveSorter;
-import com.fluxchess.move.PrincipalVariation;
+import com.fluxchess.jcpi.models.GenericMove;
+import com.fluxchess.move.*;
 import com.fluxchess.table.HistoryTable;
 import com.fluxchess.table.KillerTable;
 import com.fluxchess.table.TranspositionTable;
 import com.fluxchess.table.TranspositionTableEntry;
+
+import java.util.*;
+import java.util.concurrent.Semaphore;
 
 public final class Search implements ISearch, Runnable {
 

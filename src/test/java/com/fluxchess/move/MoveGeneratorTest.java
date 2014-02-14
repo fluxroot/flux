@@ -18,29 +18,21 @@
  */
 package com.fluxchess.move;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-
-import jcpi.data.GenericBoard;
-import jcpi.data.IllegalNotationException;
-
-import org.junit.Test;
-
 import com.fluxchess.board.Attack;
 import com.fluxchess.board.Hex88Board;
 import com.fluxchess.board.IntChessman;
-import com.fluxchess.move.IntMove;
-import com.fluxchess.move.MoveGenerator;
-import com.fluxchess.move.MoveList;
-import com.fluxchess.move.MoveRater;
-import com.fluxchess.move.MoveSee;
+import com.fluxchess.jcpi.models.GenericBoard;
+import com.fluxchess.jcpi.models.IllegalNotationException;
 import com.fluxchess.table.HistoryTable;
 import com.fluxchess.table.KillerTable;
+import org.junit.Test;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class MoveGeneratorTest {
 
@@ -71,13 +63,9 @@ public class MoveGeneratorTest {
 	public void testPerft() {
 		for (int i = 1; i < 4; i++) {
 //		for (int i = 1; i < 7; i++) {
+			BufferedReader file;
 			try {
-				BufferedReader file = null;
-				try {
-					file = new BufferedReader(new FileReader("perftsuite.epd"));
-				} catch (FileNotFoundException e) {
-					file = new BufferedReader(new FileReader("src/test/resources/perftsuite.epd"));
-				}
+				file = new BufferedReader(new InputStreamReader(MoveGeneratorTest.class.getResourceAsStream("/perftsuite.epd")));
 
 				String line = file.readLine();
 				while (line != null) {
@@ -173,13 +161,9 @@ public class MoveGeneratorTest {
 	public void testQuiescentCheckingMoves() {
 		for (int i = 1; i < 3; i++) {
 //		for (int i = 1; i < 7; i++) {
+			BufferedReader file;
 			try {
-				BufferedReader file = null;
-				try {
-					file = new BufferedReader(new FileReader("perftsuite.epd"));
-				} catch (FileNotFoundException e) {
-					file = new BufferedReader(new FileReader("src/test/resources/perftsuite.epd"));
-				}
+				file = new BufferedReader(new InputStreamReader(MoveGeneratorTest.class.getResourceAsStream("/perftsuite.epd")));
 
 				String line = file.readLine();
 				while (line != null) {

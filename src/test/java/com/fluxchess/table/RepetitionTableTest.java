@@ -18,12 +18,10 @@
  */
 package com.fluxchess.table;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import org.junit.Test;
 
-import com.fluxchess.table.RepetitionTable;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class RepetitionTableTest {
 

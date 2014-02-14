@@ -18,34 +18,18 @@
  */
 package com.fluxchess.testing;
 
+import com.fluxchess.Flux;
+import com.fluxchess.jcpi.commands.*;
+import com.fluxchess.jcpi.models.GenericBoard;
+import com.fluxchess.jcpi.models.GenericMove;
+import com.fluxchess.jcpi.protocols.IProtocolHandler;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import jcpi.AbstractCommunication;
-import jcpi.AbstractEngine;
-import jcpi.ICommunication;
-import jcpi.commands.EngineAnalyzeCommand;
-import jcpi.commands.EngineDebugCommand;
-import jcpi.commands.EngineInitializeRequestCommand;
-import jcpi.commands.EngineNewGameCommand;
-import jcpi.commands.EngineQuitCommand;
-import jcpi.commands.EngineReadyRequestCommand;
-import jcpi.commands.EngineStartCalculatingCommand;
-import jcpi.commands.EngineStopCalculatingCommand;
-import jcpi.commands.GuiBestMoveCommand;
-import jcpi.commands.GuiInformationCommand;
-import jcpi.commands.GuiInitializeAnswerCommand;
-import jcpi.commands.GuiReadyAnswerCommand;
-import jcpi.commands.IEngineCommand;
-import jcpi.commands.IGuiCommand;
-import jcpi.data.GenericBoard;
-import jcpi.data.GenericMove;
-
-import com.fluxchess.Flux;
-
-public class FluxTesting extends AbstractCommunication implements ICommunication {
+public class FluxTesting implements IProtocolHandler {
 
 	BlockingQueue<IEngineCommand> commandQueue = new LinkedBlockingQueue<IEngineCommand>();
 	List<GenericMove> moveList = new ArrayList<GenericMove>();
@@ -63,11 +47,10 @@ public class FluxTesting extends AbstractCommunication implements ICommunication
 
 	public static void main(String[] args) {
 		FluxTesting testing = new FluxTesting();
-		AbstractEngine engine = new Flux(testing);
-		engine.run();
+		new Flux(testing).run();
 	}
 
-	public void send(IGuiCommand command) {
+	public void send(IProtocolCommand command) {
 		command.accept(this);
 	}
 
@@ -85,15 +68,15 @@ public class FluxTesting extends AbstractCommunication implements ICommunication
 		return command;
 	}
 
-	public void visit(GuiInitializeAnswerCommand command) {
+	public void send(ProtocolInitializeAnswerCommand command) {
 		System.out.println(command);
 	}
 
-	public void visit(GuiReadyAnswerCommand command) {
+	public void send(ProtocolReadyAnswerCommand command) {
 		System.out.println(command);
 	}
 
-	public void visit(GuiBestMoveCommand command) {
+	public void send(ProtocolBestMoveCommand command) {
 		System.out.println(command);
 		if (command.bestMove != null) {
 			try {
@@ -112,7 +95,7 @@ public class FluxTesting extends AbstractCommunication implements ICommunication
 		}
 	}
 
-	public void visit(GuiInformationCommand command) {
+	public void send(ProtocolInformationCommand command) {
 		System.out.println(command);
 	}
 

@@ -18,20 +18,14 @@
  */
 package com.fluxchess.move;
 
-import static org.junit.Assert.assertEquals;
-import jcpi.data.GenericBoard;
-import jcpi.data.GenericFile;
-import jcpi.data.GenericMove;
-import jcpi.data.GenericPosition;
-import jcpi.data.GenericRank;
-
-import org.junit.Test;
-
 import com.fluxchess.board.Hex88Board;
 import com.fluxchess.board.IntChessman;
 import com.fluxchess.board.IntColor;
 import com.fluxchess.board.IntPosition;
-import com.fluxchess.move.IntMove;
+import com.fluxchess.jcpi.models.*;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class IntMoveTest {
 
