@@ -70,7 +70,7 @@ tasks.withType(FindBugs) {
 
 tasks.withType(Checkstyle) {
   checkstyle {
-    configFile = new File("${rootDir}/config/checkstyle/checkstyle.xml")
+    configFile = new File("${projectDir}/config/checkstyle/checkstyle.xml")
     ignoreFailures = true
     showViolations = false
   }
