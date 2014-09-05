@@ -1,7 +1,7 @@
 language: java
 
 jdk:
-- openjdk6
+- oraclejdk7
 
 env:
 - TERM=dumb ORG_GRADLE_PROJECT_buildNumber="${TRAVIS_BUILD_NUMBER}" ORG_GRADLE_PROJECT_revisionNumber="${TRAVIS_COMMIT}" ORG_GRADLE_PROJECT_branchName="${TRAVIS_BRANCH}"
