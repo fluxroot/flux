@@ -76,7 +76,7 @@ final class Search implements Runnable {
   private int showPvNumber = 1;
 
   // Search logic
-  private Evaluation evaluation;
+  private Evaluation evaluation = new Evaluation();
   private static Position board;
   private final int myColor;
 
@@ -120,15 +120,13 @@ final class Search implements Runnable {
     }
   }
 
-  Search(Evaluation newEvaluation, Position newBoard, TranspositionTable newTranspositionTable, InformationTimer newInfo, int[] timeTable) {
-    assert newEvaluation != null;
+  Search(Position newBoard, TranspositionTable newTranspositionTable, InformationTimer newInfo, int[] timeTable) {
     assert newBoard != null;
     assert newTranspositionTable != null;
     assert newInfo != null;
 
     this.analyzeMode = Configuration.analyzeMode;
 
-    this.evaluation = newEvaluation;
     board = newBoard;
     this.myColor = newBoard.activeColor;
 

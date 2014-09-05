@@ -56,7 +56,7 @@ public final class Flux extends AbstractEngine {
     initializeTranspositionTable();
 
     // Create a new search
-    this.search = new Search(new Evaluation(), new Position(new GenericBoard(GenericBoard.STANDARDSETUP)), this.transpositionTable, new InformationTimer(getProtocol(), this.transpositionTable), this.timeTable);
+    this.search = new Search(new Position(new GenericBoard(GenericBoard.STANDARDSETUP)), this.transpositionTable, new InformationTimer(getProtocol(), this.transpositionTable), this.timeTable);
   }
 
   private void initializeTranspositionTable() {
@@ -160,7 +160,7 @@ public final class Flux extends AbstractEngine {
     if (this.board != null) {
       if (this.search.isStopped()) {
         // Create a new search
-        this.search = new Search(new Evaluation(), this.board, this.transpositionTable, new InformationTimer(getProtocol(), this.transpositionTable), this.timeTable);
+        this.search = new Search(this.board, this.transpositionTable, new InformationTimer(getProtocol(), this.transpositionTable), this.timeTable);
 
         // Set all search parameters
         if (command.getDepth() != null && command.getDepth() > 0) {
