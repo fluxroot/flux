@@ -320,7 +320,7 @@ public final class Search implements Runnable {
 
   public void setSearchMoveList(List<GenericMove> moveList) {
     for (GenericMove move : moveList) {
-      this.searchMoveList.move[this.searchMoveList.tail++] = Move.convertMove(move, board);
+      this.searchMoveList.moves[this.searchMoveList.tail++] = Move.convertMove(move, board);
     }
   }
 
@@ -435,13 +435,13 @@ public final class Search implements Runnable {
 
       int move = Move.NOMOVE;
       while ((move = MoveGenerator.getNextMove()) != Move.NOMOVE) {
-        rootMoveList.move[rootMoveList.tail++] = move;
+        rootMoveList.moves[rootMoveList.tail++] = move;
       }
 
       MoveGenerator.destroy();
     } else {
       for (int i = this.searchMoveList.head; i < this.searchMoveList.tail; i++) {
-        rootMoveList.move[rootMoveList.tail++] = this.searchMoveList.move[i];
+        rootMoveList.moves[rootMoveList.tail++] = this.searchMoveList.moves[i];
       }
     }
 
@@ -656,7 +656,7 @@ public final class Search implements Runnable {
 
         if (pvList[0].tail > 1) {
           // We found a line. Set the ponder move.
-          this.bestResult.ponderMove = pvList[0].move[1];
+          this.bestResult.ponderMove = pvList[0].moves[1];
         }
       } else {
         // We found no best move.
@@ -728,7 +728,7 @@ public final class Search implements Runnable {
     }
 
     for (int j = rootMoveList.head; j < rootMoveList.tail; j++) {
-      int move = rootMoveList.move[j];
+      int move = rootMoveList.moves[j];
 
       // Update the information if we evaluate a new move.
       currentMoveNumber++;
@@ -767,16 +767,16 @@ public final class Search implements Runnable {
       if (value <= alpha) {
         value = alpha;
         moveType = Bound.ALPHA;
-        rootMoveList.value[j] = oldAlpha;
+        rootMoveList.values[j] = oldAlpha;
         sortValue = -INFINITY;
       } else if (value >= beta) {
         value = beta;
         moveType = Bound.BETA;
-        rootMoveList.value[j] = beta;
+        rootMoveList.values[j] = beta;
         sortValue = INFINITY;
       } else {
         moveType = Bound.EXACT;
-        rootMoveList.value[j] = value;
+        rootMoveList.values[j] = value;
         sortValue = value;
       }
 
@@ -784,7 +784,7 @@ public final class Search implements Runnable {
       List<GenericMove> commandMoveList = new ArrayList<GenericMove>();
       commandMoveList.add(Move.toCommandMove(move));
       for (int i = pvList[height + 1].head; i < pvList[height + 1].tail; i++) {
-        commandMoveList.add(Move.toCommandMove(pvList[height + 1].move[i]));
+        commandMoveList.add(Move.toCommandMove(pvList[height + 1].moves[i]));
       }
       PrincipalVariation pv = new PrincipalVariation(
           currentMoveNumber,
@@ -897,15 +897,15 @@ public final class Search implements Runnable {
       TranspositionTable.TranspositionTableEntry entry = this.transpositionTable.get(board.zobristCode);
       if (entry != null) {
         for (int i = rootMoveList.head; i < rootMoveList.tail; i++) {
-          if (rootMoveList.move[i] == entry.move) {
-            rootMoveList.value[i] = INFINITY;
+          if (rootMoveList.moves[i] == entry.move) {
+            rootMoveList.values[i] = INFINITY;
             break;
           }
         }
       }
     }
 
-    MoveSorter.sort(rootMoveList);
+    rootMoveList.sort();
 
     return bestValue;
   }
@@ -1122,7 +1122,7 @@ public final class Search implements Runnable {
 
         if (pvList[height].getLength() > 0) {
           // Hopefully we have a transposition move now
-          transpositionMove = pvList[height].move[pvList[height].head];
+          transpositionMove = pvList[height].moves[pvList[height].head];
         }
       }
     }
@@ -1599,10 +1599,10 @@ public final class Search implements Runnable {
 
     destination.resetList();
 
-    destination.move[destination.tail++] = move;
+    destination.moves[destination.tail++] = move;
 
     for (int i = source.head; i < source.tail; i++) {
-      destination.move[destination.tail++] = source.move[i];
+      destination.moves[destination.tail++] = source.moves[i];
     }
   }
 

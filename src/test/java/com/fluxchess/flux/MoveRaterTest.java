@@ -30,47 +30,47 @@ public class MoveRaterTest {
 
     // Pawn -> Rook
     int move1 = Move.createMove(Move.NORMAL, 16, 0, Piece.NOPIECE, Piece.NOPIECE, Piece.NOPIECE);
-    list.move[list.tail++] = move1;
+    list.moves[list.tail++] = move1;
 
     // Knight -> Rook
     int move2 = Move.createMove(Move.NORMAL, 1, 0, Piece.NOPIECE, Piece.NOPIECE, Piece.NOPIECE);
-    list.move[list.tail++] = move2;
+    list.moves[list.tail++] = move2;
 
     // Pawn -> Knight
     int move3 = Move.createMove(Move.NORMAL, 16, 1, Piece.NOPIECE, Piece.NOPIECE, Piece.NOPIECE);
-    list.move[list.tail++] = move3;
+    list.moves[list.tail++] = move3;
 
     // Rook -> Knight
     int move4 = Move.createMove(Move.NORMAL, 0, 1, Piece.NOPIECE, Piece.NOPIECE, Piece.NOPIECE);
-    list.move[list.tail++] = move4;
+    list.moves[list.tail++] = move4;
 
     // Rook -> Rook
     int move5 = Move.createMove(Move.NORMAL, 0, 7, Piece.NOPIECE, Piece.NOPIECE, Piece.NOPIECE);
-    list.move[list.tail++] = move5;
+    list.moves[list.tail++] = move5;
 
     // King -> Empty
     int move6 = Move.createMove(Move.NORMAL, 4, 32, Piece.NOPIECE, Piece.NOPIECE, Piece.NOPIECE);
-    list.move[list.tail++] = move6;
+    list.moves[list.tail++] = move6;
 
     // Pawn -> Pawn
     int move7 = Move.createMove(Move.NORMAL, 16, 17, Piece.NOPIECE, Piece.NOPIECE, Piece.NOPIECE);
-    list.move[list.tail++] = move7;
+    list.moves[list.tail++] = move7;
 
     // Pawn -> Empty
     int move8 = Move.createMove(Move.NORMAL, 16, 32, Piece.NOPIECE, Piece.NOPIECE, Piece.NOPIECE);
-    list.move[list.tail++] = move8;
+    list.moves[list.tail++] = move8;
 
     rater.rateFromMVVLVA(list);
-    MoveSorter.sort(list);
+    list.sort();
 
-    assertEquals(move1, list.move[0]);
-    assertEquals(move2, list.move[1]);
-    assertEquals(move5, list.move[2]);
-    assertEquals(move3, list.move[3]);
-    assertEquals(move4, list.move[4]);
-    assertEquals(move7, list.move[5]);
-    assertEquals(move8, list.move[6]);
-    assertEquals(move6, list.move[7]);
+    assertEquals(move1, list.moves[0]);
+    assertEquals(move2, list.moves[1]);
+    assertEquals(move5, list.moves[2]);
+    assertEquals(move3, list.moves[3]);
+    assertEquals(move4, list.moves[4]);
+    assertEquals(move7, list.moves[5]);
+    assertEquals(move8, list.moves[6]);
+    assertEquals(move6, list.moves[7]);
   }
 
 }

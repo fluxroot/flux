@@ -30,14 +30,14 @@ public class MoveListTest {
 
     moveList.newList();
     assertEquals(0, moveList.getLength());
-    moveList.move[moveList.tail++] = 1;
+    moveList.moves[moveList.tail++] = 1;
     assertEquals(1, moveList.getLength());
 
     moveList.newList();
     assertEquals(0, moveList.getLength());
-    moveList.move[moveList.tail++] = 1;
-    moveList.move[moveList.tail++] = 1;
-    moveList.move[moveList.tail++] = 1;
+    moveList.moves[moveList.tail++] = 1;
+    moveList.moves[moveList.tail++] = 1;
+    moveList.moves[moveList.tail++] = 1;
     assertEquals(3, moveList.getLength());
 
     moveList.deleteList();
@@ -45,6 +45,88 @@ public class MoveListTest {
 
     moveList.deleteList();
     assertEquals(0, moveList.getLength());
+  }
+
+  @Test
+  public void testSort() {
+    MoveList list = new MoveList();
+
+    list.moves[list.tail] = 10;
+    list.values[list.tail] = list.moves[list.tail];
+    list.tail++;
+    list.moves[list.tail] = 9;
+    list.values[list.tail] = list.moves[list.tail];
+    list.tail++;
+    list.moves[list.tail] = 8;
+    list.values[list.tail] = list.moves[list.tail];
+    list.tail++;
+    list.moves[list.tail] = 7;
+    list.values[list.tail] = list.moves[list.tail];
+    list.tail++;
+    list.moves[list.tail] = 6;
+    list.values[list.tail] = list.moves[list.tail];
+    list.tail++;
+    list.moves[list.tail] = 5;
+    list.values[list.tail] = list.moves[list.tail];
+    list.tail++;
+    list.moves[list.tail] = 4;
+    list.values[list.tail] = list.moves[list.tail];
+    list.tail++;
+    list.moves[list.tail] = 3;
+    list.values[list.tail] = list.moves[list.tail];
+    list.tail++;
+    list.moves[list.tail] = 2;
+    list.values[list.tail] = list.moves[list.tail];
+    list.tail++;
+    list.moves[list.tail] = 1;
+    list.values[list.tail] = list.moves[list.tail];
+    list.tail++;
+
+    list.sort();
+
+    for (int i = 0; i < 10; i++) {
+      assertEquals(10 - i, list.moves[i]);
+      assertEquals(10 - i, list.values[i]);
+    }
+
+    list = new MoveList();
+    list.moves[list.tail] = 3;
+    list.values[list.tail] = list.moves[list.tail];
+    list.tail++;
+    list.moves[list.tail] = 4;
+    list.values[list.tail] = list.moves[list.tail];
+    list.tail++;
+    list.moves[list.tail] = 6;
+    list.values[list.tail] = list.moves[list.tail];
+    list.tail++;
+    list.moves[list.tail] = 1;
+    list.values[list.tail] = list.moves[list.tail];
+    list.tail++;
+    list.moves[list.tail] = 10;
+    list.values[list.tail] = list.moves[list.tail];
+    list.tail++;
+    list.moves[list.tail] = 9;
+    list.values[list.tail] = list.moves[list.tail];
+    list.tail++;
+    list.moves[list.tail] = 2;
+    list.values[list.tail] = list.moves[list.tail];
+    list.tail++;
+    list.moves[list.tail] = 8;
+    list.values[list.tail] = list.moves[list.tail];
+    list.tail++;
+    list.moves[list.tail] = 5;
+    list.values[list.tail] = list.moves[list.tail];
+    list.tail++;
+    list.moves[list.tail] = 7;
+    list.values[list.tail] = list.moves[list.tail];
+    list.tail++;
+
+    list.sort();
+
+    for (int i = 0; i < 10; i++) {
+      assertEquals(10 - i, list.moves[i]);
+      assertEquals(10 - i, list.values[i]);
+    }
   }
 
 }

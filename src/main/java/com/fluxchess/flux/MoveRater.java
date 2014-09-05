@@ -34,19 +34,19 @@ public final class MoveRater {
 
   public void rateEvasion(MoveList moveList, int transpositionMove, int primaryKillerMove, int secondaryKillerMove) {
     for (int i = moveList.head; i < moveList.tail; i++) {
-      int move = moveList.move[i];
+      int move = moveList.moves[i];
 
       if (move == transpositionMove) {
-        moveList.value[i] = Integer.MAX_VALUE;
+        moveList.values[i] = Integer.MAX_VALUE;
       } else if (Move.getTarget(move) != Piece.NOPIECE) {
-        moveList.value[i] = getMVVLVARating(move);
+        moveList.values[i] = getMVVLVARating(move);
       } else if (move == primaryKillerMove) {
-        moveList.value[i] = 0;
+        moveList.values[i] = 0;
       } else if (move == secondaryKillerMove) {
-        moveList.value[i] = -1;
+        moveList.values[i] = -1;
       } else {
         // -2 because of the secondary killer move
-        moveList.value[i] = historyTable.get(moveList.move[i]) - HistoryTable.MAX_HISTORYVALUE - 2;
+        moveList.values[i] = historyTable.get(moveList.moves[i]) - HistoryTable.MAX_HISTORYVALUE - 2;
       }
     }
   }
@@ -58,7 +58,7 @@ public final class MoveRater {
    */
   public void rateFromHistory(MoveList moveList) {
     for (int i = moveList.head; i < moveList.tail; i++) {
-      moveList.value[i] = historyTable.get(moveList.move[i]);
+      moveList.values[i] = historyTable.get(moveList.moves[i]);
     }
   }
 
@@ -69,7 +69,7 @@ public final class MoveRater {
    */
   public void rateFromSEE(MoveList moveList) {
     for (int i = moveList.head; i < moveList.tail; i++) {
-      moveList.value[i] = See.seeMove(moveList.move[i], Move.getChessmanColor(moveList.move[i]));
+      moveList.values[i] = See.seeMove(moveList.moves[i], Move.getChessmanColor(moveList.moves[i]));
     }
   }
 
@@ -80,7 +80,7 @@ public final class MoveRater {
    */
   public void rateFromMVVLVA(MoveList moveList) {
     for (int i = moveList.head; i < moveList.tail; i++) {
-      moveList.value[i] = getMVVLVARating(moveList.move[i]);
+      moveList.values[i] = getMVVLVARating(moveList.moves[i]);
     }
   }
 

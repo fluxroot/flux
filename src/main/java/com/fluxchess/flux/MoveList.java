@@ -23,8 +23,8 @@ public final class MoveList {
   private static final int MAXSIZE = 4096;
   private static final int HISTORYSIZE = Search.MAX_HEIGHT + 1;
 
-  public final int[] move = new int[MAXSIZE];
-  public final int[] value = new int[MAXSIZE];
+  public final int[] moves = new int[MAXSIZE];
+  public final int[] values = new int[MAXSIZE];
   public int head = 0;
   public int index = 0;
   public int tail = 0;
@@ -65,6 +65,42 @@ public final class MoveList {
 
   public int getLength() {
     return this.tail - this.head;
+  }
+
+  /**
+   * Sorts the MoveList using insertion sort.
+   *
+   */
+  public void sort() {
+    this.insertionsort(head, tail - 1);
+  }
+
+  /**
+   * This is an implementation of the insertion sort.
+   * <p/>
+   * Note: Here insertionsort sorts the list in descending order!
+   *
+   * @param left  the left/lower index.
+   * @param right the right/higher index.
+   */
+  private void insertionsort(int left, int right) {
+    int i;
+    int j;
+    int move;
+    int value;
+
+    for (i = left + 1; i <= right; i++) {
+      move = moves[i];
+      value = values[i];
+      j = i;
+      while ((j > left) && (values[j - 1] < value)) {
+        moves[j] = moves[j - 1];
+        values[j] = values[j - 1];
+        j--;
+      }
+      moves[j] = move;
+      values[j] = value;
+    }
   }
 
 }

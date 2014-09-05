@@ -193,7 +193,7 @@ public class MoveGeneratorTest {
     MoveGenerator.initializeQuiescent(attack, true);
     int move = MoveGenerator.getNextMove();
     while (move != Move.NOMOVE) {
-      quiescentMoveList.move[quiescentMoveList.tail++] = move;
+      quiescentMoveList.moves[quiescentMoveList.tail++] = move;
       move = MoveGenerator.getNextMove();
     }
     MoveGenerator.destroy();
@@ -208,13 +208,13 @@ public class MoveGeneratorTest {
           board.makeMove(move);
           miniMaxQuiescentCheckingMoves(board, depth - 1, maxDepth);
           board.undoMove(move);
-          mainMoveList.move[mainMoveList.tail++] = move;
+          mainMoveList.moves[mainMoveList.tail++] = move;
         }
       } else {
         board.makeMove(move);
         miniMaxQuiescentCheckingMoves(board, depth - 1, maxDepth);
         board.undoMove(move);
-        mainMoveList.move[mainMoveList.tail++] = move;
+        mainMoveList.moves[mainMoveList.tail++] = move;
       }
       move = MoveGenerator.getNextMove();
     }
@@ -233,13 +233,13 @@ public class MoveGeneratorTest {
 
     result += "     Main:";
     for (int i = 0; i < main.tail; i++) {
-      result += " " + Move.toCommandMove(main.move[i]).toString();
+      result += " " + Move.toCommandMove(main.moves[i]).toString();
     }
     result += "\n";
 
     result += "Quiescent:";
     for (int i = 0; i < quiescent.tail; i++) {
-      result += " " + Move.toCommandMove(quiescent.move[i]).toString();
+      result += " " + Move.toCommandMove(quiescent.moves[i]).toString();
     }
     result += "\n";
 
