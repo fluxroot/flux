@@ -21,7 +21,7 @@ package com.fluxchess.flux;
 public final class MoveList {
 
   private static final int MAXSIZE = 4096;
-  private static final int HISTORYSIZE = Search.MAX_HEIGHT + 1;
+  private static final int HISTORYSIZE = Depth.MAX_HEIGHT + 1;
 
   public final int[] moves = new int[MAXSIZE];
   public final int[] values = new int[MAXSIZE];

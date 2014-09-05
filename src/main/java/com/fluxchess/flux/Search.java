@@ -26,16 +26,6 @@ import java.util.concurrent.Semaphore;
 public final class Search implements Runnable {
 
   /**
-   * The maximum number of depth.
-   */
-  public static final int MAX_DEPTH = 64;
-
-  /**
-   * The maximum number of plies.
-   */
-  public static final int MAX_HEIGHT = 256;
-
-  /**
    * The maximum number of moves.
    */
   public static final int MAX_MOVES = 4096;
@@ -96,7 +86,7 @@ public final class Search implements Runnable {
   private static HistoryTable historyTable;
 
   // Search information
-  private static final MoveList[] pvList = new MoveList[MAX_HEIGHT + 1];
+  private static final MoveList[] pvList = new MoveList[Depth.MAX_HEIGHT + 1];
   private static final HashMap<Integer, PrincipalVariation> multiPvMap = new HashMap<Integer, PrincipalVariation>(MAX_MOVES);
   private Result bestResult = null;
   private final int[] timeTable;
@@ -260,8 +250,8 @@ public final class Search implements Runnable {
     assert searchDepth > 0;
 
     this.searchDepth = searchDepth;
-    if (this.searchDepth > MAX_DEPTH) {
-      this.searchDepth = MAX_DEPTH;
+    if (this.searchDepth > Depth.MAX_DEPTH) {
+      this.searchDepth = Depth.MAX_DEPTH;
     }
     this.doTimeManagement = false;
   }
@@ -270,7 +260,7 @@ public final class Search implements Runnable {
     assert searchNodes > 0;
 
     this.searchNodes = searchNodes;
-    this.searchDepth = MAX_DEPTH;
+    this.searchDepth = Depth.MAX_DEPTH;
     this.doTimeManagement = false;
   }
 
@@ -279,7 +269,7 @@ public final class Search implements Runnable {
 
     this.searchTime = searchTime;
     this.searchTimeHard = this.searchTime;
-    this.searchDepth = MAX_DEPTH;
+    this.searchDepth = Depth.MAX_DEPTH;
     this.doTimeManagement = false;
   }
 
@@ -302,13 +292,13 @@ public final class Search implements Runnable {
   }
 
   public void setSearchInfinite() {
-    this.searchDepth = MAX_DEPTH;
+    this.searchDepth = Depth.MAX_DEPTH;
     this.doTimeManagement = false;
     this.analyzeMode = true;
   }
 
   public void setSearchPonder() {
-    this.searchDepth = MAX_DEPTH;
+    this.searchDepth = Depth.MAX_DEPTH;
     this.doTimeManagement = false;
   }
 
@@ -332,7 +322,7 @@ public final class Search implements Runnable {
 
   private void setTimeManagement() {
     // Dynamic time allocation
-    this.searchDepth = MAX_DEPTH;
+    this.searchDepth = Depth.MAX_DEPTH;
 
     if (this.searchClock[this.myColor] > 0) {
       // We received a time control.
@@ -697,7 +687,7 @@ public final class Search implements Runnable {
     updateSearch(height);
 
     // Abort conditions
-    if ((this.stopped && this.canStop) || height == MAX_HEIGHT) {
+    if ((this.stopped && this.canStop) || height == Depth.MAX_HEIGHT) {
       return this.evaluation.evaluate(board);
     }
 
@@ -914,7 +904,7 @@ public final class Search implements Runnable {
     updateSearch(height);
 
     // Abort conditions
-    if ((this.stopped && this.canStop) || height == MAX_HEIGHT) {
+    if ((this.stopped && this.canStop) || height == Depth.MAX_HEIGHT) {
       return this.evaluation.evaluate(board);
     }
 
@@ -1331,7 +1321,7 @@ public final class Search implements Runnable {
     updateSearch(height);
 
     // Abort conditions
-    if ((this.stopped && this.canStop) || height == MAX_HEIGHT) {
+    if ((this.stopped && this.canStop) || height == Depth.MAX_HEIGHT) {
       return this.evaluation.evaluate(board);
     }
 

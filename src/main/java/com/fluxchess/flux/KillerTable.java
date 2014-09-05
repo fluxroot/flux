@@ -24,7 +24,7 @@ package com.fluxchess.flux;
  */
 public final class KillerTable {
 
-  private static final int MAXSIZE = Search.MAX_HEIGHT + 1;
+  private static final int MAXSIZE = Depth.MAX_HEIGHT + 1;
 
   private static final int[] primaryKiller = new int[MAXSIZE];
   private static final int[] secondaryKiller = new int[MAXSIZE];
