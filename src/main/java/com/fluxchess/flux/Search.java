@@ -65,7 +65,6 @@ public final class Search implements Runnable {
   private static final int FUTILITY_QUIESCENTMARGIN = IntChessman.VALUE_PAWN;
 
   // Objects
-  private final ChessLogger logger = ChessLogger.getLogger();
   private InformationTimer info;
   private Thread thread = new Thread(this);
   private Semaphore semaphore = new Semaphore(0);
@@ -157,7 +156,6 @@ public final class Search implements Runnable {
   }
 
   public void run() {
-    this.logger.debug("Analyzing fen " + board.getBoard().toString());
     this.stopped = false;
     this.canStop = false;
     this.bestResult = new Result();
@@ -205,7 +203,6 @@ public final class Search implements Runnable {
       // Wait for initialization
       this.semaphore.acquire();
     } catch (InterruptedException e) {
-      this.logger.debug(e.getMessage());
       // Do nothing
     }
   }
@@ -217,7 +214,6 @@ public final class Search implements Runnable {
       // Wait for the thread to die
       this.thread.join();
     } catch (InterruptedException e) {
-      this.logger.debug(e.getMessage());
       // Do nothing
     }
   }
@@ -380,7 +376,6 @@ public final class Search implements Runnable {
       // Calculate the mate distance
       int mateDepth = CHECKMATE - Math.abs(pv.value);
       this.info.sendInformationMate(pv, Integer.signum(pv.value) * (mateDepth + 1) / 2, pvNumber);
-      logger.debug("Mate value: " + pv.value + ", Mate depth: " + mateDepth);
     } else {
       this.info.sendInformationCentipawns(pv, pvNumber);
     }

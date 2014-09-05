@@ -47,17 +47,11 @@ public final class Flux extends AbstractEngine {
    * @param protocol the protocol.
    */
   public Flux() {
-    // Set the protocol
-    ChessLogger.setProtocol(getProtocol());
-
     initialize();
   }
 
   public Flux(IProtocolHandler handler) {
     super(handler);
-
-    // Set the protocol
-    ChessLogger.setProtocol(handler);
 
     initialize();
   }
@@ -102,16 +96,12 @@ public final class Flux extends AbstractEngine {
   }
 
   protected void quit() {
-    ChessLogger.getLogger().debug("Received Quit command.");
-
     // Stop calculating
     new EngineStopCalculatingCommand().accept(this);
   }
 
   public void receive(EngineInitializeRequestCommand command) {
     if (command == null) throw new IllegalArgumentException();
-
-    ChessLogger.getLogger().debug("Received Protocol command.");
 
     // Stop calculating
     new EngineStopCalculatingCommand().accept(this);
@@ -129,16 +119,12 @@ public final class Flux extends AbstractEngine {
   public void receive(EngineReadyRequestCommand command) {
     if (command == null) throw new IllegalArgumentException();
 
-    ChessLogger.getLogger().debug("Received ReadyRequest command.");
-
     // Send a pong back
     getProtocol().send(new ProtocolReadyAnswerCommand(command.token));
   }
 
   public void receive(EngineDebugCommand command) {
     if (command == null) throw new IllegalArgumentException();
-
-    ChessLogger.getLogger().debug("Received Debug command.");
 
     ProtocolInformationCommand infoCommand = new ProtocolInformationCommand();
     if (command.debug) {
@@ -147,13 +133,10 @@ public final class Flux extends AbstractEngine {
       infoCommand.setString("Turning off debugging mode");
     }
     getProtocol().send(infoCommand);
-    ChessLogger.setDebug(command.debug);
   }
 
   public void receive(EngineNewGameCommand command) {
     if (command == null) throw new IllegalArgumentException();
-
-    ChessLogger.getLogger().debug("Received New command.");
 
     // Stop calculating
     new EngineStopCalculatingCommand().accept(this);
@@ -167,8 +150,6 @@ public final class Flux extends AbstractEngine {
 
   public void receive(EngineAnalyzeCommand command) {
     if (command == null) throw new IllegalArgumentException();
-
-    ChessLogger.getLogger().debug("Received Analyze command.");
 
     if (!this.search.isStopped()) {
       this.search.stop();
@@ -188,19 +169,13 @@ public final class Flux extends AbstractEngine {
   public void receive(EnginePonderHitCommand command) {
     if (command == null) throw new IllegalArgumentException();
 
-    ChessLogger.getLogger().debug("Received PonderHit command.");
-
     if (!this.search.isStopped()) {
       this.search.ponderhit();
-    } else {
-      ChessLogger.getLogger().debug("There is no search active.");
     }
   }
 
   public void receive(EngineStartCalculatingCommand command) {
     if (command == null) throw new IllegalArgumentException();
-
-    ChessLogger.getLogger().debug("Received StartCalculating command.");
 
     if (this.board != null) {
       if (this.search.isStopped()) {
@@ -241,31 +216,21 @@ public final class Flux extends AbstractEngine {
         // Go...
         this.search.start();
         this.board = null;
-      } else {
-        ChessLogger.getLogger().debug("There is already a search running.");
       }
-    } else {
-      ChessLogger.getLogger().debug("Please do a position command first.");
     }
   }
 
   public void receive(EngineStopCalculatingCommand command) {
     if (command == null) throw new IllegalArgumentException();
 
-    ChessLogger.getLogger().debug("Received StopCalculating command.");
-
     if (!this.search.isStopped()) {
       // Stop the search
       this.search.stop();
-    } else {
-      ChessLogger.getLogger().debug("There is no search active.");
     }
   }
 
   public void receive(EngineSetOptionCommand command) {
     if (command == null) throw new IllegalArgumentException();
-
-    ChessLogger.getLogger().debug("Received SetOption command.");
 
     if (command.name == null) throw new IllegalArgumentException();
 
