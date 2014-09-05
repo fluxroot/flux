@@ -233,14 +233,14 @@ public final class MoveSee {
   }
 
   private static void addHiddenAttacker(int chessmanPosition, int targetPosition) {
-    int vector = AttackVector.vector[targetPosition - chessmanPosition + 127];
-    if (vector == AttackVector.N || vector == AttackVector.K) {
+    int vector = Attack.vector[targetPosition - chessmanPosition + 127];
+    if (vector == Attack.N || vector == Attack.K) {
       // No line
       return;
     }
 
     // Get the reverse delta
-    int delta = AttackVector.deltas[chessmanPosition - targetPosition + 127];
+    int delta = Attack.deltas[chessmanPosition - targetPosition + 127];
 
     // Find the hidden attacker
     int attackerPosition = chessmanPosition + delta;
@@ -262,14 +262,14 @@ public final class MoveSee {
   }
 
   private static boolean hasHiddenAttacker(int chessmanPosition, int targetPosition) {
-    int vector = AttackVector.vector[targetPosition - chessmanPosition + 127];
-    if (vector == AttackVector.N || vector == AttackVector.K) {
+    int vector = Attack.vector[targetPosition - chessmanPosition + 127];
+    if (vector == Attack.N || vector == Attack.K) {
       // No line
       return false;
     }
 
     // Get the reverse delta
-    int delta = AttackVector.deltas[chessmanPosition - targetPosition + 127];
+    int delta = Attack.deltas[chessmanPosition - targetPosition + 127];
 
     // Find the hidden attacker
     int end = chessmanPosition + delta;
