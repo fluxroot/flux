@@ -28,7 +28,7 @@ public final class HistoryTable {
    * Creates a new HistoryTable.
    */
   public HistoryTable() {
-    historyTable = new int[IntChessman.PIECE_VALUE_SIZE][Position.BOARDSIZE];
+    historyTable = new int[Piece.PIECE_VALUE_SIZE][Position.BOARDSIZE];
   }
 
   /**
@@ -42,7 +42,7 @@ public final class HistoryTable {
 
     int piece = IntMove.getChessmanPiece(move);
     int end = IntMove.getEnd(move);
-    assert IntMove.getChessman(move) != IntChessman.NOPIECE;
+    assert IntMove.getChessman(move) != Piece.NOPIECE;
     assert IntMove.getChessmanColor(move) != IntColor.NOCOLOR;
     assert (end & 0x88) == 0;
 
@@ -59,14 +59,14 @@ public final class HistoryTable {
 
     int piece = IntMove.getChessmanPiece(move);
     int end = IntMove.getEnd(move);
-    assert IntMove.getChessman(move) != IntChessman.NOPIECE;
+    assert IntMove.getChessman(move) != Piece.NOPIECE;
     assert IntMove.getChessmanColor(move) != IntColor.NOCOLOR;
     assert (end & 0x88) == 0;
 
     historyTable[piece][end] += depth;
 
     if (historyTable[piece][end] >= MAX_HISTORYVALUE) {
-      for (int pieceValue : IntChessman.pieceValues) {
+      for (int pieceValue : Piece.pieceValues) {
         for (int positionValue : IntPosition.values) {
           historyTable[pieceValue][positionValue] /= 2;
         }

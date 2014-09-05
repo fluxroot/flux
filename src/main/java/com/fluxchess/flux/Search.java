@@ -60,9 +60,9 @@ public final class Search implements Runnable {
   private static final int LMR_DEPTH = 3;
   private static final int LMR_MOVENUMBER_MINIMUM = 3;
 
-  private static final int FUTILITY_FRONTIERMARGIN = 2 * IntChessman.VALUE_PAWN;
-  private static final int FUTILITY_PREFRONTIERMARGIN = IntChessman.VALUE_ROOK;
-  private static final int FUTILITY_QUIESCENTMARGIN = IntChessman.VALUE_PAWN;
+  private static final int FUTILITY_FRONTIERMARGIN = 2 * Piece.VALUE_PAWN;
+  private static final int FUTILITY_PREFRONTIERMARGIN = Piece.VALUE_ROOK;
+  private static final int FUTILITY_QUIESCENTMARGIN = Piece.VALUE_PAWN;
 
   // Objects
   private InformationTimer info;
@@ -617,7 +617,7 @@ public final class Search implements Runnable {
           // Check if this is an easy recapture
           else if (!timeExtended
               && IntMove.getEnd(moveResult.bestMove) == board.captureSquare
-              && IntChessman.getValueFromChessman(IntMove.getTarget(moveResult.bestMove)) >= IntChessman.VALUE_KNIGHT
+              && Piece.getValueFromChessman(IntMove.getTarget(moveResult.bestMove)) >= Piece.VALUE_KNIGHT
               && equalResults > 4) {
             this.stopFlag = true;
           }
@@ -1129,8 +1129,8 @@ public final class Search implements Runnable {
       if (Configuration.useMinorPromotionPruning
           && !this.analyzeMode
           && IntMove.getType(move) == IntMove.PAWNPROMOTION
-          && IntMove.getPromotion(move) != IntChessman.QUEEN) {
-        assert IntMove.getPromotion(move) == IntChessman.ROOK || IntMove.getPromotion(move) == IntChessman.BISHOP || IntMove.getPromotion(move) == IntChessman.KNIGHT;
+          && IntMove.getPromotion(move) != Piece.QUEEN) {
+        assert IntMove.getPromotion(move) == Piece.ROOK || IntMove.getPromotion(move) == Piece.BISHOP || IntMove.getPromotion(move) == Piece.KNIGHT;
         continue;
       }
       //## ENDOF Minor Promotion Pruning
@@ -1158,8 +1158,8 @@ public final class Search implements Runnable {
 
           // Add the target value to the eval
           int target = IntMove.getTarget(move);
-          if (target != IntChessman.NOPIECE) {
-            value += IntChessman.getValueFromChessman(target);
+          if (target != Piece.NOPIECE) {
+            value += Piece.getValueFromChessman(target);
           }
 
           // If we cannot reach alpha do not look at the move
@@ -1193,8 +1193,8 @@ public final class Search implements Runnable {
 
           // Add the target value to the eval
           int target = IntMove.getTarget(move);
-          if (target != IntChessman.NOPIECE) {
-            value += IntChessman.getValueFromChessman(target);
+          if (target != Piece.NOPIECE) {
+            value += Piece.getValueFromChessman(target);
           }
 
           // If we cannot reach alpha do not look at the move
@@ -1218,7 +1218,7 @@ public final class Search implements Runnable {
             && newDepth < depth
             && !isCheck
             && (Configuration.useCheckExtension || !board.isCheckingMove(move))
-            && IntMove.getTarget(move) == IntChessman.NOPIECE
+            && IntMove.getTarget(move) == Piece.NOPIECE
             && !isDangerousMove(move)) {
           assert !board.isCheckingMove(move);
           assert IntMove.getType(move) != IntMove.PAWNPROMOTION : board.getBoard() + ", " + IntMove.toString(move);
@@ -1433,13 +1433,13 @@ public final class Search implements Runnable {
             && !isCheck
             && !board.isCheckingMove(move)
             && !isDangerousMove(move)) {
-          assert IntMove.getTarget(move) != IntChessman.NOPIECE;
+          assert IntMove.getTarget(move) != Piece.NOPIECE;
           assert IntMove.getType(move) != IntMove.PAWNPROMOTION : board.getBoard() + ", " + IntMove.toString(move);
 
           int value = evalValue + FUTILITY_QUIESCENTMARGIN;
 
           // Add the target value to the eval
-          value += IntChessman.getValueFromChessman(IntMove.getTarget(move));
+          value += Piece.getValueFromChessman(IntMove.getTarget(move));
 
           // If we cannot reach alpha do not look at the move
           if (value <= alpha) {
@@ -1516,7 +1516,7 @@ public final class Search implements Runnable {
   private int getNewDepth(int depth, int move, boolean isSingleReply, boolean mateThreat) {
     int newDepth = depth - 1;
 
-    assert (IntMove.getEnd(move) != board.captureSquare) || (IntMove.getTarget(move) != IntChessman.NOPIECE);
+    assert (IntMove.getEnd(move) != board.captureSquare) || (IntMove.getTarget(move) != Piece.NOPIECE);
 
     //## Recapture Extension
     if (Configuration.useRecaptureExtension
@@ -1533,7 +1533,7 @@ public final class Search implements Runnable {
 
     //## Pawn Extension
     else if (Configuration.usePawnExtension
-        && IntMove.getChessman(move) == IntChessman.PAWN
+        && IntMove.getChessman(move) == Piece.PAWN
         && IntPosition.getRelativeRank(IntMove.getEnd(move), board.activeColor) == IntPosition.rank7) {
       newDepth++;
     }
@@ -1553,8 +1553,8 @@ public final class Search implements Runnable {
     // Extend another ply if we enter a pawn endgame
     if (Position.materialCount[board.activeColor] == 0
         && Position.materialCount[IntColor.switchColor(board.activeColor)] == 1
-        && IntMove.getTarget(move) != IntChessman.NOPIECE
-        && IntMove.getTarget(move) != IntChessman.PAWN) {
+        && IntMove.getTarget(move) != Piece.NOPIECE
+        && IntMove.getTarget(move) != Piece.PAWN) {
       newDepth++;
     }
 
@@ -1564,12 +1564,12 @@ public final class Search implements Runnable {
   private static boolean isDangerousMove(int move) {
     int chessman = IntMove.getChessman(move);
     int relativeRank = IntPosition.getRelativeRank(IntMove.getEnd(move), board.activeColor);
-    if (chessman == IntChessman.PAWN && relativeRank >= IntPosition.rank7) {
+    if (chessman == Piece.PAWN && relativeRank >= IntPosition.rank7) {
       return true;
     }
 
     int target = IntMove.getTarget(move);
-    if (target == IntChessman.QUEEN) {
+    if (target == Piece.QUEEN) {
       return true;
     }
 
@@ -1593,7 +1593,7 @@ public final class Search implements Runnable {
   private static void addGoodMove(int move, int depth, int height) {
     assert move != IntMove.NOMOVE;
 
-    if (IntMove.getTarget(move) != IntChessman.NOPIECE) {
+    if (IntMove.getTarget(move) != Piece.NOPIECE) {
       return;
     }
 

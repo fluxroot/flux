@@ -29,25 +29,25 @@ public class KillerTableTest {
     KillerTable killerMoves = new KillerTable();
 
     // Put a new killer move into the list
-    int move1 = IntMove.createMove(IntMove.NORMAL, 0, 16, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
+    int move1 = IntMove.createMove(IntMove.NORMAL, 0, 16, Piece.NOPIECE, Piece.NOPIECE, Piece.NOPIECE);
     killerMoves.add(move1, 0);
     assertEquals(move1, killerMoves.getPrimaryKiller(0));
     assertEquals(IntMove.NOMOVE, killerMoves.getSecondaryKiller(0));
 
     // Put the same killer move into the list
-    int move2 = IntMove.createMove(IntMove.NORMAL, 0, 16, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
+    int move2 = IntMove.createMove(IntMove.NORMAL, 0, 16, Piece.NOPIECE, Piece.NOPIECE, Piece.NOPIECE);
     killerMoves.add(move2, 0);
     assertEquals(move2, killerMoves.getPrimaryKiller(0));
     assertEquals(IntMove.NOMOVE, killerMoves.getSecondaryKiller(0));
 
     // Put a new killer move into the list
-    int move3 = IntMove.createMove(IntMove.NORMAL, 1, 17, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
+    int move3 = IntMove.createMove(IntMove.NORMAL, 1, 17, Piece.NOPIECE, Piece.NOPIECE, Piece.NOPIECE);
     killerMoves.add(move3, 0);
     assertEquals(move3, killerMoves.getPrimaryKiller(0));
     assertEquals(move2, killerMoves.getSecondaryKiller(0));
 
     // Put a new killer move into the list twice
-    int move4 = IntMove.createMove(IntMove.NORMAL, 2, 18, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
+    int move4 = IntMove.createMove(IntMove.NORMAL, 2, 18, Piece.NOPIECE, Piece.NOPIECE, Piece.NOPIECE);
     killerMoves.add(move4, 0);
     killerMoves.add(move4, 0);
     assertEquals(move4, killerMoves.getPrimaryKiller(0));

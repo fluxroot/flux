@@ -64,20 +64,20 @@ public final class MoveSee {
     // Get the attacker value
     int attackerValue = 0;
     if (type == IntMove.PAWNPROMOTION) {
-      attackerValue = IntChessman.getValueFromChessman(IntMove.getPromotion(move));
+      attackerValue = Piece.getValueFromChessman(IntMove.getPromotion(move));
     } else {
-      attackerValue = IntChessman.getValueFromChessman(IntMove.getChessman(move));
+      attackerValue = Piece.getValueFromChessman(IntMove.getChessman(move));
     }
 
     // We have no target for now
     int value = 0;
 
     // Get the target value
-    if (target != IntChessman.NOPIECE) {
-      value = IntChessman.getValueFromChessman(target);
+    if (target != Piece.NOPIECE) {
+      value = Piece.getValueFromChessman(target);
     }
     if (type == IntMove.PAWNPROMOTION) {
-      value += IntChessman.getValueFromChessman(IntMove.getPromotion(move)) - IntChessman.VALUE_PAWN;
+      value += Piece.getValueFromChessman(IntMove.getPromotion(move)) - Piece.VALUE_PAWN;
     }
 
     // Find all attackers
@@ -133,21 +133,21 @@ public final class MoveSee {
     int value = targetValue;
 
     // If we capture the king, we cannot go futher
-    if (value == IntChessman.VALUE_KING) {
+    if (value == Piece.VALUE_KING) {
       return value;
     }
 
     // Get the attacker value
     int attackerValue = 0;
-    int chessman = IntChessman.getChessman(attacker);
-    if (chessman == IntChessman.PAWN
+    int chessman = Piece.getChessman(attacker);
+    if (chessman == Piece.PAWN
         && ((targetPosition > 111 && myColor == IntColor.WHITE)
         || (targetPosition < 8 && myColor == IntColor.BLACK))) {
       // Adjust on promotion
-      value += IntChessman.VALUE_QUEEN - IntChessman.VALUE_PAWN;
-      attackerValue = IntChessman.VALUE_QUEEN;
+      value += Piece.VALUE_QUEEN - Piece.VALUE_PAWN;
+      attackerValue = Piece.VALUE_QUEEN;
     } else {
-      attackerValue = IntChessman.getValueFromChessman(chessman);
+      attackerValue = Piece.getValueFromChessman(chessman);
     }
 
     // Add the hidden attacker
@@ -161,10 +161,10 @@ public final class MoveSee {
   private static void addAllAttackers(SeeList list, int targetPosition, int myColor) {
     // Pawn attacks
     int sign = 1;
-    int pawn = IntChessman.WHITE_PAWN;
+    int pawn = Piece.WHITE_PAWN;
     if (myColor == IntColor.BLACK) {
       sign = -1;
-      pawn = IntChessman.BLACK_PAWN;
+      pawn = Piece.BLACK_PAWN;
     } else {
       assert myColor == IntColor.WHITE;
     }
@@ -185,7 +185,7 @@ public final class MoveSee {
     PositionList tempPositionList = Position.knightList[myColor];
     for (int i = 0; i < tempPositionList.size; i++) {
       int position = tempPositionList.position[i];
-      if (board.canAttack(IntChessman.KNIGHT, myColor, position, targetPosition)) {
+      if (board.canAttack(Piece.KNIGHT, myColor, position, targetPosition)) {
         list.chessman[list.size] = Position.board[position];
         list.position[list.size] = position;
         list.size++;
@@ -196,7 +196,7 @@ public final class MoveSee {
     tempPositionList = Position.bishopList[myColor];
     for (int i = 0; i < tempPositionList.size; i++) {
       int position = tempPositionList.position[i];
-      if (board.canAttack(IntChessman.BISHOP, myColor, position, targetPosition)) {
+      if (board.canAttack(Piece.BISHOP, myColor, position, targetPosition)) {
         int bishop = Position.board[position];
         if (hasHiddenAttacker(position, targetPosition)) {
           addAttacker(list, bishop, position, true);
@@ -210,7 +210,7 @@ public final class MoveSee {
     tempPositionList = Position.rookList[myColor];
     for (int i = 0; i < tempPositionList.size; i++) {
       int position = tempPositionList.position[i];
-      if (board.canAttack(IntChessman.ROOK, myColor, position, targetPosition)) {
+      if (board.canAttack(Piece.ROOK, myColor, position, targetPosition)) {
         int rook = Position.board[position];
         if (hasHiddenAttacker(position, targetPosition)) {
           addAttacker(list, rook, position, true);
@@ -224,7 +224,7 @@ public final class MoveSee {
     tempPositionList = Position.queenList[myColor];
     for (int i = 0; i < tempPositionList.size; i++) {
       int position = tempPositionList.position[i];
-      if (board.canAttack(IntChessman.QUEEN, myColor, position, targetPosition)) {
+      if (board.canAttack(Piece.QUEEN, myColor, position, targetPosition)) {
         int queen = Position.board[position];
         if (hasHiddenAttacker(position, targetPosition)) {
           addAttacker(list, queen, position, true);
@@ -237,7 +237,7 @@ public final class MoveSee {
     // King attacks
     assert Position.kingList[myColor].size == 1;
     int position = Position.kingList[myColor].position[0];
-    if (board.canAttack(IntChessman.KING, myColor, position, targetPosition)) {
+    if (board.canAttack(Piece.KING, myColor, position, targetPosition)) {
       list.chessman[list.size] = Position.board[position];
       list.position[list.size] = position;
       list.size++;
@@ -258,14 +258,14 @@ public final class MoveSee {
     int attackerPosition = chessmanPosition + delta;
     while ((attackerPosition & 0x88) == 0) {
       int attacker = Position.board[attackerPosition];
-      if (attacker == IntChessman.NOPIECE) {
+      if (attacker == Piece.NOPIECE) {
         attackerPosition += delta;
       } else {
         if (board.canSliderPseudoAttack(attacker, attackerPosition, targetPosition)) {
           if (hasHiddenAttacker(attackerPosition, targetPosition)) {
-            addAttacker(chessmanList[IntChessman.getColor(attacker)], attacker, attackerPosition, true);
+            addAttacker(chessmanList[Piece.getColor(attacker)], attacker, attackerPosition, true);
           } else {
-            addAttacker(chessmanList[IntChessman.getColor(attacker)], attacker, attackerPosition, false);
+            addAttacker(chessmanList[Piece.getColor(attacker)], attacker, attackerPosition, false);
           }
         }
         break;
@@ -287,7 +287,7 @@ public final class MoveSee {
     int end = chessmanPosition + delta;
     while ((end & 0x88) == 0) {
       int chessman = Position.board[end];
-      if (chessman == IntChessman.NOPIECE) {
+      if (chessman == Piece.NOPIECE) {
         end += delta;
       } else {
         if (board.canSliderPseudoAttack(chessman, end, targetPosition)) {
@@ -316,13 +316,13 @@ public final class MoveSee {
   }
 
   private static void addAttacker(SeeList list, int attacker, int attackerPosition, boolean hasHiddenAttacker) {
-    int attackerValue = IntChessman.getValueFromPiece(attacker);
+    int attackerValue = Piece.getValueFromPiece(attacker);
     int index = -1;
     for (int i = 0; i < list.size; i++) {
       int chessman = list.chessman[i];
       int position = list.position[i];
-      if ((!hasHiddenAttacker && IntChessman.getValueFromPiece(chessman) > attackerValue)
-          || (hasHiddenAttacker && IntChessman.getValueFromPiece(chessman) >= attackerValue)) {
+      if ((!hasHiddenAttacker && Piece.getValueFromPiece(chessman) > attackerValue)
+          || (hasHiddenAttacker && Piece.getValueFromPiece(chessman) >= attackerValue)) {
         // Insert the attacker at this position
         list.chessman[i] = attacker;
         list.position[i] = attackerPosition;

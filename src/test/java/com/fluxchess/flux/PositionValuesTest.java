@@ -30,7 +30,7 @@ public class PositionValuesTest {
       for (GenericChessman chessman : GenericChessman.values()) {
         for (int position = 0; position < Position.BOARDSIZE; position++) {
           if ((position & 0x88) == 0) {
-            Assert.assertEquals(PositionValues.getPositionValue(phase, IntChessman.valueOfChessman(chessman), IntColor.WHITE, position), PositionValues.getPositionValue(phase, IntChessman.valueOfChessman(chessman), IntColor.BLACK, 119 - position));
+            Assert.assertEquals(PositionValues.getPositionValue(phase, Piece.valueOfChessman(chessman), IntColor.WHITE, position), PositionValues.getPositionValue(phase, Piece.valueOfChessman(chessman), IntColor.BLACK, 119 - position));
           } else {
             position += 7;
           }

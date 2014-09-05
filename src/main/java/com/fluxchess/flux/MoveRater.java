@@ -38,7 +38,7 @@ public final class MoveRater {
 
       if (move == transpositionMove) {
         moveList.value[i] = Integer.MAX_VALUE;
-      } else if (IntMove.getTarget(move) != IntChessman.NOPIECE) {
+      } else if (IntMove.getTarget(move) != Piece.NOPIECE) {
         moveList.value[i] = getMVVLVARating(move);
       } else if (move == primaryKillerMove) {
         moveList.value[i] = 0;
@@ -90,12 +90,12 @@ public final class MoveRater {
     int chessman = IntMove.getChessman(move);
     int target = IntMove.getTarget(move);
 
-    value += IntChessman.VALUE_KING / IntChessman.getValueFromChessman(chessman);
-    if (target != IntChessman.NOPIECE) {
-      value += 10 * IntChessman.getValueFromChessman(target);
+    value += Piece.VALUE_KING / Piece.getValueFromChessman(chessman);
+    if (target != Piece.NOPIECE) {
+      value += 10 * Piece.getValueFromChessman(target);
     }
 
-    assert value >= (IntChessman.VALUE_KING / IntChessman.VALUE_KING) && value <= (IntChessman.VALUE_KING / IntChessman.VALUE_PAWN) + 10 * IntChessman.VALUE_QUEEN;
+    assert value >= (Piece.VALUE_KING / Piece.VALUE_KING) && value <= (Piece.VALUE_KING / Piece.VALUE_PAWN) + 10 * Piece.VALUE_QUEEN;
 
     return value;
   }

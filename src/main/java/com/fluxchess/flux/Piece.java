@@ -28,7 +28,7 @@ import com.fluxchess.jcpi.models.GenericChessman;
  * <code>     3</code>: the color (required)<br/>
  * <br/>
  */
-public final class IntChessman {
+public final class Piece {
 
   /**
    * Represents no piece
@@ -133,7 +133,7 @@ public final class IntChessman {
   /**
    * IntChessman cannot be instantiated.
    */
-  private IntChessman() {
+  private Piece() {
   }
 
   /**

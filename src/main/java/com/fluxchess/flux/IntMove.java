@@ -91,24 +91,24 @@ public final class IntMove {
   private static final int END_SHIFT = 7;
   private static final int END_MASK = IntPosition.MASK << END_SHIFT;
   private static final int CHESSMAN_SHIFT = 14;
-  private static final int CHESSMAN_MASK = IntChessman.MASK << CHESSMAN_SHIFT;
+  private static final int CHESSMAN_MASK = Piece.MASK << CHESSMAN_SHIFT;
   private static final int CHESSMAN_COLOR_SHIFT = 17;
   private static final int CHESSMAN_COLOR_MASK = IntColor.MASK << CHESSMAN_COLOR_SHIFT;
   private static final int CHESSMAN_PIECE_SHIFT = CHESSMAN_SHIFT;
-  private static final int CHESSMAN_PIECE_MASK = IntChessman.PIECE_MASK << CHESSMAN_PIECE_SHIFT;
+  private static final int CHESSMAN_PIECE_MASK = Piece.PIECE_MASK << CHESSMAN_PIECE_SHIFT;
   private static final int TARGET_SHIFT = 18;
-  private static final int TARGET_MASK = IntChessman.MASK << TARGET_SHIFT;
+  private static final int TARGET_MASK = Piece.MASK << TARGET_SHIFT;
   private static final int TARGET_COLOR_SHIFT = 21;
   private static final int TARGET_COLOR_MASK = IntColor.MASK << TARGET_COLOR_SHIFT;
   private static final int TARGET_PIECE_SHIFT = TARGET_SHIFT;
-  private static final int TARGET_PIECE_MASK = IntChessman.PIECE_MASK << TARGET_PIECE_SHIFT;
+  private static final int TARGET_PIECE_MASK = Piece.PIECE_MASK << TARGET_PIECE_SHIFT;
   private static final int PROMOTION_SHIFT = 22;
-  private static final int PROMOTION_MASK = IntChessman.MASK << PROMOTION_SHIFT;
+  private static final int PROMOTION_MASK = Piece.MASK << PROMOTION_SHIFT;
   private static final int MOVE_SHIFT = 25;
   private static final int MOVE_MASK = MASK << MOVE_SHIFT;
 
   static {
-    NULLMOVE = IntMove.createMove(IntMove.NULL, IntPosition.NOPOSITION, IntPosition.NOPOSITION, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
+    NULLMOVE = IntMove.createMove(IntMove.NULL, IntPosition.NOPOSITION, IntPosition.NOPOSITION, Piece.NOPIECE, Piece.NOPIECE, Piece.NOPIECE);
   }
 
   /**
@@ -148,36 +148,36 @@ public final class IntMove {
     move |= end << END_SHIFT;
 
     // Encode piece
-    assert piece == IntChessman.NOPIECE
-        || (IntChessman.getChessman(piece) == IntChessman.PAWN)
-        || (IntChessman.getChessman(piece) == IntChessman.KNIGHT)
-        || (IntChessman.getChessman(piece) == IntChessman.BISHOP)
-        || (IntChessman.getChessman(piece) == IntChessman.ROOK)
-        || (IntChessman.getChessman(piece) == IntChessman.QUEEN)
-        || (IntChessman.getChessman(piece) == IntChessman.KING);
-    assert piece == IntChessman.NOPIECE
-        || (IntChessman.getColor(piece) == IntColor.WHITE)
-        || (IntChessman.getColor(piece) == IntColor.BLACK);
+    assert piece == Piece.NOPIECE
+        || (Piece.getChessman(piece) == Piece.PAWN)
+        || (Piece.getChessman(piece) == Piece.KNIGHT)
+        || (Piece.getChessman(piece) == Piece.BISHOP)
+        || (Piece.getChessman(piece) == Piece.ROOK)
+        || (Piece.getChessman(piece) == Piece.QUEEN)
+        || (Piece.getChessman(piece) == Piece.KING);
+    assert piece == Piece.NOPIECE
+        || (Piece.getColor(piece) == IntColor.WHITE)
+        || (Piece.getColor(piece) == IntColor.BLACK);
     move |= piece << CHESSMAN_PIECE_SHIFT;
 
     // Encode target
-    assert target == IntChessman.NOPIECE
-        || (IntChessman.getChessman(target) == IntChessman.PAWN)
-        || (IntChessman.getChessman(target) == IntChessman.KNIGHT)
-        || (IntChessman.getChessman(target) == IntChessman.BISHOP)
-        || (IntChessman.getChessman(target) == IntChessman.ROOK)
-        || (IntChessman.getChessman(target) == IntChessman.QUEEN);
-    assert target == IntChessman.NOPIECE
-        || (IntChessman.getColor(target) == IntColor.WHITE)
-        || (IntChessman.getColor(target) == IntColor.BLACK);
+    assert target == Piece.NOPIECE
+        || (Piece.getChessman(target) == Piece.PAWN)
+        || (Piece.getChessman(target) == Piece.KNIGHT)
+        || (Piece.getChessman(target) == Piece.BISHOP)
+        || (Piece.getChessman(target) == Piece.ROOK)
+        || (Piece.getChessman(target) == Piece.QUEEN);
+    assert target == Piece.NOPIECE
+        || (Piece.getColor(target) == IntColor.WHITE)
+        || (Piece.getColor(target) == IntColor.BLACK);
     move |= target << TARGET_PIECE_SHIFT;
 
     // Encode promotion
-    assert promotion == IntChessman.NOPIECE
-        || (promotion == IntChessman.KNIGHT)
-        || (promotion == IntChessman.BISHOP)
-        || (promotion == IntChessman.ROOK)
-        || (promotion == IntChessman.QUEEN);
+    assert promotion == Piece.NOPIECE
+        || (promotion == Piece.KNIGHT)
+        || (promotion == Piece.BISHOP)
+        || (promotion == Piece.ROOK)
+        || (promotion == Piece.QUEEN);
     move |= promotion << PROMOTION_SHIFT;
 
     // Encode move
@@ -223,7 +223,7 @@ public final class IntMove {
   public static int setEndPositionAndTarget(int move, int endPosition, int target) {
     assert move != IntMove.NOMOVE;
     assert endPosition != IntPosition.NOPOSITION;
-    assert target != IntChessman.NOPIECE;
+    assert target != Piece.NOPIECE;
 
     // Zero out the end position and the target piece
     move &= ~END_MASK;
@@ -233,13 +233,13 @@ public final class IntMove {
     move |= endPosition << END_SHIFT;
 
     // Encode target
-    assert (IntChessman.getChessman(target) == IntChessman.PAWN)
-        || (IntChessman.getChessman(target) == IntChessman.KNIGHT)
-        || (IntChessman.getChessman(target) == IntChessman.BISHOP)
-        || (IntChessman.getChessman(target) == IntChessman.ROOK)
-        || (IntChessman.getChessman(target) == IntChessman.QUEEN);
-    assert (IntChessman.getColor(target) == IntColor.WHITE)
-        || (IntChessman.getColor(target) == IntColor.BLACK);
+    assert (Piece.getChessman(target) == Piece.PAWN)
+        || (Piece.getChessman(target) == Piece.KNIGHT)
+        || (Piece.getChessman(target) == Piece.BISHOP)
+        || (Piece.getChessman(target) == Piece.ROOK)
+        || (Piece.getChessman(target) == Piece.QUEEN);
+    assert (Piece.getColor(target) == IntColor.WHITE)
+        || (Piece.getColor(target) == IntColor.BLACK);
     move |= target << TARGET_PIECE_SHIFT;
 
     return move;
@@ -254,7 +254,7 @@ public final class IntMove {
    */
   public static int setPromotion(int move, int promotion) {
     assert move != IntMove.NOMOVE;
-    assert promotion != IntChessman.NOPIECE;
+    assert promotion != Piece.NOPIECE;
 
     // Zero out the promotion chessman
     move &= ~PROMOTION_MASK;
@@ -311,12 +311,12 @@ public final class IntMove {
     assert move != NOMOVE;
 
     int chessman = (move & CHESSMAN_MASK) >>> CHESSMAN_SHIFT;
-    assert (chessman == IntChessman.PAWN)
-        || (chessman == IntChessman.KNIGHT)
-        || (chessman == IntChessman.BISHOP)
-        || (chessman == IntChessman.ROOK)
-        || (chessman == IntChessman.QUEEN)
-        || (chessman == IntChessman.KING);
+    assert (chessman == Piece.PAWN)
+        || (chessman == Piece.KNIGHT)
+        || (chessman == Piece.BISHOP)
+        || (chessman == Piece.ROOK)
+        || (chessman == Piece.QUEEN)
+        || (chessman == Piece.KING);
 
     return chessman;
   }
@@ -329,7 +329,7 @@ public final class IntMove {
    */
   public static int getChessmanColor(int move) {
     assert move != NOMOVE;
-    assert getChessman(move) != IntChessman.NOPIECE;
+    assert getChessman(move) != Piece.NOPIECE;
 
     int color = (move & CHESSMAN_COLOR_MASK) >>> CHESSMAN_COLOR_SHIFT;
     assert IntColor.isValidColor(color);
@@ -359,13 +359,13 @@ public final class IntMove {
     assert move != NOMOVE;
 
     int chessman = (move & TARGET_MASK) >>> TARGET_SHIFT;
-    assert (chessman == IntChessman.PAWN)
-        || (chessman == IntChessman.KNIGHT)
-        || (chessman == IntChessman.BISHOP)
-        || (chessman == IntChessman.ROOK)
-        || (chessman == IntChessman.QUEEN)
-        || (chessman == IntChessman.KING)
-        || (chessman == IntChessman.NOPIECE);
+    assert (chessman == Piece.PAWN)
+        || (chessman == Piece.KNIGHT)
+        || (chessman == Piece.BISHOP)
+        || (chessman == Piece.ROOK)
+        || (chessman == Piece.QUEEN)
+        || (chessman == Piece.KING)
+        || (chessman == Piece.NOPIECE);
 
     return chessman;
   }
@@ -378,7 +378,7 @@ public final class IntMove {
    */
   public static int getTargetColor(int move) {
     assert move != NOMOVE;
-    assert getTarget(move) != IntChessman.NOPIECE;
+    assert getTarget(move) != Piece.NOPIECE;
 
     int color = (move & TARGET_COLOR_MASK) >>> TARGET_COLOR_SHIFT;
     assert IntColor.isValidColor(color);
@@ -408,10 +408,10 @@ public final class IntMove {
     assert move != NOMOVE;
 
     int promotion = (move & PROMOTION_MASK) >>> PROMOTION_SHIFT;
-    assert (promotion == IntChessman.KNIGHT)
-        || (promotion == IntChessman.BISHOP)
-        || (promotion == IntChessman.ROOK)
-        || (promotion == IntChessman.QUEEN);
+    assert (promotion == Piece.KNIGHT)
+        || (promotion == Piece.BISHOP)
+        || (promotion == Piece.ROOK)
+        || (promotion == Piece.QUEEN);
 
     return promotion;
   }
@@ -446,19 +446,19 @@ public final class IntMove {
       int promotion;
       if (move.promotion == null) {
         // TODO: maybe better throw IllegalArgumentException()
-        promotion = IntChessman.QUEEN;
+        promotion = Piece.QUEEN;
       } else {
-        promotion = IntChessman.valueOfChessman(move.promotion);
+        promotion = Piece.valueOfChessman(move.promotion);
       }
       return createMove(PAWNPROMOTION, IntPosition.valueOfPosition(move.from), IntPosition.valueOfPosition(move.to), Position.board[IntPosition.valueOfPosition(move.from)], Position.board[IntPosition.valueOfPosition(move.to)], promotion);
     } else if (isPawnDouble(move, board)) {
-      return createMove(PAWNDOUBLE, IntPosition.valueOfPosition(move.from), IntPosition.valueOfPosition(move.to), Position.board[IntPosition.valueOfPosition(move.from)], IntChessman.NOPIECE, IntChessman.NOPIECE);
+      return createMove(PAWNDOUBLE, IntPosition.valueOfPosition(move.from), IntPosition.valueOfPosition(move.to), Position.board[IntPosition.valueOfPosition(move.from)], Piece.NOPIECE, Piece.NOPIECE);
     } else if (isEnPassant(move, board)) {
-      return createMove(ENPASSANT, IntPosition.valueOfPosition(move.from), IntPosition.valueOfPosition(move.to), Position.board[IntPosition.valueOfPosition(move.from)], Position.board[IntPosition.valueOfPosition(GenericPosition.valueOf(move.to.file, move.from.rank))], IntChessman.NOPIECE);
+      return createMove(ENPASSANT, IntPosition.valueOfPosition(move.from), IntPosition.valueOfPosition(move.to), Position.board[IntPosition.valueOfPosition(move.from)], Position.board[IntPosition.valueOfPosition(GenericPosition.valueOf(move.to.file, move.from.rank))], Piece.NOPIECE);
     } else if (isCastling(move, board)) {
-      return createMove(CASTLING, IntPosition.valueOfPosition(move.from), IntPosition.valueOfPosition(move.to), Position.board[IntPosition.valueOfPosition(move.from)], IntChessman.NOPIECE, IntChessman.NOPIECE);
+      return createMove(CASTLING, IntPosition.valueOfPosition(move.from), IntPosition.valueOfPosition(move.to), Position.board[IntPosition.valueOfPosition(move.from)], Piece.NOPIECE, Piece.NOPIECE);
     } else {
-      return createMove(NORMAL, IntPosition.valueOfPosition(move.from), IntPosition.valueOfPosition(move.to), Position.board[IntPosition.valueOfPosition(move.from)], Position.board[IntPosition.valueOfPosition(move.to)], IntChessman.NOPIECE);
+      return createMove(NORMAL, IntPosition.valueOfPosition(move.from), IntPosition.valueOfPosition(move.to), Position.board[IntPosition.valueOfPosition(move.from)], Position.board[IntPosition.valueOfPosition(move.to)], Piece.NOPIECE);
     }
   }
 
@@ -476,9 +476,9 @@ public final class IntMove {
     int position = IntPosition.valueOfPosition(move.from);
 
     int piece = Position.board[position];
-    if (piece != IntChessman.NOPIECE) {
-      if ((piece == IntChessman.WHITE_PAWN && move.from.rank == GenericRank.R7 && move.to.rank == GenericRank.R8)
-          || (piece == IntChessman.BLACK_PAWN && move.from.rank == GenericRank.R2 && move.to.rank == GenericRank.R1)) {
+    if (piece != Piece.NOPIECE) {
+      if ((piece == Piece.WHITE_PAWN && move.from.rank == GenericRank.R7 && move.to.rank == GenericRank.R8)
+          || (piece == Piece.BLACK_PAWN && move.from.rank == GenericRank.R2 && move.to.rank == GenericRank.R1)) {
         return true;
       }
     }
@@ -500,9 +500,9 @@ public final class IntMove {
     int position = IntPosition.valueOfPosition(move.from);
 
     int piece = Position.board[position];
-    if (piece != IntChessman.NOPIECE) {
-      if ((piece == IntChessman.WHITE_PAWN && move.from.rank == GenericRank.R2 && move.to.rank == GenericRank.R4)
-          || (piece == IntChessman.BLACK_PAWN && move.from.rank == GenericRank.R7 && move.to.rank == GenericRank.R5)) {
+    if (piece != Piece.NOPIECE) {
+      if ((piece == Piece.WHITE_PAWN && move.from.rank == GenericRank.R2 && move.to.rank == GenericRank.R4)
+          || (piece == Piece.BLACK_PAWN && move.from.rank == GenericRank.R7 && move.to.rank == GenericRank.R5)) {
         return true;
       }
     }
@@ -527,9 +527,9 @@ public final class IntMove {
 
     int piece = Position.board[position];
     int target = Position.board[targetIntPosition];
-    if (piece != IntChessman.NOPIECE && target != IntChessman.NOPIECE) {
-      if (IntChessman.getChessman(piece) == IntChessman.PAWN && IntChessman.getChessman(target) == IntChessman.PAWN) {
-        if (IntChessman.getColor(piece) == IntChessman.getColorOpposite(target)) {
+    if (piece != Piece.NOPIECE && target != Piece.NOPIECE) {
+      if (Piece.getChessman(piece) == Piece.PAWN && Piece.getChessman(target) == Piece.PAWN) {
+        if (Piece.getColor(piece) == Piece.getColorOpposite(target)) {
           if (board.enPassantSquare == IntPosition.valueOfPosition(move.to)) {
             return true;
           }
@@ -554,8 +554,8 @@ public final class IntMove {
     int position = IntPosition.valueOfPosition(move.from);
 
     int piece = Position.board[position];
-    if (piece != IntChessman.NOPIECE) {
-      if (IntChessman.getChessman(piece) == IntChessman.KING) {
+    if (piece != Piece.NOPIECE) {
+      if (Piece.getChessman(piece) == Piece.KING) {
         if (move.from.file == GenericFile.Fe
             && move.from.rank == GenericRank.R1
             && move.to.file == GenericFile.Fg
@@ -607,7 +607,7 @@ public final class IntMove {
       case CASTLING:
         return new GenericMove(IntPosition.valueOfIntPosition(start), IntPosition.valueOfIntPosition(end));
       case PAWNPROMOTION:
-        return new GenericMove(IntPosition.valueOfIntPosition(start), IntPosition.valueOfIntPosition(end), IntChessman.valueOfIntChessman(getPromotion(move)));
+        return new GenericMove(IntPosition.valueOfIntPosition(start), IntPosition.valueOfIntPosition(end), Piece.valueOfIntChessman(getPromotion(move)));
       case NULL:
         // TODO:
         return null;
@@ -643,22 +643,22 @@ public final class IntMove {
         throw new IllegalArgumentException();
     }
 
-    if (getChessman(move) != IntChessman.NOPIECE) {
+    if (getChessman(move) != Piece.NOPIECE) {
       string += ", (";
       string += IntColor.valueOfIntColor(getChessmanColor(move));
       string += "/";
-      string += IntChessman.valueOfIntChessman(getChessman(move));
+      string += Piece.valueOfIntChessman(getChessman(move));
       string += ")";
     }
 
     string += ", ";
     string += toCommandMove(move).toString();
 
-    if (getTarget(move) != IntChessman.NOPIECE) {
+    if (getTarget(move) != Piece.NOPIECE) {
       string += ", (";
       string += IntColor.valueOfIntColor(getTargetColor(move));
       string += "/";
-      string += IntChessman.valueOfIntChessman(getTarget(move));
+      string += Piece.valueOfIntChessman(getTarget(move));
       string += ")";
     }
 

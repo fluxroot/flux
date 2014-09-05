@@ -27,7 +27,7 @@ public class IntMoveTest {
 
   @Test
   public void testIntMove() {
-    int move = IntMove.createMove(IntMove.NULL, IntPosition.NOPOSITION, IntPosition.NOPOSITION, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
+    int move = IntMove.createMove(IntMove.NULL, IntPosition.NOPOSITION, IntPosition.NOPOSITION, Piece.NOPIECE, Piece.NOPIECE, Piece.NOPIECE);
     assertEquals(IntMove.NULL, IntMove.getType(move));
 //		assertEquals(IntPosition.NOPOSITION, IntMove.getStart(move));
 //		assertEquals(IntPosition.NOPOSITION, IntMove.getEnd(move));
@@ -37,23 +37,23 @@ public class IntMoveTest {
 //		assertEquals(IntColor.NOCOLOR, IntMove.getTargetColor(move));
 //		assertEquals(IntChessman.NOCHESSMAN, IntMove.getPromotion(move));
 
-    move = IntMove.createMove(IntMove.NORMAL, 0, 16, IntChessman.createPiece(IntChessman.PAWN, IntColor.WHITE), IntChessman.createPiece(IntChessman.QUEEN, IntColor.BLACK), IntChessman.NOPIECE);
+    move = IntMove.createMove(IntMove.NORMAL, 0, 16, Piece.createPiece(Piece.PAWN, IntColor.WHITE), Piece.createPiece(Piece.QUEEN, IntColor.BLACK), Piece.NOPIECE);
     assertEquals(IntMove.NORMAL, IntMove.getType(move));
     assertEquals(0, IntMove.getStart(move));
     assertEquals(16, IntMove.getEnd(move));
-    assertEquals(IntChessman.PAWN, IntMove.getChessman(move));
+    assertEquals(Piece.PAWN, IntMove.getChessman(move));
     assertEquals(IntColor.WHITE, IntMove.getChessmanColor(move));
-    assertEquals(IntChessman.WHITE_PAWN, IntMove.getChessmanPiece(move));
-    assertEquals(IntChessman.QUEEN, IntMove.getTarget(move));
+    assertEquals(Piece.WHITE_PAWN, IntMove.getChessmanPiece(move));
+    assertEquals(Piece.QUEEN, IntMove.getTarget(move));
     assertEquals(IntColor.BLACK, IntMove.getTargetColor(move));
-    assertEquals(IntChessman.BLACK_QUEEN, IntMove.getTargetPiece(move));
+    assertEquals(Piece.BLACK_QUEEN, IntMove.getTargetPiece(move));
 //		assertEquals(IntChessman.NOCHESSMAN, IntMove.getPromotion(move));
 
-    move = IntMove.createMove(IntMove.NORMAL, 0, 16, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.QUEEN);
-    assertEquals(IntChessman.QUEEN, IntMove.getPromotion(move));
+    move = IntMove.createMove(IntMove.NORMAL, 0, 16, Piece.NOPIECE, Piece.NOPIECE, Piece.QUEEN);
+    assertEquals(Piece.QUEEN, IntMove.getPromotion(move));
 
-    move = IntMove.createMove(IntMove.NORMAL, 0, 16, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.QUEEN);
-    int move2 = IntMove.createMove(IntMove.NORMAL, 0, 16, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.QUEEN);
+    move = IntMove.createMove(IntMove.NORMAL, 0, 16, Piece.NOPIECE, Piece.NOPIECE, Piece.QUEEN);
+    int move2 = IntMove.createMove(IntMove.NORMAL, 0, 16, Piece.NOPIECE, Piece.NOPIECE, Piece.QUEEN);
     assertEquals(move, move2);
 
     GenericMove commandMove = new GenericMove(GenericPosition.valueOf(GenericFile.Fa, GenericRank.R2), GenericPosition.valueOf(GenericFile.Fa, GenericRank.R4));
@@ -61,17 +61,17 @@ public class IntMoveTest {
     assertEquals(IntMove.PAWNDOUBLE, IntMove.getType(move));
     assertEquals(16, IntMove.getStart(move));
     assertEquals(48, IntMove.getEnd(move));
-    assertEquals(IntChessman.PAWN, IntMove.getChessman(move));
+    assertEquals(Piece.PAWN, IntMove.getChessman(move));
     assertEquals(IntColor.WHITE, IntMove.getChessmanColor(move));
-    assertEquals(IntChessman.WHITE_PAWN, IntMove.getChessmanPiece(move));
-    assertEquals(IntChessman.NOPIECE, IntMove.getTarget(move));
+    assertEquals(Piece.WHITE_PAWN, IntMove.getChessmanPiece(move));
+    assertEquals(Piece.NOPIECE, IntMove.getTarget(move));
 //		assertEquals(IntColor.NOCOLOR, IntMove.getTargetColor(move));
 //		assertEquals(IntChessman.NOCHESSMAN, IntMove.getPromotion(move));
   }
 
   @Test
   public void testSetEndPosition() {
-    int move = IntMove.createMove(IntMove.NORMAL, IntPosition.a2, IntPosition.a3, IntChessman.createPiece(IntChessman.PAWN, IntColor.WHITE), IntChessman.NOPIECE, IntChessman.NOPIECE);
+    int move = IntMove.createMove(IntMove.NORMAL, IntPosition.a2, IntPosition.a3, Piece.createPiece(Piece.PAWN, IntColor.WHITE), Piece.NOPIECE, Piece.NOPIECE);
     assertEquals(IntPosition.a3, IntMove.getEnd(move));
 
     move = IntMove.setEndPosition(move, IntPosition.a4);

@@ -448,7 +448,7 @@ public final class Evaluation {
                           int end = Position.pawnList[myColor].position[0] + delta;
                           while ((end & 0x88) == 0) {
                             int chessman = Position.board[end];
-                            if ((chessman != IntChessman.NOPIECE && IntChessman.getColor(chessman) == enemyColor) || (enemyAttackTable[end] & BIT_MINOR) != 0) {
+                            if ((chessman != Piece.NOPIECE && Piece.getColor(chessman) == enemyColor) || (enemyAttackTable[end] & BIT_MINOR) != 0) {
                               drawFactor[myColor] = 1;
                               break;
                             } else {
@@ -472,7 +472,7 @@ public final class Evaluation {
                           int end = Position.pawnList[myColor].position[0] + delta;
                           while ((end & 0x88) == 0) {
                             int chessman = Position.board[end];
-                            if ((chessman != IntChessman.NOPIECE && IntChessman.getColor(chessman) == enemyColor) || (enemyAttackTable[end] & BIT_MINOR) != 0) {
+                            if ((chessman != Piece.NOPIECE && Piece.getColor(chessman) == enemyColor) || (enemyAttackTable[end] & BIT_MINOR) != 0) {
                               drawFactor[myColor] = 1;
                               break;
                             } else {
@@ -707,10 +707,10 @@ public final class Evaluation {
           myAttackTable[targetPosition] |= BIT_MINOR;
 
           int target = Position.board[targetPosition];
-          if (target == IntChessman.NOPIECE) {
+          if (target == Piece.NOPIECE) {
             allMobility++;
           } else {
-            if (IntChessman.getColor(target) == enemyColor) {
+            if (Piece.getColor(target) == enemyColor) {
               allMobility++;
             }
           }
@@ -753,11 +753,11 @@ public final class Evaluation {
           myAttackTable[targetPosition] |= BIT_MINOR;
 
           int target = Position.board[targetPosition];
-          if (target == IntChessman.NOPIECE) {
+          if (target == Piece.NOPIECE) {
             allMobility++;
             targetPosition += delta;
           } else {
-            if (IntChessman.getColor(target) == enemyColor) {
+            if (Piece.getColor(target) == enemyColor) {
               allMobility++;
             }
             break;
@@ -814,11 +814,11 @@ public final class Evaluation {
           myAttackTable[targetPosition] |= BIT_ROOK;
 
           int target = Position.board[targetPosition];
-          if (target == IntChessman.NOPIECE) {
+          if (target == Piece.NOPIECE) {
             allMobility++;
             targetPosition += delta;
           } else {
-            if (IntChessman.getColor(target) == enemyColor) {
+            if (Piece.getColor(target) == enemyColor) {
               allMobility++;
             }
             break;
@@ -918,11 +918,11 @@ public final class Evaluation {
           myAttackTable[targetPosition] |= BIT_QUEEN;
 
           int target = Position.board[targetPosition];
-          if (target == IntChessman.NOPIECE) {
+          if (target == Piece.NOPIECE) {
             allMobility++;
             targetPosition += delta;
           } else {
-            if (IntChessman.getColor(target) == enemyColor) {
+            if (Piece.getColor(target) == enemyColor) {
               allMobility++;
             }
             break;
@@ -1012,7 +1012,7 @@ public final class Evaluation {
       attackCount += 4;
       flag |= enemyAttackTable[attackedSquare];
       int chessman = Position.board[attackedSquare];
-      if (chessman == IntChessman.NOPIECE || IntChessman.getColor(chessman) == enemyColor) {
+      if (chessman == Piece.NOPIECE || Piece.getColor(chessman) == enemyColor) {
         attackCount += 3;
       }
       if (myAttackTable[attackedSquare] == -127) {
@@ -1024,7 +1024,7 @@ public final class Evaluation {
       attackCount += 4;
       flag |= enemyAttackTable[attackedSquare];
       int chessman = Position.board[attackedSquare];
-      if (chessman == IntChessman.NOPIECE || IntChessman.getColor(chessman) == enemyColor) {
+      if (chessman == Piece.NOPIECE || Piece.getColor(chessman) == enemyColor) {
         attackCount += 3;
       }
       if (myAttackTable[attackedSquare] == -127) {
@@ -1036,7 +1036,7 @@ public final class Evaluation {
       attackCount += 4;
       flag |= enemyAttackTable[attackedSquare];
       int chessman = Position.board[attackedSquare];
-      if (chessman == IntChessman.NOPIECE || IntChessman.getColor(chessman) == enemyColor) {
+      if (chessman == Piece.NOPIECE || Piece.getColor(chessman) == enemyColor) {
         attackCount += 3;
       }
       if (myAttackTable[attackedSquare] == -127) {
@@ -1048,7 +1048,7 @@ public final class Evaluation {
       attackCount += 4;
       flag |= enemyAttackTable[attackedSquare];
       int chessman = Position.board[attackedSquare];
-      if (chessman == IntChessman.NOPIECE || IntChessman.getColor(chessman) == enemyColor) {
+      if (chessman == Piece.NOPIECE || Piece.getColor(chessman) == enemyColor) {
         attackCount += 3;
       }
       if (myAttackTable[attackedSquare] == -127) {
@@ -1060,7 +1060,7 @@ public final class Evaluation {
       attackCount += 4;
       flag |= enemyAttackTable[attackedSquare];
       int chessman = Position.board[attackedSquare];
-      if (chessman == IntChessman.NOPIECE || IntChessman.getColor(chessman) == enemyColor) {
+      if (chessman == Piece.NOPIECE || Piece.getColor(chessman) == enemyColor) {
         attackCount += 3;
       }
       if (myAttackTable[attackedSquare] == -127) {
@@ -1072,7 +1072,7 @@ public final class Evaluation {
       attackCount += 4;
       flag |= enemyAttackTable[attackedSquare];
       int chessman = Position.board[attackedSquare];
-      if (chessman == IntChessman.NOPIECE || IntChessman.getColor(chessman) == enemyColor) {
+      if (chessman == Piece.NOPIECE || Piece.getColor(chessman) == enemyColor) {
         attackCount += 3;
       }
       if (myAttackTable[attackedSquare] == -127) {
@@ -1084,7 +1084,7 @@ public final class Evaluation {
       attackCount += 4;
       flag |= enemyAttackTable[attackedSquare];
       int chessman = Position.board[attackedSquare];
-      if (chessman == IntChessman.NOPIECE || IntChessman.getColor(chessman) == enemyColor) {
+      if (chessman == Piece.NOPIECE || Piece.getColor(chessman) == enemyColor) {
         attackCount += 3;
       }
       if (myAttackTable[attackedSquare] == -127) {
@@ -1096,7 +1096,7 @@ public final class Evaluation {
       attackCount += 4;
       flag |= enemyAttackTable[attackedSquare];
       int chessman = Position.board[attackedSquare];
-      if (chessman == IntChessman.NOPIECE || IntChessman.getColor(chessman) == enemyColor) {
+      if (chessman == Piece.NOPIECE || Piece.getColor(chessman) == enemyColor) {
         attackCount += 3;
       }
       if (myAttackTable[attackedSquare] == -127) {
@@ -1206,7 +1206,7 @@ public final class Evaluation {
             // Check whether we can advance
             assert ((pawnPosition + sign * 16) & 0x88) == 0;
             int chessman = Position.board[pawnPosition + sign * 16];
-            if ((chessman == IntChessman.NOPIECE || IntChessman.getChessman(chessman) != IntChessman.PAWN)
+            if ((chessman == Piece.NOPIECE || Piece.getChessman(chessman) != Piece.PAWN)
                 && (enemyAttackTable[pawnPosition] & BIT_PAWN) == 0
                 && (enemyAttackTable[pawnPosition + sign * 16] & BIT_PAWN) == 0) {
               backward = false;
@@ -1218,8 +1218,8 @@ public final class Evaluation {
             assert ((pawnPosition + sign * 32) & 0x88) == 0;
             int chessman1 = Position.board[pawnPosition + sign * 16];
             int chessman2 = Position.board[pawnPosition + sign * 32];
-            if ((chessman1 == IntChessman.NOPIECE || IntChessman.getChessman(chessman1) != IntChessman.PAWN)
-                && (chessman2 == IntChessman.NOPIECE || IntChessman.getChessman(chessman2) != IntChessman.PAWN)
+            if ((chessman1 == Piece.NOPIECE || Piece.getChessman(chessman1) != Piece.PAWN)
+                && (chessman2 == Piece.NOPIECE || Piece.getChessman(chessman2) != Piece.PAWN)
                 && (enemyAttackTable[pawnPosition] & BIT_PAWN) == 0
                 && (enemyAttackTable[pawnPosition + sign * 16] & BIT_PAWN) == 0
                 && (enemyAttackTable[pawnPosition + sign * 32] & BIT_PAWN) == 0) {
@@ -1279,8 +1279,8 @@ public final class Evaluation {
             int endPosition = pawnPosition + 16;
             for (int j = pawnRank + 1; j <= 7; j++) {
               int chessman = Position.board[endPosition];
-              if (chessman != IntChessman.NOPIECE) {
-                if (IntChessman.getChessman(chessman) == IntChessman.ROOK && IntChessman.getColor(chessman) == myColor) {
+              if (chessman != Piece.NOPIECE) {
+                if (Piece.getChessman(chessman) == Piece.ROOK && Piece.getColor(chessman) == myColor) {
                   // We have no bad rook
                   isPasser = false;
                 }
@@ -1306,8 +1306,8 @@ public final class Evaluation {
             int endPosition = pawnPosition - 16;
             for (int j = pawnRank - 1; j >= 0; j--) {
               int chessman = Position.board[endPosition];
-              if (chessman != IntChessman.NOPIECE) {
-                if (IntChessman.getChessman(chessman) == IntChessman.ROOK && IntChessman.getColor(chessman) == myColor) {
+              if (chessman != Piece.NOPIECE) {
+                if (Piece.getChessman(chessman) == Piece.ROOK && Piece.getColor(chessman) == myColor) {
                   // We have no bad rook
                   isPasser = false;
                 }
@@ -1344,7 +1344,7 @@ public final class Evaluation {
             int endPosition = pawnPosition + 16;
             for (int j = pawnRank + 1; j <= 7; j++) {
               int chessman = Position.board[endPosition];
-              if (chessman != IntChessman.NOPIECE && IntChessman.getColor(chessman) == myColor) {
+              if (chessman != Piece.NOPIECE && Piece.getColor(chessman) == myColor) {
                 pathClear = false;
               }
               endPosition += 16;
@@ -1383,7 +1383,7 @@ public final class Evaluation {
             int endPosition = pawnPosition - 16;
             for (int j = pawnRank - 1; j >= 0; j--) {
               int chessman = Position.board[endPosition];
-              if (chessman != IntChessman.NOPIECE && IntChessman.getColor(chessman) == myColor) {
+              if (chessman != Piece.NOPIECE && Piece.getColor(chessman) == myColor) {
                 pathClear = false;
               }
               endPosition -= 16;
@@ -1418,9 +1418,9 @@ public final class Evaluation {
         } else {
           // Free passer
           assert ((pawnPosition + sign * 16) & 0x88) == 0;
-          if (Position.board[pawnPosition + sign * 16] == IntChessman.NOPIECE) {
+          if (Position.board[pawnPosition + sign * 16] == Piece.NOPIECE) {
             // TODO: Do we have to consider promotion moves?
-            int move = IntMove.createMove(IntMove.NORMAL, pawnPosition, pawnPosition + sign * 16, pawn, IntChessman.NOPIECE, IntChessman.NOPIECE);
+            int move = IntMove.createMove(IntMove.NORMAL, pawnPosition, pawnPosition + sign * 16, pawn, Piece.NOPIECE, Piece.NOPIECE);
             if (MoveSee.seeMove(move, myColor) >= 0) {
               endgameMax += EVAL_PAWN_PASSER_FREE;
             }
@@ -1445,79 +1445,79 @@ public final class Evaluation {
 
     if (myColor == IntColor.WHITE) {
       // Trapped white bishop
-      if (Position.board[IntPosition.a7] == IntChessman.WHITE_BISHOP
-          && Position.board[IntPosition.b6] == IntChessman.BLACK_PAWN) {
+      if (Position.board[IntPosition.a7] == Piece.WHITE_BISHOP
+          && Position.board[IntPosition.b6] == Piece.BLACK_PAWN) {
         total[TOTAL_OPENING] -= 100;
         total[TOTAL_ENDGAME] -= 100;
-        if (Position.board[IntPosition.c7] == IntChessman.BLACK_PAWN) {
+        if (Position.board[IntPosition.c7] == Piece.BLACK_PAWN) {
           total[TOTAL_OPENING] -= 50;
           total[TOTAL_ENDGAME] -= 50;
         }
       }
-      if (Position.board[IntPosition.b8] == IntChessman.WHITE_BISHOP
-          && Position.board[IntPosition.c7] == IntChessman.BLACK_PAWN) {
+      if (Position.board[IntPosition.b8] == Piece.WHITE_BISHOP
+          && Position.board[IntPosition.c7] == Piece.BLACK_PAWN) {
         total[TOTAL_OPENING] -= 100;
         total[TOTAL_ENDGAME] -= 100;
       }
-      if (Position.board[IntPosition.h7] == IntChessman.WHITE_BISHOP
-          && Position.board[IntPosition.g6] == IntChessman.BLACK_PAWN) {
+      if (Position.board[IntPosition.h7] == Piece.WHITE_BISHOP
+          && Position.board[IntPosition.g6] == Piece.BLACK_PAWN) {
         total[TOTAL_OPENING] -= 100;
         total[TOTAL_ENDGAME] -= 100;
-        if (Position.board[IntPosition.f7] == IntChessman.BLACK_PAWN) {
+        if (Position.board[IntPosition.f7] == Piece.BLACK_PAWN) {
           total[TOTAL_OPENING] -= 50;
           total[TOTAL_ENDGAME] -= 50;
         }
       }
-      if (Position.board[IntPosition.g8] == IntChessman.WHITE_BISHOP
-          && Position.board[IntPosition.f7] == IntChessman.BLACK_PAWN) {
+      if (Position.board[IntPosition.g8] == Piece.WHITE_BISHOP
+          && Position.board[IntPosition.f7] == Piece.BLACK_PAWN) {
         total[TOTAL_OPENING] -= 100;
         total[TOTAL_ENDGAME] -= 100;
       }
-      if (Position.board[IntPosition.a6] == IntChessman.WHITE_BISHOP
-          && Position.board[IntPosition.b5] == IntChessman.BLACK_PAWN) {
+      if (Position.board[IntPosition.a6] == Piece.WHITE_BISHOP
+          && Position.board[IntPosition.b5] == Piece.BLACK_PAWN) {
         total[TOTAL_OPENING] -= 50;
         total[TOTAL_ENDGAME] -= 50;
       }
-      if (Position.board[IntPosition.h6] == IntChessman.WHITE_BISHOP
-          && Position.board[IntPosition.g5] == IntChessman.BLACK_PAWN) {
+      if (Position.board[IntPosition.h6] == Piece.WHITE_BISHOP
+          && Position.board[IntPosition.g5] == Piece.BLACK_PAWN) {
         total[TOTAL_OPENING] -= 50;
         total[TOTAL_ENDGAME] -= 50;
       }
 
       // Blocked center pawn
-      if (Position.board[IntPosition.d2] == IntChessman.WHITE_PAWN
-          && Position.board[IntPosition.d3] != IntChessman.NOPIECE) {
+      if (Position.board[IntPosition.d2] == Piece.WHITE_PAWN
+          && Position.board[IntPosition.d3] != Piece.NOPIECE) {
         total[TOTAL_OPENING] -= 20;
         total[TOTAL_ENDGAME] -= 20;
-        if (Position.board[IntPosition.c1] == IntChessman.WHITE_BISHOP) {
+        if (Position.board[IntPosition.c1] == Piece.WHITE_BISHOP) {
           total[TOTAL_OPENING] -= 30;
           total[TOTAL_ENDGAME] -= 30;
         }
       }
-      if (Position.board[IntPosition.e2] == IntChessman.WHITE_PAWN
-          && Position.board[IntPosition.e3] != IntChessman.NOPIECE) {
+      if (Position.board[IntPosition.e2] == Piece.WHITE_PAWN
+          && Position.board[IntPosition.e3] != Piece.NOPIECE) {
         total[TOTAL_OPENING] -= 20;
         total[TOTAL_ENDGAME] -= 20;
-        if (Position.board[IntPosition.f1] == IntChessman.WHITE_BISHOP) {
+        if (Position.board[IntPosition.f1] == Piece.WHITE_BISHOP) {
           total[TOTAL_OPENING] -= 30;
           total[TOTAL_ENDGAME] -= 30;
         }
       }
 
       // Blocked rook
-      if ((Position.board[IntPosition.c1] == IntChessman.WHITE_KING
-          || Position.board[IntPosition.b1] == IntChessman.WHITE_KING)
-          && (Position.board[IntPosition.a1] == IntChessman.WHITE_ROOK
-          || Position.board[IntPosition.a2] == IntChessman.WHITE_ROOK
-          || Position.board[IntPosition.b1] == IntChessman.WHITE_ROOK)) {
+      if ((Position.board[IntPosition.c1] == Piece.WHITE_KING
+          || Position.board[IntPosition.b1] == Piece.WHITE_KING)
+          && (Position.board[IntPosition.a1] == Piece.WHITE_ROOK
+          || Position.board[IntPosition.a2] == Piece.WHITE_ROOK
+          || Position.board[IntPosition.b1] == Piece.WHITE_ROOK)) {
         total[TOTAL_OPENING] -= 50;
         total[TOTAL_ENDGAME] -= 50;
       }
-      if ((Position.board[IntPosition.f1] == IntChessman.WHITE_KING
-          || Position.board[IntPosition.g1] == IntChessman.WHITE_KING)
-          && (Position.board[IntPosition.h1] == IntChessman.WHITE_ROOK
-          || Position.board[IntPosition.h2] == IntChessman.WHITE_ROOK
-          || Position.board[IntPosition.g1] == IntChessman.WHITE_ROOK)) {
+      if ((Position.board[IntPosition.f1] == Piece.WHITE_KING
+          || Position.board[IntPosition.g1] == Piece.WHITE_KING)
+          && (Position.board[IntPosition.h1] == Piece.WHITE_ROOK
+          || Position.board[IntPosition.h2] == Piece.WHITE_ROOK
+          || Position.board[IntPosition.g1] == Piece.WHITE_ROOK)) {
         total[TOTAL_OPENING] -= 50;
         total[TOTAL_ENDGAME] -= 50;
       }
@@ -1525,79 +1525,79 @@ public final class Evaluation {
       assert myColor == IntColor.BLACK;
 
       // Trapped black bishop
-      if (Position.board[IntPosition.a2] == IntChessman.BLACK_BISHOP
-          && Position.board[IntPosition.b3] == IntChessman.WHITE_PAWN) {
+      if (Position.board[IntPosition.a2] == Piece.BLACK_BISHOP
+          && Position.board[IntPosition.b3] == Piece.WHITE_PAWN) {
         total[TOTAL_OPENING] -= 100;
         total[TOTAL_ENDGAME] -= 100;
-        if (Position.board[IntPosition.c2] == IntChessman.WHITE_PAWN) {
+        if (Position.board[IntPosition.c2] == Piece.WHITE_PAWN) {
           total[TOTAL_OPENING] -= 50;
           total[TOTAL_ENDGAME] -= 50;
         }
       }
-      if (Position.board[IntPosition.b1] == IntChessman.BLACK_BISHOP
-          && Position.board[IntPosition.c2] == IntChessman.WHITE_PAWN) {
+      if (Position.board[IntPosition.b1] == Piece.BLACK_BISHOP
+          && Position.board[IntPosition.c2] == Piece.WHITE_PAWN) {
         total[TOTAL_OPENING] -= 100;
         total[TOTAL_ENDGAME] -= 100;
       }
-      if (Position.board[IntPosition.h2] == IntChessman.BLACK_BISHOP
-          && Position.board[IntPosition.g3] == IntChessman.WHITE_PAWN) {
+      if (Position.board[IntPosition.h2] == Piece.BLACK_BISHOP
+          && Position.board[IntPosition.g3] == Piece.WHITE_PAWN) {
         total[TOTAL_OPENING] -= 100;
         total[TOTAL_ENDGAME] -= 100;
-        if (Position.board[IntPosition.f2] == IntChessman.WHITE_PAWN) {
+        if (Position.board[IntPosition.f2] == Piece.WHITE_PAWN) {
           total[TOTAL_OPENING] -= 50;
           total[TOTAL_ENDGAME] -= 50;
         }
       }
-      if (Position.board[IntPosition.g1] == IntChessman.BLACK_BISHOP
-          && Position.board[IntPosition.f2] == IntChessman.WHITE_PAWN) {
+      if (Position.board[IntPosition.g1] == Piece.BLACK_BISHOP
+          && Position.board[IntPosition.f2] == Piece.WHITE_PAWN) {
         total[TOTAL_OPENING] -= 100;
         total[TOTAL_ENDGAME] -= 100;
       }
-      if (Position.board[IntPosition.a3] == IntChessman.BLACK_BISHOP
-          && Position.board[IntPosition.b4] == IntChessman.WHITE_PAWN) {
+      if (Position.board[IntPosition.a3] == Piece.BLACK_BISHOP
+          && Position.board[IntPosition.b4] == Piece.WHITE_PAWN) {
         total[TOTAL_OPENING] -= 50;
         total[TOTAL_ENDGAME] -= 50;
       }
-      if (Position.board[IntPosition.h3] == IntChessman.BLACK_BISHOP
-          && Position.board[IntPosition.g4] == IntChessman.WHITE_PAWN) {
+      if (Position.board[IntPosition.h3] == Piece.BLACK_BISHOP
+          && Position.board[IntPosition.g4] == Piece.WHITE_PAWN) {
         total[TOTAL_OPENING] -= 50;
         total[TOTAL_ENDGAME] -= 50;
       }
 
       // Blocked center pawn
-      if (Position.board[IntPosition.d7] == IntChessman.BLACK_PAWN
-          && Position.board[IntPosition.d6] != IntChessman.NOPIECE) {
+      if (Position.board[IntPosition.d7] == Piece.BLACK_PAWN
+          && Position.board[IntPosition.d6] != Piece.NOPIECE) {
         total[TOTAL_OPENING] -= 20;
         total[TOTAL_ENDGAME] -= 20;
-        if (Position.board[IntPosition.c8] == IntChessman.BLACK_BISHOP) {
+        if (Position.board[IntPosition.c8] == Piece.BLACK_BISHOP) {
           total[TOTAL_OPENING] -= 30;
           total[TOTAL_ENDGAME] -= 30;
         }
       }
-      if (Position.board[IntPosition.e7] == IntChessman.BLACK_PAWN
-          && Position.board[IntPosition.e6] != IntChessman.NOPIECE) {
+      if (Position.board[IntPosition.e7] == Piece.BLACK_PAWN
+          && Position.board[IntPosition.e6] != Piece.NOPIECE) {
         total[TOTAL_OPENING] -= 20;
         total[TOTAL_ENDGAME] -= 20;
-        if (Position.board[IntPosition.f8] == IntChessman.BLACK_BISHOP) {
+        if (Position.board[IntPosition.f8] == Piece.BLACK_BISHOP) {
           total[TOTAL_OPENING] -= 30;
           total[TOTAL_ENDGAME] -= 30;
         }
       }
 
       // Blocked rook
-      if ((Position.board[IntPosition.c8] == IntChessman.BLACK_KING
-          || Position.board[IntPosition.b8] == IntChessman.BLACK_KING)
-          && (Position.board[IntPosition.a8] == IntChessman.BLACK_ROOK
-          || Position.board[IntPosition.a7] == IntChessman.BLACK_ROOK
-          || Position.board[IntPosition.b8] == IntChessman.BLACK_ROOK)) {
+      if ((Position.board[IntPosition.c8] == Piece.BLACK_KING
+          || Position.board[IntPosition.b8] == Piece.BLACK_KING)
+          && (Position.board[IntPosition.a8] == Piece.BLACK_ROOK
+          || Position.board[IntPosition.a7] == Piece.BLACK_ROOK
+          || Position.board[IntPosition.b8] == Piece.BLACK_ROOK)) {
         total[TOTAL_OPENING] -= 50;
         total[TOTAL_ENDGAME] -= 50;
       }
-      if ((Position.board[IntPosition.f8] == IntChessman.BLACK_KING
-          || Position.board[IntPosition.g8] == IntChessman.BLACK_KING)
-          && (Position.board[IntPosition.h8] == IntChessman.BLACK_ROOK
-          || Position.board[IntPosition.h7] == IntChessman.BLACK_ROOK
-          || Position.board[IntPosition.g8] == IntChessman.BLACK_ROOK)) {
+      if ((Position.board[IntPosition.f8] == Piece.BLACK_KING
+          || Position.board[IntPosition.g8] == Piece.BLACK_KING)
+          && (Position.board[IntPosition.h8] == Piece.BLACK_ROOK
+          || Position.board[IntPosition.h7] == Piece.BLACK_ROOK
+          || Position.board[IntPosition.g8] == Piece.BLACK_ROOK)) {
         total[TOTAL_OPENING] -= 50;
         total[TOTAL_ENDGAME] -= 50;
       }

@@ -204,7 +204,7 @@ public class MoveGeneratorTest {
     move = MoveGenerator.getNextMove();
     while (move != IntMove.NOMOVE) {
       if (!attack.isCheck()) {
-        if ((IntMove.getTarget(move) != IntChessman.NOPIECE && isGoodCapture(move, board)) || (IntMove.getTarget(move) == IntChessman.NOPIECE && board.isCheckingMove(move)) && MoveSee.seeMove(move, IntMove.getChessmanColor(move)) >= 0) {
+        if ((IntMove.getTarget(move) != Piece.NOPIECE && isGoodCapture(move, board)) || (IntMove.getTarget(move) == Piece.NOPIECE && board.isCheckingMove(move)) && MoveSee.seeMove(move, IntMove.getChessmanColor(move)) >= 0) {
           board.makeMove(move);
           miniMaxQuiescentCheckingMoves(board, depth - 1, maxDepth);
           board.undoMove(move);
@@ -248,7 +248,7 @@ public class MoveGeneratorTest {
 
   private static boolean isGoodCapture(int move, Position board) {
     if (IntMove.getType(move) == IntMove.PAWNPROMOTION) {
-      if (IntMove.getPromotion(move) == IntChessman.QUEEN) {
+      if (IntMove.getPromotion(move) == Piece.QUEEN) {
         return true;
       } else {
         return false;
@@ -258,10 +258,10 @@ public class MoveGeneratorTest {
     int chessman = IntMove.getChessman(move);
     int target = IntMove.getTarget(move);
 
-    assert chessman != IntChessman.NOPIECE;
-    assert target != IntChessman.NOPIECE;
+    assert chessman != Piece.NOPIECE;
+    assert target != Piece.NOPIECE;
 
-    if (IntChessman.getValueFromChessman(chessman) <= IntChessman.getValueFromChessman(target)) {
+    if (Piece.getValueFromChessman(chessman) <= Piece.getValueFromChessman(target)) {
       return true;
     }
 
