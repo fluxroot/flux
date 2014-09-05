@@ -34,313 +34,313 @@ import java.util.List;
  */
 public final class Flux extends AbstractEngine {
 
-	private Hex88Board board = null;
-	private TranspositionTable transpositionTable;
-	private EvaluationTable evaluationTable;
-	private PawnTable pawnTable;
-	private final int[] timeTable = new int[ISearch.MAX_HEIGHT + 1];
-	private ISearch search;
+  private Hex88Board board = null;
+  private TranspositionTable transpositionTable;
+  private EvaluationTable evaluationTable;
+  private PawnTable pawnTable;
+  private final int[] timeTable = new int[ISearch.MAX_HEIGHT + 1];
+  private ISearch search;
 
-	/**
-	 * Creates a new Flux.
-	 * 
-	 * @param protocol the protocol.
-	 */
-	public Flux() {
-		// Set the protocol
-		ChessLogger.setProtocol(getProtocol());
+  /**
+   * Creates a new Flux.
+   *
+   * @param protocol the protocol.
+   */
+  public Flux() {
+    // Set the protocol
+    ChessLogger.setProtocol(getProtocol());
 
-		initialize();
-	}
+    initialize();
+  }
 
-	public Flux(IProtocolHandler handler) {
-		super(handler);
+  public Flux(IProtocolHandler handler) {
+    super(handler);
 
-		// Set the protocol
-		ChessLogger.setProtocol(handler);
+    // Set the protocol
+    ChessLogger.setProtocol(handler);
 
-		initialize();
-	}
-	
-	private void initialize() {
-		initializeTranspositionTable();
-		initializeEvaluationTable();
-		initializePawnTable();
+    initialize();
+  }
 
-		// Create a new search
-		this.search = new Search(new Evaluation(this.evaluationTable, this.pawnTable), new Hex88Board(new GenericBoard(GenericBoard.STANDARDSETUP)), this.transpositionTable, new InformationTimer(getProtocol(), this.transpositionTable), this.timeTable);
-	}
+  private void initialize() {
+    initializeTranspositionTable();
+    initializeEvaluationTable();
+    initializePawnTable();
 
-	private void initializeTranspositionTable() {
-		int numberOfEntries = Configuration.transpositionTableSize * 1024 * 1024 / TranspositionTable.ENTRYSIZE;
-		transpositionTable = new TranspositionTable(numberOfEntries);
+    // Create a new search
+    this.search = new Search(new Evaluation(this.evaluationTable, this.pawnTable), new Hex88Board(new GenericBoard(GenericBoard.STANDARDSETUP)), this.transpositionTable, new InformationTimer(getProtocol(), this.transpositionTable), this.timeTable);
+  }
 
-		Runtime.getRuntime().gc();
-	}
+  private void initializeTranspositionTable() {
+    int numberOfEntries = Configuration.transpositionTableSize * 1024 * 1024 / TranspositionTable.ENTRYSIZE;
+    transpositionTable = new TranspositionTable(numberOfEntries);
 
-	private void initializeEvaluationTable() {
-		int numberOfEntries = Configuration.evaluationTableSize * 1024 * 1024 / EvaluationTable.ENTRYSIZE;
-		evaluationTable = new EvaluationTable(numberOfEntries);
+    Runtime.getRuntime().gc();
+  }
 
-		Runtime.getRuntime().gc();
-	}
+  private void initializeEvaluationTable() {
+    int numberOfEntries = Configuration.evaluationTableSize * 1024 * 1024 / EvaluationTable.ENTRYSIZE;
+    evaluationTable = new EvaluationTable(numberOfEntries);
 
-	private void initializePawnTable() {
-		int numberOfEntries = Configuration.pawnTableSize * 1024 * 1024 / PawnTable.ENTRYSIZE;
-		pawnTable = new PawnTable(numberOfEntries);
+    Runtime.getRuntime().gc();
+  }
 
-		Runtime.getRuntime().gc();
-	}
+  private void initializePawnTable() {
+    int numberOfEntries = Configuration.pawnTableSize * 1024 * 1024 / PawnTable.ENTRYSIZE;
+    pawnTable = new PawnTable(numberOfEntries);
 
-	/**
-	 * The main function.
-	 * 
-	 * @param args not used.
-	 */
-	public static void main(String[] args) {
-		new Flux().run();
-	}
+    Runtime.getRuntime().gc();
+  }
 
-	protected void quit() {
-		ChessLogger.getLogger().debug("Received Quit command.");
+  /**
+   * The main function.
+   *
+   * @param args not used.
+   */
+  public static void main(String[] args) {
+    new Flux().run();
+  }
 
-		// Stop calculating
-		new EngineStopCalculatingCommand().accept(this);
-	}
+  protected void quit() {
+    ChessLogger.getLogger().debug("Received Quit command.");
 
-	public void receive(EngineInitializeRequestCommand command) {
-		if (command == null) throw new IllegalArgumentException();
-		
-		ChessLogger.getLogger().debug("Received Protocol command.");
-		
-		// Stop calculating
-		new EngineStopCalculatingCommand().accept(this);
+    // Stop calculating
+    new EngineStopCalculatingCommand().accept(this);
+  }
 
-		initialize();
+  public void receive(EngineInitializeRequestCommand command) {
+    if (command == null) throw new IllegalArgumentException();
 
-		// Send the initialization commands
-		ProtocolInitializeAnswerCommand initializeCommand = new ProtocolInitializeAnswerCommand(Configuration.name, Configuration.author);
-		for (AbstractOption option : Configuration.options) {
-			initializeCommand.addOption(option);
-		}
-		getProtocol().send(initializeCommand);
-	}
+    ChessLogger.getLogger().debug("Received Protocol command.");
 
-	public void receive(EngineReadyRequestCommand command) {
-		if (command == null) throw new IllegalArgumentException();
-		
-		ChessLogger.getLogger().debug("Received ReadyRequest command.");
+    // Stop calculating
+    new EngineStopCalculatingCommand().accept(this);
 
-		// Send a pong back
-		getProtocol().send(new ProtocolReadyAnswerCommand(command.token));
-	}
+    initialize();
 
-	public void receive(EngineDebugCommand command) {
-		if (command == null) throw new IllegalArgumentException();
-		
-		ChessLogger.getLogger().debug("Received Debug command.");
+    // Send the initialization commands
+    ProtocolInitializeAnswerCommand initializeCommand = new ProtocolInitializeAnswerCommand(Configuration.name, Configuration.author);
+    for (AbstractOption option : Configuration.options) {
+      initializeCommand.addOption(option);
+    }
+    getProtocol().send(initializeCommand);
+  }
 
-		ProtocolInformationCommand infoCommand = new ProtocolInformationCommand();
-		if (command.debug) {
-			infoCommand.setString("Turning on debugging mode");
-		} else {
-			infoCommand.setString("Turning off debugging mode");
-		}
-		getProtocol().send(infoCommand);
-		ChessLogger.setDebug(command.debug);
-	}
+  public void receive(EngineReadyRequestCommand command) {
+    if (command == null) throw new IllegalArgumentException();
 
-	public void receive(EngineNewGameCommand command) {
-		if (command == null) throw new IllegalArgumentException();
-		
-		ChessLogger.getLogger().debug("Received New command.");
+    ChessLogger.getLogger().debug("Received ReadyRequest command.");
 
-		// Stop calculating
-		new EngineStopCalculatingCommand().accept(this);
-		
-		// Clear the hash table
-		this.transpositionTable.clear();
-		
-		// Clear time table
-		Arrays.fill(this.timeTable, 0);
-	}
+    // Send a pong back
+    getProtocol().send(new ProtocolReadyAnswerCommand(command.token));
+  }
 
-	public void receive(EngineAnalyzeCommand command) {
-		if (command == null) throw new IllegalArgumentException();
-		
-		ChessLogger.getLogger().debug("Received Analyze command.");
+  public void receive(EngineDebugCommand command) {
+    if (command == null) throw new IllegalArgumentException();
 
-		if (!this.search.isStopped()) {
-			this.search.stop();
-		}
+    ChessLogger.getLogger().debug("Received Debug command.");
 
-		// Create a new board
-		this.board = new Hex88Board(command.board);
-		
-		// Make all moves
-		List<GenericMove> moveList = command.moves;
-		for (GenericMove move : moveList) {
-			int newMove = IntMove.convertMove(move, this.board);
-			this.board.makeMove(newMove);
-		}
-	}
+    ProtocolInformationCommand infoCommand = new ProtocolInformationCommand();
+    if (command.debug) {
+      infoCommand.setString("Turning on debugging mode");
+    } else {
+      infoCommand.setString("Turning off debugging mode");
+    }
+    getProtocol().send(infoCommand);
+    ChessLogger.setDebug(command.debug);
+  }
 
-	public void receive(EnginePonderHitCommand command) {
-		if (command == null) throw new IllegalArgumentException();
-		
-		ChessLogger.getLogger().debug("Received PonderHit command.");
+  public void receive(EngineNewGameCommand command) {
+    if (command == null) throw new IllegalArgumentException();
 
-		if (!this.search.isStopped()) {
-			this.search.ponderhit();
-		} else {
-			ChessLogger.getLogger().debug("There is no search active.");
-		}
-	}
+    ChessLogger.getLogger().debug("Received New command.");
 
-	public void receive(EngineStartCalculatingCommand command) {
-		if (command == null) throw new IllegalArgumentException();
-		
-		ChessLogger.getLogger().debug("Received StartCalculating command.");
+    // Stop calculating
+    new EngineStopCalculatingCommand().accept(this);
 
-		if (this.board != null) {
-			if (this.search.isStopped()) {
-				// Create a new search
-				this.search = new Search(new Evaluation(this.evaluationTable, this.pawnTable), this.board, this.transpositionTable, new InformationTimer(getProtocol(), this.transpositionTable), this.timeTable);
+    // Clear the hash table
+    this.transpositionTable.clear();
 
-				// Set all search parameters
-				if (command.getDepth() != null && command.getDepth() > 0) {
-					this.search.setSearchDepth(command.getDepth());
-				}
-				if (command.getNodes() != null && command.getNodes() > 0) {
-					this.search.setSearchNodes(command.getNodes());
-				}
-				if (command.getMoveTime() != null && command.getMoveTime() > 0) {
-					this.search.setSearchTime(command.getMoveTime());
-				}
-				for (GenericColor side : GenericColor.values()) {
-					if (command.getClock(side) != null && command.getClock(side) > 0) {
-						this.search.setSearchClock(IntColor.valueOfColor(side), command.getClock(side));
-					}
-					if (command.getClockIncrement(side) != null && command.getClockIncrement(side) > 0) {
-						this.search.setSearchClockIncrement(IntColor.valueOfColor(side), command.getClockIncrement(side));
-					}
-				}
-				if (command.getMovesToGo() != null && command.getMovesToGo() > 0) {
-					this.search.setSearchMovesToGo(command.getMovesToGo());
-				}
-				if (command.getInfinite()) {
-					this.search.setSearchInfinite();
-				}
-				if (command.getPonder()) {
-					this.search.setSearchPonder();
-				}
-				if (command.getSearchMoveList() != null) {
-					this.search.setSearchMoveList(command.getSearchMoveList());
-				}
+    // Clear time table
+    Arrays.fill(this.timeTable, 0);
+  }
 
-				// Go...
-				this.search.start();
-				this.board = null;
-			} else {
-				ChessLogger.getLogger().debug("There is already a search running.");
-			}
-		} else {
-			ChessLogger.getLogger().debug("Please do a position command first.");
-		}
-	}
+  public void receive(EngineAnalyzeCommand command) {
+    if (command == null) throw new IllegalArgumentException();
 
-	public void receive(EngineStopCalculatingCommand command) {
-		if (command == null) throw new IllegalArgumentException();
-		
-		ChessLogger.getLogger().debug("Received StopCalculating command.");
+    ChessLogger.getLogger().debug("Received Analyze command.");
 
-		if (!this.search.isStopped()) {
-			// Stop the search
-			this.search.stop();
-		} else {
-			ChessLogger.getLogger().debug("There is no search active.");
-		}
-	}
+    if (!this.search.isStopped()) {
+      this.search.stop();
+    }
 
-	public void receive(EngineSetOptionCommand command) {
-		if (command == null) throw new IllegalArgumentException();
+    // Create a new board
+    this.board = new Hex88Board(command.board);
 
-		ChessLogger.getLogger().debug("Received SetOption command.");
+    // Make all moves
+    List<GenericMove> moveList = command.moves;
+    for (GenericMove move : moveList) {
+      int newMove = IntMove.convertMove(move, this.board);
+      this.board.makeMove(newMove);
+    }
+  }
 
-		if (command.name == null) throw new IllegalArgumentException();
+  public void receive(EnginePonderHitCommand command) {
+    if (command == null) throw new IllegalArgumentException();
 
-		// ponder
-		if (command.name.equalsIgnoreCase(Configuration.ponderOption.name)) {
-			if (command.value == null) throw new IllegalArgumentException();
+    ChessLogger.getLogger().debug("Received PonderHit command.");
 
-			Configuration.ponder = Boolean.parseBoolean(command.value);
-		}
+    if (!this.search.isStopped()) {
+      this.search.ponderhit();
+    } else {
+      ChessLogger.getLogger().debug("There is no search active.");
+    }
+  }
 
-		// showPvNumber
-		else if (command.name.equalsIgnoreCase(Configuration.multiPVOption.name)) {
-			if (command.value == null) throw new IllegalArgumentException();
+  public void receive(EngineStartCalculatingCommand command) {
+    if (command == null) throw new IllegalArgumentException();
 
-			try {
-				Configuration.showPvNumber = new Integer(command.value);
-			} catch (NumberFormatException e) {
-				Configuration.showPvNumber = Configuration.defaultShowPvNumber;
-			}
-		}
+    ChessLogger.getLogger().debug("Received StartCalculating command.");
 
-		// transpositionTableSize
-		else if (command.name.equalsIgnoreCase(Configuration.hashOption.name)) {
-			if (command.value == null) throw new IllegalArgumentException();
+    if (this.board != null) {
+      if (this.search.isStopped()) {
+        // Create a new search
+        this.search = new Search(new Evaluation(this.evaluationTable, this.pawnTable), this.board, this.transpositionTable, new InformationTimer(getProtocol(), this.transpositionTable), this.timeTable);
 
-			try {
-				Configuration.transpositionTableSize = new Integer(command.value);
-			} catch (NumberFormatException e) {
-				Configuration.transpositionTableSize = Configuration.defaultTranspositionTableSize;
-			}
-			initializeTranspositionTable();
-		}
+        // Set all search parameters
+        if (command.getDepth() != null && command.getDepth() > 0) {
+          this.search.setSearchDepth(command.getDepth());
+        }
+        if (command.getNodes() != null && command.getNodes() > 0) {
+          this.search.setSearchNodes(command.getNodes());
+        }
+        if (command.getMoveTime() != null && command.getMoveTime() > 0) {
+          this.search.setSearchTime(command.getMoveTime());
+        }
+        for (GenericColor side : GenericColor.values()) {
+          if (command.getClock(side) != null && command.getClock(side) > 0) {
+            this.search.setSearchClock(IntColor.valueOfColor(side), command.getClock(side));
+          }
+          if (command.getClockIncrement(side) != null && command.getClockIncrement(side) > 0) {
+            this.search.setSearchClockIncrement(IntColor.valueOfColor(side), command.getClockIncrement(side));
+          }
+        }
+        if (command.getMovesToGo() != null && command.getMovesToGo() > 0) {
+          this.search.setSearchMovesToGo(command.getMovesToGo());
+        }
+        if (command.getInfinite()) {
+          this.search.setSearchInfinite();
+        }
+        if (command.getPonder()) {
+          this.search.setSearchPonder();
+        }
+        if (command.getSearchMoveList() != null) {
+          this.search.setSearchMoveList(command.getSearchMoveList());
+        }
 
-		// Clear Hash
-		else if (command.name.equalsIgnoreCase(Configuration.clearHashOption.name)) {
-			transpositionTable.clear();
-		}
+        // Go...
+        this.search.start();
+        this.board = null;
+      } else {
+        ChessLogger.getLogger().debug("There is already a search running.");
+      }
+    } else {
+      ChessLogger.getLogger().debug("Please do a position command first.");
+    }
+  }
 
-		// evaluationTableSize
-		else if (command.name.equalsIgnoreCase(Configuration.evaluationTableOption.name)) {
-			if (command.value == null) throw new IllegalArgumentException();
+  public void receive(EngineStopCalculatingCommand command) {
+    if (command == null) throw new IllegalArgumentException();
 
-			try {
-				Configuration.evaluationTableSize = new Integer(command.value);
-			} catch (NumberFormatException e) {
-				Configuration.evaluationTableSize = Configuration.defaultEvaluationTableSize;
-			}
-			initializeEvaluationTable();
-		}
+    ChessLogger.getLogger().debug("Received StopCalculating command.");
 
-		// pawnTableSize
-		else if (command.name.equalsIgnoreCase(Configuration.pawnTableOption.name)) {
-			if (command.value == null) throw new IllegalArgumentException();
+    if (!this.search.isStopped()) {
+      // Stop the search
+      this.search.stop();
+    } else {
+      ChessLogger.getLogger().debug("There is no search active.");
+    }
+  }
 
-			try {
-				Configuration.pawnTableSize = new Integer(command.value);
-			} catch (NumberFormatException e) {
-				Configuration.pawnTableSize = Configuration.defaultPawnTableSize;
-			}
-			initializePawnTable();
-		}
+  public void receive(EngineSetOptionCommand command) {
+    if (command == null) throw new IllegalArgumentException();
 
-		// showRefutations
-		else if (command.name.equalsIgnoreCase(Configuration.uciShowRefutationsOption.name)) {
-			if (command.value == null) throw new IllegalArgumentException();
+    ChessLogger.getLogger().debug("Received SetOption command.");
 
-			Configuration.showRefutations = Boolean.parseBoolean(command.value);
-		}
+    if (command.name == null) throw new IllegalArgumentException();
 
-		// analyzeMode
-		else if (command.name.equalsIgnoreCase(Configuration.uciAnalyzeModeOption.name)) {
-			if (command.value == null) throw new IllegalArgumentException();
+    // ponder
+    if (command.name.equalsIgnoreCase(Configuration.ponderOption.name)) {
+      if (command.value == null) throw new IllegalArgumentException();
 
-			Configuration.analyzeMode = Boolean.parseBoolean(command.value);
-		}
-	}
+      Configuration.ponder = Boolean.parseBoolean(command.value);
+    }
+
+    // showPvNumber
+    else if (command.name.equalsIgnoreCase(Configuration.multiPVOption.name)) {
+      if (command.value == null) throw new IllegalArgumentException();
+
+      try {
+        Configuration.showPvNumber = new Integer(command.value);
+      } catch (NumberFormatException e) {
+        Configuration.showPvNumber = Configuration.defaultShowPvNumber;
+      }
+    }
+
+    // transpositionTableSize
+    else if (command.name.equalsIgnoreCase(Configuration.hashOption.name)) {
+      if (command.value == null) throw new IllegalArgumentException();
+
+      try {
+        Configuration.transpositionTableSize = new Integer(command.value);
+      } catch (NumberFormatException e) {
+        Configuration.transpositionTableSize = Configuration.defaultTranspositionTableSize;
+      }
+      initializeTranspositionTable();
+    }
+
+    // Clear Hash
+    else if (command.name.equalsIgnoreCase(Configuration.clearHashOption.name)) {
+      transpositionTable.clear();
+    }
+
+    // evaluationTableSize
+    else if (command.name.equalsIgnoreCase(Configuration.evaluationTableOption.name)) {
+      if (command.value == null) throw new IllegalArgumentException();
+
+      try {
+        Configuration.evaluationTableSize = new Integer(command.value);
+      } catch (NumberFormatException e) {
+        Configuration.evaluationTableSize = Configuration.defaultEvaluationTableSize;
+      }
+      initializeEvaluationTable();
+    }
+
+    // pawnTableSize
+    else if (command.name.equalsIgnoreCase(Configuration.pawnTableOption.name)) {
+      if (command.value == null) throw new IllegalArgumentException();
+
+      try {
+        Configuration.pawnTableSize = new Integer(command.value);
+      } catch (NumberFormatException e) {
+        Configuration.pawnTableSize = Configuration.defaultPawnTableSize;
+      }
+      initializePawnTable();
+    }
+
+    // showRefutations
+    else if (command.name.equalsIgnoreCase(Configuration.uciShowRefutationsOption.name)) {
+      if (command.value == null) throw new IllegalArgumentException();
+
+      Configuration.showRefutations = Boolean.parseBoolean(command.value);
+    }
+
+    // analyzeMode
+    else if (command.name.equalsIgnoreCase(Configuration.uciAnalyzeModeOption.name)) {
+      if (command.value == null) throw new IllegalArgumentException();
+
+      Configuration.analyzeMode = Boolean.parseBoolean(command.value);
+    }
+  }
 
 }

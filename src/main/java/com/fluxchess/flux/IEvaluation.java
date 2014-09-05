@@ -20,7 +20,7 @@ package com.fluxchess.flux;
 
 public interface IEvaluation {
 
-	public abstract void print(Hex88Board board);
-	public abstract int evaluate(Hex88Board board);
+  public abstract void print(Hex88Board board);
+  public abstract int evaluate(Hex88Board board);
 
 }

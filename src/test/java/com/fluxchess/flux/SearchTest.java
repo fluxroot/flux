@@ -33,70 +33,70 @@ import static org.junit.Assert.assertEquals;
 
 public class SearchTest implements IProtocolHandler {
 
-	BlockingQueue<IEngineCommand> commandQueue = new LinkedBlockingQueue<IEngineCommand>();
-	boolean found = false;
-	
-	public SearchTest() {
-		try {
-			this.commandQueue.add(new EngineInitializeRequestCommand());
-			this.commandQueue.add(new EngineNewGameCommand());
-			this.commandQueue.add(new EngineAnalyzeCommand(new GenericBoard("5n2/B3K3/2p2Np1/4k3/7P/3bN1P1/2Prn1P1/1q6 w - -"), new ArrayList<GenericMove>()));
-			EngineStartCalculatingCommand startCommand = new EngineStartCalculatingCommand();
-			startCommand.setDepth(3);
-			this.commandQueue.add(startCommand);
-		} catch (IllegalNotationException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	@Test
-	public void testMate30() {
-		new Flux(this).run();
-		assertEquals(this.found, true);
-	}
-	
-	public void send(IProtocolCommand command) {
-		command.accept(this);
-	}
+  BlockingQueue<IEngineCommand> commandQueue = new LinkedBlockingQueue<IEngineCommand>();
+  boolean found = false;
 
-	public IEngineCommand receive() {
-		IEngineCommand command = null;
-		try {
-			command = this.commandQueue.take();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		assert command != null;
-		
-		System.out.println(command);
+  public SearchTest() {
+    try {
+      this.commandQueue.add(new EngineInitializeRequestCommand());
+      this.commandQueue.add(new EngineNewGameCommand());
+      this.commandQueue.add(new EngineAnalyzeCommand(new GenericBoard("5n2/B3K3/2p2Np1/4k3/7P/3bN1P1/2Prn1P1/1q6 w - -"), new ArrayList<GenericMove>()));
+      EngineStartCalculatingCommand startCommand = new EngineStartCalculatingCommand();
+      startCommand.setDepth(3);
+      this.commandQueue.add(startCommand);
+    } catch (IllegalNotationException e) {
+      e.printStackTrace();
+    }
+  }
 
-		return command;
-	}
+  @Test
+  public void testMate30() {
+    new Flux(this).run();
+    assertEquals(this.found, true);
+  }
 
-	public void send(ProtocolInitializeAnswerCommand command) {
-		System.out.println(command);
-	}
+  public void send(IProtocolCommand command) {
+    command.accept(this);
+  }
 
-	public void send(ProtocolReadyAnswerCommand command) {
-		System.out.println(command);
-	}
+  public IEngineCommand receive() {
+    IEngineCommand command = null;
+    try {
+      command = this.commandQueue.take();
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+    assert command != null;
 
-	public void send(ProtocolBestMoveCommand command) {
-		this.commandQueue.add(new EngineQuitCommand());
-		System.out.println(command);
-	}
+    System.out.println(command);
 
-	public void send(ProtocolInformationCommand command) {
-		if (command.getMate() != null) {
-			if (command.getMate() == 30) {
-				this.found = true;
-			}
-		}
-		System.out.println(command);
-	}
+    return command;
+  }
 
-	public String toString() {
-		return "FluxTesting Protocol";
-	}
+  public void send(ProtocolInitializeAnswerCommand command) {
+    System.out.println(command);
+  }
+
+  public void send(ProtocolReadyAnswerCommand command) {
+    System.out.println(command);
+  }
+
+  public void send(ProtocolBestMoveCommand command) {
+    this.commandQueue.add(new EngineQuitCommand());
+    System.out.println(command);
+  }
+
+  public void send(ProtocolInformationCommand command) {
+    if (command.getMate() != null) {
+      if (command.getMate() == 30) {
+        this.found = true;
+      }
+    }
+    System.out.println(command);
+  }
+
+  public String toString() {
+    return "FluxTesting Protocol";
+  }
 
 }

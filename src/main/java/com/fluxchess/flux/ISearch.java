@@ -24,34 +24,34 @@ import java.util.List;
 
 public interface ISearch {
 
-	/**
-	 * The maximum number of plies.
-	 */
-	public static final int MAX_HEIGHT = 256;
-	
-	/**
-	 * The maximum number of depth.
-	 */
-	public static final int MAX_DEPTH = 64;
-	
-	/**
-	 * The maximum number of moves.
-	 */
-	public static final int MAX_MOVES = 4096;
-	
-	public abstract void start();
-	public abstract void stop();
-	public abstract void ponderhit();
-	public abstract boolean isStopped();
+  /**
+   * The maximum number of plies.
+   */
+  public static final int MAX_HEIGHT = 256;
 
-	public abstract void setSearchDepth(int searchDepth);
-	public abstract void setSearchNodes(long searchNodes);
-	public abstract void setSearchTime(long searchTime);
-	public abstract void setSearchClock(int side, long timeLeft);
-	public abstract void setSearchClockIncrement(int side, long timeIncrement);
-	public abstract void setSearchMovesToGo(int searchMovesToGo);
-	public abstract void setSearchInfinite();
-	public abstract void setSearchPonder();
-	public abstract void setSearchMoveList(List<GenericMove> moveList);
+  /**
+   * The maximum number of depth.
+   */
+  public static final int MAX_DEPTH = 64;
+
+  /**
+   * The maximum number of moves.
+   */
+  public static final int MAX_MOVES = 4096;
+
+  public abstract void start();
+  public abstract void stop();
+  public abstract void ponderhit();
+  public abstract boolean isStopped();
+
+  public abstract void setSearchDepth(int searchDepth);
+  public abstract void setSearchNodes(long searchNodes);
+  public abstract void setSearchTime(long searchTime);
+  public abstract void setSearchClock(int side, long timeLeft);
+  public abstract void setSearchClockIncrement(int side, long timeIncrement);
+  public abstract void setSearchMovesToGo(int searchMovesToGo);
+  public abstract void setSearchInfinite();
+  public abstract void setSearchPonder();
+  public abstract void setSearchMoveList(List<GenericMove> moveList);
 
 }

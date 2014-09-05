@@ -20,84 +20,84 @@ package com.fluxchess.flux;
 
 public final class PawnTable {
 
-	public static final int ENTRYSIZE = 16;
+  public static final int ENTRYSIZE = 16;
 
-	private final int size;
-	
-	private final long[] zobristCode;
-	private final int[] opening;
-	private final int[] endgame;
-	
-	public PawnTable(int newSize) {
-		assert newSize >= 1;
+  private final int size;
 
-		this.size = newSize;
-		this.zobristCode = new long[this.size];
-		this.opening = new int[this.size];
-		this.endgame = new int[this.size];
-	}
+  private final long[] zobristCode;
+  private final int[] opening;
+  private final int[] endgame;
 
-	/**
-	 * Puts a zobrist code and opening and endgame value into the table.
-	 * 
-	 * @param newZobristCode the zobrist code.
-	 * @param newOpening the opening value.
-	 * @param newEndgame the endgame value.
-	 */
-	public void put(long newZobristCode, int newOpening, int newEndgame) {
-		int position = (int) (newZobristCode % this.size);
+  public PawnTable(int newSize) {
+    assert newSize >= 1;
 
-		this.zobristCode[position] = newZobristCode;
-		this.opening[position] = newOpening;
-		this.endgame[position] = newEndgame;
-	}
-	
-	/**
-	 * Returns whether or not this zobrist code exists in the table.
-	 * 
-	 * @param newZobristCode the zobrist code.
-	 * @return true if the zobrist code exists in the table, false otherwise.
-	 */
-	public boolean exists(long newZobristCode) {
-		int position = (int) (newZobristCode % this.size);
-		
-		if (this.zobristCode[position] == newZobristCode) {
-			return true;
-		} else {
-			return false;
-		}
-	}
+    this.size = newSize;
+    this.zobristCode = new long[this.size];
+    this.opening = new int[this.size];
+    this.endgame = new int[this.size];
+  }
 
-	/**
-	 * Returns the opening given the zobrist code.
-	 * 
-	 * @param newZobristCode the zobrist code.
-	 * @return the opening value.
-	 */
-	public int getOpening(long newZobristCode) {
-		int position = (int) (newZobristCode % this.size);
+  /**
+   * Puts a zobrist code and opening and endgame value into the table.
+   *
+   * @param newZobristCode the zobrist code.
+   * @param newOpening     the opening value.
+   * @param newEndgame     the endgame value.
+   */
+  public void put(long newZobristCode, int newOpening, int newEndgame) {
+    int position = (int) (newZobristCode % this.size);
 
-		if (this.zobristCode[position] == newZobristCode) {
-			return this.opening[position];
-		}
-		
-		throw new IllegalArgumentException();
-	}
-	
-	/**
-	 * Returns the endgame given the zobrist code.
-	 * 
-	 * @param newZobristCode the zobrist code.
-	 * @return the endgame value.
-	 */
-	public int getEndgame(long newZobristCode) {
-		int position = (int) (newZobristCode % this.size);
+    this.zobristCode[position] = newZobristCode;
+    this.opening[position] = newOpening;
+    this.endgame[position] = newEndgame;
+  }
 
-		if (this.zobristCode[position] == newZobristCode) {
-			return this.endgame[position];
-		}
-		
-		throw new IllegalArgumentException();
-	}
+  /**
+   * Returns whether or not this zobrist code exists in the table.
+   *
+   * @param newZobristCode the zobrist code.
+   * @return true if the zobrist code exists in the table, false otherwise.
+   */
+  public boolean exists(long newZobristCode) {
+    int position = (int) (newZobristCode % this.size);
+
+    if (this.zobristCode[position] == newZobristCode) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  /**
+   * Returns the opening given the zobrist code.
+   *
+   * @param newZobristCode the zobrist code.
+   * @return the opening value.
+   */
+  public int getOpening(long newZobristCode) {
+    int position = (int) (newZobristCode % this.size);
+
+    if (this.zobristCode[position] == newZobristCode) {
+      return this.opening[position];
+    }
+
+    throw new IllegalArgumentException();
+  }
+
+  /**
+   * Returns the endgame given the zobrist code.
+   *
+   * @param newZobristCode the zobrist code.
+   * @return the endgame value.
+   */
+  public int getEndgame(long newZobristCode) {
+    int position = (int) (newZobristCode % this.size);
+
+    if (this.zobristCode[position] == newZobristCode) {
+      return this.endgame[position];
+    }
+
+    throw new IllegalArgumentException();
+  }
 
 }

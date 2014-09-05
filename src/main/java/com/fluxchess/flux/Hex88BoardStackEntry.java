@@ -20,28 +20,28 @@ package com.fluxchess.flux;
 
 public final class Hex88BoardStackEntry {
 
-	public long zobristHistory = 0;
-	public long pawnZobristHistory = 0;
-	public int halfMoveClockHistory = 0;
-	public int enPassantHistory = 0;
-	public int captureSquareHistory = 0;
-	public final int[] positionValueOpening = new int[IntColor.ARRAY_DIMENSION];
-	public final int[] positionValueEndgame = new int[IntColor.ARRAY_DIMENSION];
+  public long zobristHistory = 0;
+  public long pawnZobristHistory = 0;
+  public int halfMoveClockHistory = 0;
+  public int enPassantHistory = 0;
+  public int captureSquareHistory = 0;
+  public final int[] positionValueOpening = new int[IntColor.ARRAY_DIMENSION];
+  public final int[] positionValueEndgame = new int[IntColor.ARRAY_DIMENSION];
 
-	public Hex88BoardStackEntry() {
-		clear();
-	}
+  public Hex88BoardStackEntry() {
+    clear();
+  }
 
-	public void clear() {
-		this.zobristHistory = 0;
-		this.pawnZobristHistory = 0;
-		this.halfMoveClockHistory = 0;
-		this.enPassantHistory = 0;
-		this.captureSquareHistory = 0;
-		for (int color : IntColor.values) {
-			this.positionValueOpening[color] = 0;
-			this.positionValueEndgame[color] = 0;
-		}
-	}
+  public void clear() {
+    this.zobristHistory = 0;
+    this.pawnZobristHistory = 0;
+    this.halfMoveClockHistory = 0;
+    this.enPassantHistory = 0;
+    this.captureSquareHistory = 0;
+    for (int color : IntColor.values) {
+      this.positionValueOpening[color] = 0;
+      this.positionValueEndgame[color] = 0;
+    }
+  }
 
 }

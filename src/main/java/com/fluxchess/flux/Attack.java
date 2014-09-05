@@ -23,23 +23,23 @@ package com.fluxchess.flux;
  */
 public final class Attack {
 
-	public static final int MAXATTACK = 16;
+  public static final int MAXATTACK = 16;
 
-	/**
-	 * Represents no attack
-	 */
-	public static final int NOATTACK = -3;
-	
-	public int count = NOATTACK;
-	public int[] delta = new int[MAXATTACK];
-	public int[] position = new int[MAXATTACK];
-	public int numberOfMoves = -1;
+  /**
+   * Represents no attack
+   */
+  public static final int NOATTACK = -3;
 
-	public Attack() {
-	}
+  public int count = NOATTACK;
+  public int[] delta = new int[MAXATTACK];
+  public int[] position = new int[MAXATTACK];
+  public int numberOfMoves = -1;
 
-	public boolean isCheck() {
-		return this.count != 0;
-	}
+  public Attack() {
+  }
+
+  public boolean isCheck() {
+    return this.count != 0;
+  }
 
 }

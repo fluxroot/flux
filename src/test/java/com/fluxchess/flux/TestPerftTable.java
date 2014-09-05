@@ -20,39 +20,39 @@ package com.fluxchess.flux;
 
 public final class TestPerftTable {
 
-	private final int size = 4194304;
-	private int currentAge = 0;
+  private final int size = 4194304;
+  private int currentAge = 0;
 
-	private long[] zobristCode;
-	private int[] nodeNumber;
-	private int[] age;
-	
-	public TestPerftTable() {
-		this.zobristCode = new long[this.size];
-		this.nodeNumber = new int[this.size];
-		this.age = new int[this.size];
-	}
+  private long[] zobristCode;
+  private int[] nodeNumber;
+  private int[] age;
 
-	public void put(long newZobristCode, int newNodeNumber) {
-		int position = (int) (newZobristCode % this.size);
+  public TestPerftTable() {
+    this.zobristCode = new long[this.size];
+    this.nodeNumber = new int[this.size];
+    this.age = new int[this.size];
+  }
 
-		this.zobristCode[position] = newZobristCode;
-		this.nodeNumber[position] = newNodeNumber;
-		this.age[position] = this.currentAge;
-	}
-	
-	public int get(long newZobristCode) {
-		int position = (int) (newZobristCode % this.size);
+  public void put(long newZobristCode, int newNodeNumber) {
+    int position = (int) (newZobristCode % this.size);
 
-		if (this.zobristCode[position] == newZobristCode && this.currentAge == this.age[position]) {
-			return this.nodeNumber[position];
-		} else {
-			return 0;
-		}
-	}
-	
-	public void increaseAge() {
-		this.currentAge++;
-	}
+    this.zobristCode[position] = newZobristCode;
+    this.nodeNumber[position] = newNodeNumber;
+    this.age[position] = this.currentAge;
+  }
+
+  public int get(long newZobristCode) {
+    int position = (int) (newZobristCode % this.size);
+
+    if (this.zobristCode[position] == newZobristCode && this.currentAge == this.age[position]) {
+      return this.nodeNumber[position];
+    } else {
+      return 0;
+    }
+  }
+
+  public void increaseAge() {
+    this.currentAge++;
+  }
 
 }

@@ -27,25 +27,25 @@ import java.io.InputStreamReader;
 
 public class EvaluationTesting {
 
-	public static void main(String[] args) {
-		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-		try {
-			String token = reader.readLine();
-			while (!token.equalsIgnoreCase("quit")) {
-				IEvaluation evaluation = new Evaluation(new EvaluationTable(1024), new PawnTable(1024));
-				try {
-					Hex88Board board = new Hex88Board(new GenericBoard(token));
-					new MoveSee(board);
-					evaluation.print(board);
-				} catch (IllegalNotationException e) {
-					e.printStackTrace();
-					break;
-				}
-				token = reader.readLine();
-			}
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-	}
+  public static void main(String[] args) {
+    BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+    try {
+      String token = reader.readLine();
+      while (!token.equalsIgnoreCase("quit")) {
+        IEvaluation evaluation = new Evaluation(new EvaluationTable(1024), new PawnTable(1024));
+        try {
+          Hex88Board board = new Hex88Board(new GenericBoard(token));
+          new MoveSee(board);
+          evaluation.print(board);
+        } catch (IllegalNotationException e) {
+          e.printStackTrace();
+          break;
+        }
+        token = reader.readLine();
+      }
+    } catch (IOException e1) {
+      e1.printStackTrace();
+    }
+  }
 
 }

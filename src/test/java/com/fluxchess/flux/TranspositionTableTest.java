@@ -24,70 +24,70 @@ import static org.junit.Assert.*;
 
 public class TranspositionTableTest {
 
-	@Test
-	public void testTranspositionTable() {
-		TranspositionTable table = new TranspositionTable(10);
-		int move1 = IntMove.createMove(IntMove.NORMAL, IntPosition.a2, IntPosition.a3, IntChessman.createPiece(IntChessman.PAWN, IntColor.WHITE), IntChessman.NOPIECE, IntChessman.NOPIECE);
+  @Test
+  public void testTranspositionTable() {
+    TranspositionTable table = new TranspositionTable(10);
+    int move1 = IntMove.createMove(IntMove.NORMAL, IntPosition.a2, IntPosition.a3, IntChessman.createPiece(IntChessman.PAWN, IntColor.WHITE), IntChessman.NOPIECE, IntChessman.NOPIECE);
 
-		// Put an entry into the table
-		table.put(1L, 1, 100, IntValue.EXACT, move1, false, 0);
+    // Put an entry into the table
+    table.put(1L, 1, 100, IntValue.EXACT, move1, false, 0);
 
-		TranspositionTableEntry entry = table.get(1L);
-		assertNotNull(entry);
+    TranspositionTableEntry entry = table.get(1L);
+    assertNotNull(entry);
 
-		assertEquals(1, entry.depth);
-		assertEquals(100, entry.getValue(0));
-		assertEquals(IntValue.EXACT, entry.type);
-		assertEquals(move1, entry.move);
-		assertEquals(100, table.getPermillUsed());
+    assertEquals(1, entry.depth);
+    assertEquals(100, entry.getValue(0));
+    assertEquals(IntValue.EXACT, entry.type);
+    assertEquals(move1, entry.move);
+    assertEquals(100, table.getPermillUsed());
 
-		// Overwrite the entry with a new one
-		table.put(1L, 2, 200, IntValue.BETA, move1, false, 0);
+    // Overwrite the entry with a new one
+    table.put(1L, 2, 200, IntValue.BETA, move1, false, 0);
 
-		entry = table.get(1L);
-		assertNotNull(entry);
+    entry = table.get(1L);
+    assertNotNull(entry);
 
-		assertEquals(2, entry.depth);
-		assertEquals(200, entry.getValue(0));
-		assertEquals(IntValue.BETA, entry.type);
-		assertEquals(move1, entry.move);
-		assertEquals(100, table.getPermillUsed());
+    assertEquals(2, entry.depth);
+    assertEquals(200, entry.getValue(0));
+    assertEquals(IntValue.BETA, entry.type);
+    assertEquals(move1, entry.move);
+    assertEquals(100, table.getPermillUsed());
 
-		// Put an mate entry into the table
-		table.put(2L, 0, Search.CHECKMATE - 5, IntValue.EXACT, move1, false, 3);
+    // Put an mate entry into the table
+    table.put(2L, 0, Search.CHECKMATE - 5, IntValue.EXACT, move1, false, 3);
 
-		entry = table.get(2L);
-		assertNotNull(entry);
+    entry = table.get(2L);
+    assertNotNull(entry);
 
-		assertEquals(0, entry.depth);
-		assertEquals(Search.CHECKMATE - 4, entry.getValue(2));
-		assertEquals(IntValue.EXACT, entry.type);
-		assertEquals(move1, entry.move);
-		assertEquals(200, table.getPermillUsed());
+    assertEquals(0, entry.depth);
+    assertEquals(Search.CHECKMATE - 4, entry.getValue(2));
+    assertEquals(IntValue.EXACT, entry.type);
+    assertEquals(move1, entry.move);
+    assertEquals(200, table.getPermillUsed());
 
-		// Increase the age
-		table.increaseAge();
-		
-		assertNull(table.get(2L));
-		
-		assertEquals(0, table.getPermillUsed());
-	}
+    // Increase the age
+    table.increaseAge();
 
-	@Test
-	public void testSize() {
-		System.out.println("Testing Transposition Table size:");
-		int[] megabytes = { 4, 8, 16, 32, 64, 128, 256 };
-		for (int i : megabytes) {
-			int numberOfEntries = i * 1024 * 1024 / TranspositionTable.ENTRYSIZE;
+    assertNull(table.get(2L));
 
-			System.gc();
-			long usedMemoryBefore = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
-			new TranspositionTable(numberOfEntries);
-			long usedMemoryAfter = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+    assertEquals(0, table.getPermillUsed());
+  }
 
-			long hashAllocation = (usedMemoryAfter - usedMemoryBefore) / (1024 * 1024);
-			System.out.println("Transposition Table size " + i + " = " + hashAllocation);
-		}
-	}
+  @Test
+  public void testSize() {
+    System.out.println("Testing Transposition Table size:");
+    int[] megabytes = {4, 8, 16, 32, 64, 128, 256};
+    for (int i : megabytes) {
+      int numberOfEntries = i * 1024 * 1024 / TranspositionTable.ENTRYSIZE;
+
+      System.gc();
+      long usedMemoryBefore = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+      new TranspositionTable(numberOfEntries);
+      long usedMemoryAfter = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+
+      long hashAllocation = (usedMemoryAfter - usedMemoryBefore) / (1024 * 1024);
+      System.out.println("Transposition Table size " + i + " = " + hashAllocation);
+    }
+  }
 
 }

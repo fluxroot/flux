@@ -22,77 +22,77 @@ import com.fluxchess.jcpi.options.*;
 
 public final class Configuration {
 
-	public static final String name = "Flux 2.2.2";
-	public static final String author = "Phokham Nonava";
-	
-	// Search
-	public static final boolean useAspirationWindows = true;
-	public static final boolean useInternalIterativeDeepening = true;
+  public static final String name = "Flux 2.2.2";
+  public static final String author = "Phokham Nonava";
 
-	// Pruning
-	public static final boolean useMateDistancePruning = true;
-	public static final boolean useNullMovePruning = true;
-	public static final boolean useVerifiedNullMovePruning = true;
-	public static final boolean useFutilityPruning = true;
-	public static final boolean useExtendedFutilityPruning = true;
-	public static final boolean useLateMoveReduction = true;
-	public static final boolean useLateMoveReductionResearch = true;
-	public static final boolean useDeltaPruning = true;
-	public static final boolean useMinorPromotionPruning = true;
-	
-	// Tables
-	public static final boolean useTranspositionTable = true;
-	public static final boolean useKillerTable = true;
-	public static final boolean useHistoryTable = true;
-	public static final boolean useEvaluationTable = true;
-	public static final boolean usePawnTable = true;
+  // Search
+  public static final boolean useAspirationWindows = true;
+  public static final boolean useInternalIterativeDeepening = true;
 
-	// Extensions
-	public static final boolean useSingleReplyExtension = true;
-	public static final boolean useRecaptureExtension = true;
-	public static final boolean useCheckExtension = true;
-	public static final boolean usePawnExtension = true;
-	public static final boolean useMateThreatExtension = true;
-	
-	public static boolean ponder = true;
-	public static final CheckboxOption ponderOption = Options.newPonderOption(ponder);
-	
-	public static final int defaultShowPvNumber = 1;
-	public static int showPvNumber = defaultShowPvNumber;
-	public static final SpinnerOption multiPVOption = Options.newMultiPVOption(showPvNumber, 1, 256);
-	
-	public static final int defaultTranspositionTableSize = 16;
-	public static int transpositionTableSize = defaultTranspositionTableSize;
-	public static final SpinnerOption hashOption = Options.newHashOption(transpositionTableSize, 4, 256);
+  // Pruning
+  public static final boolean useMateDistancePruning = true;
+  public static final boolean useNullMovePruning = true;
+  public static final boolean useVerifiedNullMovePruning = true;
+  public static final boolean useFutilityPruning = true;
+  public static final boolean useExtendedFutilityPruning = true;
+  public static final boolean useLateMoveReduction = true;
+  public static final boolean useLateMoveReductionResearch = true;
+  public static final boolean useDeltaPruning = true;
+  public static final boolean useMinorPromotionPruning = true;
 
-	public static final ButtonOption clearHashOption = new ButtonOption("Clear Hash");
+  // Tables
+  public static final boolean useTranspositionTable = true;
+  public static final boolean useKillerTable = true;
+  public static final boolean useHistoryTable = true;
+  public static final boolean useEvaluationTable = true;
+  public static final boolean usePawnTable = true;
 
-	public static final int defaultEvaluationTableSize = 4;
-	public static int evaluationTableSize = defaultEvaluationTableSize;
-	public static final SpinnerOption evaluationTableOption = new SpinnerOption("Evaluation Table", evaluationTableSize, 4, 64);
-	
-	public static final int defaultPawnTableSize = 4;
-	public static int pawnTableSize = defaultPawnTableSize;
-	public static final SpinnerOption pawnTableOption = new SpinnerOption("Pawn Table", pawnTableSize, 4, 64);
+  // Extensions
+  public static final boolean useSingleReplyExtension = true;
+  public static final boolean useRecaptureExtension = true;
+  public static final boolean useCheckExtension = true;
+  public static final boolean usePawnExtension = true;
+  public static final boolean useMateThreatExtension = true;
 
-	public static boolean showRefutations = false;
-	public static final CheckboxOption uciShowRefutationsOption = Options.newUciShowRefutationsOption(showRefutations);
+  public static boolean ponder = true;
+  public static final CheckboxOption ponderOption = Options.newPonderOption(ponder);
 
-	public static boolean analyzeMode = false;
-	public static final CheckboxOption uciAnalyzeModeOption = Options.newUciAnalyseModeOption(analyzeMode);
+  public static final int defaultShowPvNumber = 1;
+  public static int showPvNumber = defaultShowPvNumber;
+  public static final SpinnerOption multiPVOption = Options.newMultiPVOption(showPvNumber, 1, 256);
 
-	public static final AbstractOption[] options = new AbstractOption[]{
-			ponderOption,
-			multiPVOption,
-			hashOption,
-			clearHashOption,
-			evaluationTableOption,
-			pawnTableOption,
-			uciShowRefutationsOption,
-			uciAnalyzeModeOption
-	};
+  public static final int defaultTranspositionTableSize = 16;
+  public static int transpositionTableSize = defaultTranspositionTableSize;
+  public static final SpinnerOption hashOption = Options.newHashOption(transpositionTableSize, 4, 256);
 
-	private Configuration() {
-	}
+  public static final ButtonOption clearHashOption = new ButtonOption("Clear Hash");
+
+  public static final int defaultEvaluationTableSize = 4;
+  public static int evaluationTableSize = defaultEvaluationTableSize;
+  public static final SpinnerOption evaluationTableOption = new SpinnerOption("Evaluation Table", evaluationTableSize, 4, 64);
+
+  public static final int defaultPawnTableSize = 4;
+  public static int pawnTableSize = defaultPawnTableSize;
+  public static final SpinnerOption pawnTableOption = new SpinnerOption("Pawn Table", pawnTableSize, 4, 64);
+
+  public static boolean showRefutations = false;
+  public static final CheckboxOption uciShowRefutationsOption = Options.newUciShowRefutationsOption(showRefutations);
+
+  public static boolean analyzeMode = false;
+  public static final CheckboxOption uciAnalyzeModeOption = Options.newUciAnalyseModeOption(analyzeMode);
+
+  public static final AbstractOption[] options = new AbstractOption[]{
+      ponderOption,
+      multiPVOption,
+      hashOption,
+      clearHashOption,
+      evaluationTableOption,
+      pawnTableOption,
+      uciShowRefutationsOption,
+      uciAnalyzeModeOption
+  };
+
+  private Configuration() {
+  }
 
 }

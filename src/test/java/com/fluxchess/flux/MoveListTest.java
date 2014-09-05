@@ -24,27 +24,27 @@ import static org.junit.Assert.assertEquals;
 
 public class MoveListTest {
 
-	@Test
-	public void testRemove() {
-		MoveList moveList = new MoveList();
+  @Test
+  public void testRemove() {
+    MoveList moveList = new MoveList();
 
-		moveList.newList();
-		assertEquals(0, moveList.getLength());
-		moveList.move[moveList.tail++] = 1;
-		assertEquals(1, moveList.getLength());
-		
-		moveList.newList();
-		assertEquals(0, moveList.getLength());
-		moveList.move[moveList.tail++] = 1;
-		moveList.move[moveList.tail++] = 1;
-		moveList.move[moveList.tail++] = 1;
-		assertEquals(3, moveList.getLength());
-		
-		moveList.deleteList();
-		assertEquals(1, moveList.getLength());
+    moveList.newList();
+    assertEquals(0, moveList.getLength());
+    moveList.move[moveList.tail++] = 1;
+    assertEquals(1, moveList.getLength());
 
-		moveList.deleteList();
-		assertEquals(0, moveList.getLength());
-	}
+    moveList.newList();
+    assertEquals(0, moveList.getLength());
+    moveList.move[moveList.tail++] = 1;
+    moveList.move[moveList.tail++] = 1;
+    moveList.move[moveList.tail++] = 1;
+    assertEquals(3, moveList.getLength());
+
+    moveList.deleteList();
+    assertEquals(1, moveList.getLength());
+
+    moveList.deleteList();
+    assertEquals(0, moveList.getLength());
+  }
 
 }

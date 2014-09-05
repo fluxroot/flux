@@ -20,18 +20,18 @@ package com.fluxchess.flux;
 
 public final class Result {
 
-	public int bestMove = IntMove.NOMOVE;
-	public int ponderMove = IntMove.NOMOVE;
-	public int value = IntValue.NOVALUE;
-	public int resultValue = -Search.INFINITY;
-	public long time = -1;
-	public int moveNumber = 0;
-	public int depth = 0;
-	
-	/**
-	 * Creates a new Result.
-	 */
-	public Result() {
-	}
+  public int bestMove = IntMove.NOMOVE;
+  public int ponderMove = IntMove.NOMOVE;
+  public int value = IntValue.NOVALUE;
+  public int resultValue = -Search.INFINITY;
+  public long time = -1;
+  public int moveNumber = 0;
+  public int depth = 0;
+
+  /**
+   * Creates a new Result.
+   */
+  public Result() {
+  }
 
 }

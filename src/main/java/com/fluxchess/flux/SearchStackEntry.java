@@ -20,14 +20,14 @@ package com.fluxchess.flux;
 
 public final class SearchStackEntry {
 
-	public int totalNodes;
+  public int totalNodes;
 
-	public SearchStackEntry() {
-		clear();
-	}
+  public SearchStackEntry() {
+    clear();
+  }
 
-	public void clear() {
-		this.totalNodes = 0;
-	}
+  public void clear() {
+    this.totalNodes = 0;
+  }
 
 }

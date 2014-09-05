@@ -22,72 +22,72 @@ import com.fluxchess.jcpi.models.GenericScore;
 
 public class IntValue {
 
-	/**
-	 * Represents no value
-	 */
-	public static final int NOVALUE = -9;
+  /**
+   * Represents no value
+   */
+  public static final int NOVALUE = -9;
 
-	/**
-	 * IntValue values
-	 */
-	public static final int EXACT = 0;
-	public static final int ALPHA = 1;
-	public static final int BETA = 2;
+  /**
+   * IntValue values
+   */
+  public static final int EXACT = 0;
+  public static final int ALPHA = 1;
+  public static final int BETA = 2;
 
-	/**
-	 * IntValue mask
-	 */
-	public static final int MASK = 0x3;
+  /**
+   * IntValue mask
+   */
+  public static final int MASK = 0x3;
 
-	/**
-	 * IntValue cannot be instantiated.
-	 */
-	private IntValue() {
-	}
+  /**
+   * IntValue cannot be instantiated.
+   */
+  private IntValue() {
+  }
 
-	/**
-	 * Returns the IntValue value of the EnumValue.
-	 * 
-	 * @param value the EnumValue.
-	 * @return the IntValue value.
-	 */
-	public static int valueOfValue(GenericScore value) {
-		assert value != null;
+  /**
+   * Returns the IntValue value of the EnumValue.
+   *
+   * @param value the EnumValue.
+   * @return the IntValue value.
+   */
+  public static int valueOfValue(GenericScore value) {
+    assert value != null;
 
-		switch (value) {
-		case EXACT:
-			return EXACT;
-		case ALPHA:
-			return ALPHA;
-		case BETA:
-			return BETA;
-		default:
-			assert false : value;
-			break;
-		}
+    switch (value) {
+      case EXACT:
+        return EXACT;
+      case ALPHA:
+        return ALPHA;
+      case BETA:
+        return BETA;
+      default:
+        assert false : value;
+        break;
+    }
 
-		throw new IllegalArgumentException();
-	}
+    throw new IllegalArgumentException();
+  }
 
-	/**
-	 * Returns the EnumValue of the IntValue value.
-	 * 
-	 * @param value the IntValue value.
-	 * @return the EnumValue.
-	 */
-	public static GenericScore valueOfIntValue(int value) {
-		assert value != NOVALUE;
+  /**
+   * Returns the EnumValue of the IntValue value.
+   *
+   * @param value the IntValue value.
+   * @return the EnumValue.
+   */
+  public static GenericScore valueOfIntValue(int value) {
+    assert value != NOVALUE;
 
-		switch (value) {
-		case EXACT:
-			return GenericScore.EXACT;
-		case ALPHA:
-			return GenericScore.ALPHA;
-		case BETA:
-			return GenericScore.BETA;
-		default:
-			throw new IllegalArgumentException();
-		}
-	}
+    switch (value) {
+      case EXACT:
+        return GenericScore.EXACT;
+      case ALPHA:
+        return GenericScore.ALPHA;
+      case BETA:
+        return GenericScore.BETA;
+      default:
+        throw new IllegalArgumentException();
+    }
+  }
 
 }

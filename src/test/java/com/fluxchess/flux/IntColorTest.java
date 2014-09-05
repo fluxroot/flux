@@ -26,10 +26,10 @@ import static org.junit.Assert.assertEquals;
 
 public class IntColorTest {
 
-	@Test
-	public void testIntColor() {
-		Assert.assertEquals(IntColor.valueOfColor(GenericColor.WHITE), IntColor.WHITE);
-		assertEquals(IntColor.valueOfIntColor(IntColor.WHITE), GenericColor.WHITE);
-	}
+  @Test
+  public void testIntColor() {
+    Assert.assertEquals(IntColor.valueOfColor(GenericColor.WHITE), IntColor.WHITE);
+    assertEquals(IntColor.valueOfIntColor(IntColor.WHITE), GenericColor.WHITE);
+  }
 
 }

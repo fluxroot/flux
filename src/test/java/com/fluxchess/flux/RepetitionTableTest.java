@@ -25,24 +25,24 @@ import static org.junit.Assert.assertTrue;
 
 public class RepetitionTableTest {
 
-	@Test
-	public void testTable() {
-		RepetitionTable table = new RepetitionTable();
+  @Test
+  public void testTable() {
+    RepetitionTable table = new RepetitionTable();
 
-		// Put a first entry
-		table.put(1);
-		assertTrue(table.exists(1));
-		
-		// Put a secondy entry
-		table.put(1);
-		
-		// Remove one entry
-		table.remove(1);
-		assertTrue(table.exists(1));
-		
-		// Remove the second entry
-		table.remove(1);
-		assertFalse(table.exists(1));
-	}
+    // Put a first entry
+    table.put(1);
+    assertTrue(table.exists(1));
+
+    // Put a secondy entry
+    table.put(1);
+
+    // Remove one entry
+    table.remove(1);
+    assertTrue(table.exists(1));
+
+    // Remove the second entry
+    table.remove(1);
+    assertFalse(table.exists(1));
+  }
 
 }

@@ -22,103 +22,103 @@ import com.fluxchess.jcpi.models.GenericColor;
 
 public final class IntColor {
 
-	/**
-	 * Represents no color
-	 */
-	public static final int NOCOLOR = -4;
+  /**
+   * Represents no color
+   */
+  public static final int NOCOLOR = -4;
 
-	/**
-	 * IntColor values
-	 */
-	public static final int WHITE = 0;
-	public static final int BLACK = 1;
+  /**
+   * IntColor values
+   */
+  public static final int WHITE = 0;
+  public static final int BLACK = 1;
 
-	/**
-	 * IntColor constants
-	 */
-	public static final int ARRAY_DIMENSION = 2;
+  /**
+   * IntColor constants
+   */
+  public static final int ARRAY_DIMENSION = 2;
 
-	/**
-	 * IntColor array
-	 */
-	public static final int[] values = {
-		WHITE,
-		BLACK
-	};
+  /**
+   * IntColor array
+   */
+  public static final int[] values = {
+      WHITE,
+      BLACK
+  };
 
-	/**
-	 * IntColor mask
-	 */
-	public static final int MASK = 0x1;
+  /**
+   * IntColor mask
+   */
+  public static final int MASK = 0x1;
 
-	/**
-	 * IntColor cannot be instantiated.
-	 */
-	private IntColor() {
-	}
+  /**
+   * IntColor cannot be instantiated.
+   */
+  private IntColor() {
+  }
 
-	/**
-	 * Returns the IntColor value of the GenericColor.
-	 * 
-	 * @param color the GenericColor.
-	 * @return the IntColor value.
-	 */
-	public static int valueOfColor(GenericColor color) {
-		assert color != null;
+  /**
+   * Returns the IntColor value of the GenericColor.
+   *
+   * @param color the GenericColor.
+   * @return the IntColor value.
+   */
+  public static int valueOfColor(GenericColor color) {
+    assert color != null;
 
-		switch (color) {
-		case WHITE:
-			return WHITE;
-		case BLACK:
-			return BLACK;
-		default:
-			assert false : color;
-			break;
-		}
+    switch (color) {
+      case WHITE:
+        return WHITE;
+      case BLACK:
+        return BLACK;
+      default:
+        assert false : color;
+        break;
+    }
 
-		throw new IllegalArgumentException();
-	}
+    throw new IllegalArgumentException();
+  }
 
-	/**
-	 * Returns the GenericColor of the color value.
-	 * 
-	 * @param color the color value.
-	 * @return the GenericColor.
-	 */
-	public static GenericColor valueOfIntColor(int color) {
-		assert color != NOCOLOR;
+  /**
+   * Returns the GenericColor of the color value.
+   *
+   * @param color the color value.
+   * @return the GenericColor.
+   */
+  public static GenericColor valueOfIntColor(int color) {
+    assert color != NOCOLOR;
 
-		switch (color) {
-		case WHITE:
-			return GenericColor.WHITE;
-		case BLACK:
-			return GenericColor.BLACK;
-		default:
-			throw new IllegalArgumentException();
-		}
-	}
+    switch (color) {
+      case WHITE:
+        return GenericColor.WHITE;
+      case BLACK:
+        return GenericColor.BLACK;
+      default:
+        throw new IllegalArgumentException();
+    }
+  }
 
-	/**
-	 * Returns the opposite color.
-	 * 
-	 * @param color the color.
-	 * @return the opposite color.
-	 */
-	public static int switchColor(int color) {
-		assert color != NOCOLOR && (color == WHITE || color == BLACK);
+  /**
+   * Returns the opposite color.
+   *
+   * @param color the color.
+   * @return the opposite color.
+   */
+  public static int switchColor(int color) {
+    assert color != NOCOLOR && (color == WHITE || color == BLACK);
 
-		assert (color ^ MASK) == WHITE || (color ^ MASK) == BLACK;
-		return color ^ MASK;
-	}
+    assert (color ^ MASK) == WHITE || (color ^ MASK) == BLACK;
+    return color ^ MASK;
+  }
 
-	public static boolean isValidColor(int color) {
-		for (int colorValue : values) {
-			if (color == colorValue) {
-				return true;
-			}
-		}
-		
-		return false;
-	}
+  public static boolean isValidColor(int color) {
+    for (int colorValue : values) {
+      if (color == colorValue) {
+        return true;
+      }
+    }
+
+    return false;
+  }
 
 }
