@@ -103,4 +103,68 @@ public final class MoveList {
     }
   }
 
+  public void rateEvasion(int transpositionMove, int primaryKillerMove, int secondaryKillerMove, HistoryTable historyTable) {
+    for (int i = head; i < tail; i++) {
+      int move = moves[i];
+
+      if (move == transpositionMove) {
+        values[i] = Integer.MAX_VALUE;
+      } else if (Move.getTarget(move) != Piece.NOPIECE) {
+        values[i] = getMVVLVARating(move);
+      } else if (move == primaryKillerMove) {
+        values[i] = 0;
+      } else if (move == secondaryKillerMove) {
+        values[i] = -1;
+      } else {
+        // -2 because of the secondary killer move
+        values[i] = historyTable.get(moves[i]) - HistoryTable.MAX_HISTORYVALUE - 2;
+      }
+    }
+  }
+
+  /**
+   * Rates the move list according to the history table.
+   *
+   */
+  public void rateFromHistory(HistoryTable historyTable) {
+    for (int i = head; i < tail; i++) {
+      values[i] = historyTable.get(moves[i]);
+    }
+  }
+
+  /**
+   * Rates the move according to SEE.
+   *
+   */
+  public void rateFromSEE() {
+    for (int i = head; i < tail; i++) {
+      values[i] = See.seeMove(moves[i], Move.getChessmanColor(moves[i]));
+    }
+  }
+
+  /**
+   * Rates the move according to the MVV/LVA.
+   */
+  public void rateFromMVVLVA() {
+    for (int i = head; i < tail; i++) {
+      values[i] = getMVVLVARating(moves[i]);
+    }
+  }
+
+  private int getMVVLVARating(int move) {
+    int value = 0;
+
+    int chessman = Move.getChessman(move);
+    int target = Move.getTarget(move);
+
+    value += Piece.VALUE_KING / Piece.getValueFromChessman(chessman);
+    if (target != Piece.NOPIECE) {
+      value += 10 * Piece.getValueFromChessman(target);
+    }
+
+    assert value >= (Piece.VALUE_KING / Piece.VALUE_KING) && value <= (Piece.VALUE_KING / Piece.VALUE_PAWN) + 10 * Piece.VALUE_QUEEN;
+
+    return value;
+  }
+
 }

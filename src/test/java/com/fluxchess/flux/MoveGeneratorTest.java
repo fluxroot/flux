@@ -228,8 +228,8 @@ public class MoveGeneratorTest {
   private String printDifference(Position board, MoveList main, MoveList quiescent) {
     String result = board.getBoard().toString() + "\n";
 
-    new MoveRater(new HistoryTable()).rateFromMVVLVA(main);
-    new MoveRater(new HistoryTable()).rateFromMVVLVA(quiescent);
+    main.rateFromMVVLVA();
+    quiescent.rateFromMVVLVA();
 
     result += "     Main:";
     for (int i = 0; i < main.tail; i++) {

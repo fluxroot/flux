@@ -62,9 +62,7 @@ public final class MoveGenerator {
 
   // Tables
   private static KillerTable killerTable;
-
-  // Sorter and Rater
-  private static MoveRater moveRater;
+  private static HistoryTable historyTable;
 
   // Move list
   private static MoveList moveList;
@@ -112,14 +110,14 @@ public final class MoveGenerator {
    *
    * @param newBoard the board.
    */
-  public MoveGenerator(Position newBoard, KillerTable newKillerTable, HistoryTable historyTable) {
+  public MoveGenerator(Position newBoard, KillerTable newKillerTable, HistoryTable newHistoryTable) {
     assert newBoard != null;
     assert newKillerTable != null;
-    assert historyTable != null;
+    assert newHistoryTable != null;
 
     board = newBoard;
     killerTable = newKillerTable;
-    moveRater = new MoveRater(historyTable);
+    historyTable = newHistoryTable;
 
     moveList = new MoveList();
     tempMoveList = new MoveList();
@@ -144,7 +142,7 @@ public final class MoveGenerator {
 
     if (attack.isCheck()) {
       generateEvasion(attack);
-      moveRater.rateEvasion(moveList, generator[generatorHistory].transpositionMove, generator[generatorHistory].primaryKillerMove, generator[generatorHistory].secondaryKillerMove);
+      moveList.rateEvasion(generator[generatorHistory].transpositionMove, generator[generatorHistory].primaryKillerMove, generator[generatorHistory].secondaryKillerMove, historyTable);
       moveList.sort();
       generator[generatorHistory].statePosition = statePositionEvasion;
       generator[generatorHistory].testState = GEN_EVASION;
@@ -168,7 +166,7 @@ public final class MoveGenerator {
 
     if (attack.isCheck()) {
       generateEvasion(attack);
-      moveRater.rateEvasion(moveList, generator[generatorHistory].transpositionMove, generator[generatorHistory].primaryKillerMove, generator[generatorHistory].secondaryKillerMove);
+      moveList.rateEvasion(generator[generatorHistory].transpositionMove, generator[generatorHistory].primaryKillerMove, generator[generatorHistory].secondaryKillerMove, historyTable);
       moveList.sort();
       generator[generatorHistory].statePosition = statePositionEvasion;
       generator[generatorHistory].testState = GEN_EVASION;
@@ -291,7 +289,7 @@ public final class MoveGenerator {
         case GEN_GOODCAPTURE:
           generateCaptures();
           tempMoveList.resetList();
-          moveRater.rateFromMVVLVA(moveList);
+          moveList.rateFromMVVLVA();
           moveList.sort();
           generator[generatorHistory].testState = GEN_GOODCAPTURE;
           break;
@@ -312,7 +310,7 @@ public final class MoveGenerator {
         case GEN_NONCAPTURE:
           generateNonCaptures();
           if (Configuration.useHistoryTable) {
-            moveRater.rateFromHistory(moveList);
+            moveList.rateFromHistory(historyTable);
             moveList.sort();
           }
           generator[generatorHistory].testState = GEN_NONCAPTURE;
@@ -324,7 +322,7 @@ public final class MoveGenerator {
           break;
         case GEN_GOODCAPTURE_QS:
           generateCaptures();
-          moveRater.rateFromMVVLVA(moveList);
+          moveList.rateFromMVVLVA();
           moveList.sort();
           generator[generatorHistory].testState = GEN_GOODCAPTURE_QS;
           break;
