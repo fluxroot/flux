@@ -42,7 +42,7 @@ public final class TranspositionTable {
     public long zobristCode = 0;
     public int age = -1;
     public int depth = -1;
-    private int value = -Search.INFINITY;
+    private int value = -Value.INFINITY;
     public int type = Bound.NOVALUE;
     public int move = Move.NOMOVE;
     public boolean mateThreat = false;
@@ -54,7 +54,7 @@ public final class TranspositionTable {
       this.zobristCode = 0;
       this.age = -1;
       this.depth = -1;
-      this.value = -Search.INFINITY;
+      this.value = -Value.INFINITY;
       this.type = Bound.NOVALUE;
       this.move = Move.NOMOVE;
       this.mateThreat = false;
@@ -62,9 +62,9 @@ public final class TranspositionTable {
 
     public int getValue(int height) {
       int value = this.value;
-      if (value < -Search.CHECKMATE_THRESHOLD) {
+      if (value < -Value.CHECKMATE_THRESHOLD) {
         value += height;
-      } else if (value > Search.CHECKMATE_THRESHOLD) {
+      } else if (value > Value.CHECKMATE_THRESHOLD) {
         value -= height;
       }
 
@@ -73,12 +73,12 @@ public final class TranspositionTable {
 
     public void setValue(int value, int height) {
       // Normalize mate values
-      if (value < -Search.CHECKMATE_THRESHOLD) {
+      if (value < -Value.CHECKMATE_THRESHOLD) {
         value -= height;
-      } else if (value > Search.CHECKMATE_THRESHOLD) {
+      } else if (value > Value.CHECKMATE_THRESHOLD) {
         value += height;
       }
-      assert value <= Search.CHECKMATE || value >= -Search.CHECKMATE;
+      assert value <= Value.CHECKMATE || value >= -Value.CHECKMATE;
 
       this.value = value;
     }

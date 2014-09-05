@@ -317,7 +317,7 @@ public final class Evaluation {
     // Evaluate draw
     evaluateDraw(board);
     if (drawFactor[myColor] == 0 && drawFactor[enemyColor] == 0) {
-      return Search.DRAW;
+      return Value.DRAW;
     }
 
     // Evaluate the pawn structures
@@ -365,16 +365,16 @@ public final class Evaluation {
     total = (totalOpening * phase + totalEndgame * (PHASE_INTERVAL - phase)) / PHASE_INTERVAL;
 
     // Draw factor
-    if (total > Search.DRAW) {
+    if (total > Value.DRAW) {
       total = (total * drawFactor[myColor]) / DRAW_FACTOR;
-    } else if (total < Search.DRAW) {
+    } else if (total < Value.DRAW) {
       total = (total * drawFactor[enemyColor]) / DRAW_FACTOR;
     }
 
-    if (total < -Search.CHECKMATE_THRESHOLD) {
-      total = -Search.CHECKMATE_THRESHOLD;
-    } else if (total > Search.CHECKMATE_THRESHOLD) {
-      total = Search.CHECKMATE_THRESHOLD;
+    if (total < -Value.CHECKMATE_THRESHOLD) {
+      total = -Value.CHECKMATE_THRESHOLD;
+    } else if (total > Value.CHECKMATE_THRESHOLD) {
+      total = Value.CHECKMATE_THRESHOLD;
     }
 
     // Store the result and return

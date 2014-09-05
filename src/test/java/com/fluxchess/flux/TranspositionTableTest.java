@@ -54,13 +54,13 @@ public class TranspositionTableTest {
     assertEquals(100, table.getPermillUsed());
 
     // Put an mate entry into the table
-    table.put(2L, 0, Search.CHECKMATE - 5, Bound.EXACT, move1, false, 3);
+    table.put(2L, 0, Value.CHECKMATE - 5, Bound.EXACT, move1, false, 3);
 
     entry = table.get(2L);
     assertNotNull(entry);
 
     assertEquals(0, entry.depth);
-    assertEquals(Search.CHECKMATE - 4, entry.getValue(2));
+    assertEquals(Value.CHECKMATE - 4, entry.getValue(2));
     assertEquals(Bound.EXACT, entry.type);
     assertEquals(move1, entry.move);
     assertEquals(200, table.getPermillUsed());

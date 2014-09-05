@@ -29,14 +29,14 @@ public final class EvaluationTable {
 
   public static final class EvaluationTableEntry {
     public long zobristCode = 0;
-    public int evaluation = -Search.INFINITY;
+    public int evaluation = -Value.INFINITY;
 
     public EvaluationTableEntry() {
     }
 
     public void clear() {
       this.zobristCode = 0;
-      this.evaluation = -Search.INFINITY;
+      this.evaluation = -Value.INFINITY;
     }
   }
 
