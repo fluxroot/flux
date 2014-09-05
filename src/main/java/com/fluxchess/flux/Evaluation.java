@@ -647,8 +647,8 @@ final class Evaluation {
       int pawnRank = Square.getRank(pawnPosition);
 
       // Fill attack table
-      for (int j = 1; j < MoveGenerator.moveDeltaPawn.length; j++) {
-        int delta = MoveGenerator.moveDeltaPawn[j];
+      for (int j = 1; j < Square.pawnDirections.length; j++) {
+        int delta = Square.pawnDirections[j];
 
         // Attack Table
         int targetPosition = pawnPosition;
@@ -692,7 +692,7 @@ final class Evaluation {
       int allMobility = EVAL_KNIGHT_MOBILITY_BASE;
 
       // Fill attack table and evaluate mobility
-      for (int delta : MoveGenerator.moveDeltaKnight) {
+      for (int delta : Square.knightDirections) {
         int targetPosition = knightPosition + delta;
         if ((targetPosition & 0x88) == 0) {
           myAttackTable[targetPosition]++;
@@ -738,7 +738,7 @@ final class Evaluation {
       int allMobility = EVAL_BISHOP_MOBILITY_BASE;
 
       // Fill attack table and evaluate mobility
-      for (int delta : MoveGenerator.moveDeltaBishop) {
+      for (int delta : Square.bishopDirections) {
         int targetPosition = bishopPosition + delta;
         while ((targetPosition & 0x88) == 0) {
           myAttackTable[targetPosition]++;
@@ -799,7 +799,7 @@ final class Evaluation {
       int allMobility = EVAL_ROOK_MOBILITY_BASE;
 
       // Fill attack table and evaluate mobility
-      for (int delta : MoveGenerator.moveDeltaRook) {
+      for (int delta : Square.rookDirections) {
         int targetPosition = rookPosition + delta;
         while ((targetPosition & 0x88) == 0) {
           myAttackTable[targetPosition]++;
@@ -903,7 +903,7 @@ final class Evaluation {
       int allMobility = EVAL_QUEEN_MOBILITY_BASE;
 
       // Fill attack table and evaluate mobility
-      for (int delta : MoveGenerator.moveDeltaQueen) {
+      for (int delta : Square.queenDirections) {
         int targetPosition = queenPosition + delta;
         while ((targetPosition & 0x88) == 0) {
           myAttackTable[targetPosition]++;
@@ -976,7 +976,7 @@ final class Evaluation {
     int kingPosition = myKingList.position[0];
 
     // Fill attack table
-    for (int delta : MoveGenerator.moveDeltaKing) {
+    for (int delta : Square.kingDirections) {
       int targetPosition = kingPosition + delta;
       if ((targetPosition & 0x88) == 0) {
         myAttackTable[targetPosition]++;

@@ -84,9 +84,45 @@ final class Square {
       a8, b8, c8, d8, e8, f8, g8, h8
   };
 
-  /**
-   * Castling positions
-   */
+  // These are our move deltas.
+  // N = north, E = east, S = south, W = west
+  static final int N = 16;
+  static final int E = 1;
+  static final int S = -16;
+  static final int W = -1;
+  static final int NE = N + E;
+  static final int SE = S + E;
+  static final int SW = S + W;
+  static final int NW = N + W;
+
+  static final int[] pawnDirections = {
+      N, NE, NW
+  };
+  static final int[] knightDirections = {
+      N + N + E,
+      N + E + E,
+      S + E + E,
+      S + S + E,
+      S + S + W,
+      S + W + W,
+      N + W + W,
+      N + N + W
+  };
+  static final int[] bishopDirections = {
+      NE, SE, SW, NW
+  };
+  static final int[] rookDirections = {
+      N, E, S, W
+  };
+  static final int[] queenDirections = {
+      N, NE, E, SE,
+      S, SW, W, NW
+  };
+  static final int[] kingDirections = {
+      N, NE, E, SE,
+      S, SW, W, NW
+  };
+
   static final int WHITE_CASTLING_KINGSIDE = g1;
   static final int WHITE_CASTLING_QUEENSIDE = c1;
   static final int BLACK_CASTLING_KINGSIDE = g8;

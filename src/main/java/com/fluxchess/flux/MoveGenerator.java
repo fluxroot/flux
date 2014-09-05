@@ -24,14 +24,6 @@ package com.fluxchess.flux;
  */
 final class MoveGenerator {
 
-  // Move deltas
-  static final int[] moveDeltaPawn = {16, 17, 15};
-  static final int[] moveDeltaKnight = {+33, +18, -14, -31, -33, -18, +14, +31};
-  static final int[] moveDeltaBishop = {+17, -15, -17, +15};
-  static final int[] moveDeltaRook = {+16, +1, -16, -1};
-  static final int[] moveDeltaQueen = {+16, +17, +1, -15, -16, -17, -1, +15};
-  static final int[] moveDeltaKing = {+16, +17, +1, -15, -16, -17, -1, +15};
-
   private static final int HISTORYSIZE = Depth.MAX_PLY + 1;
   private static final int STATELISTSIZE = 256;
 
@@ -566,26 +558,26 @@ final class MoveGenerator {
     tempChessmanList = Position.knightList[activeColor];
     for (int i = 0; i < tempChessmanList.size; i++) {
       int position = tempChessmanList.position[i];
-      addDefaultCaptureMovesTo(Position.board[position], position, moveDeltaKnight, Square.NOPOSITION);
+      addDefaultCaptureMovesTo(Position.board[position], position, Square.knightDirections, Square.NOPOSITION);
     }
     tempChessmanList = Position.bishopList[activeColor];
     for (int i = 0; i < tempChessmanList.size; i++) {
       int position = tempChessmanList.position[i];
-      addDefaultCaptureMovesTo(Position.board[position], position, moveDeltaBishop, Square.NOPOSITION);
+      addDefaultCaptureMovesTo(Position.board[position], position, Square.bishopDirections, Square.NOPOSITION);
     }
     tempChessmanList = Position.rookList[activeColor];
     for (int i = 0; i < tempChessmanList.size; i++) {
       int position = tempChessmanList.position[i];
-      addDefaultCaptureMovesTo(Position.board[position], position, moveDeltaRook, Square.NOPOSITION);
+      addDefaultCaptureMovesTo(Position.board[position], position, Square.rookDirections, Square.NOPOSITION);
     }
     tempChessmanList = Position.queenList[activeColor];
     for (int i = 0; i < tempChessmanList.size; i++) {
       int position = tempChessmanList.position[i];
-      addDefaultCaptureMovesTo(Position.board[position], position, moveDeltaQueen, Square.NOPOSITION);
+      addDefaultCaptureMovesTo(Position.board[position], position, Square.queenDirections, Square.NOPOSITION);
     }
     assert Position.kingList[activeColor].size == 1;
     int position = Position.kingList[activeColor].position[0];
-    addDefaultCaptureMovesTo(Position.board[position], position, moveDeltaKing, Square.NOPOSITION);
+    addDefaultCaptureMovesTo(Position.board[position], position, Square.kingDirections, Square.NOPOSITION);
   }
 
   private static void generateEvasion(Attack attack) {
@@ -601,7 +593,7 @@ final class MoveGenerator {
     int moveTemplate = Move.createMove(MoveType.NORMAL, kingPosition, kingPosition, king, Piece.NOPIECE, Piece.NOPIECE);
 
     // Generate king moves
-    for (int delta : moveDeltaKing) {
+    for (int delta : Square.kingDirections) {
       assert attack.count > 0;
       boolean isOnCheckLine = false;
       for (int i = 0; i < attack.count; i++) {
@@ -645,28 +637,28 @@ final class MoveGenerator {
     for (int i = 0; i < tempChessmanList.size; i++) {
       int position = tempChessmanList.position[i];
       if (!board.isPinned(position, activeColor)) {
-        addDefaultCaptureMovesTo(Position.board[position], position, moveDeltaKnight, attackerPosition);
+        addDefaultCaptureMovesTo(Position.board[position], position, Square.knightDirections, attackerPosition);
       }
     }
     tempChessmanList = Position.bishopList[activeColor];
     for (int i = 0; i < tempChessmanList.size; i++) {
       int position = tempChessmanList.position[i];
       if (!board.isPinned(position, activeColor)) {
-        addDefaultCaptureMovesTo(Position.board[position], position, moveDeltaBishop, attackerPosition);
+        addDefaultCaptureMovesTo(Position.board[position], position, Square.bishopDirections, attackerPosition);
       }
     }
     tempChessmanList = Position.rookList[activeColor];
     for (int i = 0; i < tempChessmanList.size; i++) {
       int position = tempChessmanList.position[i];
       if (!board.isPinned(position, activeColor)) {
-        addDefaultCaptureMovesTo(Position.board[position], position, moveDeltaRook, attackerPosition);
+        addDefaultCaptureMovesTo(Position.board[position], position, Square.rookDirections, attackerPosition);
       }
     }
     tempChessmanList = Position.queenList[activeColor];
     for (int i = 0; i < tempChessmanList.size; i++) {
       int position = tempChessmanList.position[i];
       if (!board.isPinned(position, activeColor)) {
-        addDefaultCaptureMovesTo(Position.board[position], position, moveDeltaQueen, attackerPosition);
+        addDefaultCaptureMovesTo(Position.board[position], position, Square.queenDirections, attackerPosition);
       }
     }
 
@@ -684,28 +676,28 @@ final class MoveGenerator {
         for (int i = 0; i < tempChessmanList.size; i++) {
           int position = tempChessmanList.position[i];
           if (!board.isPinned(position, activeColor)) {
-            addDefaultNonCaptureMovesTo(Position.board[position], position, moveDeltaKnight, end);
+            addDefaultNonCaptureMovesTo(Position.board[position], position, Square.knightDirections, end);
           }
         }
         tempChessmanList = Position.bishopList[activeColor];
         for (int i = 0; i < tempChessmanList.size; i++) {
           int position = tempChessmanList.position[i];
           if (!board.isPinned(position, activeColor)) {
-            addDefaultNonCaptureMovesTo(Position.board[position], position, moveDeltaBishop, end);
+            addDefaultNonCaptureMovesTo(Position.board[position], position, Square.bishopDirections, end);
           }
         }
         tempChessmanList = Position.rookList[activeColor];
         for (int i = 0; i < tempChessmanList.size; i++) {
           int position = tempChessmanList.position[i];
           if (!board.isPinned(position, activeColor)) {
-            addDefaultNonCaptureMovesTo(Position.board[position], position, moveDeltaRook, end);
+            addDefaultNonCaptureMovesTo(Position.board[position], position, Square.rookDirections, end);
           }
         }
         tempChessmanList = Position.queenList[activeColor];
         for (int i = 0; i < tempChessmanList.size; i++) {
           int position = tempChessmanList.position[i];
           if (!board.isPinned(position, activeColor)) {
-            addDefaultNonCaptureMovesTo(Position.board[position], position, moveDeltaQueen, end);
+            addDefaultNonCaptureMovesTo(Position.board[position], position, Square.queenDirections, end);
           }
         }
 
@@ -731,31 +723,31 @@ final class MoveGenerator {
     for (int i = 0; i < tempChessmanList.size; i++) {
       int position = tempChessmanList.position[i];
       boolean isPinned = board.isPinned(position, enemyKingColor);
-      addDefaultNonCaptureCheckMovesTo(Position.board[position], PieceType.KNIGHT, activeColor, position, moveDeltaKnight, enemyKingPosition, isPinned);
+      addDefaultNonCaptureCheckMovesTo(Position.board[position], PieceType.KNIGHT, activeColor, position, Square.knightDirections, enemyKingPosition, isPinned);
     }
     tempChessmanList = Position.bishopList[activeColor];
     for (int i = 0; i < tempChessmanList.size; i++) {
       int position = tempChessmanList.position[i];
       boolean isPinned = board.isPinned(position, enemyKingColor);
-      addDefaultNonCaptureCheckMovesTo(Position.board[position], PieceType.BISHOP, activeColor, position, moveDeltaBishop, enemyKingPosition, isPinned);
+      addDefaultNonCaptureCheckMovesTo(Position.board[position], PieceType.BISHOP, activeColor, position, Square.bishopDirections, enemyKingPosition, isPinned);
     }
     tempChessmanList = Position.rookList[activeColor];
     for (int i = 0; i < tempChessmanList.size; i++) {
       int position = tempChessmanList.position[i];
       boolean isPinned = board.isPinned(position, enemyKingColor);
-      addDefaultNonCaptureCheckMovesTo(Position.board[position], PieceType.ROOK, activeColor, position, moveDeltaRook, enemyKingPosition, isPinned);
+      addDefaultNonCaptureCheckMovesTo(Position.board[position], PieceType.ROOK, activeColor, position, Square.rookDirections, enemyKingPosition, isPinned);
     }
     tempChessmanList = Position.queenList[activeColor];
     for (int i = 0; i < tempChessmanList.size; i++) {
       int position = tempChessmanList.position[i];
       boolean isPinned = board.isPinned(position, enemyKingColor);
-      addDefaultNonCaptureCheckMovesTo(Position.board[position], PieceType.QUEEN, activeColor, position, moveDeltaQueen, enemyKingPosition, isPinned);
+      addDefaultNonCaptureCheckMovesTo(Position.board[position], PieceType.QUEEN, activeColor, position, Square.queenDirections, enemyKingPosition, isPinned);
     }
     assert Position.kingList[activeColor].size == 1;
     int position = Position.kingList[activeColor].position[0];
     int king = Position.board[position];
     boolean isPinned = board.isPinned(position, enemyKingColor);
-    addDefaultNonCaptureCheckMovesTo(king, PieceType.KING, activeColor, position, moveDeltaKing, enemyKingPosition, isPinned);
+    addDefaultNonCaptureCheckMovesTo(king, PieceType.KING, activeColor, position, Square.kingDirections, enemyKingPosition, isPinned);
     addCastlingCheckMoveIfAllowed(king, position, activeColor, enemyKingPosition);
   }
 
@@ -901,7 +893,7 @@ final class MoveGenerator {
     assert Position.board[pawnPosition] == pawn;
     assert moveList != null;
 
-    int delta = moveDeltaPawn[0];
+    int delta = Square.pawnDirections[0];
     if (pawnColor == Color.BLACK) {
       delta *= -1;
     }
@@ -956,7 +948,7 @@ final class MoveGenerator {
     assert moveList != null;
     assert Position.board[targetPosition] == Piece.NOPIECE;
 
-    int delta = moveDeltaPawn[0];
+    int delta = Square.pawnDirections[0];
     int pawnPiece = Piece.BLACK_PAWN;
     if (pawnColor == Color.WHITE) {
       delta *= -1;
@@ -1027,7 +1019,7 @@ final class MoveGenerator {
     assert board != null;
     assert moveList != null;
 
-    int delta = moveDeltaPawn[0];
+    int delta = Square.pawnDirections[0];
     if (color == Color.BLACK) {
       delta *= -1;
     }
@@ -1125,8 +1117,8 @@ final class MoveGenerator {
     assert Position.board[pawnPosition] == pawn;
     assert moveList != null;
 
-    for (int i = 1; i < moveDeltaPawn.length; i++) {
-      int delta = moveDeltaPawn[i];
+    for (int i = 1; i < Square.pawnDirections.length; i++) {
+      int delta = Square.pawnDirections[i];
       if (pawnColor == Color.BLACK) {
         delta *= -1;
       }
@@ -1207,8 +1199,8 @@ final class MoveGenerator {
     }
     int enPassantPosition = targetPosition + enPassantDelta;
 
-    for (int i = 1; i < moveDeltaPawn.length; i++) {
-      int delta = moveDeltaPawn[i];
+    for (int i = 1; i < Square.pawnDirections.length; i++) {
+      int delta = Square.pawnDirections[i];
       if (pawnColor == Color.WHITE) {
         delta *= -1;
       }
