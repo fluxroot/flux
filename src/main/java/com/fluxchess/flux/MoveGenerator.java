@@ -257,7 +257,7 @@ public final class MoveGenerator {
             if (!isLegal(move)) {
               continue;
             }
-            if (MoveSee.seeMove(move, Move.getChessmanColor(move)) < 0) {
+            if (See.seeMove(move, Move.getChessmanColor(move)) < 0) {
               continue;
             }
             assert board.isCheckingMove(move) : board.getBoard().toString() + ", " + Move.toCommandMove(move).toString();
@@ -536,7 +536,7 @@ public final class MoveGenerator {
       return true;
     }
 
-    return MoveSee.seeMove(move, Move.getChessmanColor(move)) >= 0;
+    return See.seeMove(move, Move.getChessmanColor(move)) >= 0;
   }
 
   /**

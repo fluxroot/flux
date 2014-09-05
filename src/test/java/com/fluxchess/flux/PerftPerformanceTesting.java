@@ -57,7 +57,7 @@ public class PerftPerformanceTesting {
       while (!token.equalsIgnoreCase("quit")) {
         try {
           Position testBoard = new Position(new GenericBoard(token));
-          new MoveSee(testBoard);
+          new See(testBoard);
           KillerTable killerTable = new KillerTable();
           HistoryTable historyTable = new HistoryTable();
           MoveGenerator generator = new MoveGenerator(testBoard, killerTable, historyTable);

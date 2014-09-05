@@ -69,7 +69,7 @@ public final class MoveRater {
    */
   public void rateFromSEE(MoveList moveList) {
     for (int i = moveList.head; i < moveList.tail; i++) {
-      moveList.value[i] = MoveSee.seeMove(moveList.move[i], Move.getChessmanColor(moveList.move[i]));
+      moveList.value[i] = See.seeMove(moveList.move[i], Move.getChessmanColor(moveList.move[i]));
     }
   }
 

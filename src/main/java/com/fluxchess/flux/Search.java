@@ -140,7 +140,7 @@ public final class Search implements Runnable {
     historyTable = new HistoryTable();
 
     new MoveGenerator(newBoard, killerTable, historyTable);
-    new MoveSee(newBoard);
+    new See(newBoard);
 
     this.info = newInfo;
     this.info.setSearch(this);
@@ -1521,7 +1521,7 @@ public final class Search implements Runnable {
     //## Recapture Extension
     if (Configuration.useRecaptureExtension
         && Move.getEnd(move) == board.captureSquare
-        && MoveSee.seeMove(move, Move.getChessmanColor(move)) > 0) {
+        && See.seeMove(move, Move.getChessmanColor(move)) > 0) {
       newDepth++;
     }
 

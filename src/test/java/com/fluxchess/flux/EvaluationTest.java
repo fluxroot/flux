@@ -33,10 +33,10 @@ public class EvaluationTest {
 
     try {
       board = new Position(new GenericBoard("r6r/1bk2ppp/p2qp3/2b1Q3/Pp3P2/1B2P3/1P2N1PP/R1B3K1 w - -"));
-      new MoveSee(board);
+      new See(board);
       int value1 = evaluation.evaluate(board);
       board = new Position(new GenericBoard("r4q1r/1bk2ppp/p2bp3/4Q3/Pp3P2/1B2P3/1P2N1PP/R1B3K1 w - -"));
-      new MoveSee(board);
+      new See(board);
       int value2 = evaluation.evaluate(board);
       assertEquals(value1 + " > " + value2, true, value1 > value2);
     } catch (IllegalNotationException e) {

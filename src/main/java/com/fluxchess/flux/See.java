@@ -21,12 +21,12 @@ package com.fluxchess.flux;
 /**
  * Notes: Ideas from Fruit
  */
-public final class MoveSee {
+public final class See {
 
   private static Position board = null;
-  private static SeeList[] chessmanList = new SeeList[Color.ARRAY_DIMENSION];
+  private static List[] chessmanList = new List[Color.ARRAY_DIMENSION];
 
-  public static final class SeeList {
+  private static final class List {
     private static final int MAXSIZE = 16;
 
     public final int[] chessman = new int[MAXSIZE];
@@ -34,14 +34,14 @@ public final class MoveSee {
     public int head = 0;
     public int size = 0;
 
-    public SeeList() {
+    public List() {
     }
   }
 
-  public MoveSee(Position newBoard) {
+  public See(Position newBoard) {
     board = newBoard;
-    chessmanList[Color.WHITE] = new SeeList();
-    chessmanList[Color.BLACK] = new SeeList();
+    chessmanList[Color.WHITE] = new List();
+    chessmanList[Color.BLACK] = new List();
   }
 
   public static int seeMove(int move, int myColor) {
@@ -54,8 +54,8 @@ public final class MoveSee {
     int enemyColor = Color.switchColor(myColor);
 
     // Clear the chessman list
-    SeeList myList = chessmanList[myColor];
-    SeeList enemyList = chessmanList[enemyColor];
+    List myList = chessmanList[myColor];
+    List enemyList = chessmanList[enemyColor];
     myList.head = 0;
     myList.size = 0;
     enemyList.head = 0;
@@ -158,7 +158,7 @@ public final class MoveSee {
     return value;
   }
 
-  private static void addAllAttackers(SeeList list, int targetPosition, int myColor) {
+  private static void addAllAttackers(List list, int targetPosition, int myColor) {
     // Pawn attacks
     int sign = 1;
     int pawn = Piece.WHITE_PAWN;
@@ -300,7 +300,7 @@ public final class MoveSee {
     return false;
   }
 
-  private static boolean shiftAttacker(SeeList list) {
+  private static boolean shiftAttacker(List list) {
     if (list.size == 0) {
       return false;
     } else {
@@ -315,7 +315,7 @@ public final class MoveSee {
     }
   }
 
-  private static void addAttacker(SeeList list, int attacker, int attackerPosition, boolean hasHiddenAttacker) {
+  private static void addAttacker(List list, int attacker, int attackerPosition, boolean hasHiddenAttacker) {
     int attackerValue = Piece.getValueFromPiece(attacker);
     int index = -1;
     for (int i = 0; i < list.size; i++) {

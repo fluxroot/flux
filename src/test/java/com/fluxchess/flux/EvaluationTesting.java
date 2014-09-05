@@ -35,7 +35,7 @@ public class EvaluationTesting {
         Evaluation evaluation = new Evaluation(new EvaluationTable(1024), new PawnTable(1024));
         try {
           Position board = new Position(new GenericBoard(token));
-          new MoveSee(board);
+          new See(board);
           evaluation.print(board);
         } catch (IllegalNotationException e) {
           e.printStackTrace();

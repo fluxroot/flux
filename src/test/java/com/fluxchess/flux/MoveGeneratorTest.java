@@ -38,7 +38,7 @@ public class MoveGeneratorTest {
     try {
       board = new GenericBoard("1k6/8/8/5pP1/4K1P1/8/8/8 w - f6");
       Position testBoard = new Position(board);
-      new MoveSee(testBoard);
+      new See(testBoard);
 
 //			testBoard.makeMove(IntMove.createMove(IntMove.NORMAL, IntPosition.d2, IntPosition.c1, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN));
 //			testBoard.makeMove(IntMove.createMove(IntMove.NORMAL, IntPosition.e7, IntPosition.d6, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN));
@@ -72,7 +72,7 @@ public class MoveGeneratorTest {
             int nodesNumber = Integer.parseInt(data[1]);
 
             Position testBoard = new Position(board);
-            new MoveSee(testBoard);
+            new See(testBoard);
 
             System.out.print("Testing " + tokens[0].trim() + " depth " + depth + " with nodes number " + nodesNumber + ": ");
             long startTime = System.currentTimeMillis();
@@ -164,7 +164,7 @@ public class MoveGeneratorTest {
             int nodesNumber = Integer.parseInt(data[1]);
 
             Position testBoard = new Position(board);
-            new MoveSee(testBoard);
+            new See(testBoard);
 
             System.out.println("Testing " + tokens[0].trim() + " depth " + depth + " with nodes number " + nodesNumber + ":");
             new MoveGenerator(testBoard, new KillerTable(), new HistoryTable());
@@ -204,7 +204,7 @@ public class MoveGeneratorTest {
     move = MoveGenerator.getNextMove();
     while (move != Move.NOMOVE) {
       if (!attack.isCheck()) {
-        if ((Move.getTarget(move) != Piece.NOPIECE && isGoodCapture(move, board)) || (Move.getTarget(move) == Piece.NOPIECE && board.isCheckingMove(move)) && MoveSee.seeMove(move, Move.getChessmanColor(move)) >= 0) {
+        if ((Move.getTarget(move) != Piece.NOPIECE && isGoodCapture(move, board)) || (Move.getTarget(move) == Piece.NOPIECE && board.isCheckingMove(move)) && See.seeMove(move, Move.getChessmanColor(move)) >= 0) {
           board.makeMove(move);
           miniMaxQuiescentCheckingMoves(board, depth - 1, maxDepth);
           board.undoMove(move);
@@ -265,7 +265,7 @@ public class MoveGeneratorTest {
       return true;
     }
 
-    return MoveSee.seeMove(move, Move.getChessmanColor(move)) >= 0;
+    return See.seeMove(move, Move.getChessmanColor(move)) >= 0;
   }
 
 }
