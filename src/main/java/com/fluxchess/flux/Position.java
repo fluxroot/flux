@@ -277,34 +277,34 @@ public final class Position {
 
     switch (chessman) {
       case Piece.PAWN:
-        addPosition(position, pawnList[color]);
+        pawnList[color].addPosition(position);
         materialCountAll[color]++;
         if (update) {
           this.pawnZobristCode ^= zobristChessman[Piece.PAWN][color][position];
         }
         break;
       case Piece.KNIGHT:
-        addPosition(position, knightList[color]);
+        knightList[color].addPosition(position);
         materialCount[color]++;
         materialCountAll[color]++;
         break;
       case Piece.BISHOP:
-        addPosition(position, bishopList[color]);
+        bishopList[color].addPosition(position);
         materialCount[color]++;
         materialCountAll[color]++;
         break;
       case Piece.ROOK:
-        addPosition(position, rookList[color]);
+        rookList[color].addPosition(position);
         materialCount[color]++;
         materialCountAll[color]++;
         break;
       case Piece.QUEEN:
-        addPosition(position, queenList[color]);
+        queenList[color].addPosition(position);
         materialCount[color]++;
         materialCountAll[color]++;
         break;
       case Piece.KING:
-        addPosition(position, kingList[color]);
+        kingList[color].addPosition(position);
         break;
       default:
         assert false : chessman;
@@ -341,34 +341,34 @@ public final class Position {
 
     switch (chessman) {
       case Piece.PAWN:
-        removePosition(position, pawnList[color]);
+        pawnList[color].removePosition(position);
         materialCountAll[color]--;
         if (update) {
           this.pawnZobristCode ^= zobristChessman[Piece.PAWN][color][position];
         }
         break;
       case Piece.KNIGHT:
-        removePosition(position, knightList[color]);
+        knightList[color].removePosition(position);
         materialCount[color]--;
         materialCountAll[color]--;
         break;
       case Piece.BISHOP:
-        removePosition(position, bishopList[color]);
+        bishopList[color].removePosition(position);
         materialCount[color]--;
         materialCountAll[color]--;
         break;
       case Piece.ROOK:
-        removePosition(position, rookList[color]);
+        rookList[color].removePosition(position);
         materialCount[color]--;
         materialCountAll[color]--;
         break;
       case Piece.QUEEN:
-        removePosition(position, queenList[color]);
+        queenList[color].removePosition(position);
         materialCount[color]--;
         materialCountAll[color]--;
         break;
       case Piece.KING:
-        removePosition(position, kingList[color]);
+        kingList[color].removePosition(position);
         break;
       default:
         assert false : chessman;
@@ -410,8 +410,8 @@ public final class Position {
 
     switch (chessman) {
       case Piece.PAWN:
-        removePosition(start, pawnList[color]);
-        addPosition(end, pawnList[color]);
+        pawnList[color].removePosition(start);
+        pawnList[color].addPosition(end);
         if (update) {
           long[] tempZobristChessman = zobristChessman[Piece.PAWN][color];
           this.pawnZobristCode ^= tempZobristChessman[start];
@@ -419,24 +419,24 @@ public final class Position {
         }
         break;
       case Piece.KNIGHT:
-        removePosition(start, knightList[color]);
-        addPosition(end, knightList[color]);
+        knightList[color].removePosition(start);
+        knightList[color].addPosition(end);
         break;
       case Piece.BISHOP:
-        removePosition(start, bishopList[color]);
-        addPosition(end, bishopList[color]);
+        bishopList[color].removePosition(start);
+        bishopList[color].addPosition(end);
         break;
       case Piece.ROOK:
-        removePosition(start, rookList[color]);
-        addPosition(end, rookList[color]);
+        rookList[color].removePosition(start);
+        rookList[color].addPosition(end);
         break;
       case Piece.QUEEN:
-        removePosition(start, queenList[color]);
-        addPosition(end, queenList[color]);
+        queenList[color].removePosition(start);
+        queenList[color].addPosition(end);
         break;
       case Piece.KING:
-        removePosition(start, kingList[color]);
-        addPosition(end, kingList[color]);
+        kingList[color].removePosition(start);
+        kingList[color].addPosition(end);
         break;
       default:
         assert false : chessman;
@@ -1645,59 +1645,6 @@ public final class Position {
 
     // Update half move clock
     this.halfMoveClock++;
-  }
-
-  /**
-   * Adds the position to the list.
-   *
-   * @param position the position.
-   * @param list     the position list.
-   */
-  private void addPosition(int position, PositionList list) {
-    assert (position & 0x88) == 0;
-    assert list != null;
-    assert list.size >= 0 && list.size < list.MAXSIZE;
-
-    // Iterate over the list from the end
-    int j = list.size;
-    for (int i = list.size - 1; i >= 0; i--) {
-      assert list.position[i] != position;
-      if (list.position[i] > position) {
-        list.position[j] = list.position[i];
-        j--;
-      } else {
-        break;
-      }
-    }
-    list.position[j] = position;
-    list.size++;
-
-    assert list.size > 0 && list.size <= list.MAXSIZE;
-  }
-
-  /**
-   * Removes the position from the list.
-   *
-   * @param position the position.
-   * @param list     the position list.
-   */
-  private void removePosition(int position, PositionList list) {
-    assert (position & 0x88) == 0;
-    assert list != null;
-    assert list.size > 0 && list.size <= list.MAXSIZE;
-
-    // Iterate over the list from the beginning
-    int j = 0;
-    for (int i = 0; i < list.size; i++) {
-      if (list.position[i] != position) {
-        list.position[j] = list.position[i];
-        j++;
-      }
-    }
-
-    list.size--;
-
-    assert list.size >= 0 && list.size < list.MAXSIZE;
   }
 
   public String toString() {
