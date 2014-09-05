@@ -107,6 +107,22 @@ public final class Search implements Runnable {
   private Result bestResult = null;
   private final int[] timeTable;
 
+  private static final class Result {
+    public int bestMove = Move.NOMOVE;
+    public int ponderMove = Move.NOMOVE;
+    public int value = Bound.NOVALUE;
+    public int resultValue = -INFINITY;
+    public long time = -1;
+    public int moveNumber = 0;
+    public int depth = 0;
+
+    /**
+     * Creates a new Result.
+     */
+    public Result() {
+    }
+  }
+
   // Static initialization
   static {
     if (Configuration.useVerifiedNullMovePruning) {
