@@ -109,7 +109,7 @@ public final class Flux extends AbstractEngine {
     initialize();
 
     // Send the initialization commands
-    ProtocolInitializeAnswerCommand initializeCommand = new ProtocolInitializeAnswerCommand(Configuration.name, Configuration.author);
+    ProtocolInitializeAnswerCommand initializeCommand = new ProtocolInitializeAnswerCommand(VersionInfo.current().toString(), "Phokham Nonava");
     for (AbstractOption option : Configuration.options) {
       initializeCommand.addOption(option);
     }

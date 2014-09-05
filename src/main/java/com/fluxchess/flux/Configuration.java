@@ -22,9 +22,6 @@ import com.fluxchess.jcpi.options.*;
 
 public final class Configuration {
 
-  public static final String name = "Flux 2.2.2";
-  public static final String author = "Phokham Nonava";
-
   // Search
   public static final boolean useAspirationWindows = true;
   public static final boolean useInternalIterativeDeepening = true;
