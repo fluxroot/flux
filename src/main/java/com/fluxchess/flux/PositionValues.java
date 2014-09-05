@@ -226,14 +226,14 @@ public final class PositionValues {
 
   public static int getPositionValue(int phase, int chessman, int chessmanColor, int chessmanPosition) {
     assert phase != IntGamePhase.NOGAMEPHASE;
-    assert chessmanColor != IntColor.NOCOLOR;
+    assert chessmanColor != Color.NOCOLOR;
     assert (chessmanPosition & 0x88) == 0;
 
     int position = chessmanPosition;
-    if (chessmanColor == IntColor.BLACK) {
+    if (chessmanColor == Color.BLACK) {
       position = 127 - 8 - chessmanPosition;
     } else {
-      assert chessmanColor == IntColor.WHITE;
+      assert chessmanColor == Color.WHITE;
     }
 
     if (phase == IntGamePhase.ENDGAME) {

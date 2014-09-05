@@ -83,8 +83,8 @@ public final class Search implements Runnable {
   private long searchTime = 0;
   private long searchTimeHard = 0;
   private long searchTimeStart = 0;
-  private final long[] searchClock = new long[IntColor.ARRAY_DIMENSION];
-  private final long[] searchClockIncrement = new long[IntColor.ARRAY_DIMENSION];
+  private final long[] searchClock = new long[Color.ARRAY_DIMENSION];
+  private final long[] searchClockIncrement = new long[Color.ARRAY_DIMENSION];
   private int searchMovesToGo = 0;
   private final MoveList searchMoveList = new MoveList();
 
@@ -1552,7 +1552,7 @@ public final class Search implements Runnable {
 
     // Extend another ply if we enter a pawn endgame
     if (Position.materialCount[board.activeColor] == 0
-        && Position.materialCount[IntColor.switchColor(board.activeColor)] == 1
+        && Position.materialCount[Color.switchColor(board.activeColor)] == 1
         && IntMove.getTarget(move) != Piece.NOPIECE
         && IntMove.getTarget(move) != Piece.PAWN) {
       newDepth++;

@@ -24,7 +24,7 @@ package com.fluxchess.flux;
 public final class MoveSee {
 
   private static Position board = null;
-  private static SeeList[] chessmanList = new SeeList[IntColor.ARRAY_DIMENSION];
+  private static SeeList[] chessmanList = new SeeList[Color.ARRAY_DIMENSION];
 
   public static final class SeeList {
     private static final int MAXSIZE = 16;
@@ -40,8 +40,8 @@ public final class MoveSee {
 
   public MoveSee(Position newBoard) {
     board = newBoard;
-    chessmanList[IntColor.WHITE] = new SeeList();
-    chessmanList[IntColor.BLACK] = new SeeList();
+    chessmanList[Color.WHITE] = new SeeList();
+    chessmanList[Color.BLACK] = new SeeList();
   }
 
   public static int seeMove(int move, int myColor) {
@@ -51,7 +51,7 @@ public final class MoveSee {
     int type = IntMove.getType(move);
 
     // Get the enemy color
-    int enemyColor = IntColor.switchColor(myColor);
+    int enemyColor = Color.switchColor(myColor);
 
     // Clear the chessman list
     SeeList myList = chessmanList[myColor];
@@ -86,10 +86,10 @@ public final class MoveSee {
 
     // Find the attacker hiding behind the en-passant
     if (type == IntMove.ENPASSANT) {
-      if (myColor == IntColor.WHITE) {
+      if (myColor == Color.WHITE) {
         addHiddenAttacker(end - 16, end);
       } else {
-        assert myColor == IntColor.BLACK;
+        assert myColor == Color.BLACK;
 
         addHiddenAttacker(end + 16, end);
       }
@@ -141,8 +141,8 @@ public final class MoveSee {
     int attackerValue = 0;
     int chessman = Piece.getChessman(attacker);
     if (chessman == Piece.PAWN
-        && ((targetPosition > 111 && myColor == IntColor.WHITE)
-        || (targetPosition < 8 && myColor == IntColor.BLACK))) {
+        && ((targetPosition > 111 && myColor == Color.WHITE)
+        || (targetPosition < 8 && myColor == Color.BLACK))) {
       // Adjust on promotion
       value += Piece.VALUE_QUEEN - Piece.VALUE_PAWN;
       attackerValue = Piece.VALUE_QUEEN;
@@ -162,11 +162,11 @@ public final class MoveSee {
     // Pawn attacks
     int sign = 1;
     int pawn = Piece.WHITE_PAWN;
-    if (myColor == IntColor.BLACK) {
+    if (myColor == Color.BLACK) {
       sign = -1;
       pawn = Piece.BLACK_PAWN;
     } else {
-      assert myColor == IntColor.WHITE;
+      assert myColor == Color.WHITE;
     }
     int pawnPosition = targetPosition - sign * 15;
     if ((pawnPosition & 0x88) == 0 && Position.board[pawnPosition] == pawn) {

@@ -197,7 +197,7 @@ public final class IntPosition {
     assert position != NOPOSITION;
 
     int rank = position >>> 4;
-    if (color == IntColor.BLACK) {
+    if (color == Color.BLACK) {
       rank = 7 - rank;
     }
 

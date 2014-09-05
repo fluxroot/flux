@@ -24,12 +24,12 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class IntColorTest {
+public class ColorTest {
 
   @Test
   public void testIntColor() {
-    Assert.assertEquals(IntColor.valueOfColor(GenericColor.WHITE), IntColor.WHITE);
-    assertEquals(IntColor.valueOfIntColor(IntColor.WHITE), GenericColor.WHITE);
+    Assert.assertEquals(Color.valueOfColor(GenericColor.WHITE), Color.WHITE);
+    assertEquals(Color.valueOfIntColor(Color.WHITE), GenericColor.WHITE);
   }
 
 }

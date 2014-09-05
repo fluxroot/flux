@@ -43,7 +43,7 @@ public final class HistoryTable {
     int piece = IntMove.getChessmanPiece(move);
     int end = IntMove.getEnd(move);
     assert IntMove.getChessman(move) != Piece.NOPIECE;
-    assert IntMove.getChessmanColor(move) != IntColor.NOCOLOR;
+    assert IntMove.getChessmanColor(move) != Color.NOCOLOR;
     assert (end & 0x88) == 0;
 
     return historyTable[piece][end];
@@ -60,7 +60,7 @@ public final class HistoryTable {
     int piece = IntMove.getChessmanPiece(move);
     int end = IntMove.getEnd(move);
     assert IntMove.getChessman(move) != Piece.NOPIECE;
-    assert IntMove.getChessmanColor(move) != IntColor.NOCOLOR;
+    assert IntMove.getChessmanColor(move) != Color.NOCOLOR;
     assert (end & 0x88) == 0;
 
     historyTable[piece][end] += depth;

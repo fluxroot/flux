@@ -80,23 +80,23 @@ public final class Piece {
   private static final int CHESSMAN_SHIFT = 0;
   private static final int CHESSMAN_MASK = MASK << CHESSMAN_SHIFT;
   private static final int COLOR_SHIFT = 3;
-  private static final int COLOR_MASK = IntColor.MASK << COLOR_SHIFT;
+  private static final int COLOR_MASK = Color.MASK << COLOR_SHIFT;
 
   /**
    * Piece values
    */
-  public static final int WHITE_PAWN = (PAWN << CHESSMAN_SHIFT) | (IntColor.WHITE << COLOR_SHIFT);
-  public static final int WHITE_KNIGHT = (KNIGHT << CHESSMAN_SHIFT) | (IntColor.WHITE << COLOR_SHIFT);
-  public static final int WHITE_BISHOP = (BISHOP << CHESSMAN_SHIFT) | (IntColor.WHITE << COLOR_SHIFT);
-  public static final int WHITE_ROOK = (ROOK << CHESSMAN_SHIFT) | (IntColor.WHITE << COLOR_SHIFT);
-  public static final int WHITE_QUEEN = (QUEEN << CHESSMAN_SHIFT) | (IntColor.WHITE << COLOR_SHIFT);
-  public static final int WHITE_KING = (KING << CHESSMAN_SHIFT) | (IntColor.WHITE << COLOR_SHIFT);
-  public static final int BLACK_PAWN = (PAWN << CHESSMAN_SHIFT) | (IntColor.BLACK << COLOR_SHIFT);
-  public static final int BLACK_KNIGHT = (KNIGHT << CHESSMAN_SHIFT) | (IntColor.BLACK << COLOR_SHIFT);
-  public static final int BLACK_BISHOP = (BISHOP << CHESSMAN_SHIFT) | (IntColor.BLACK << COLOR_SHIFT);
-  public static final int BLACK_ROOK = (ROOK << CHESSMAN_SHIFT) | (IntColor.BLACK << COLOR_SHIFT);
-  public static final int BLACK_QUEEN = (QUEEN << CHESSMAN_SHIFT) | (IntColor.BLACK << COLOR_SHIFT);
-  public static final int BLACK_KING = (KING << CHESSMAN_SHIFT) | (IntColor.BLACK << COLOR_SHIFT);
+  public static final int WHITE_PAWN = (PAWN << CHESSMAN_SHIFT) | (Color.WHITE << COLOR_SHIFT);
+  public static final int WHITE_KNIGHT = (KNIGHT << CHESSMAN_SHIFT) | (Color.WHITE << COLOR_SHIFT);
+  public static final int WHITE_BISHOP = (BISHOP << CHESSMAN_SHIFT) | (Color.WHITE << COLOR_SHIFT);
+  public static final int WHITE_ROOK = (ROOK << CHESSMAN_SHIFT) | (Color.WHITE << COLOR_SHIFT);
+  public static final int WHITE_QUEEN = (QUEEN << CHESSMAN_SHIFT) | (Color.WHITE << COLOR_SHIFT);
+  public static final int WHITE_KING = (KING << CHESSMAN_SHIFT) | (Color.WHITE << COLOR_SHIFT);
+  public static final int BLACK_PAWN = (PAWN << CHESSMAN_SHIFT) | (Color.BLACK << COLOR_SHIFT);
+  public static final int BLACK_KNIGHT = (KNIGHT << CHESSMAN_SHIFT) | (Color.BLACK << COLOR_SHIFT);
+  public static final int BLACK_BISHOP = (BISHOP << CHESSMAN_SHIFT) | (Color.BLACK << COLOR_SHIFT);
+  public static final int BLACK_ROOK = (ROOK << CHESSMAN_SHIFT) | (Color.BLACK << COLOR_SHIFT);
+  public static final int BLACK_QUEEN = (QUEEN << CHESSMAN_SHIFT) | (Color.BLACK << COLOR_SHIFT);
+  public static final int BLACK_KING = (KING << CHESSMAN_SHIFT) | (Color.BLACK << COLOR_SHIFT);
 
   public static final int[] pieceValues = {
       WHITE_PAWN,
@@ -202,7 +202,7 @@ public final class Piece {
    */
   public static int createPiece(int chessman, int color) {
     assert chessman != NOPIECE;
-    assert color != IntColor.NOCOLOR;
+    assert color != Color.NOCOLOR;
 
     int piece = 0;
 
@@ -217,8 +217,8 @@ public final class Piece {
 
     // Set the color
     piece |= color << COLOR_SHIFT;
-    assert (color == IntColor.WHITE)
-        || (color == IntColor.BLACK);
+    assert (color == Color.WHITE)
+        || (color == Color.BLACK);
 
     return piece;
   }
@@ -233,7 +233,7 @@ public final class Piece {
    */
   public static int createPromotion(int chessman, int color) {
     assert chessman != NOPIECE;
-    assert color != IntColor.NOCOLOR;
+    assert color != Color.NOCOLOR;
 
     int piece = 0;
 
@@ -246,8 +246,8 @@ public final class Piece {
 
     // Set the color
     piece |= color << COLOR_SHIFT;
-    assert (color == IntColor.WHITE)
-        || (color == IntColor.BLACK);
+    assert (color == Color.WHITE)
+        || (color == Color.BLACK);
 
     return piece;
   }
@@ -277,7 +277,7 @@ public final class Piece {
     assert piece != NOPIECE;
 
     int color = (piece & COLOR_MASK) >>> COLOR_SHIFT;
-    assert IntColor.isValidColor(color);
+    assert Color.isValidColor(color);
 
     return color;
   }

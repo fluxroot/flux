@@ -194,10 +194,10 @@ public final class Flux extends AbstractEngine {
         }
         for (GenericColor side : GenericColor.values()) {
           if (command.getClock(side) != null && command.getClock(side) > 0) {
-            this.search.setSearchClock(IntColor.valueOfColor(side), command.getClock(side));
+            this.search.setSearchClock(Color.valueOfColor(side), command.getClock(side));
           }
           if (command.getClockIncrement(side) != null && command.getClockIncrement(side) > 0) {
-            this.search.setSearchClockIncrement(IntColor.valueOfColor(side), command.getClockIncrement(side));
+            this.search.setSearchClockIncrement(Color.valueOfColor(side), command.getClockIncrement(side));
           }
         }
         if (command.getMovesToGo() != null && command.getMovesToGo() > 0) {

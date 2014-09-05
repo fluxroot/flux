@@ -93,13 +93,13 @@ public final class IntMove {
   private static final int CHESSMAN_SHIFT = 14;
   private static final int CHESSMAN_MASK = Piece.MASK << CHESSMAN_SHIFT;
   private static final int CHESSMAN_COLOR_SHIFT = 17;
-  private static final int CHESSMAN_COLOR_MASK = IntColor.MASK << CHESSMAN_COLOR_SHIFT;
+  private static final int CHESSMAN_COLOR_MASK = Color.MASK << CHESSMAN_COLOR_SHIFT;
   private static final int CHESSMAN_PIECE_SHIFT = CHESSMAN_SHIFT;
   private static final int CHESSMAN_PIECE_MASK = Piece.PIECE_MASK << CHESSMAN_PIECE_SHIFT;
   private static final int TARGET_SHIFT = 18;
   private static final int TARGET_MASK = Piece.MASK << TARGET_SHIFT;
   private static final int TARGET_COLOR_SHIFT = 21;
-  private static final int TARGET_COLOR_MASK = IntColor.MASK << TARGET_COLOR_SHIFT;
+  private static final int TARGET_COLOR_MASK = Color.MASK << TARGET_COLOR_SHIFT;
   private static final int TARGET_PIECE_SHIFT = TARGET_SHIFT;
   private static final int TARGET_PIECE_MASK = Piece.PIECE_MASK << TARGET_PIECE_SHIFT;
   private static final int PROMOTION_SHIFT = 22;
@@ -156,8 +156,8 @@ public final class IntMove {
         || (Piece.getChessman(piece) == Piece.QUEEN)
         || (Piece.getChessman(piece) == Piece.KING);
     assert piece == Piece.NOPIECE
-        || (Piece.getColor(piece) == IntColor.WHITE)
-        || (Piece.getColor(piece) == IntColor.BLACK);
+        || (Piece.getColor(piece) == Color.WHITE)
+        || (Piece.getColor(piece) == Color.BLACK);
     move |= piece << CHESSMAN_PIECE_SHIFT;
 
     // Encode target
@@ -168,8 +168,8 @@ public final class IntMove {
         || (Piece.getChessman(target) == Piece.ROOK)
         || (Piece.getChessman(target) == Piece.QUEEN);
     assert target == Piece.NOPIECE
-        || (Piece.getColor(target) == IntColor.WHITE)
-        || (Piece.getColor(target) == IntColor.BLACK);
+        || (Piece.getColor(target) == Color.WHITE)
+        || (Piece.getColor(target) == Color.BLACK);
     move |= target << TARGET_PIECE_SHIFT;
 
     // Encode promotion
@@ -238,8 +238,8 @@ public final class IntMove {
         || (Piece.getChessman(target) == Piece.BISHOP)
         || (Piece.getChessman(target) == Piece.ROOK)
         || (Piece.getChessman(target) == Piece.QUEEN);
-    assert (Piece.getColor(target) == IntColor.WHITE)
-        || (Piece.getColor(target) == IntColor.BLACK);
+    assert (Piece.getColor(target) == Color.WHITE)
+        || (Piece.getColor(target) == Color.BLACK);
     move |= target << TARGET_PIECE_SHIFT;
 
     return move;
@@ -332,7 +332,7 @@ public final class IntMove {
     assert getChessman(move) != Piece.NOPIECE;
 
     int color = (move & CHESSMAN_COLOR_MASK) >>> CHESSMAN_COLOR_SHIFT;
-    assert IntColor.isValidColor(color);
+    assert Color.isValidColor(color);
 
     return color;
   }
@@ -381,7 +381,7 @@ public final class IntMove {
     assert getTarget(move) != Piece.NOPIECE;
 
     int color = (move & TARGET_COLOR_MASK) >>> TARGET_COLOR_SHIFT;
-    assert IntColor.isValidColor(color);
+    assert Color.isValidColor(color);
 
     return color;
   }
@@ -645,7 +645,7 @@ public final class IntMove {
 
     if (getChessman(move) != Piece.NOPIECE) {
       string += ", (";
-      string += IntColor.valueOfIntColor(getChessmanColor(move));
+      string += Color.valueOfIntColor(getChessmanColor(move));
       string += "/";
       string += Piece.valueOfIntChessman(getChessman(move));
       string += ")";
@@ -656,7 +656,7 @@ public final class IntMove {
 
     if (getTarget(move) != Piece.NOPIECE) {
       string += ", (";
-      string += IntColor.valueOfIntColor(getTargetColor(move));
+      string += Color.valueOfIntColor(getTargetColor(move));
       string += "/";
       string += Piece.valueOfIntChessman(getTarget(move));
       string += ")";

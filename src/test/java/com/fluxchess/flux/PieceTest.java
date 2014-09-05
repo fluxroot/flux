@@ -31,35 +31,35 @@ public class PieceTest {
     Assert.assertEquals(Piece.valueOfChessman(GenericChessman.KING), Piece.KING);
     assertEquals(Piece.valueOfIntChessman(Piece.KING), GenericChessman.KING);
 
-    int piece = Piece.createPiece(Piece.PAWN, IntColor.WHITE);
+    int piece = Piece.createPiece(Piece.PAWN, Color.WHITE);
 
     assertEquals(Piece.PAWN, Piece.getChessman(piece));
-    assertEquals(IntColor.WHITE, Piece.getColor(piece));
-    assertEquals(IntColor.BLACK, Piece.getColorOpposite(piece));
+    assertEquals(Color.WHITE, Piece.getColor(piece));
+    assertEquals(Color.BLACK, Piece.getColorOpposite(piece));
     assertEquals(Piece.VALUE_PAWN, Piece.getValueFromPiece(piece));
     assertFalse(Piece.isSliding(piece));
 
-    piece = Piece.createPiece(Piece.ROOK, IntColor.BLACK);
+    piece = Piece.createPiece(Piece.ROOK, Color.BLACK);
 
     assertEquals(Piece.ROOK, Piece.getChessman(piece));
-    assertEquals(IntColor.BLACK, Piece.getColor(piece));
-    assertEquals(IntColor.WHITE, Piece.getColorOpposite(piece));
+    assertEquals(Color.BLACK, Piece.getColor(piece));
+    assertEquals(Color.WHITE, Piece.getColorOpposite(piece));
     assertEquals(500, Piece.getValueFromPiece(piece));
     assertTrue(Piece.isSliding(piece));
 
-    piece = Piece.createPromotion(Piece.QUEEN, IntColor.BLACK);
+    piece = Piece.createPromotion(Piece.QUEEN, Color.BLACK);
 
     assertEquals(Piece.QUEEN, Piece.getChessman(piece));
-    assertEquals(IntColor.BLACK, Piece.getColor(piece));
-    assertEquals(IntColor.WHITE, Piece.getColorOpposite(piece));
+    assertEquals(Color.BLACK, Piece.getColor(piece));
+    assertEquals(Color.WHITE, Piece.getColorOpposite(piece));
     assertEquals(Piece.VALUE_QUEEN, Piece.getValueFromPiece(piece));
     assertTrue(Piece.isSliding(piece));
 
-    piece = Piece.createPiece(Piece.KNIGHT, IntColor.BLACK);
+    piece = Piece.createPiece(Piece.KNIGHT, Color.BLACK);
 
     assertEquals(Piece.KNIGHT, Piece.getChessman(piece));
-    assertEquals(IntColor.BLACK, Piece.getColor(piece));
-    assertEquals(IntColor.WHITE, Piece.getColorOpposite(piece));
+    assertEquals(Color.BLACK, Piece.getColor(piece));
+    assertEquals(Color.WHITE, Piece.getColorOpposite(piece));
     assertEquals(Piece.VALUE_KNIGHT, Piece.getValueFromPiece(piece));
     assertFalse(Piece.isSliding(piece));
   }

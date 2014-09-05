@@ -89,31 +89,31 @@ public final class Evaluation {
   private static final byte BIT_QUEEN = 1 << 6;
   private static final byte BIT_KING = -128;
   private static final byte MASK_ATTACKERS = 31;
-  private static final byte[][] attackTable = new byte[IntColor.ARRAY_DIMENSION][Position.BOARDSIZE];
+  private static final byte[][] attackTable = new byte[Color.ARRAY_DIMENSION][Position.BOARDSIZE];
 
   // Our pawn structure table. 8 + 2 -> 2 Sentinels for each side.
-  private static final byte[][] pawnTable = new byte[IntColor.ARRAY_DIMENSION][10];
+  private static final byte[][] pawnTable = new byte[Color.ARRAY_DIMENSION][10];
 
   // Our total values
   private static final int PHASE_INTERVAL = Position.GAMEPHASE_OPENING_VALUE - Position.GAMEPHASE_ENDGAME_VALUE;
   private static final int TOTAL_OPENING = 0;
   private static final int TOTAL_ENDGAME = 1;
-  private static int[][] totalPawn = new int[IntColor.ARRAY_DIMENSION][2];
-  private static int[][] totalKnight = new int[IntColor.ARRAY_DIMENSION][2];
-  private static int[][] totalBishop = new int[IntColor.ARRAY_DIMENSION][2];
-  private static int[][] totalRook = new int[IntColor.ARRAY_DIMENSION][2];
-  private static int[][] totalQueen = new int[IntColor.ARRAY_DIMENSION][2];
-  private static int[][] totalKing = new int[IntColor.ARRAY_DIMENSION][2];
-  private static int[][] totalPawnStructure = new int[IntColor.ARRAY_DIMENSION][2];
-  private static int[][] totalPawnPasser = new int[IntColor.ARRAY_DIMENSION][2];
-  private static int[][] totalPatterns = new int[IntColor.ARRAY_DIMENSION][2];
+  private static int[][] totalPawn = new int[Color.ARRAY_DIMENSION][2];
+  private static int[][] totalKnight = new int[Color.ARRAY_DIMENSION][2];
+  private static int[][] totalBishop = new int[Color.ARRAY_DIMENSION][2];
+  private static int[][] totalRook = new int[Color.ARRAY_DIMENSION][2];
+  private static int[][] totalQueen = new int[Color.ARRAY_DIMENSION][2];
+  private static int[][] totalKing = new int[Color.ARRAY_DIMENSION][2];
+  private static int[][] totalPawnStructure = new int[Color.ARRAY_DIMENSION][2];
+  private static int[][] totalPawnPasser = new int[Color.ARRAY_DIMENSION][2];
+  private static int[][] totalPatterns = new int[Color.ARRAY_DIMENSION][2];
   private static int totalOpening = 0;
   private static int totalEndgame = 0;
   private static int total = 0;
 
   // Draw values
   private static final int DRAW_FACTOR = 16;
-  private static int[] drawFactor = new int[IntColor.ARRAY_DIMENSION];
+  private static int[] drawFactor = new int[Color.ARRAY_DIMENSION];
 
   // The hash tables
   private final EvaluationTable evaluationTable;
@@ -134,13 +134,13 @@ public final class Evaluation {
     evaluate(board);
 
     int myColor = board.activeColor;
-    int enemyColor = IntColor.switchColor(myColor);
+    int enemyColor = Color.switchColor(myColor);
 
     System.out.printf("%20s:               (%5s:%5s)               (%5s:%5s)\n", "Colors",
-        IntColor.valueOfIntColor(myColor).toString(),
-        IntColor.valueOfIntColor(enemyColor).toString(),
-        IntColor.valueOfIntColor(myColor).toString(),
-        IntColor.valueOfIntColor(enemyColor).toString());
+        Color.valueOfIntColor(myColor).toString(),
+        Color.valueOfIntColor(enemyColor).toString(),
+        Color.valueOfIntColor(myColor).toString(),
+        Color.valueOfIntColor(enemyColor).toString());
     System.out.printf("%20s: Opening %5d (%5d:%5d) Endgame %5d (%5d:%5d)\n", "Total Material",
         Position.materialValue[myColor] - Position.materialValue[enemyColor],
         Position.materialValue[myColor],
@@ -242,7 +242,7 @@ public final class Evaluation {
     }
 
     // Initialize
-    for (int color : IntColor.values) {
+    for (int color : Color.values) {
       // Zero our tables
       Arrays.fill(attackTable[color], (byte) 0);
       Arrays.fill(pawnTable[color], (byte) 0);
@@ -271,7 +271,7 @@ public final class Evaluation {
       drawFactor[color] = DRAW_FACTOR;
     }
     int myColor = board.activeColor;
-    int enemyColor = IntColor.switchColor(myColor);
+    int enemyColor = Color.switchColor(myColor);
     totalOpening = 0;
     totalEndgame = 0;
     total = 0;
@@ -412,8 +412,8 @@ public final class Evaluation {
   }
 
   private static void evaluateDraw(Position board) {
-    for (int myColor : IntColor.values) {
-      int enemyColor = IntColor.switchColor(myColor);
+    for (int myColor : Color.values) {
+      int enemyColor = Color.switchColor(myColor);
       byte[] enemyAttackTable = attackTable[enemyColor];
 
       assert Position.kingList[myColor].size != 0;
@@ -440,10 +440,10 @@ public final class Evaluation {
 
                           // Check the promotion path
                           int delta = 16;
-                          if (myColor == IntColor.BLACK) {
+                          if (myColor == Color.BLACK) {
                             delta = -16;
                           } else {
-                            assert myColor == IntColor.WHITE;
+                            assert myColor == Color.WHITE;
                           }
                           int end = Position.pawnList[myColor].position[0] + delta;
                           while ((end & 0x88) == 0) {
@@ -464,10 +464,10 @@ public final class Evaluation {
 
                           // Check the promotion path
                           int delta = 16;
-                          if (myColor == IntColor.BLACK) {
+                          if (myColor == Color.BLACK) {
                             delta = -16;
                           } else {
-                            assert myColor == IntColor.WHITE;
+                            assert myColor == Color.WHITE;
                           }
                           int end = Position.pawnList[myColor].position[0] + delta;
                           while ((end & 0x88) == 0) {
@@ -641,7 +641,7 @@ public final class Evaluation {
   }
 
   private static void evaluatePawn(int myColor) {
-    assert myColor != IntColor.NOCOLOR;
+    assert myColor != Color.NOCOLOR;
 
     // Initialize
     byte[] myAttackTable = attackTable[myColor];
@@ -660,10 +660,10 @@ public final class Evaluation {
 
         // Attack Table
         int targetPosition = pawnPosition;
-        if (myColor == IntColor.WHITE) {
+        if (myColor == Color.WHITE) {
           targetPosition += delta;
         } else {
-          assert myColor == IntColor.BLACK;
+          assert myColor == Color.BLACK;
 
           targetPosition -= delta;
         }
@@ -676,8 +676,8 @@ public final class Evaluation {
       // Fill pawn table
       int tableFile = pawnFile + 1;
       if (myPawnTable[tableFile] == 0
-          || (myPawnTable[tableFile] > pawnRank && myColor == IntColor.WHITE)
-          || (myPawnTable[tableFile] < pawnRank && myColor == IntColor.BLACK)) {
+          || (myPawnTable[tableFile] > pawnRank && myColor == Color.WHITE)
+          || (myPawnTable[tableFile] < pawnRank && myColor == Color.BLACK)) {
         // Set the rank to the lowest pawn rank
         myPawnTable[tableFile] = (byte) pawnRank;
       }
@@ -685,7 +685,7 @@ public final class Evaluation {
   }
 
   private static void evaluateKnight(int myColor, int enemyColor, Position board) {
-    assert myColor != IntColor.NOCOLOR;
+    assert myColor != Color.NOCOLOR;
 
     // Initialize
     int[] total = totalKnight[myColor];
@@ -730,7 +730,7 @@ public final class Evaluation {
   }
 
   private static void evaluateBishop(int myColor, int enemyColor, Position board) {
-    assert myColor != IntColor.NOCOLOR;
+    assert myColor != Color.NOCOLOR;
     assert board != null;
 
     // Initialize
@@ -784,7 +784,7 @@ public final class Evaluation {
   }
 
   private static void evaluateRook(int myColor, int enemyColor, Position board) {
-    assert myColor != IntColor.NOCOLOR;
+    assert myColor != Color.NOCOLOR;
     assert board != null;
 
     // Initialize
@@ -861,11 +861,11 @@ public final class Evaluation {
       // Evaluate 7th rank
       int seventhRank = 6;
       int eighthRank = 7;
-      if (myColor == IntColor.BLACK) {
+      if (myColor == Color.BLACK) {
         seventhRank = 1;
         eighthRank = 0;
       } else {
-        assert myColor == IntColor.WHITE;
+        assert myColor == Color.WHITE;
       }
       if (rookRank == seventhRank) {
         int kingPosition = Position.kingList[enemyColor].position[0];
@@ -893,7 +893,7 @@ public final class Evaluation {
   }
 
   private static void evaluateQueen(int myColor, int enemyColor, Position board) {
-    assert myColor != IntColor.NOCOLOR;
+    assert myColor != Color.NOCOLOR;
     assert board != null;
 
     // Initialize
@@ -945,11 +945,11 @@ public final class Evaluation {
       // Evaluate 7th rank
       int seventhRank = 6;
       int eighthRank = 7;
-      if (myColor == IntColor.BLACK) {
+      if (myColor == Color.BLACK) {
         seventhRank = 1;
         eighthRank = 0;
       } else {
-        assert myColor == IntColor.WHITE;
+        assert myColor == Color.WHITE;
       }
       if (queenRank == seventhRank) {
         int kingPosition = Position.kingList[enemyColor].position[0];
@@ -970,7 +970,7 @@ public final class Evaluation {
   }
 
   private static void evaluateKing(int myColor, int enemyColor, Position board) {
-    assert myColor != IntColor.NOCOLOR;
+    assert myColor != Color.NOCOLOR;
     assert board != null;
 
     // Initialize
@@ -1000,12 +1000,12 @@ public final class Evaluation {
     int sign = 1;
     int castlingKingside = Castling.WHITE_KINGSIDE;
     int castlingQueenside = Castling.WHITE_QUEENSIDE;
-    if (myColor == IntColor.BLACK) {
+    if (myColor == Color.BLACK) {
       sign = -1;
       castlingKingside = Castling.BLACK_KINGSIDE;
       castlingQueenside = Castling.BLACK_QUEENSIDE;
     } else {
-      assert myColor == IntColor.WHITE;
+      assert myColor == Color.WHITE;
     }
     attackedSquare = kingPosition + 1;
     if ((attackedSquare & 0x88) == 0 && enemyAttackTable[attackedSquare] != 0) {
@@ -1115,11 +1115,11 @@ public final class Evaluation {
 
     int castlingPositionKingside = IntPosition.WHITE_CASTLING_KINGSIDE;
     int castlingPositionQueenside = IntPosition.WHITE_CASTLING_QUEENSIDE;
-    if (myColor == IntColor.BLACK) {
+    if (myColor == Color.BLACK) {
       castlingPositionKingside = IntPosition.BLACK_CASTLING_KINGSIDE;
       castlingPositionQueenside = IntPosition.BLACK_CASTLING_QUEENSIDE;
     } else {
-      assert myColor == IntColor.WHITE;
+      assert myColor == Color.WHITE;
     }
 
     // Evaluate pawn shield
@@ -1145,7 +1145,7 @@ public final class Evaluation {
   }
 
   private static void evaluatePawnStructure(int myColor, int enemyColor, Position board) {
-    assert myColor != IntColor.NOCOLOR;
+    assert myColor != Color.NOCOLOR;
     assert board != null;
 
     // Initialize
@@ -1180,14 +1180,14 @@ public final class Evaluation {
 
         boolean backward = false;
         int sign = 1;
-        if (myColor == IntColor.WHITE) {
+        if (myColor == Color.WHITE) {
           if ((myPawnTable[tableFile + 1] == 0 || myPawnTable[tableFile + 1] > pawnRank)
               && (myPawnTable[tableFile - 1] == 0 || myPawnTable[tableFile - 1] > pawnRank)) {
             // We are behind the left and right pawn
             backward = true;
           }
         } else {
-          assert myColor == IntColor.BLACK;
+          assert myColor == Color.BLACK;
 
           if ((myPawnTable[tableFile + 1] == 0 || myPawnTable[tableFile + 1] < pawnRank)
               && (myPawnTable[tableFile - 1] == 0 || myPawnTable[tableFile - 1] < pawnRank)) {
@@ -1237,7 +1237,7 @@ public final class Evaluation {
   }
 
   private static void evaluatePawnPasser(int myColor, int enemyColor, Position board) {
-    assert myColor != IntColor.NOCOLOR;
+    assert myColor != Color.NOCOLOR;
     assert board != null;
 
     // Initialize
@@ -1267,7 +1267,7 @@ public final class Evaluation {
       boolean isPasser = false;
       int sign = 1;
       int rankBonus = pawnRank;
-      if (myColor == IntColor.WHITE) {
+      if (myColor == Color.WHITE) {
         if ((enemyPawnTable[tableFile] == 0 || enemyPawnTable[tableFile] < pawnRank)
             && (enemyPawnTable[tableFile + 1] == 0 || enemyPawnTable[tableFile + 1] <= pawnRank)
             && (enemyPawnTable[tableFile - 1] == 0 || enemyPawnTable[tableFile - 1] <= pawnRank)) {
@@ -1291,7 +1291,7 @@ public final class Evaluation {
           }
         }
       } else {
-        assert myColor == IntColor.BLACK;
+        assert myColor == Color.BLACK;
 
         if ((enemyPawnTable[tableFile] == 0 || enemyPawnTable[tableFile] > pawnRank)
             && (enemyPawnTable[tableFile + 1] == 0 || enemyPawnTable[tableFile + 1] >= pawnRank)
@@ -1338,7 +1338,7 @@ public final class Evaluation {
 
         if (Position.materialCount[enemyColor] == 0) {
           // Unstoppable passer
-          if (myColor == IntColor.WHITE) {
+          if (myColor == Color.WHITE) {
             // Is a friendly chessman blocking our promotion path?
             boolean pathClear = true;
             int endPosition = pawnPosition + 16;
@@ -1376,7 +1376,7 @@ public final class Evaluation {
               }
             }
           } else {
-            assert myColor == IntColor.BLACK;
+            assert myColor == Color.BLACK;
 
             // Is a friendly chessman blocking our promotion path?
             boolean pathClear = true;
@@ -1437,13 +1437,13 @@ public final class Evaluation {
   }
 
   private static void evaluatePatterns(int myColor, Position board) {
-    assert myColor != IntColor.NOCOLOR;
+    assert myColor != Color.NOCOLOR;
     assert board != null;
 
     // Initialize
     int[] total = totalPatterns[myColor];
 
-    if (myColor == IntColor.WHITE) {
+    if (myColor == Color.WHITE) {
       // Trapped white bishop
       if (Position.board[IntPosition.a7] == Piece.WHITE_BISHOP
           && Position.board[IntPosition.b6] == Piece.BLACK_PAWN) {
@@ -1522,7 +1522,7 @@ public final class Evaluation {
         total[TOTAL_ENDGAME] -= 50;
       }
     } else {
-      assert myColor == IntColor.BLACK;
+      assert myColor == Color.BLACK;
 
       // Trapped black bishop
       if (Position.board[IntPosition.a2] == Piece.BLACK_BISHOP
@@ -1605,7 +1605,7 @@ public final class Evaluation {
   }
 
   private static int getPawnShieldPenalty(int myColor, int kingPosition) {
-    assert myColor != IntColor.NOCOLOR;
+    assert myColor != Color.NOCOLOR;
     assert (kingPosition & 0x88) == 0;
 
     // Initialize
@@ -1617,7 +1617,7 @@ public final class Evaluation {
 
     // Evaluate pawn shield
     int penalty = 0;
-    if (myColor == IntColor.WHITE) {
+    if (myColor == Color.WHITE) {
       // Evaluate the file of the king
       if (myPawnTable[tableFile] == 0 || myPawnTable[tableFile] < kingRank) {
         penalty += 2 * 36;
@@ -1643,7 +1643,7 @@ public final class Evaluation {
         }
       }
     } else {
-      assert myColor == IntColor.BLACK;
+      assert myColor == Color.BLACK;
 
       // Evaluate the file of the king
       if (myPawnTable[tableFile] == 0 || myPawnTable[tableFile] > kingRank) {

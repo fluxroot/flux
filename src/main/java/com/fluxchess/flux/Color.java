@@ -20,7 +20,7 @@ package com.fluxchess.flux;
 
 import com.fluxchess.jcpi.models.GenericColor;
 
-public final class IntColor {
+public final class Color {
 
   /**
    * Represents no color
@@ -54,7 +54,7 @@ public final class IntColor {
   /**
    * IntColor cannot be instantiated.
    */
-  private IntColor() {
+  private Color() {
   }
 
   /**
