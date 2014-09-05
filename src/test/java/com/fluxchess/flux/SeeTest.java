@@ -53,7 +53,7 @@ public class SeeTest {
 
       // Pawn promotion capture
       board = new Position(new GenericBoard("8/8/K7/6k1/8/5B2/4p3/3R4 b - -"));
-      move = Move.createMove(MoveType.PAWNPROMOTION, Square.e2, Square.d1, Position.board[Square.e2], Position.board[Square.d1], Piece.ROOK);
+      move = Move.createMove(MoveType.PAWNPROMOTION, Square.e2, Square.d1, Position.board[Square.e2], Position.board[Square.d1], PieceType.ROOK);
       new See(board);
       value = See.seeMove(move, Color.BLACK);
       assertEquals(

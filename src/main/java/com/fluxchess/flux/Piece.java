@@ -36,39 +36,11 @@ public final class Piece {
   public static final int NOPIECE = 4;
 
   /**
-   * Chessman values
-   */
-  public static final int PAWN = 1;
-  public static final int KNIGHT = 2;
-  public static final int KING = 3;
-  public static final int BISHOP = 5;
-  public static final int ROOK = 6;
-  public static final int QUEEN = 7;
-
-  /**
    * Bit operations
    */
   public static final int BIT_SLIDING = 4;
   public static final int BIT_DIAGONAL_SLIDING = 1;
   public static final int BIT_STRAIGHT_SLIDING = 2;
-
-  /**
-   * Chessman array
-   */
-  public static final int CHESSMAN_VALUE_SIZE = 8;
-  public static final int[] values = {
-      PAWN,
-      KNIGHT,
-      BISHOP,
-      ROOK,
-      QUEEN,
-      KING
-  };
-
-  /**
-   * Chessman mask
-   */
-  public static final int MASK = 0x7;
 
   /**
    * Chessman
@@ -78,25 +50,25 @@ public final class Piece {
 
   // Bit operation values
   private static final int CHESSMAN_SHIFT = 0;
-  private static final int CHESSMAN_MASK = MASK << CHESSMAN_SHIFT;
+  private static final int CHESSMAN_MASK = PieceType.MASK << CHESSMAN_SHIFT;
   private static final int COLOR_SHIFT = 3;
   private static final int COLOR_MASK = Color.MASK << COLOR_SHIFT;
 
   /**
    * Piece values
    */
-  public static final int WHITE_PAWN = (PAWN << CHESSMAN_SHIFT) | (Color.WHITE << COLOR_SHIFT);
-  public static final int WHITE_KNIGHT = (KNIGHT << CHESSMAN_SHIFT) | (Color.WHITE << COLOR_SHIFT);
-  public static final int WHITE_BISHOP = (BISHOP << CHESSMAN_SHIFT) | (Color.WHITE << COLOR_SHIFT);
-  public static final int WHITE_ROOK = (ROOK << CHESSMAN_SHIFT) | (Color.WHITE << COLOR_SHIFT);
-  public static final int WHITE_QUEEN = (QUEEN << CHESSMAN_SHIFT) | (Color.WHITE << COLOR_SHIFT);
-  public static final int WHITE_KING = (KING << CHESSMAN_SHIFT) | (Color.WHITE << COLOR_SHIFT);
-  public static final int BLACK_PAWN = (PAWN << CHESSMAN_SHIFT) | (Color.BLACK << COLOR_SHIFT);
-  public static final int BLACK_KNIGHT = (KNIGHT << CHESSMAN_SHIFT) | (Color.BLACK << COLOR_SHIFT);
-  public static final int BLACK_BISHOP = (BISHOP << CHESSMAN_SHIFT) | (Color.BLACK << COLOR_SHIFT);
-  public static final int BLACK_ROOK = (ROOK << CHESSMAN_SHIFT) | (Color.BLACK << COLOR_SHIFT);
-  public static final int BLACK_QUEEN = (QUEEN << CHESSMAN_SHIFT) | (Color.BLACK << COLOR_SHIFT);
-  public static final int BLACK_KING = (KING << CHESSMAN_SHIFT) | (Color.BLACK << COLOR_SHIFT);
+  public static final int WHITE_PAWN = (PieceType.PAWN << CHESSMAN_SHIFT) | (Color.WHITE << COLOR_SHIFT);
+  public static final int WHITE_KNIGHT = (PieceType.KNIGHT << CHESSMAN_SHIFT) | (Color.WHITE << COLOR_SHIFT);
+  public static final int WHITE_BISHOP = (PieceType.BISHOP << CHESSMAN_SHIFT) | (Color.WHITE << COLOR_SHIFT);
+  public static final int WHITE_ROOK = (PieceType.ROOK << CHESSMAN_SHIFT) | (Color.WHITE << COLOR_SHIFT);
+  public static final int WHITE_QUEEN = (PieceType.QUEEN << CHESSMAN_SHIFT) | (Color.WHITE << COLOR_SHIFT);
+  public static final int WHITE_KING = (PieceType.KING << CHESSMAN_SHIFT) | (Color.WHITE << COLOR_SHIFT);
+  public static final int BLACK_PAWN = (PieceType.PAWN << CHESSMAN_SHIFT) | (Color.BLACK << COLOR_SHIFT);
+  public static final int BLACK_KNIGHT = (PieceType.KNIGHT << CHESSMAN_SHIFT) | (Color.BLACK << COLOR_SHIFT);
+  public static final int BLACK_BISHOP = (PieceType.BISHOP << CHESSMAN_SHIFT) | (Color.BLACK << COLOR_SHIFT);
+  public static final int BLACK_ROOK = (PieceType.ROOK << CHESSMAN_SHIFT) | (Color.BLACK << COLOR_SHIFT);
+  public static final int BLACK_QUEEN = (PieceType.QUEEN << CHESSMAN_SHIFT) | (Color.BLACK << COLOR_SHIFT);
+  public static final int BLACK_KING = (PieceType.KING << CHESSMAN_SHIFT) | (Color.BLACK << COLOR_SHIFT);
 
   public static final int[] pieceValues = {
       WHITE_PAWN,
@@ -147,17 +119,17 @@ public final class Piece {
 
     switch (chessman) {
       case PAWN:
-        return PAWN;
+        return PieceType.PAWN;
       case KNIGHT:
-        return KNIGHT;
+        return PieceType.KNIGHT;
       case BISHOP:
-        return BISHOP;
+        return PieceType.BISHOP;
       case ROOK:
-        return ROOK;
+        return PieceType.ROOK;
       case QUEEN:
-        return QUEEN;
+        return PieceType.QUEEN;
       case KING:
-        return KING;
+        return PieceType.KING;
       default:
         assert false : chessman;
         break;
@@ -176,17 +148,17 @@ public final class Piece {
     assert chessman != NOPIECE;
 
     switch (chessman) {
-      case PAWN:
+      case PieceType.PAWN:
         return GenericChessman.PAWN;
-      case KNIGHT:
+      case PieceType.KNIGHT:
         return GenericChessman.KNIGHT;
-      case BISHOP:
+      case PieceType.BISHOP:
         return GenericChessman.BISHOP;
-      case ROOK:
+      case PieceType.ROOK:
         return GenericChessman.ROOK;
-      case QUEEN:
+      case PieceType.QUEEN:
         return GenericChessman.QUEEN;
-      case KING:
+      case PieceType.KING:
         return GenericChessman.KING;
       default:
         throw new IllegalArgumentException();
@@ -208,12 +180,12 @@ public final class Piece {
 
     // Set the chessman
     piece |= chessman << CHESSMAN_SHIFT;
-    assert (chessman == PAWN)
-        || (chessman == KNIGHT)
-        || (chessman == BISHOP)
-        || (chessman == ROOK)
-        || (chessman == QUEEN)
-        || (chessman == KING);
+    assert (chessman == PieceType.PAWN)
+        || (chessman == PieceType.KNIGHT)
+        || (chessman == PieceType.BISHOP)
+        || (chessman == PieceType.ROOK)
+        || (chessman == PieceType.QUEEN)
+        || (chessman == PieceType.KING);
 
     // Set the color
     piece |= color << COLOR_SHIFT;
@@ -239,10 +211,10 @@ public final class Piece {
 
     // Set the promotion chessman
     piece |= chessman << CHESSMAN_SHIFT;
-    assert (chessman == KNIGHT)
-        || (chessman == BISHOP)
-        || (chessman == ROOK)
-        || (chessman == QUEEN);
+    assert (chessman == PieceType.KNIGHT)
+        || (chessman == PieceType.BISHOP)
+        || (chessman == PieceType.ROOK)
+        || (chessman == PieceType.QUEEN);
 
     // Set the color
     piece |= color << COLOR_SHIFT;
@@ -308,17 +280,17 @@ public final class Piece {
     int chessman = (piece & CHESSMAN_MASK) >>> CHESSMAN_SHIFT;
 
     switch (chessman) {
-      case PAWN:
+      case PieceType.PAWN:
         return VALUE_PAWN;
-      case KNIGHT:
+      case PieceType.KNIGHT:
         return VALUE_KNIGHT;
-      case BISHOP:
+      case PieceType.BISHOP:
         return VALUE_BISHOP;
-      case ROOK:
+      case PieceType.ROOK:
         return VALUE_ROOK;
-      case QUEEN:
+      case PieceType.QUEEN:
         return VALUE_QUEEN;
-      case KING:
+      case PieceType.KING:
         return VALUE_KING;
       default:
         throw new IllegalArgumentException();
@@ -335,17 +307,17 @@ public final class Piece {
     assert chessman != NOPIECE;
 
     switch (chessman) {
-      case PAWN:
+      case PieceType.PAWN:
         return VALUE_PAWN;
-      case KNIGHT:
+      case PieceType.KNIGHT:
         return VALUE_KNIGHT;
-      case BISHOP:
+      case PieceType.BISHOP:
         return VALUE_BISHOP;
-      case ROOK:
+      case PieceType.ROOK:
         return VALUE_ROOK;
-      case QUEEN:
+      case PieceType.QUEEN:
         return VALUE_QUEEN;
-      case KING:
+      case PieceType.KING:
         return VALUE_KING;
       default:
         throw new IllegalArgumentException();
@@ -363,14 +335,14 @@ public final class Piece {
 
     int chessman = (piece & CHESSMAN_MASK) >>> CHESSMAN_SHIFT;
 
-    assert ((chessman & BIT_SLIDING) != 0 && (chessman == BISHOP || chessman == ROOK || chessman == QUEEN))
-        || ((chessman & BIT_SLIDING) == 0 && (chessman == PAWN || chessman == KNIGHT || chessman == KING));
+    assert ((chessman & BIT_SLIDING) != 0 && (chessman == PieceType.BISHOP || chessman == PieceType.ROOK || chessman == PieceType.QUEEN))
+        || ((chessman & BIT_SLIDING) == 0 && (chessman == PieceType.PAWN || chessman == PieceType.KNIGHT || chessman == PieceType.KING));
 
     return (chessman & BIT_SLIDING) != 0;
   }
 
   public static boolean isValidChessman(int chessman) {
-    for (int chessmanValue : values) {
+    for (int chessmanValue : PieceType.values) {
       if (chessman == chessmanValue) {
         return true;
       }

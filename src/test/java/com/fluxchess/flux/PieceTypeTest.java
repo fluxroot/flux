@@ -20,21 +20,15 @@ package com.fluxchess.flux;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import java.lang.reflect.InvocationTargetException;
 
-public class HistoryTableTest {
+import static com.fluxchess.test.AssertUtil.assertUtilityClassWellDefined;
+
+public class PieceTypeTest {
 
   @Test
-  public void testHistoryTable() {
-    HistoryTable table = new HistoryTable();
-
-    int move1 = Move.createMove(MoveType.NORMAL, 16, 32, PieceType.PAWN, Piece.NOPIECE, Piece.NOPIECE);
-    table.add(move1, 1);
-    assertEquals(1, table.get(move1));
-
-    int move2 = Move.createMove(MoveType.NORMAL, 16, 32, PieceType.PAWN, Piece.NOPIECE, Piece.NOPIECE);
-    table.add(move2, 1);
-    assertEquals(2, table.get(move2));
+  public void testUtilityClass() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    assertUtilityClassWellDefined(PieceType.class);
   }
 
 }

@@ -48,7 +48,7 @@ public final class Position {
 
   // The zobrist keys
   private static final long zobristActiveColor;
-  private static final long[][][] zobristChessman = new long[Piece.CHESSMAN_VALUE_SIZE][Color.ARRAY_DIMENSION][BOARDSIZE];
+  private static final long[][][] zobristChessman = new long[PieceType.VALUES_SIZE][Color.ARRAY_DIMENSION][BOARDSIZE];
   private static final long[] zobristCastling = new long[Castling.ARRAY_DIMENSION];
   private static final long[] zobristEnPassant = new long[BOARDSIZE];
 
@@ -143,7 +143,7 @@ public final class Position {
   static {
     zobristActiveColor = Math.abs(random.nextLong());
 
-    for (int chessman : Piece.values) {
+    for (int chessman : PieceType.values) {
       for (int color : Color.values) {
         for (int i = 0; i < BOARDSIZE; i++) {
           zobristChessman[chessman][color][i] = Math.abs(random.nextLong());
@@ -276,34 +276,34 @@ public final class Position {
     int color = Piece.getColor(piece);
 
     switch (chessman) {
-      case Piece.PAWN:
+      case PieceType.PAWN:
         pawnList[color].addPosition(position);
         materialCountAll[color]++;
         if (update) {
-          this.pawnZobristCode ^= zobristChessman[Piece.PAWN][color][position];
+          this.pawnZobristCode ^= zobristChessman[PieceType.PAWN][color][position];
         }
         break;
-      case Piece.KNIGHT:
+      case PieceType.KNIGHT:
         knightList[color].addPosition(position);
         materialCount[color]++;
         materialCountAll[color]++;
         break;
-      case Piece.BISHOP:
+      case PieceType.BISHOP:
         bishopList[color].addPosition(position);
         materialCount[color]++;
         materialCountAll[color]++;
         break;
-      case Piece.ROOK:
+      case PieceType.ROOK:
         rookList[color].addPosition(position);
         materialCount[color]++;
         materialCountAll[color]++;
         break;
-      case Piece.QUEEN:
+      case PieceType.QUEEN:
         queenList[color].addPosition(position);
         materialCount[color]++;
         materialCountAll[color]++;
         break;
-      case Piece.KING:
+      case PieceType.KING:
         kingList[color].addPosition(position);
         break;
       default:
@@ -340,34 +340,34 @@ public final class Position {
     int color = Piece.getColor(piece);
 
     switch (chessman) {
-      case Piece.PAWN:
+      case PieceType.PAWN:
         pawnList[color].removePosition(position);
         materialCountAll[color]--;
         if (update) {
-          this.pawnZobristCode ^= zobristChessman[Piece.PAWN][color][position];
+          this.pawnZobristCode ^= zobristChessman[PieceType.PAWN][color][position];
         }
         break;
-      case Piece.KNIGHT:
+      case PieceType.KNIGHT:
         knightList[color].removePosition(position);
         materialCount[color]--;
         materialCountAll[color]--;
         break;
-      case Piece.BISHOP:
+      case PieceType.BISHOP:
         bishopList[color].removePosition(position);
         materialCount[color]--;
         materialCountAll[color]--;
         break;
-      case Piece.ROOK:
+      case PieceType.ROOK:
         rookList[color].removePosition(position);
         materialCount[color]--;
         materialCountAll[color]--;
         break;
-      case Piece.QUEEN:
+      case PieceType.QUEEN:
         queenList[color].removePosition(position);
         materialCount[color]--;
         materialCountAll[color]--;
         break;
-      case Piece.KING:
+      case PieceType.KING:
         kingList[color].removePosition(position);
         break;
       default:
@@ -409,32 +409,32 @@ public final class Position {
     int color = Piece.getColor(piece);
 
     switch (chessman) {
-      case Piece.PAWN:
+      case PieceType.PAWN:
         pawnList[color].removePosition(start);
         pawnList[color].addPosition(end);
         if (update) {
-          long[] tempZobristChessman = zobristChessman[Piece.PAWN][color];
+          long[] tempZobristChessman = zobristChessman[PieceType.PAWN][color];
           this.pawnZobristCode ^= tempZobristChessman[start];
           this.pawnZobristCode ^= tempZobristChessman[end];
         }
         break;
-      case Piece.KNIGHT:
+      case PieceType.KNIGHT:
         knightList[color].removePosition(start);
         knightList[color].addPosition(end);
         break;
-      case Piece.BISHOP:
+      case PieceType.BISHOP:
         bishopList[color].removePosition(start);
         bishopList[color].addPosition(end);
         break;
-      case Piece.ROOK:
+      case PieceType.ROOK:
         rookList[color].removePosition(start);
         rookList[color].addPosition(end);
         break;
-      case Piece.QUEEN:
+      case PieceType.QUEEN:
         queenList[color].removePosition(start);
         queenList[color].addPosition(end);
         break;
-      case Piece.KING:
+      case PieceType.KING:
         kingList[color].removePosition(start);
         kingList[color].addPosition(end);
         break;
@@ -474,7 +474,7 @@ public final class Position {
       for (int index = 0; index < pawnList[intColor].size; index++) {
         int intPosition = pawnList[intColor].position[index];
         assert intPosition != Square.NOPOSITION;
-        assert Piece.getChessman(board[intPosition]) == Piece.PAWN;
+        assert Piece.getChessman(board[intPosition]) == PieceType.PAWN;
         assert Piece.getColor(board[intPosition]) == intColor;
 
         GenericPosition position = Square.valueOfIntPosition(intPosition);
@@ -484,7 +484,7 @@ public final class Position {
       for (int index = 0; index < knightList[intColor].size; index++) {
         int intPosition = knightList[intColor].position[index];
         assert intPosition != Square.NOPOSITION;
-        assert Piece.getChessman(board[intPosition]) == Piece.KNIGHT;
+        assert Piece.getChessman(board[intPosition]) == PieceType.KNIGHT;
         assert Piece.getColor(board[intPosition]) == intColor;
 
         GenericPosition position = Square.valueOfIntPosition(intPosition);
@@ -494,7 +494,7 @@ public final class Position {
       for (int index = 0; index < bishopList[intColor].size; index++) {
         int intPosition = bishopList[intColor].position[index];
         assert intPosition != Square.NOPOSITION;
-        assert Piece.getChessman(board[intPosition]) == Piece.BISHOP;
+        assert Piece.getChessman(board[intPosition]) == PieceType.BISHOP;
         assert Piece.getColor(board[intPosition]) == intColor;
 
         GenericPosition position = Square.valueOfIntPosition(intPosition);
@@ -504,7 +504,7 @@ public final class Position {
       for (int index = 0; index < rookList[intColor].size; index++) {
         int intPosition = rookList[intColor].position[index];
         assert intPosition != Square.NOPOSITION;
-        assert Piece.getChessman(board[intPosition]) == Piece.ROOK;
+        assert Piece.getChessman(board[intPosition]) == PieceType.ROOK;
         assert Piece.getColor(board[intPosition]) == intColor;
 
         GenericPosition position = Square.valueOfIntPosition(intPosition);
@@ -514,7 +514,7 @@ public final class Position {
       for (int index = 0; index < queenList[intColor].size; index++) {
         int intPosition = queenList[intColor].position[index];
         assert intPosition != Square.NOPOSITION;
-        assert Piece.getChessman(board[intPosition]) == Piece.QUEEN;
+        assert Piece.getChessman(board[intPosition]) == PieceType.QUEEN;
         assert Piece.getColor(board[intPosition]) == intColor;
 
         GenericPosition position = Square.valueOfIntPosition(intPosition);
@@ -524,7 +524,7 @@ public final class Position {
       assert kingList[intColor].size == 1;
       int intPosition = kingList[intColor].position[0];
       assert intPosition != Square.NOPOSITION;
-      assert Piece.getChessman(board[intPosition]) == Piece.KING;
+      assert Piece.getChessman(board[intPosition]) == PieceType.KING;
       assert Piece.getColor(board[intPosition]) == intColor;
 
       GenericPosition position = Square.valueOfIntPosition(intPosition);
@@ -670,7 +670,7 @@ public final class Position {
           assert false : endPosition;
         }
 
-        return canAttack(Piece.ROOK, chessmanColor, rookEnd, enemyKingPosition);
+        return canAttack(PieceType.ROOK, chessmanColor, rookEnd, enemyKingPosition);
       case MoveType.NULL:
         assert false;
         break;
@@ -744,11 +744,11 @@ public final class Position {
     int attackVector = Attack.N;
 
     switch (Piece.getChessman(attacker)) {
-      case Piece.PAWN:
+      case PieceType.PAWN:
         break;
-      case Piece.KNIGHT:
+      case PieceType.KNIGHT:
         break;
-      case Piece.BISHOP:
+      case PieceType.BISHOP:
         attackVector = Attack.vector[targetPosition - attackerPosition + 127];
         switch (attackVector) {
           case Attack.u:
@@ -759,7 +759,7 @@ public final class Position {
             break;
         }
         break;
-      case Piece.ROOK:
+      case PieceType.ROOK:
         attackVector = Attack.vector[targetPosition - attackerPosition + 127];
         switch (attackVector) {
           case Attack.s:
@@ -769,7 +769,7 @@ public final class Position {
             break;
         }
         break;
-      case Piece.QUEEN:
+      case PieceType.QUEEN:
         attackVector = Attack.vector[targetPosition - attackerPosition + 127];
         switch (attackVector) {
           case Attack.u:
@@ -782,7 +782,7 @@ public final class Position {
             break;
         }
         break;
-      case Piece.KING:
+      case PieceType.KING:
         break;
       default:
         assert false : Piece.getChessman(attacker);
@@ -879,11 +879,11 @@ public final class Position {
     PositionList tempChessmanList = knightList[attackerColor];
     for (int index = 0; index < tempChessmanList.size; index++) {
       int attackerPosition = tempChessmanList.position[index];
-      assert Piece.getChessman(board[attackerPosition]) == Piece.KNIGHT;
+      assert Piece.getChessman(board[attackerPosition]) == PieceType.KNIGHT;
       assert attackerPosition != Square.NOPOSITION;
       assert board[attackerPosition] != Piece.NOPIECE;
       assert attackerColor == Piece.getColor(board[attackerPosition]);
-      if (canAttack(Piece.KNIGHT, attackerColor, attackerPosition, targetPosition)) {
+      if (canAttack(PieceType.KNIGHT, attackerColor, attackerPosition, targetPosition)) {
         if (stop) {
           return true;
         }
@@ -897,11 +897,11 @@ public final class Position {
     tempChessmanList = bishopList[attackerColor];
     for (int index = 0; index < tempChessmanList.size; index++) {
       int attackerPosition = tempChessmanList.position[index];
-      assert Piece.getChessman(board[attackerPosition]) == Piece.BISHOP;
+      assert Piece.getChessman(board[attackerPosition]) == PieceType.BISHOP;
       assert attackerPosition != Square.NOPOSITION;
       assert board[attackerPosition] != Piece.NOPIECE;
       assert attackerColor == Piece.getColor(board[attackerPosition]);
-      if (canAttack(Piece.BISHOP, attackerColor, attackerPosition, targetPosition)) {
+      if (canAttack(PieceType.BISHOP, attackerColor, attackerPosition, targetPosition)) {
         if (stop) {
           return true;
         }
@@ -915,11 +915,11 @@ public final class Position {
     tempChessmanList = rookList[attackerColor];
     for (int index = 0; index < tempChessmanList.size; index++) {
       int attackerPosition = tempChessmanList.position[index];
-      assert Piece.getChessman(board[attackerPosition]) == Piece.ROOK;
+      assert Piece.getChessman(board[attackerPosition]) == PieceType.ROOK;
       assert attackerPosition != Square.NOPOSITION;
       assert board[attackerPosition] != Piece.NOPIECE;
       assert attackerColor == Piece.getColor(board[attackerPosition]);
-      if (canAttack(Piece.ROOK, attackerColor, attackerPosition, targetPosition)) {
+      if (canAttack(PieceType.ROOK, attackerColor, attackerPosition, targetPosition)) {
         if (stop) {
           return true;
         }
@@ -933,11 +933,11 @@ public final class Position {
     tempChessmanList = queenList[attackerColor];
     for (int index = 0; index < tempChessmanList.size; index++) {
       int attackerPosition = tempChessmanList.position[index];
-      assert Piece.getChessman(board[attackerPosition]) == Piece.QUEEN;
+      assert Piece.getChessman(board[attackerPosition]) == PieceType.QUEEN;
       assert attackerPosition != Square.NOPOSITION;
       assert board[attackerPosition] != Piece.NOPIECE;
       assert attackerColor == Piece.getColor(board[attackerPosition]);
-      if (canAttack(Piece.QUEEN, attackerColor, attackerPosition, targetPosition)) {
+      if (canAttack(PieceType.QUEEN, attackerColor, attackerPosition, targetPosition)) {
         if (stop) {
           return true;
         }
@@ -950,11 +950,11 @@ public final class Position {
     }
     assert kingList[attackerColor].size == 1;
     int attackerPosition = kingList[attackerColor].position[0];
-    assert Piece.getChessman(board[attackerPosition]) == Piece.KING;
+    assert Piece.getChessman(board[attackerPosition]) == PieceType.KING;
     assert attackerPosition != Square.NOPOSITION;
     assert board[attackerPosition] != Piece.NOPIECE;
     assert attackerColor == Piece.getColor(board[attackerPosition]);
-    if (canAttack(Piece.KING, attackerColor, attackerPosition, targetPosition)) {
+    if (canAttack(PieceType.KING, attackerColor, attackerPosition, targetPosition)) {
       if (stop) {
         return true;
       }
@@ -986,19 +986,19 @@ public final class Position {
     int attackVector = Attack.vector[targetPosition - attackerPosition + 127];
 
     switch (attackerChessman) {
-      case Piece.PAWN:
+      case PieceType.PAWN:
         if (attackVector == Attack.u && attackerColor == Color.WHITE) {
           return true;
         } else if (attackVector == Attack.d && attackerColor == Color.BLACK) {
           return true;
         }
         break;
-      case Piece.KNIGHT:
+      case PieceType.KNIGHT:
         if (attackVector == Attack.K) {
           return true;
         }
         break;
-      case Piece.BISHOP:
+      case PieceType.BISHOP:
         switch (attackVector) {
           case Attack.u:
           case Attack.d:
@@ -1012,7 +1012,7 @@ public final class Position {
             break;
         }
         break;
-      case Piece.ROOK:
+      case PieceType.ROOK:
         switch (attackVector) {
           case Attack.s:
             return true;
@@ -1025,7 +1025,7 @@ public final class Position {
             break;
         }
         break;
-      case Piece.QUEEN:
+      case PieceType.QUEEN:
         switch (attackVector) {
           case Attack.u:
           case Attack.d:
@@ -1041,7 +1041,7 @@ public final class Position {
             break;
         }
         break;
-      case Piece.KING:
+      case PieceType.KING:
         switch (attackVector) {
           case Attack.u:
           case Attack.d:
@@ -1310,7 +1310,7 @@ public final class Position {
     }
 
     // Update half move clock
-    if (chessman == Piece.PAWN || target != Piece.NOPIECE) {
+    if (chessman == PieceType.PAWN || target != Piece.NOPIECE) {
       this.halfMoveClock = 0;
     } else {
       this.halfMoveClock++;
@@ -1337,7 +1337,7 @@ public final class Position {
     // Remove the pawn at the start position
     int startPosition = Move.getStart(move);
     int pawn = remove(startPosition, true);
-    assert Piece.getChessman(pawn) == Piece.PAWN;
+    assert Piece.getChessman(pawn) == PieceType.PAWN;
     int pawnColor = Piece.getColor(pawn);
     assert Piece.getChessman(pawn) == Move.getChessman(move);
     assert pawnColor == Move.getChessmanColor(move);
@@ -1434,7 +1434,7 @@ public final class Position {
     int pawn = move(startPosition, endPosition, true);
     int pawnColor = Piece.getColor(pawn);
 
-    assert Piece.getChessman(pawn) == Piece.PAWN;
+    assert Piece.getChessman(pawn) == PieceType.PAWN;
     assert (startPosition >>> 4 == 1 && pawnColor == Color.WHITE) || (startPosition >>> 4 == 6 && pawnColor == Color.BLACK) : getBoard().toString() + ":" + Move.toString(move);
     assert (endPosition >>> 4 == 3 && pawnColor == Color.WHITE) || (endPosition >>> 4 == 4 && pawnColor == Color.BLACK);
     assert Math.abs(startPosition - endPosition) == 32;
@@ -1481,7 +1481,7 @@ public final class Position {
     int kingStartPosition = Move.getStart(move);
     int kingEndPosition = Move.getEnd(move);
     int king = move(kingStartPosition, kingEndPosition, true);
-    assert Piece.getChessman(king) == Piece.KING;
+    assert Piece.getChessman(king) == PieceType.KING;
 
     // Get the rook positions
     int rookStartPosition;
@@ -1513,7 +1513,7 @@ public final class Position {
 
     // Move the rook
     int rook = move(rookStartPosition, rookEndPosition, true);
-    assert Piece.getChessman(rook) == Piece.ROOK;
+    assert Piece.getChessman(rook) == PieceType.ROOK;
 
     // Update castling
     assert (newCastling ^ castling) == Castling.WHITE_KINGSIDE
@@ -1580,7 +1580,7 @@ public final class Position {
     int startPosition = Move.getStart(move);
     int endPosition = Move.getEnd(move);
     int pawn = move(startPosition, endPosition, true);
-    assert Piece.getChessman(pawn) == Piece.PAWN;
+    assert Piece.getChessman(pawn) == PieceType.PAWN;
     int pawnColor = Piece.getColor(pawn);
 
     // Calculate the en passant position
@@ -1596,7 +1596,7 @@ public final class Position {
     // Remove the captured pawn
     int target = remove(targetPosition, true);
     assert Move.getTarget(move) != Piece.NOPIECE;
-    assert Piece.getChessman(target) == Piece.PAWN;
+    assert Piece.getChessman(target) == PieceType.PAWN;
     assert Piece.getColor(target) == Color.switchColor(pawnColor);
     captureHistory[this.captureHistorySize++] = target;
 

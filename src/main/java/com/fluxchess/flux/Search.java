@@ -1129,8 +1129,8 @@ public final class Search implements Runnable {
       if (Configuration.useMinorPromotionPruning
           && !this.analyzeMode
           && Move.getType(move) == MoveType.PAWNPROMOTION
-          && Move.getPromotion(move) != Piece.QUEEN) {
-        assert Move.getPromotion(move) == Piece.ROOK || Move.getPromotion(move) == Piece.BISHOP || Move.getPromotion(move) == Piece.KNIGHT;
+          && Move.getPromotion(move) != PieceType.QUEEN) {
+        assert Move.getPromotion(move) == PieceType.ROOK || Move.getPromotion(move) == PieceType.BISHOP || Move.getPromotion(move) == PieceType.KNIGHT;
         continue;
       }
       //## ENDOF Minor Promotion Pruning
@@ -1533,7 +1533,7 @@ public final class Search implements Runnable {
 
     //## Pawn Extension
     else if (Configuration.usePawnExtension
-        && Move.getChessman(move) == Piece.PAWN
+        && Move.getChessman(move) == PieceType.PAWN
         && Square.getRelativeRank(Move.getEnd(move), board.activeColor) == Rank.r7) {
       newDepth++;
     }
@@ -1554,7 +1554,7 @@ public final class Search implements Runnable {
     if (Position.materialCount[board.activeColor] == 0
         && Position.materialCount[Color.switchColor(board.activeColor)] == 1
         && Move.getTarget(move) != Piece.NOPIECE
-        && Move.getTarget(move) != Piece.PAWN) {
+        && Move.getTarget(move) != PieceType.PAWN) {
       newDepth++;
     }
 
@@ -1564,12 +1564,12 @@ public final class Search implements Runnable {
   private static boolean isDangerousMove(int move) {
     int chessman = Move.getChessman(move);
     int relativeRank = Square.getRelativeRank(Move.getEnd(move), board.activeColor);
-    if (chessman == Piece.PAWN && relativeRank >= Rank.r7) {
+    if (chessman == PieceType.PAWN && relativeRank >= Rank.r7) {
       return true;
     }
 
     int target = Move.getTarget(move);
-    if (target == Piece.QUEEN) {
+    if (target == PieceType.QUEEN) {
       return true;
     }
 

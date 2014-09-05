@@ -18,23 +18,23 @@
  */
 package com.fluxchess.flux;
 
-import org.junit.Test;
+public final class PieceType {
 
-import static org.junit.Assert.assertEquals;
+  public static final int MASK = 0x7;
 
-public class HistoryTableTest {
+  public static final int PAWN = 1;
+  public static final int KNIGHT = 2;
+  public static final int KING = 3;
+  public static final int BISHOP = 5;
+  public static final int ROOK = 6;
+  public static final int QUEEN = 7;
 
-  @Test
-  public void testHistoryTable() {
-    HistoryTable table = new HistoryTable();
+  public static final int VALUES_SIZE = 8;
+  public static final int[] values = {
+      PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING
+  };
 
-    int move1 = Move.createMove(MoveType.NORMAL, 16, 32, PieceType.PAWN, Piece.NOPIECE, Piece.NOPIECE);
-    table.add(move1, 1);
-    assertEquals(1, table.get(move1));
-
-    int move2 = Move.createMove(MoveType.NORMAL, 16, 32, PieceType.PAWN, Piece.NOPIECE, Piece.NOPIECE);
-    table.add(move2, 1);
-    assertEquals(2, table.get(move2));
+  private PieceType() {
   }
 
 }

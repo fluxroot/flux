@@ -1198,7 +1198,7 @@ public final class Evaluation {
             // Check whether we can advance
             assert ((pawnPosition + sign * 16) & 0x88) == 0;
             int chessman = Position.board[pawnPosition + sign * 16];
-            if ((chessman == Piece.NOPIECE || Piece.getChessman(chessman) != Piece.PAWN)
+            if ((chessman == Piece.NOPIECE || Piece.getChessman(chessman) != PieceType.PAWN)
                 && (enemyAttackTable[pawnPosition] & BIT_PAWN) == 0
                 && (enemyAttackTable[pawnPosition + sign * 16] & BIT_PAWN) == 0) {
               backward = false;
@@ -1210,8 +1210,8 @@ public final class Evaluation {
             assert ((pawnPosition + sign * 32) & 0x88) == 0;
             int chessman1 = Position.board[pawnPosition + sign * 16];
             int chessman2 = Position.board[pawnPosition + sign * 32];
-            if ((chessman1 == Piece.NOPIECE || Piece.getChessman(chessman1) != Piece.PAWN)
-                && (chessman2 == Piece.NOPIECE || Piece.getChessman(chessman2) != Piece.PAWN)
+            if ((chessman1 == Piece.NOPIECE || Piece.getChessman(chessman1) != PieceType.PAWN)
+                && (chessman2 == Piece.NOPIECE || Piece.getChessman(chessman2) != PieceType.PAWN)
                 && (enemyAttackTable[pawnPosition] & BIT_PAWN) == 0
                 && (enemyAttackTable[pawnPosition + sign * 16] & BIT_PAWN) == 0
                 && (enemyAttackTable[pawnPosition + sign * 32] & BIT_PAWN) == 0) {
@@ -1272,7 +1272,7 @@ public final class Evaluation {
             for (int j = pawnRank + 1; j <= 7; j++) {
               int chessman = Position.board[endPosition];
               if (chessman != Piece.NOPIECE) {
-                if (Piece.getChessman(chessman) == Piece.ROOK && Piece.getColor(chessman) == myColor) {
+                if (Piece.getChessman(chessman) == PieceType.ROOK && Piece.getColor(chessman) == myColor) {
                   // We have no bad rook
                   isPasser = false;
                 }
@@ -1299,7 +1299,7 @@ public final class Evaluation {
             for (int j = pawnRank - 1; j >= 0; j--) {
               int chessman = Position.board[endPosition];
               if (chessman != Piece.NOPIECE) {
-                if (Piece.getChessman(chessman) == Piece.ROOK && Piece.getColor(chessman) == myColor) {
+                if (Piece.getChessman(chessman) == PieceType.ROOK && Piece.getColor(chessman) == myColor) {
                   // We have no bad rook
                   isPasser = false;
                 }

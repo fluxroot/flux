@@ -64,19 +64,19 @@ public final class Move {
   private static final int END_SHIFT = 7;
   private static final int END_MASK = Square.MASK << END_SHIFT;
   private static final int CHESSMAN_SHIFT = 14;
-  private static final int CHESSMAN_MASK = Piece.MASK << CHESSMAN_SHIFT;
+  private static final int CHESSMAN_MASK = PieceType.MASK << CHESSMAN_SHIFT;
   private static final int CHESSMAN_COLOR_SHIFT = 17;
   private static final int CHESSMAN_COLOR_MASK = Color.MASK << CHESSMAN_COLOR_SHIFT;
   private static final int CHESSMAN_PIECE_SHIFT = CHESSMAN_SHIFT;
   private static final int CHESSMAN_PIECE_MASK = Piece.PIECE_MASK << CHESSMAN_PIECE_SHIFT;
   private static final int TARGET_SHIFT = 18;
-  private static final int TARGET_MASK = Piece.MASK << TARGET_SHIFT;
+  private static final int TARGET_MASK = PieceType.MASK << TARGET_SHIFT;
   private static final int TARGET_COLOR_SHIFT = 21;
   private static final int TARGET_COLOR_MASK = Color.MASK << TARGET_COLOR_SHIFT;
   private static final int TARGET_PIECE_SHIFT = TARGET_SHIFT;
   private static final int TARGET_PIECE_MASK = Piece.PIECE_MASK << TARGET_PIECE_SHIFT;
   private static final int PROMOTION_SHIFT = 22;
-  private static final int PROMOTION_MASK = Piece.MASK << PROMOTION_SHIFT;
+  private static final int PROMOTION_MASK = PieceType.MASK << PROMOTION_SHIFT;
   private static final int MOVE_SHIFT = 25;
   private static final int MOVE_MASK = MoveType.MASK << MOVE_SHIFT;
 
@@ -122,12 +122,12 @@ public final class Move {
 
     // Encode piece
     assert piece == Piece.NOPIECE
-        || (Piece.getChessman(piece) == Piece.PAWN)
-        || (Piece.getChessman(piece) == Piece.KNIGHT)
-        || (Piece.getChessman(piece) == Piece.BISHOP)
-        || (Piece.getChessman(piece) == Piece.ROOK)
-        || (Piece.getChessman(piece) == Piece.QUEEN)
-        || (Piece.getChessman(piece) == Piece.KING);
+        || (Piece.getChessman(piece) == PieceType.PAWN)
+        || (Piece.getChessman(piece) == PieceType.KNIGHT)
+        || (Piece.getChessman(piece) == PieceType.BISHOP)
+        || (Piece.getChessman(piece) == PieceType.ROOK)
+        || (Piece.getChessman(piece) == PieceType.QUEEN)
+        || (Piece.getChessman(piece) == PieceType.KING);
     assert piece == Piece.NOPIECE
         || (Piece.getColor(piece) == Color.WHITE)
         || (Piece.getColor(piece) == Color.BLACK);
@@ -135,11 +135,11 @@ public final class Move {
 
     // Encode target
     assert target == Piece.NOPIECE
-        || (Piece.getChessman(target) == Piece.PAWN)
-        || (Piece.getChessman(target) == Piece.KNIGHT)
-        || (Piece.getChessman(target) == Piece.BISHOP)
-        || (Piece.getChessman(target) == Piece.ROOK)
-        || (Piece.getChessman(target) == Piece.QUEEN);
+        || (Piece.getChessman(target) == PieceType.PAWN)
+        || (Piece.getChessman(target) == PieceType.KNIGHT)
+        || (Piece.getChessman(target) == PieceType.BISHOP)
+        || (Piece.getChessman(target) == PieceType.ROOK)
+        || (Piece.getChessman(target) == PieceType.QUEEN);
     assert target == Piece.NOPIECE
         || (Piece.getColor(target) == Color.WHITE)
         || (Piece.getColor(target) == Color.BLACK);
@@ -147,10 +147,10 @@ public final class Move {
 
     // Encode promotion
     assert promotion == Piece.NOPIECE
-        || (promotion == Piece.KNIGHT)
-        || (promotion == Piece.BISHOP)
-        || (promotion == Piece.ROOK)
-        || (promotion == Piece.QUEEN);
+        || (promotion == PieceType.KNIGHT)
+        || (promotion == PieceType.BISHOP)
+        || (promotion == PieceType.ROOK)
+        || (promotion == PieceType.QUEEN);
     move |= promotion << PROMOTION_SHIFT;
 
     // Encode move
@@ -206,11 +206,11 @@ public final class Move {
     move |= endPosition << END_SHIFT;
 
     // Encode target
-    assert (Piece.getChessman(target) == Piece.PAWN)
-        || (Piece.getChessman(target) == Piece.KNIGHT)
-        || (Piece.getChessman(target) == Piece.BISHOP)
-        || (Piece.getChessman(target) == Piece.ROOK)
-        || (Piece.getChessman(target) == Piece.QUEEN);
+    assert (Piece.getChessman(target) == PieceType.PAWN)
+        || (Piece.getChessman(target) == PieceType.KNIGHT)
+        || (Piece.getChessman(target) == PieceType.BISHOP)
+        || (Piece.getChessman(target) == PieceType.ROOK)
+        || (Piece.getChessman(target) == PieceType.QUEEN);
     assert (Piece.getColor(target) == Color.WHITE)
         || (Piece.getColor(target) == Color.BLACK);
     move |= target << TARGET_PIECE_SHIFT;
@@ -284,12 +284,12 @@ public final class Move {
     assert move != NOMOVE;
 
     int chessman = (move & CHESSMAN_MASK) >>> CHESSMAN_SHIFT;
-    assert (chessman == Piece.PAWN)
-        || (chessman == Piece.KNIGHT)
-        || (chessman == Piece.BISHOP)
-        || (chessman == Piece.ROOK)
-        || (chessman == Piece.QUEEN)
-        || (chessman == Piece.KING);
+    assert (chessman == PieceType.PAWN)
+        || (chessman == PieceType.KNIGHT)
+        || (chessman == PieceType.BISHOP)
+        || (chessman == PieceType.ROOK)
+        || (chessman == PieceType.QUEEN)
+        || (chessman == PieceType.KING);
 
     return chessman;
   }
@@ -332,12 +332,12 @@ public final class Move {
     assert move != NOMOVE;
 
     int chessman = (move & TARGET_MASK) >>> TARGET_SHIFT;
-    assert (chessman == Piece.PAWN)
-        || (chessman == Piece.KNIGHT)
-        || (chessman == Piece.BISHOP)
-        || (chessman == Piece.ROOK)
-        || (chessman == Piece.QUEEN)
-        || (chessman == Piece.KING)
+    assert (chessman == PieceType.PAWN)
+        || (chessman == PieceType.KNIGHT)
+        || (chessman == PieceType.BISHOP)
+        || (chessman == PieceType.ROOK)
+        || (chessman == PieceType.QUEEN)
+        || (chessman == PieceType.KING)
         || (chessman == Piece.NOPIECE);
 
     return chessman;
@@ -381,10 +381,10 @@ public final class Move {
     assert move != NOMOVE;
 
     int promotion = (move & PROMOTION_MASK) >>> PROMOTION_SHIFT;
-    assert (promotion == Piece.KNIGHT)
-        || (promotion == Piece.BISHOP)
-        || (promotion == Piece.ROOK)
-        || (promotion == Piece.QUEEN);
+    assert (promotion == PieceType.KNIGHT)
+        || (promotion == PieceType.BISHOP)
+        || (promotion == PieceType.ROOK)
+        || (promotion == PieceType.QUEEN);
 
     return promotion;
   }
@@ -419,7 +419,7 @@ public final class Move {
       int promotion;
       if (move.promotion == null) {
         // TODO: maybe better throw IllegalArgumentException()
-        promotion = Piece.QUEEN;
+        promotion = PieceType.QUEEN;
       } else {
         promotion = Piece.valueOfChessman(move.promotion);
       }
@@ -501,7 +501,7 @@ public final class Move {
     int piece = Position.board[position];
     int target = Position.board[targetIntPosition];
     if (piece != Piece.NOPIECE && target != Piece.NOPIECE) {
-      if (Piece.getChessman(piece) == Piece.PAWN && Piece.getChessman(target) == Piece.PAWN) {
+      if (Piece.getChessman(piece) == PieceType.PAWN && Piece.getChessman(target) == PieceType.PAWN) {
         if (Piece.getColor(piece) == Piece.getColorOpposite(target)) {
           if (board.enPassantSquare == Square.valueOfPosition(move.to)) {
             return true;
@@ -528,7 +528,7 @@ public final class Move {
 
     int piece = Position.board[position];
     if (piece != Piece.NOPIECE) {
-      if (Piece.getChessman(piece) == Piece.KING) {
+      if (Piece.getChessman(piece) == PieceType.KING) {
         if (move.from.file == GenericFile.Fe
             && move.from.rank == GenericRank.R1
             && move.to.file == GenericFile.Fg
