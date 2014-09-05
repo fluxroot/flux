@@ -116,16 +116,8 @@ public final class Evaluation {
   private static int[] drawFactor = new int[Color.ARRAY_DIMENSION];
 
   // The hash tables
-  private final EvaluationTable evaluationTable;
-  private final PawnTable pawnHashtable;
-
-  /**
-   * Creates a new Evaluation.
-   */
-  public Evaluation(EvaluationTable newEvaluationTable, PawnTable newPawnTable) {
-    this.evaluationTable = newEvaluationTable;
-    this.pawnHashtable = newPawnTable;
-  }
+  private final EvaluationTable evaluationTable = new EvaluationTable(Configuration.defaultEvaluationTableSize * 1024 * 1024 / EvaluationTable.ENTRYSIZE);
+  private final PawnTable pawnHashtable = new PawnTable(Configuration.defaultPawnTableSize * 1024 * 1024 / PawnTable.ENTRYSIZE);
 
   /**
    * Prints the evaluation of the board.

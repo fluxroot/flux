@@ -38,21 +38,4 @@ public class EvaluationTableTest {
     assertEquals(2, table.get(2).evaluation);
   }
 
-  @Test
-  public void testSize() {
-    System.out.println("Testing Evaluation Table size:");
-    int[] megabytes = {4, 8, 16, 32, 64};
-    for (int i : megabytes) {
-      int numberOfEntries = i * 1024 * 1024 / EvaluationTable.ENTRYSIZE;
-
-      System.gc();
-      long usedMemoryBefore = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
-      new EvaluationTable(numberOfEntries);
-      long usedMemoryAfter = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
-
-      long hashAllocation = (usedMemoryAfter - usedMemoryBefore) / 1024 / 1024;
-      System.out.println("Evaluation Table size " + i + " = " + hashAllocation);
-    }
-  }
-
 }

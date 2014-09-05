@@ -36,8 +36,6 @@ public final class Flux extends AbstractEngine {
 
   private Position board = null;
   private TranspositionTable transpositionTable;
-  private EvaluationTable evaluationTable;
-  private PawnTable pawnTable;
   private final int[] timeTable = new int[Search.MAX_HEIGHT + 1];
   private Search search;
 
@@ -58,30 +56,14 @@ public final class Flux extends AbstractEngine {
 
   private void initialize() {
     initializeTranspositionTable();
-    initializeEvaluationTable();
-    initializePawnTable();
 
     // Create a new search
-    this.search = new Search(new Evaluation(this.evaluationTable, this.pawnTable), new Position(new GenericBoard(GenericBoard.STANDARDSETUP)), this.transpositionTable, new InformationTimer(getProtocol(), this.transpositionTable), this.timeTable);
+    this.search = new Search(new Evaluation(), new Position(new GenericBoard(GenericBoard.STANDARDSETUP)), this.transpositionTable, new InformationTimer(getProtocol(), this.transpositionTable), this.timeTable);
   }
 
   private void initializeTranspositionTable() {
     int numberOfEntries = Configuration.transpositionTableSize * 1024 * 1024 / TranspositionTable.ENTRYSIZE;
     transpositionTable = new TranspositionTable(numberOfEntries);
-
-    Runtime.getRuntime().gc();
-  }
-
-  private void initializeEvaluationTable() {
-    int numberOfEntries = Configuration.evaluationTableSize * 1024 * 1024 / EvaluationTable.ENTRYSIZE;
-    evaluationTable = new EvaluationTable(numberOfEntries);
-
-    Runtime.getRuntime().gc();
-  }
-
-  private void initializePawnTable() {
-    int numberOfEntries = Configuration.pawnTableSize * 1024 * 1024 / PawnTable.ENTRYSIZE;
-    pawnTable = new PawnTable(numberOfEntries);
 
     Runtime.getRuntime().gc();
   }
@@ -180,7 +162,7 @@ public final class Flux extends AbstractEngine {
     if (this.board != null) {
       if (this.search.isStopped()) {
         // Create a new search
-        this.search = new Search(new Evaluation(this.evaluationTable, this.pawnTable), this.board, this.transpositionTable, new InformationTimer(getProtocol(), this.transpositionTable), this.timeTable);
+        this.search = new Search(new Evaluation(), this.board, this.transpositionTable, new InformationTimer(getProtocol(), this.transpositionTable), this.timeTable);
 
         // Set all search parameters
         if (command.getDepth() != null && command.getDepth() > 0) {
@@ -267,30 +249,6 @@ public final class Flux extends AbstractEngine {
     // Clear Hash
     else if (command.name.equalsIgnoreCase(Configuration.clearHashOption.name)) {
       transpositionTable.clear();
-    }
-
-    // evaluationTableSize
-    else if (command.name.equalsIgnoreCase(Configuration.evaluationTableOption.name)) {
-      if (command.value == null) throw new IllegalArgumentException();
-
-      try {
-        Configuration.evaluationTableSize = new Integer(command.value);
-      } catch (NumberFormatException e) {
-        Configuration.evaluationTableSize = Configuration.defaultEvaluationTableSize;
-      }
-      initializeEvaluationTable();
-    }
-
-    // pawnTableSize
-    else if (command.name.equalsIgnoreCase(Configuration.pawnTableOption.name)) {
-      if (command.value == null) throw new IllegalArgumentException();
-
-      try {
-        Configuration.pawnTableSize = new Integer(command.value);
-      } catch (NumberFormatException e) {
-        Configuration.pawnTableSize = Configuration.defaultPawnTableSize;
-      }
-      initializePawnTable();
     }
 
     // showRefutations

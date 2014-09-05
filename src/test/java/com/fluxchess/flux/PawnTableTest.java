@@ -40,21 +40,4 @@ public class PawnTableTest {
     assertEquals(2, table.getEndgame(2));
   }
 
-  @Test
-  public void testSize() {
-    System.out.println("Testing Pawn Table size:");
-    int[] megabytes = {4, 8, 16, 32, 64};
-    for (int i : megabytes) {
-      int numberOfEntries = i * 1024 * 1024 / PawnTable.ENTRYSIZE;
-
-      System.gc();
-      long usedMemoryBefore = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
-      new PawnTable(numberOfEntries);
-      long usedMemoryAfter = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
-
-      long hashAllocation = (usedMemoryAfter - usedMemoryBefore) / 1024 / 1024;
-      System.out.println("Pawn Table size " + i + " = " + hashAllocation);
-    }
-  }
-
 }

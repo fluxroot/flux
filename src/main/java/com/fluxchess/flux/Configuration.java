@@ -65,12 +65,8 @@ public final class Configuration {
   public static final ButtonOption clearHashOption = new ButtonOption("Clear Hash");
 
   public static final int defaultEvaluationTableSize = 4;
-  public static int evaluationTableSize = defaultEvaluationTableSize;
-  public static final SpinnerOption evaluationTableOption = new SpinnerOption("Evaluation Table", evaluationTableSize, 4, 64);
 
   public static final int defaultPawnTableSize = 4;
-  public static int pawnTableSize = defaultPawnTableSize;
-  public static final SpinnerOption pawnTableOption = new SpinnerOption("Pawn Table", pawnTableSize, 4, 64);
 
   public static boolean showRefutations = false;
   public static final CheckboxOption uciShowRefutationsOption = Options.newUciShowRefutationsOption(showRefutations);
@@ -83,8 +79,6 @@ public final class Configuration {
       multiPVOption,
       hashOption,
       clearHashOption,
-      evaluationTableOption,
-      pawnTableOption,
       uciShowRefutationsOption,
       uciAnalyzeModeOption
   };
