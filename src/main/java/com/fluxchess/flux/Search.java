@@ -398,7 +398,6 @@ final class Search implements Runnable {
               entry.depth,
               0,
               0,
-              0,
               0
           );
         }
@@ -666,8 +665,6 @@ final class Search implements Runnable {
   }
 
   private void updateSearch(int height) {
-    assert this.transpositionTable.getPermillUsed() >= 0 && this.transpositionTable.getPermillUsed() <= 1000;
-
     totalNodes++;
     if (height > currentMaxDepth) {
       currentMaxDepth = height;
@@ -774,7 +771,6 @@ final class Search implements Runnable {
           commandMoveList,
           currentDepth,
           currentMaxDepth,
-          this.transpositionTable.getPermillUsed(),
           getCurrentNps(),
           System.currentTimeMillis() - totalTimeStart,
           totalNodes);
@@ -861,7 +857,6 @@ final class Search implements Runnable {
           firstPv.pv,
           firstPv.depth,
           currentMaxDepth,
-          this.transpositionTable.getPermillUsed(),
           getCurrentNps(),
           System.currentTimeMillis() - totalTimeStart,
           totalNodes);
@@ -1681,7 +1676,6 @@ final class Search implements Runnable {
 
       command.setDepth(this.currentDepth);
       command.setMaxDepth(this.currentMaxDepth);
-      command.setHash(this.transpositionTable.getPermillUsed());
       command.setNps(getCurrentNps());
       command.setTime(System.currentTimeMillis() - this.totalTimeStart);
       command.setNodes(this.totalNodes);
@@ -1705,7 +1699,6 @@ final class Search implements Runnable {
 
     command.setDepth(this.currentDepth);
     command.setMaxDepth(this.currentMaxDepth);
-    command.setHash(this.transpositionTable.getPermillUsed());
     command.setNps(getCurrentNps());
     command.setTime(System.currentTimeMillis() - this.totalTimeStart);
     command.setNodes(this.totalNodes);
@@ -1727,7 +1720,6 @@ final class Search implements Runnable {
 
       command.setDepth(pv.depth);
       command.setMaxDepth(pv.maxDepth);
-      command.setHash(pv.hash);
       command.setNps(pv.nps);
       command.setTime(pv.time);
       command.setNodes(pv.totalNodes);
@@ -1760,7 +1752,6 @@ final class Search implements Runnable {
 
       command.setDepth(pv.depth);
       command.setMaxDepth(pv.maxDepth);
-      command.setHash(pv.hash);
       command.setNps(pv.nps);
       command.setTime(pv.time);
       command.setNodes(pv.totalNodes);

@@ -31,12 +31,11 @@ final class PrincipalVariation implements Comparable<PrincipalVariation> {
   final List<GenericMove> pv;
   final int depth;
   final int maxDepth;
-  final int hash;
   final long nps;
   final long time;
   final long totalNodes;
 
-  PrincipalVariation(int moveNumber, int value, int type, int sortValue, List<GenericMove> pv, int depth, int maxDepth, int hash, long nps, long time, long totalNodes) {
+  PrincipalVariation(int moveNumber, int value, int type, int sortValue, List<GenericMove> pv, int depth, int maxDepth, long nps, long time, long totalNodes) {
     this.moveNumber = moveNumber;
     this.value = value;
     this.type = type;
@@ -44,7 +43,6 @@ final class PrincipalVariation implements Comparable<PrincipalVariation> {
     this.pv = pv;
     this.depth = depth;
     this.maxDepth = maxDepth;
-    this.hash = hash;
     this.nps = nps;
     this.time = time;
     this.totalNodes = totalNodes;

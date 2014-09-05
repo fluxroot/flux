@@ -39,7 +39,6 @@ public class TranspositionTableTest {
     assertEquals(100, entry.getValue(0));
     assertEquals(Bound.EXACT, entry.type);
     assertEquals(move1, entry.move);
-    assertEquals(100, table.getPermillUsed());
 
     // Overwrite the entry with a new one
     table.put(1L, 2, 200, Bound.BETA, move1, false, 0);
@@ -51,7 +50,6 @@ public class TranspositionTableTest {
     assertEquals(200, entry.getValue(0));
     assertEquals(Bound.BETA, entry.type);
     assertEquals(move1, entry.move);
-    assertEquals(100, table.getPermillUsed());
 
     // Put an mate entry into the table
     table.put(2L, 0, Value.CHECKMATE - 5, Bound.EXACT, move1, false, 3);
@@ -63,14 +61,11 @@ public class TranspositionTableTest {
     assertEquals(Value.CHECKMATE - 4, entry.getValue(2));
     assertEquals(Bound.EXACT, entry.type);
     assertEquals(move1, entry.move);
-    assertEquals(200, table.getPermillUsed());
 
     // Increase the age
     table.increaseAge();
 
     assertNull(table.get(2L));
-
-    assertEquals(0, table.getPermillUsed());
   }
 
   @Test

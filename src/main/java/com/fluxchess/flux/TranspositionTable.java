@@ -35,9 +35,6 @@ final class TranspositionTable {
   // Age
   private int currentAge = 0;
 
-  // Number of slots used
-  private int slotsUsed = 0;
-
   static final class TranspositionTableEntry {
     long zobristCode = 0;
     int age = -1;
@@ -101,7 +98,6 @@ final class TranspositionTable {
     }
 
     this.currentAge = 0;
-    this.slotsUsed = 0;
   }
 
   /**
@@ -109,7 +105,6 @@ final class TranspositionTable {
    */
   void clear() {
     this.currentAge = 0;
-    this.slotsUsed = 0;
 
     for (TranspositionTableEntry anEntry : this.entry) {
       anEntry.clear();
@@ -121,7 +116,6 @@ final class TranspositionTable {
    */
   void increaseAge() {
     this.currentAge++;
-    this.slotsUsed = 0;
   }
 
   /**
@@ -144,7 +138,6 @@ final class TranspositionTable {
     //## BEGIN "always replace" Scheme
     if (currentEntry.zobristCode == 0 || currentEntry.age != this.currentAge) {
       // This is a new entry
-      this.slotsUsed++;
       currentEntry.zobristCode = zobristCode;
       currentEntry.age = this.currentAge;
       currentEntry.depth = depth;
@@ -218,15 +211,6 @@ final class TranspositionTable {
 
       return newMoveList;
     }
-  }
-
-  /**
-   * Returns the permill of slots used.
-   *
-   * @return the permill of slots used.
-   */
-  int getPermillUsed() {
-    return (int) ((1000L * (long) this.slotsUsed) / (long) this.size);
   }
 
 }
