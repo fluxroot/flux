@@ -185,9 +185,8 @@ public class PositionTest {
     GenericBoard board = new GenericBoard(GenericBoard.STANDARDSETUP);
     Position testBoard = new Position(board);
 
-    int move = Move.createMove(MoveType.NULL, Square.NOPOSITION, Square.NOPOSITION, Piece.NOPIECE, Piece.NOPIECE, Piece.NOPIECE);
-    testBoard.makeMove(move);
-    testBoard.undoMove(move);
+    testBoard.makeMoveNull();
+    testBoard.undoMoveNull();
 
     assertEquals(board, testBoard.getBoard());
   }

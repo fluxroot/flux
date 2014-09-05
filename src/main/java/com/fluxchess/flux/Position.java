@@ -671,9 +671,6 @@ final class Position {
         }
 
         return canAttack(PieceType.ROOK, chessmanColor, rookEnd, enemyKingPosition);
-      case MoveType.NULL:
-        assert false;
-        break;
       default:
         assert false : Move.getType(move);
         break;
@@ -1118,9 +1115,6 @@ final class Position {
       case MoveType.CASTLING:
         makeMoveCastling(move);
         break;
-      case MoveType.NULL:
-        makeMoveNull(move);
-        break;
       default:
         throw new IllegalArgumentException();
     }
@@ -1189,8 +1183,6 @@ final class Position {
         break;
       case MoveType.CASTLING:
         undoMoveCastling(move);
-        break;
-      case MoveType.NULL:
         break;
       default:
         throw new IllegalArgumentException();
@@ -1614,7 +1606,25 @@ final class Position {
     put(captureHistory[--this.captureHistorySize], targetPosition, false);
   }
 
-  private void makeMoveNull(int move) {
+  void makeMoveNull() {
+    // Get current stack entry
+    State currentStackEntry = states[this.statesSize];
+
+    // Save history
+    currentStackEntry.zobristHistory = this.zobristCode;
+    currentStackEntry.pawnZobristHistory = this.pawnZobristCode;
+    currentStackEntry.halfMoveClockHistory = this.halfMoveClock;
+    currentStackEntry.enPassantHistory = this.enPassantSquare;
+    currentStackEntry.captureSquareHistory = this.captureSquare;
+    for (int color : Color.values) {
+      currentStackEntry.positionValueOpening[color] = positionValueOpening[color];
+      currentStackEntry.positionValueEndgame[color] = positionValueEndgame[color];
+    }
+
+    // Update stack size
+    this.statesSize++;
+    assert this.statesSize < STACKSIZE;
+
     // Update the capture square
     this.captureSquare = Square.NOPOSITION;
 
@@ -1626,6 +1636,48 @@ final class Position {
 
     // Update half move clock
     this.halfMoveClock++;
+
+    // Update half move number
+    this.halfMoveNumber++;
+
+    // Update active color
+    this.activeColor = Color.switchColor(this.activeColor);
+    this.zobristCode ^= zobristActiveColor;
+    this.pawnZobristCode ^= zobristActiveColor;
+
+    // Update attack list
+    this.attackHistorySize++;
+    attackHistory[this.attackHistorySize][Color.WHITE].count = Attack.NOATTACK;
+    attackHistory[this.attackHistorySize][Color.BLACK].count = Attack.NOATTACK;
+  }
+
+  void undoMoveNull() {
+    // Update attack list
+    this.attackHistorySize--;
+
+    // Update active color
+    this.activeColor = Color.switchColor(this.activeColor);
+
+    // Update half move number
+    this.halfMoveNumber--;
+
+    // Update stack size
+    this.statesSize--;
+    assert this.statesSize >= 0;
+
+    // Get current stack entry
+    State currentStackEntry = states[this.statesSize];
+
+    // Restore zobrist history
+    this.zobristCode = currentStackEntry.zobristHistory;
+    this.pawnZobristCode = currentStackEntry.pawnZobristHistory;
+    this.halfMoveClock = currentStackEntry.halfMoveClockHistory;
+    this.enPassantSquare = currentStackEntry.enPassantHistory;
+    this.captureSquare = currentStackEntry.captureSquareHistory;
+    for (int color : Color.values) {
+      positionValueOpening[color] = currentStackEntry.positionValueOpening[color];
+      positionValueEndgame[color] = currentStackEntry.positionValueEndgame[color];
+    }
   }
 
   public String toString() {

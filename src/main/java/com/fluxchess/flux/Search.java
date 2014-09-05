@@ -978,9 +978,9 @@ final class Search implements Runnable {
         int newDepth = depth - 1 - NULLMOVE_REDUCTION;
 
         // Make the null move
-        board.makeMove(Move.NULLMOVE);
+        board.makeMoveNull();
         int value = -alphaBeta(newDepth, -beta, -beta + 1, height + 1, false, false);
-        board.undoMove(Move.NULLMOVE);
+        board.undoMoveNull();
 
         // Verify on beta exceeding
         if (Configuration.useVerifiedNullMovePruning) {
@@ -1585,7 +1585,7 @@ final class Search implements Runnable {
     }
 
     int type = Move.getType(move);
-    if (type == MoveType.PAWNPROMOTION || type == MoveType.NULL) {
+    if (type == MoveType.PAWNPROMOTION) {
       return;
     }
 

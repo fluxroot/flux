@@ -27,17 +27,7 @@ public class MoveTest {
 
   @Test
   public void testIntMove() {
-    int move = Move.createMove(MoveType.NULL, Square.NOPOSITION, Square.NOPOSITION, Piece.NOPIECE, Piece.NOPIECE, Piece.NOPIECE);
-    assertEquals(MoveType.NULL, Move.getType(move));
-//		assertEquals(IntPosition.NOPOSITION, IntMove.getStart(move));
-//		assertEquals(IntPosition.NOPOSITION, IntMove.getEnd(move));
-//		assertEquals(IntChessman.NOCHESSMAN, IntMove.getChessman(move));
-//		assertEquals(IntColor.NOCOLOR, IntMove.getChessmanColor(move));
-//		assertEquals(IntChessman.NOCHESSMAN, IntMove.getTarget(move));
-//		assertEquals(IntColor.NOCOLOR, IntMove.getTargetColor(move));
-//		assertEquals(IntChessman.NOCHESSMAN, IntMove.getPromotion(move));
-
-    move = Move.createMove(MoveType.NORMAL, 0, 16, Piece.createPiece(PieceType.PAWN, Color.WHITE), Piece.createPiece(PieceType.QUEEN, Color.BLACK), Piece.NOPIECE);
+    int move = Move.createMove(MoveType.NORMAL, 0, 16, Piece.createPiece(PieceType.PAWN, Color.WHITE), Piece.createPiece(PieceType.QUEEN, Color.BLACK), Piece.NOPIECE);
     assertEquals(MoveType.NORMAL, Move.getType(move));
     assertEquals(0, Move.getStart(move));
     assertEquals(16, Move.getEnd(move));

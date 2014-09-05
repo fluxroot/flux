@@ -387,7 +387,6 @@ final class MoveGenerator {
         }
       case MoveType.PAWNPROMOTION:
       case MoveType.ENPASSANT:
-      case MoveType.NULL:
         return false;
       case MoveType.CASTLING:
         switch (targetPosition) {

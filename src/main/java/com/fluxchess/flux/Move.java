@@ -43,11 +43,6 @@ final class Move {
    */
   static final int NOMOVE = -8;
 
-  /**
-   * Null move
-   */
-  static final int NULLMOVE;
-
   // Position value
   // We do not use 127 because there all bits are set
   private static final int INTERNAL_NOPOSITION = 126;
@@ -74,10 +69,6 @@ final class Move {
   private static final int MOVE_SHIFT = 25;
   private static final int MOVE_MASK = MoveType.MASK << MOVE_SHIFT;
 
-  static {
-    NULLMOVE = Move.createMove(MoveType.NULL, Square.NOPOSITION, Square.NOPOSITION, Piece.NOPIECE, Piece.NOPIECE, Piece.NOPIECE);
-  }
-
   /**
    * IntMove cannot be instantiated.
    */
@@ -97,16 +88,10 @@ final class Move {
    */
   static int createMove(int type, int start, int end, int piece, int target, int promotion) {
     assert type != NOMOVE;
-    assert (type == MoveType.NULL && start == Square.NOPOSITION) || (start & 0x88) == 0;
-    assert (type == MoveType.NULL && end == Square.NOPOSITION) || (end & 0x88) == 0;
+    assert (start & 0x88) == 0;
+    assert (end & 0x88) == 0;
 
     int move = 0;
-
-    // Check for special case Move.NULL
-    if (type == MoveType.NULL) {
-      start = INTERNAL_NOPOSITION;
-      end = INTERNAL_NOPOSITION;
-    }
 
     // Encode start
     move |= start << START_SHIFT;
@@ -152,8 +137,7 @@ final class Move {
         || (type == MoveType.PAWNDOUBLE)
         || (type == MoveType.PAWNPROMOTION)
         || (type == MoveType.ENPASSANT)
-        || (type == MoveType.CASTLING)
-        || (type == MoveType.NULL);
+        || (type == MoveType.CASTLING);
     move |= type << MOVE_SHIFT;
 
     return move;
@@ -243,7 +227,6 @@ final class Move {
 
     int position = (move & START_MASK) >>> START_SHIFT;
 
-    assert getType(move) != MoveType.NULL;
     assert position != INTERNAL_NOPOSITION;
     assert (position & 0x88) == 0;
 
@@ -261,7 +244,6 @@ final class Move {
 
     int position = (move & END_MASK) >>> END_SHIFT;
 
-    assert getType(move) != MoveType.NULL;
     assert position != INTERNAL_NOPOSITION;
     assert (position & 0x88) == 0;
 
@@ -575,9 +557,6 @@ final class Move {
         return new GenericMove(Square.valueOfIntPosition(start), Square.valueOfIntPosition(end));
       case MoveType.PAWNPROMOTION:
         return new GenericMove(Square.valueOfIntPosition(start), Square.valueOfIntPosition(end), Piece.valueOfIntChessman(getPromotion(move)));
-      case MoveType.NULL:
-        // TODO:
-        return null;
       default:
         throw new IllegalArgumentException();
     }
@@ -602,9 +581,6 @@ final class Move {
         break;
       case MoveType.CASTLING:
         string += "CASTLING";
-        break;
-      case MoveType.NULL:
-        string += "NULL";
         break;
       default:
         throw new IllegalArgumentException();

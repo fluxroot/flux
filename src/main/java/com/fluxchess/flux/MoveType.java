@@ -27,18 +27,26 @@ final class MoveType {
   static final int PAWNPROMOTION = 2;
   static final int ENPASSANT = 3;
   static final int CASTLING = 4;
-  static final int NULL = 5;
+  static final int NOMOVETYPE = 5;
 
   static final int[] values = {
-      NORMAL,
-      PAWNDOUBLE,
-      PAWNPROMOTION,
-      ENPASSANT,
-      CASTLING,
-      NULL
+      NORMAL, PAWNDOUBLE, PAWNPROMOTION, ENPASSANT, CASTLING
   };
 
   private MoveType() {
+  }
+
+  static boolean isValid(int movetype) {
+    switch (movetype) {
+      case NORMAL:
+      case PAWNDOUBLE:
+      case PAWNPROMOTION:
+      case ENPASSANT:
+      case CASTLING:
+        return true;
+      default:
+        return false;
+    }
   }
 
 }
