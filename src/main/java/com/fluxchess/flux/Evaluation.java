@@ -998,12 +998,12 @@ public final class Evaluation {
     byte flag = 0;
 
     int sign = 1;
-    int castlingKingside = IntCastling.WHITE_KINGSIDE;
-    int castlingQueenside = IntCastling.WHITE_QUEENSIDE;
+    int castlingKingside = Castling.WHITE_KINGSIDE;
+    int castlingQueenside = Castling.WHITE_QUEENSIDE;
     if (myColor == IntColor.BLACK) {
       sign = -1;
-      castlingKingside = IntCastling.BLACK_KINGSIDE;
-      castlingQueenside = IntCastling.BLACK_QUEENSIDE;
+      castlingKingside = Castling.BLACK_KINGSIDE;
+      castlingQueenside = Castling.BLACK_QUEENSIDE;
     } else {
       assert myColor == IntColor.WHITE;
     }

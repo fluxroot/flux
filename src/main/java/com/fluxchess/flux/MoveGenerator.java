@@ -397,7 +397,7 @@ public final class MoveGenerator {
         switch (targetPosition) {
           case IntPosition.g1:
             // Do not test g1 whether it is attacked as we will test it in isLegal()
-            if ((Position.castling & IntCastling.WHITE_KINGSIDE) != 0
+            if ((Position.castling & Castling.WHITE_KINGSIDE) != 0
                 && Position.board[IntPosition.f1] == IntChessman.NOPIECE
                 && Position.board[IntPosition.g1] == IntChessman.NOPIECE
                 && !board.isAttacked(IntPosition.f1, IntColor.BLACK)) {
@@ -409,7 +409,7 @@ public final class MoveGenerator {
             break;
           case IntPosition.c1:
             // Do not test c1 whether it is attacked as we will test it in isLegal()
-            if ((Position.castling & IntCastling.WHITE_QUEENSIDE) != 0
+            if ((Position.castling & Castling.WHITE_QUEENSIDE) != 0
                 && Position.board[IntPosition.b1] == IntChessman.NOPIECE
                 && Position.board[IntPosition.c1] == IntChessman.NOPIECE
                 && Position.board[IntPosition.d1] == IntChessman.NOPIECE
@@ -422,7 +422,7 @@ public final class MoveGenerator {
             break;
           case IntPosition.g8:
             // Do not test g8 whether it is attacked as we will test it in isLegal()
-            if ((Position.castling & IntCastling.BLACK_KINGSIDE) != 0
+            if ((Position.castling & Castling.BLACK_KINGSIDE) != 0
                 && Position.board[IntPosition.f8] == IntChessman.NOPIECE
                 && Position.board[IntPosition.g8] == IntChessman.NOPIECE
                 && !board.isAttacked(IntPosition.f8, IntColor.WHITE)) {
@@ -434,7 +434,7 @@ public final class MoveGenerator {
             break;
           case IntPosition.c8:
             // Do not test c8 whether it is attacked as we will test it in isLegal()
-            if ((Position.castling & IntCastling.BLACK_QUEENSIDE) != 0
+            if ((Position.castling & Castling.BLACK_QUEENSIDE) != 0
                 && Position.board[IntPosition.b8] == IntChessman.NOPIECE
                 && Position.board[IntPosition.c8] == IntChessman.NOPIECE
                 && Position.board[IntPosition.d8] == IntChessman.NOPIECE
@@ -1289,7 +1289,7 @@ public final class MoveGenerator {
 
     if (color == IntColor.WHITE) {
       // Do not test g1 whether it is attacked as we will test it in isLegal()
-      if ((Position.castling & IntCastling.WHITE_KINGSIDE) != 0
+      if ((Position.castling & Castling.WHITE_KINGSIDE) != 0
           && Position.board[IntPosition.f1] == IntChessman.NOPIECE
           && Position.board[IntPosition.g1] == IntChessman.NOPIECE
           && !board.isAttacked(IntPosition.f1, IntColor.BLACK)) {
@@ -1300,7 +1300,7 @@ public final class MoveGenerator {
         moveList.move[moveList.tail++] = move;
       }
       // Do not test c1 whether it is attacked as we will test it in isLegal()
-      if ((Position.castling & IntCastling.WHITE_QUEENSIDE) != 0
+      if ((Position.castling & Castling.WHITE_QUEENSIDE) != 0
           && Position.board[IntPosition.b1] == IntChessman.NOPIECE
           && Position.board[IntPosition.c1] == IntChessman.NOPIECE
           && Position.board[IntPosition.d1] == IntChessman.NOPIECE
@@ -1315,7 +1315,7 @@ public final class MoveGenerator {
       assert color == IntColor.BLACK;
 
       // Do not test g8 whether it is attacked as we will test it in isLegal()
-      if ((Position.castling & IntCastling.BLACK_KINGSIDE) != 0
+      if ((Position.castling & Castling.BLACK_KINGSIDE) != 0
           && Position.board[IntPosition.f8] == IntChessman.NOPIECE
           && Position.board[IntPosition.g8] == IntChessman.NOPIECE
           && !board.isAttacked(IntPosition.f8, IntColor.WHITE)) {
@@ -1326,7 +1326,7 @@ public final class MoveGenerator {
         moveList.move[moveList.tail++] = move;
       }
       // Do not test c8 whether it is attacked as we will test it in isLegal()
-      if ((Position.castling & IntCastling.BLACK_QUEENSIDE) != 0
+      if ((Position.castling & Castling.BLACK_QUEENSIDE) != 0
           && Position.board[IntPosition.b8] == IntChessman.NOPIECE
           && Position.board[IntPosition.c8] == IntChessman.NOPIECE
           && Position.board[IntPosition.d8] == IntChessman.NOPIECE
@@ -1354,7 +1354,7 @@ public final class MoveGenerator {
 
     if (color == IntColor.WHITE) {
       // Do not test g1 whether it is attacked as we will test it in isLegal()
-      if ((Position.castling & IntCastling.WHITE_KINGSIDE) != 0
+      if ((Position.castling & Castling.WHITE_KINGSIDE) != 0
           && Position.board[IntPosition.f1] == IntChessman.NOPIECE
           && Position.board[IntPosition.g1] == IntChessman.NOPIECE
           && !board.isAttacked(IntPosition.f1, IntColor.BLACK)) {
@@ -1367,7 +1367,7 @@ public final class MoveGenerator {
         }
       }
       // Do not test c1 whether it is attacked as we will test it in isLegal()
-      if ((Position.castling & IntCastling.WHITE_QUEENSIDE) != 0
+      if ((Position.castling & Castling.WHITE_QUEENSIDE) != 0
           && Position.board[IntPosition.b1] == IntChessman.NOPIECE
           && Position.board[IntPosition.c1] == IntChessman.NOPIECE
           && Position.board[IntPosition.d1] == IntChessman.NOPIECE
@@ -1384,7 +1384,7 @@ public final class MoveGenerator {
       assert color == IntColor.BLACK;
 
       // Do not test g8 whether it is attacked as we will test it in isLegal()
-      if ((Position.castling & IntCastling.BLACK_KINGSIDE) != 0
+      if ((Position.castling & Castling.BLACK_KINGSIDE) != 0
           && Position.board[IntPosition.f8] == IntChessman.NOPIECE
           && Position.board[IntPosition.g8] == IntChessman.NOPIECE
           && !board.isAttacked(IntPosition.f8, IntColor.WHITE)) {
@@ -1397,7 +1397,7 @@ public final class MoveGenerator {
         }
       }
       // Do not test c8 whether it is attacked as we will test it in isLegal()
-      if ((Position.castling & IntCastling.BLACK_QUEENSIDE) != 0
+      if ((Position.castling & Castling.BLACK_QUEENSIDE) != 0
           && Position.board[IntPosition.b8] == IntChessman.NOPIECE
           && Position.board[IntPosition.c8] == IntChessman.NOPIECE
           && Position.board[IntPosition.d8] == IntChessman.NOPIECE

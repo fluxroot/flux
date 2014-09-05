@@ -18,7 +18,7 @@
  */
 package com.fluxchess.flux;
 
-public final class IntCastling {
+public final class Castling {
 
   /**
    * IntCastling values
@@ -36,7 +36,7 @@ public final class IntCastling {
   /**
    * IntCastling cannot be instantiated.
    */
-  private IntCastling() {
+  private Castling() {
   }
 
 }

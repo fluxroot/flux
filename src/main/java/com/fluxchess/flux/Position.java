@@ -49,7 +49,7 @@ public final class Position {
   // The zobrist keys
   private static final long zobristActiveColor;
   private static final long[][][] zobristChessman = new long[IntChessman.CHESSMAN_VALUE_SIZE][IntColor.ARRAY_DIMENSION][BOARDSIZE];
-  private static final long[] zobristCastling = new long[IntCastling.ARRAY_DIMENSION];
+  private static final long[] zobristCastling = new long[Castling.ARRAY_DIMENSION];
   private static final long[] zobristEnPassant = new long[BOARDSIZE];
 
   //## BEGIN 0x88 Board Representation
@@ -151,12 +151,12 @@ public final class Position {
       }
     }
 
-    zobristCastling[IntCastling.WHITE_KINGSIDE] = Math.abs(random.nextLong());
-    zobristCastling[IntCastling.WHITE_QUEENSIDE] = Math.abs(random.nextLong());
-    zobristCastling[IntCastling.BLACK_KINGSIDE] = Math.abs(random.nextLong());
-    zobristCastling[IntCastling.BLACK_QUEENSIDE] = Math.abs(random.nextLong());
-    zobristCastling[IntCastling.WHITE_KINGSIDE | IntCastling.WHITE_QUEENSIDE] = zobristCastling[IntCastling.WHITE_KINGSIDE] ^ zobristCastling[IntCastling.WHITE_QUEENSIDE];
-    zobristCastling[IntCastling.BLACK_KINGSIDE | IntCastling.BLACK_QUEENSIDE] = zobristCastling[IntCastling.BLACK_KINGSIDE] ^ zobristCastling[IntCastling.BLACK_QUEENSIDE];
+    zobristCastling[Castling.WHITE_KINGSIDE] = Math.abs(random.nextLong());
+    zobristCastling[Castling.WHITE_QUEENSIDE] = Math.abs(random.nextLong());
+    zobristCastling[Castling.BLACK_KINGSIDE] = Math.abs(random.nextLong());
+    zobristCastling[Castling.BLACK_QUEENSIDE] = Math.abs(random.nextLong());
+    zobristCastling[Castling.WHITE_KINGSIDE | Castling.WHITE_QUEENSIDE] = zobristCastling[Castling.WHITE_KINGSIDE] ^ zobristCastling[Castling.WHITE_QUEENSIDE];
+    zobristCastling[Castling.BLACK_KINGSIDE | Castling.BLACK_QUEENSIDE] = zobristCastling[Castling.BLACK_KINGSIDE] ^ zobristCastling[Castling.BLACK_QUEENSIDE];
 
     for (int i = 0; i < BOARDSIZE; i++) {
       zobristEnPassant[i] = Math.abs(random.nextLong());
@@ -227,20 +227,20 @@ public final class Position {
     // Initialize castling
     castling = 0;
     if (newBoard.getCastling(GenericColor.WHITE, GenericCastling.KINGSIDE) != null) {
-      castling |= IntCastling.WHITE_KINGSIDE;
-      this.zobristCode ^= zobristCastling[IntCastling.WHITE_KINGSIDE];
+      castling |= Castling.WHITE_KINGSIDE;
+      this.zobristCode ^= zobristCastling[Castling.WHITE_KINGSIDE];
     }
     if (newBoard.getCastling(GenericColor.WHITE, GenericCastling.QUEENSIDE) != null) {
-      castling |= IntCastling.WHITE_QUEENSIDE;
-      this.zobristCode ^= zobristCastling[IntCastling.WHITE_QUEENSIDE];
+      castling |= Castling.WHITE_QUEENSIDE;
+      this.zobristCode ^= zobristCastling[Castling.WHITE_QUEENSIDE];
     }
     if (newBoard.getCastling(GenericColor.BLACK, GenericCastling.KINGSIDE) != null) {
-      castling |= IntCastling.BLACK_KINGSIDE;
-      this.zobristCode ^= zobristCastling[IntCastling.BLACK_KINGSIDE];
+      castling |= Castling.BLACK_KINGSIDE;
+      this.zobristCode ^= zobristCastling[Castling.BLACK_KINGSIDE];
     }
     if (newBoard.getCastling(GenericColor.BLACK, GenericCastling.QUEENSIDE) != null) {
-      castling |= IntCastling.BLACK_QUEENSIDE;
-      this.zobristCode ^= zobristCastling[IntCastling.BLACK_QUEENSIDE];
+      castling |= Castling.BLACK_QUEENSIDE;
+      this.zobristCode ^= zobristCastling[Castling.BLACK_QUEENSIDE];
     }
 
     // Initialize the active color
@@ -535,16 +535,16 @@ public final class Position {
     newBoard.setActiveColor(IntColor.valueOfIntColor(this.activeColor));
 
     // Set castling
-    if ((castling & IntCastling.WHITE_KINGSIDE) != 0) {
+    if ((castling & Castling.WHITE_KINGSIDE) != 0) {
       newBoard.setCastling(GenericColor.WHITE, GenericCastling.KINGSIDE, GenericFile.Fh);
     }
-    if ((castling & IntCastling.WHITE_QUEENSIDE) != 0) {
+    if ((castling & Castling.WHITE_QUEENSIDE) != 0) {
       newBoard.setCastling(GenericColor.WHITE, GenericCastling.QUEENSIDE, GenericFile.Fa);
     }
-    if ((castling & IntCastling.BLACK_KINGSIDE) != 0) {
+    if ((castling & Castling.BLACK_KINGSIDE) != 0) {
       newBoard.setCastling(GenericColor.BLACK, GenericCastling.KINGSIDE, GenericFile.Fh);
     }
-    if ((castling & IntCastling.BLACK_QUEENSIDE) != 0) {
+    if ((castling & Castling.BLACK_QUEENSIDE) != 0) {
       newBoard.setCastling(GenericColor.BLACK, GenericCastling.QUEENSIDE, GenericFile.Fa);
     }
 
@@ -1230,33 +1230,33 @@ public final class Position {
 
       switch (endPosition) {
         case IntPosition.a1:
-          newCastling &= ~IntCastling.WHITE_QUEENSIDE;
+          newCastling &= ~Castling.WHITE_QUEENSIDE;
           break;
         case IntPosition.a8:
-          newCastling &= ~IntCastling.BLACK_QUEENSIDE;
+          newCastling &= ~Castling.BLACK_QUEENSIDE;
           break;
         case IntPosition.h1:
-          newCastling &= ~IntCastling.WHITE_KINGSIDE;
+          newCastling &= ~Castling.WHITE_KINGSIDE;
           break;
         case IntPosition.h8:
-          newCastling &= ~IntCastling.BLACK_KINGSIDE;
+          newCastling &= ~Castling.BLACK_KINGSIDE;
           break;
         case IntPosition.e1:
-          newCastling &= ~(IntCastling.WHITE_KINGSIDE | IntCastling.WHITE_QUEENSIDE);
+          newCastling &= ~(Castling.WHITE_KINGSIDE | Castling.WHITE_QUEENSIDE);
           break;
         case IntPosition.e8:
-          newCastling &= ~(IntCastling.BLACK_KINGSIDE | IntCastling.BLACK_QUEENSIDE);
+          newCastling &= ~(Castling.BLACK_KINGSIDE | Castling.BLACK_QUEENSIDE);
           break;
         default:
           break;
       }
       if (newCastling != castling) {
-        assert (newCastling ^ castling) == IntCastling.WHITE_KINGSIDE
-            || (newCastling ^ castling) == IntCastling.WHITE_QUEENSIDE
-            || (newCastling ^ castling) == IntCastling.BLACK_KINGSIDE
-            || (newCastling ^ castling) == IntCastling.BLACK_QUEENSIDE
-            || (newCastling ^ castling) == (IntCastling.WHITE_KINGSIDE | IntCastling.WHITE_QUEENSIDE)
-            || (newCastling ^ castling) == (IntCastling.BLACK_KINGSIDE | IntCastling.BLACK_QUEENSIDE);
+        assert (newCastling ^ castling) == Castling.WHITE_KINGSIDE
+            || (newCastling ^ castling) == Castling.WHITE_QUEENSIDE
+            || (newCastling ^ castling) == Castling.BLACK_KINGSIDE
+            || (newCastling ^ castling) == Castling.BLACK_QUEENSIDE
+            || (newCastling ^ castling) == (Castling.WHITE_KINGSIDE | Castling.WHITE_QUEENSIDE)
+            || (newCastling ^ castling) == (Castling.BLACK_KINGSIDE | Castling.BLACK_QUEENSIDE);
         this.zobristCode ^= zobristCastling[newCastling ^ castling];
         castling = newCastling;
       }
@@ -1272,33 +1272,33 @@ public final class Position {
     // Update castling
     switch (startPosition) {
       case IntPosition.a1:
-        newCastling &= ~IntCastling.WHITE_QUEENSIDE;
+        newCastling &= ~Castling.WHITE_QUEENSIDE;
         break;
       case IntPosition.a8:
-        newCastling &= ~IntCastling.BLACK_QUEENSIDE;
+        newCastling &= ~Castling.BLACK_QUEENSIDE;
         break;
       case IntPosition.h1:
-        newCastling &= ~IntCastling.WHITE_KINGSIDE;
+        newCastling &= ~Castling.WHITE_KINGSIDE;
         break;
       case IntPosition.h8:
-        newCastling &= ~IntCastling.BLACK_KINGSIDE;
+        newCastling &= ~Castling.BLACK_KINGSIDE;
         break;
       case IntPosition.e1:
-        newCastling &= ~(IntCastling.WHITE_KINGSIDE | IntCastling.WHITE_QUEENSIDE);
+        newCastling &= ~(Castling.WHITE_KINGSIDE | Castling.WHITE_QUEENSIDE);
         break;
       case IntPosition.e8:
-        newCastling &= ~(IntCastling.BLACK_KINGSIDE | IntCastling.BLACK_QUEENSIDE);
+        newCastling &= ~(Castling.BLACK_KINGSIDE | Castling.BLACK_QUEENSIDE);
         break;
       default:
         break;
     }
     if (newCastling != castling) {
-      assert (newCastling ^ castling) == IntCastling.WHITE_KINGSIDE
-          || (newCastling ^ castling) == IntCastling.WHITE_QUEENSIDE
-          || (newCastling ^ castling) == IntCastling.BLACK_KINGSIDE
-          || (newCastling ^ castling) == IntCastling.BLACK_QUEENSIDE
-          || (newCastling ^ castling) == (IntCastling.WHITE_KINGSIDE | IntCastling.WHITE_QUEENSIDE)
-          || (newCastling ^ castling) == (IntCastling.BLACK_KINGSIDE | IntCastling.BLACK_QUEENSIDE);
+      assert (newCastling ^ castling) == Castling.WHITE_KINGSIDE
+          || (newCastling ^ castling) == Castling.WHITE_QUEENSIDE
+          || (newCastling ^ castling) == Castling.BLACK_KINGSIDE
+          || (newCastling ^ castling) == Castling.BLACK_QUEENSIDE
+          || (newCastling ^ castling) == (Castling.WHITE_KINGSIDE | Castling.WHITE_QUEENSIDE)
+          || (newCastling ^ castling) == (Castling.BLACK_KINGSIDE | Castling.BLACK_QUEENSIDE);
       this.zobristCode ^= zobristCastling[newCastling ^ castling];
       castling = newCastling;
     }
@@ -1357,33 +1357,33 @@ public final class Position {
 
       switch (endPosition) {
         case IntPosition.a1:
-          newCastling &= ~IntCastling.WHITE_QUEENSIDE;
+          newCastling &= ~Castling.WHITE_QUEENSIDE;
           break;
         case IntPosition.a8:
-          newCastling &= ~IntCastling.BLACK_QUEENSIDE;
+          newCastling &= ~Castling.BLACK_QUEENSIDE;
           break;
         case IntPosition.h1:
-          newCastling &= ~IntCastling.WHITE_KINGSIDE;
+          newCastling &= ~Castling.WHITE_KINGSIDE;
           break;
         case IntPosition.h8:
-          newCastling &= ~IntCastling.BLACK_KINGSIDE;
+          newCastling &= ~Castling.BLACK_KINGSIDE;
           break;
         case IntPosition.e1:
-          newCastling &= ~(IntCastling.WHITE_KINGSIDE | IntCastling.WHITE_QUEENSIDE);
+          newCastling &= ~(Castling.WHITE_KINGSIDE | Castling.WHITE_QUEENSIDE);
           break;
         case IntPosition.e8:
-          newCastling &= ~(IntCastling.BLACK_KINGSIDE | IntCastling.BLACK_QUEENSIDE);
+          newCastling &= ~(Castling.BLACK_KINGSIDE | Castling.BLACK_QUEENSIDE);
           break;
         default:
           break;
       }
       if (newCastling != castling) {
-        assert (newCastling ^ castling) == IntCastling.WHITE_KINGSIDE
-            || (newCastling ^ castling) == IntCastling.WHITE_QUEENSIDE
-            || (newCastling ^ castling) == IntCastling.BLACK_KINGSIDE
-            || (newCastling ^ castling) == IntCastling.BLACK_QUEENSIDE
-            || (newCastling ^ castling) == (IntCastling.WHITE_KINGSIDE | IntCastling.WHITE_QUEENSIDE)
-            || (newCastling ^ castling) == (IntCastling.BLACK_KINGSIDE | IntCastling.BLACK_QUEENSIDE);
+        assert (newCastling ^ castling) == Castling.WHITE_KINGSIDE
+            || (newCastling ^ castling) == Castling.WHITE_QUEENSIDE
+            || (newCastling ^ castling) == Castling.BLACK_KINGSIDE
+            || (newCastling ^ castling) == Castling.BLACK_QUEENSIDE
+            || (newCastling ^ castling) == (Castling.WHITE_KINGSIDE | Castling.WHITE_QUEENSIDE)
+            || (newCastling ^ castling) == (Castling.BLACK_KINGSIDE | Castling.BLACK_QUEENSIDE);
         this.zobristCode ^= zobristCastling[newCastling ^ castling];
         castling = newCastling;
       }
@@ -1490,22 +1490,22 @@ public final class Position {
       case IntPosition.g1:
         rookStartPosition = IntPosition.h1;
         rookEndPosition = IntPosition.f1;
-        newCastling &= ~(IntCastling.WHITE_KINGSIDE | IntCastling.WHITE_QUEENSIDE);
+        newCastling &= ~(Castling.WHITE_KINGSIDE | Castling.WHITE_QUEENSIDE);
         break;
       case IntPosition.c1:
         rookStartPosition = IntPosition.a1;
         rookEndPosition = IntPosition.d1;
-        newCastling &= ~(IntCastling.WHITE_KINGSIDE | IntCastling.WHITE_QUEENSIDE);
+        newCastling &= ~(Castling.WHITE_KINGSIDE | Castling.WHITE_QUEENSIDE);
         break;
       case IntPosition.g8:
         rookStartPosition = IntPosition.h8;
         rookEndPosition = IntPosition.f8;
-        newCastling &= ~(IntCastling.BLACK_KINGSIDE | IntCastling.BLACK_QUEENSIDE);
+        newCastling &= ~(Castling.BLACK_KINGSIDE | Castling.BLACK_QUEENSIDE);
         break;
       case IntPosition.c8:
         rookStartPosition = IntPosition.a8;
         rookEndPosition = IntPosition.d8;
-        newCastling &= ~(IntCastling.BLACK_KINGSIDE | IntCastling.BLACK_QUEENSIDE);
+        newCastling &= ~(Castling.BLACK_KINGSIDE | Castling.BLACK_QUEENSIDE);
         break;
       default:
         throw new IllegalArgumentException();
@@ -1516,12 +1516,12 @@ public final class Position {
     assert IntChessman.getChessman(rook) == IntChessman.ROOK;
 
     // Update castling
-    assert (newCastling ^ castling) == IntCastling.WHITE_KINGSIDE
-        || (newCastling ^ castling) == IntCastling.WHITE_QUEENSIDE
-        || (newCastling ^ castling) == IntCastling.BLACK_KINGSIDE
-        || (newCastling ^ castling) == IntCastling.BLACK_QUEENSIDE
-        || (newCastling ^ castling) == (IntCastling.WHITE_KINGSIDE | IntCastling.WHITE_QUEENSIDE)
-        || (newCastling ^ castling) == (IntCastling.BLACK_KINGSIDE | IntCastling.BLACK_QUEENSIDE);
+    assert (newCastling ^ castling) == Castling.WHITE_KINGSIDE
+        || (newCastling ^ castling) == Castling.WHITE_QUEENSIDE
+        || (newCastling ^ castling) == Castling.BLACK_KINGSIDE
+        || (newCastling ^ castling) == Castling.BLACK_QUEENSIDE
+        || (newCastling ^ castling) == (Castling.WHITE_KINGSIDE | Castling.WHITE_QUEENSIDE)
+        || (newCastling ^ castling) == (Castling.BLACK_KINGSIDE | Castling.BLACK_QUEENSIDE);
     this.zobristCode ^= zobristCastling[newCastling ^ castling];
     castling = newCastling;
 
