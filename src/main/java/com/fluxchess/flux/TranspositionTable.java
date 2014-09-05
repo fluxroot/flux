@@ -44,7 +44,7 @@ public final class TranspositionTable {
     public int depth = -1;
     private int value = -Search.INFINITY;
     public int type = IntValue.NOVALUE;
-    public int move = IntMove.NOMOVE;
+    public int move = Move.NOMOVE;
     public boolean mateThreat = false;
 
     public TranspositionTableEntry() {
@@ -56,7 +56,7 @@ public final class TranspositionTable {
       this.depth = -1;
       this.value = -Search.INFINITY;
       this.type = IntValue.NOVALUE;
-      this.move = IntMove.NOMOVE;
+      this.move = Move.NOMOVE;
       this.mateThreat = false;
     }
 
@@ -154,7 +154,7 @@ public final class TranspositionTable {
       currentEntry.mateThreat = mateThreat;
     } else if (currentEntry.zobristCode == zobristCode) {
       // The same zobrist key already exists
-      if (depth >= currentEntry.depth && move != IntMove.NOMOVE) {
+      if (depth >= currentEntry.depth && move != Move.NOMOVE) {
         currentEntry.depth = depth;
         currentEntry.setValue(value, height);
         currentEntry.type = type;
@@ -207,10 +207,10 @@ public final class TranspositionTable {
 
     if (currentEntry == null
         || depth == 0
-        || currentEntry.move == IntMove.NOMOVE) {
+        || currentEntry.move == Move.NOMOVE) {
       return moveList;
     } else {
-      moveList.add(IntMove.toCommandMove(currentEntry.move));
+      moveList.add(Move.toCommandMove(currentEntry.move));
 
       board.makeMove(currentEntry.move);
       List<GenericMove> newMoveList = getMoveList(board, depth - 1, moveList);

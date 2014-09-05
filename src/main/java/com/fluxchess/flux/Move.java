@@ -36,7 +36,7 @@ import com.fluxchess.jcpi.models.GenericRank;
  * 22 - 24: the promotion chessman (optional)
  * 25 - 27: the type (required)
  */
-public final class IntMove {
+public final class Move {
 
   /**
    * Represents no move
@@ -108,13 +108,13 @@ public final class IntMove {
   private static final int MOVE_MASK = MASK << MOVE_SHIFT;
 
   static {
-    NULLMOVE = IntMove.createMove(IntMove.NULL, IntPosition.NOPOSITION, IntPosition.NOPOSITION, Piece.NOPIECE, Piece.NOPIECE, Piece.NOPIECE);
+    NULLMOVE = Move.createMove(Move.NULL, IntPosition.NOPOSITION, IntPosition.NOPOSITION, Piece.NOPIECE, Piece.NOPIECE, Piece.NOPIECE);
   }
 
   /**
    * IntMove cannot be instantiated.
    */
-  private IntMove() {
+  private Move() {
   }
 
   /**
@@ -200,7 +200,7 @@ public final class IntMove {
    * @return the move.
    */
   public static int setEndPosition(int move, int endPosition) {
-    assert move != IntMove.NOMOVE;
+    assert move != Move.NOMOVE;
     assert endPosition != IntPosition.NOPOSITION;
 
     // Zero out the end position
@@ -221,7 +221,7 @@ public final class IntMove {
    * @return the move.
    */
   public static int setEndPositionAndTarget(int move, int endPosition, int target) {
-    assert move != IntMove.NOMOVE;
+    assert move != Move.NOMOVE;
     assert endPosition != IntPosition.NOPOSITION;
     assert target != Piece.NOPIECE;
 
@@ -253,7 +253,7 @@ public final class IntMove {
    * @return the move.
    */
   public static int setPromotion(int move, int promotion) {
-    assert move != IntMove.NOMOVE;
+    assert move != Move.NOMOVE;
     assert promotion != Piece.NOPIECE;
 
     // Zero out the promotion chessman
@@ -276,7 +276,7 @@ public final class IntMove {
 
     int position = (move & START_MASK) >>> START_SHIFT;
 
-    assert getType(move) != IntMove.NULL;
+    assert getType(move) != Move.NULL;
     assert position != INTERNAL_NOPOSITION;
     assert (position & 0x88) == 0;
 
@@ -294,7 +294,7 @@ public final class IntMove {
 
     int position = (move & END_MASK) >>> END_SHIFT;
 
-    assert getType(move) != IntMove.NULL;
+    assert getType(move) != Move.NULL;
     assert position != INTERNAL_NOPOSITION;
     assert (position & 0x88) == 0;
 

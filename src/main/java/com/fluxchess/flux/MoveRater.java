@@ -38,7 +38,7 @@ public final class MoveRater {
 
       if (move == transpositionMove) {
         moveList.value[i] = Integer.MAX_VALUE;
-      } else if (IntMove.getTarget(move) != Piece.NOPIECE) {
+      } else if (Move.getTarget(move) != Piece.NOPIECE) {
         moveList.value[i] = getMVVLVARating(move);
       } else if (move == primaryKillerMove) {
         moveList.value[i] = 0;
@@ -69,7 +69,7 @@ public final class MoveRater {
    */
   public void rateFromSEE(MoveList moveList) {
     for (int i = moveList.head; i < moveList.tail; i++) {
-      moveList.value[i] = MoveSee.seeMove(moveList.move[i], IntMove.getChessmanColor(moveList.move[i]));
+      moveList.value[i] = MoveSee.seeMove(moveList.move[i], Move.getChessmanColor(moveList.move[i]));
     }
   }
 
@@ -87,8 +87,8 @@ public final class MoveRater {
   private int getMVVLVARating(int move) {
     int value = 0;
 
-    int chessman = IntMove.getChessman(move);
-    int target = IntMove.getTarget(move);
+    int chessman = Move.getChessman(move);
+    int target = Move.getTarget(move);
 
     value += Piece.VALUE_KING / Piece.getValueFromChessman(chessman);
     if (target != Piece.NOPIECE) {

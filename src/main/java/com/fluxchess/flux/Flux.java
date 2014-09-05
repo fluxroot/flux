@@ -161,7 +161,7 @@ public final class Flux extends AbstractEngine {
     // Make all moves
     List<GenericMove> moveList = command.moves;
     for (GenericMove move : moveList) {
-      int newMove = IntMove.convertMove(move, this.board);
+      int newMove = Move.convertMove(move, this.board);
       this.board.makeMove(newMove);
     }
   }

@@ -28,11 +28,11 @@ public class HistoryTableTest {
   public void testHistoryTable() {
     HistoryTable table = new HistoryTable();
 
-    int move1 = IntMove.createMove(IntMove.NORMAL, 16, 32, Piece.PAWN, Piece.NOPIECE, Piece.NOPIECE);
+    int move1 = Move.createMove(Move.NORMAL, 16, 32, Piece.PAWN, Piece.NOPIECE, Piece.NOPIECE);
     table.add(move1, 1);
     assertEquals(1, table.get(move1));
 
-    int move2 = IntMove.createMove(IntMove.NORMAL, 16, 32, Piece.PAWN, Piece.NOPIECE, Piece.NOPIECE);
+    int move2 = Move.createMove(Move.NORMAL, 16, 32, Piece.PAWN, Piece.NOPIECE, Piece.NOPIECE);
     table.add(move2, 1);
     assertEquals(2, table.get(move2));
   }

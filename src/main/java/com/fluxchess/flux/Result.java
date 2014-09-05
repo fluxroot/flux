@@ -20,8 +20,8 @@ package com.fluxchess.flux;
 
 public final class Result {
 
-  public int bestMove = IntMove.NOMOVE;
-  public int ponderMove = IntMove.NOMOVE;
+  public int bestMove = Move.NOMOVE;
+  public int ponderMove = Move.NOMOVE;
   public int value = IntValue.NOVALUE;
   public int resultValue = -Search.INFINITY;
   public long time = -1;

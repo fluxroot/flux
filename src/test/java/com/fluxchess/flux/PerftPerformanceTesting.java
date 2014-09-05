@@ -33,11 +33,11 @@ public class PerftPerformanceTesting {
     }
 
     Attack attack = board.getAttack(board.activeColor);
-    MoveGenerator.initializeMain(attack, 0, IntMove.NOMOVE);
+    MoveGenerator.initializeMain(attack, 0, Move.NOMOVE);
 
     long totalNodes = 0;
     int move = MoveGenerator.getNextMove();
-    while (move != IntMove.NOMOVE) {
+    while (move != Move.NOMOVE) {
       board.makeMove(move);
       totalNodes += miniMax(board, generator, depth - 1, maxDepth);
       board.undoMove(move);

@@ -50,9 +50,9 @@ public final class MoveGenerator {
   private final class Generator {
     public int statePosition = -1;
     public int testState = GEN_END;
-    public int transpositionMove = IntMove.NOMOVE;
-    public int primaryKillerMove = IntMove.NOMOVE;
-    public int secondaryKillerMove = IntMove.NOMOVE;
+    public int transpositionMove = Move.NOMOVE;
+    public int primaryKillerMove = Move.NOMOVE;
+    public int secondaryKillerMove = Move.NOMOVE;
   }
 
   ;
@@ -162,9 +162,9 @@ public final class MoveGenerator {
     nonCaptureMoveList.newList();
     generatorHistory++;
 
-    generator[generatorHistory].transpositionMove = IntMove.NOMOVE;
-    generator[generatorHistory].primaryKillerMove = IntMove.NOMOVE;
-    generator[generatorHistory].secondaryKillerMove = IntMove.NOMOVE;
+    generator[generatorHistory].transpositionMove = Move.NOMOVE;
+    generator[generatorHistory].primaryKillerMove = Move.NOMOVE;
+    generator[generatorHistory].secondaryKillerMove = Move.NOMOVE;
 
     if (attack.isCheck()) {
       generateEvasion(attack);
@@ -206,7 +206,7 @@ public final class MoveGenerator {
             if (!isLegal(move)) {
               continue;
             }
-            assert IntMove.getTarget(move) != Piece.NOPIECE;
+            assert Move.getTarget(move) != Piece.NOPIECE;
             if (!isGoodCapture(move)) {
               tempMoveList.move[tempMoveList.tail++] = move;
               continue;
@@ -239,7 +239,7 @@ public final class MoveGenerator {
             break;
           case GEN_BADCAPTURE:
             assert isLegal(move);
-            assert !isGoodCapture(move) : board.getBoard().toString() + ", " + IntMove.toCommandMove(move).toString();
+            assert !isGoodCapture(move) : board.getBoard().toString() + ", " + Move.toCommandMove(move).toString();
             break;
           case GEN_EVASION:
             assert isLegal(move);
@@ -248,7 +248,7 @@ public final class MoveGenerator {
             if (!isLegal(move)) {
               continue;
             }
-            assert IntMove.getTarget(move) != Piece.NOPIECE : Piece.valueOfIntChessman(IntMove.getTarget(move)).toString();
+            assert Move.getTarget(move) != Piece.NOPIECE : Piece.valueOfIntChessman(Move.getTarget(move)).toString();
             if (!isGoodCapture(move)) {
               continue;
             }
@@ -257,10 +257,10 @@ public final class MoveGenerator {
             if (!isLegal(move)) {
               continue;
             }
-            if (MoveSee.seeMove(move, IntMove.getChessmanColor(move)) < 0) {
+            if (MoveSee.seeMove(move, Move.getChessmanColor(move)) < 0) {
               continue;
             }
-            assert board.isCheckingMove(move) : board.getBoard().toString() + ", " + IntMove.toCommandMove(move).toString();
+            assert board.isCheckingMove(move) : board.getBoard().toString() + ", " + Move.toCommandMove(move).toString();
             break;
           case GEN_END:
             assert false : stateList[generator[generatorHistory].statePosition];
@@ -280,12 +280,12 @@ public final class MoveGenerator {
       switch (state) {
         case GEN_TRANSPOSITION:
           if (Configuration.useTranspositionTable) {
-            if (generator[generatorHistory].transpositionMove != IntMove.NOMOVE) {
+            if (generator[generatorHistory].transpositionMove != Move.NOMOVE) {
               moveList.move[moveList.tail++] = generator[generatorHistory].transpositionMove;
             }
             generator[generatorHistory].testState = GEN_TRANSPOSITION;
           } else {
-            generator[generatorHistory].transpositionMove = IntMove.NOMOVE;
+            generator[generatorHistory].transpositionMove = Move.NOMOVE;
           }
           break;
         case GEN_GOODCAPTURE:
@@ -297,16 +297,16 @@ public final class MoveGenerator {
           break;
         case GEN_KILLER:
           if (Configuration.useKillerTable) {
-            if (generator[generatorHistory].primaryKillerMove != IntMove.NOMOVE) {
+            if (generator[generatorHistory].primaryKillerMove != Move.NOMOVE) {
               moveList.move[moveList.tail++] = generator[generatorHistory].primaryKillerMove;
             }
-            if (generator[generatorHistory].secondaryKillerMove != IntMove.NOMOVE) {
+            if (generator[generatorHistory].secondaryKillerMove != Move.NOMOVE) {
               moveList.move[moveList.tail++] = generator[generatorHistory].secondaryKillerMove;
             }
             generator[generatorHistory].testState = GEN_KILLER;
           } else {
-            generator[generatorHistory].primaryKillerMove = IntMove.NOMOVE;
-            generator[generatorHistory].secondaryKillerMove = IntMove.NOMOVE;
+            generator[generatorHistory].primaryKillerMove = Move.NOMOVE;
+            generator[generatorHistory].secondaryKillerMove = Move.NOMOVE;
           }
           break;
         case GEN_NONCAPTURE:
@@ -333,7 +333,7 @@ public final class MoveGenerator {
           generator[generatorHistory].testState = GEN_CHECK_QS;
           break;
         case GEN_END:
-          return IntMove.NOMOVE;
+          return Move.NOMOVE;
         default:
           assert false : state;
           break;
@@ -342,15 +342,15 @@ public final class MoveGenerator {
   }
 
   private static boolean isPseudo(int move) {
-    int chessmanPosition = IntMove.getStart(move);
+    int chessmanPosition = Move.getStart(move);
     int piece = Position.board[chessmanPosition];
 
     // Check chessman
-    if (piece == Piece.NOPIECE || IntMove.getChessman(move) != Piece.getChessman(piece)) {
+    if (piece == Piece.NOPIECE || Move.getChessman(move) != Piece.getChessman(piece)) {
       return false;
     }
 
-    int color = IntMove.getChessmanColor(move);
+    int color = Move.getChessmanColor(move);
 
     // Check color
     if (color != Piece.getColor(piece)) {
@@ -359,21 +359,21 @@ public final class MoveGenerator {
 
     assert color == board.activeColor;
 
-    int targetPosition = IntMove.getEnd(move);
+    int targetPosition = Move.getEnd(move);
 
     // Check empty target
     if (Position.board[targetPosition] != Piece.NOPIECE) {
       return false;
     }
 
-    assert IntMove.getTarget(move) == Piece.NOPIECE;
+    assert Move.getTarget(move) == Piece.NOPIECE;
 
-    int type = IntMove.getType(move);
+    int type = Move.getType(move);
 
     switch (type) {
-      case IntMove.NORMAL:
+      case Move.NORMAL:
         break;
-      case IntMove.PAWNDOUBLE:
+      case Move.PAWNDOUBLE:
         int delta = 0;
         if (color == Color.WHITE) {
           delta = 16;
@@ -389,11 +389,11 @@ public final class MoveGenerator {
         } else {
           return false;
         }
-      case IntMove.PAWNPROMOTION:
-      case IntMove.ENPASSANT:
-      case IntMove.NULL:
+      case Move.PAWNPROMOTION:
+      case Move.ENPASSANT:
+      case Move.NULL:
         return false;
-      case IntMove.CASTLING:
+      case Move.CASTLING:
         switch (targetPosition) {
           case IntPosition.g1:
             // Do not test g1 whether it is attacked as we will test it in isLegal()
@@ -446,7 +446,7 @@ public final class MoveGenerator {
             }
             break;
           default:
-            assert false : IntMove.toCommandMove(move);
+            assert false : Move.toCommandMove(move);
             break;
         }
         break;
@@ -456,7 +456,7 @@ public final class MoveGenerator {
     }
 
     int chessman = Piece.getChessman(piece);
-    assert chessman == IntMove.getChessman(move);
+    assert chessman == Move.getChessman(move);
 
     // Check pawn move
     if (chessman == Piece.PAWN) {
@@ -489,7 +489,7 @@ public final class MoveGenerator {
    */
   private static boolean isLegal(int move) {
     // Slow test for en passant
-    if (IntMove.getType(move) == IntMove.ENPASSANT) {
+    if (Move.getType(move) == Move.ENPASSANT) {
       int activeColor = board.activeColor;
       board.makeMove(move);
       boolean isCheck = board.getAttack(activeColor).isCheck();
@@ -498,19 +498,19 @@ public final class MoveGenerator {
       return !isCheck;
     }
 
-    int chessmanColor = IntMove.getChessmanColor(move);
+    int chessmanColor = Move.getChessmanColor(move);
 
     // Special test for king
-    if (IntMove.getChessman(move) == Piece.KING) {
-      return !board.isAttacked(IntMove.getEnd(move), Color.switchColor(chessmanColor));
+    if (Move.getChessman(move) == Piece.KING) {
+      return !board.isAttacked(Move.getEnd(move), Color.switchColor(chessmanColor));
     }
 
     assert Position.kingList[chessmanColor].size == 1;
-    if (board.isPinned(IntMove.getStart(move), chessmanColor)) {
+    if (board.isPinned(Move.getStart(move), chessmanColor)) {
       // We are pinned. Test if we move on the line.
       int kingPosition = Position.kingList[chessmanColor].position[0];
-      int attackDeltaStart = Attack.deltas[kingPosition - IntMove.getStart(move) + 127];
-      int attackDeltaEnd = Attack.deltas[kingPosition - IntMove.getEnd(move) + 127];
+      int attackDeltaStart = Attack.deltas[kingPosition - Move.getStart(move) + 127];
+      int attackDeltaEnd = Attack.deltas[kingPosition - Move.getEnd(move) + 127];
       return attackDeltaStart == attackDeltaEnd;
     }
 
@@ -518,16 +518,16 @@ public final class MoveGenerator {
   }
 
   private static boolean isGoodCapture(int move) {
-    if (IntMove.getType(move) == IntMove.PAWNPROMOTION) {
-      if (IntMove.getPromotion(move) == Piece.QUEEN) {
+    if (Move.getType(move) == Move.PAWNPROMOTION) {
+      if (Move.getPromotion(move) == Piece.QUEEN) {
         return true;
       } else {
         return false;
       }
     }
 
-    int chessman = IntMove.getChessman(move);
-    int target = IntMove.getTarget(move);
+    int chessman = Move.getChessman(move);
+    int target = Move.getTarget(move);
 
     assert chessman != Piece.NOPIECE;
     assert target != Piece.NOPIECE;
@@ -536,7 +536,7 @@ public final class MoveGenerator {
       return true;
     }
 
-    return MoveSee.seeMove(move, IntMove.getChessmanColor(move)) >= 0;
+    return MoveSee.seeMove(move, Move.getChessmanColor(move)) >= 0;
   }
 
   /**
@@ -610,7 +610,7 @@ public final class MoveGenerator {
     int king = Position.board[kingPosition];
     int attackerColor = Color.switchColor(activeColor);
     int oppositeColor = Piece.getColorOpposite(king);
-    int moveTemplate = IntMove.createMove(IntMove.NORMAL, kingPosition, kingPosition, king, Piece.NOPIECE, Piece.NOPIECE);
+    int moveTemplate = Move.createMove(Move.NORMAL, kingPosition, kingPosition, king, Piece.NOPIECE, Piece.NOPIECE);
 
     // Generate king moves
     for (int delta : moveDeltaKing) {
@@ -627,12 +627,12 @@ public final class MoveGenerator {
         if ((end & 0x88) == 0 && !board.isAttacked(end, attackerColor)) {
           int target = Position.board[end];
           if (target == Piece.NOPIECE) {
-            int move = IntMove.setEndPosition(moveTemplate, end);
+            int move = Move.setEndPosition(moveTemplate, end);
             moveList.move[moveList.tail++] = move;
           } else {
             if (Piece.getColor(target) == oppositeColor) {
               assert Piece.getChessman(target) != Piece.KING;
-              int move = IntMove.setEndPositionAndTarget(moveTemplate, end, target);
+              int move = Move.setEndPositionAndTarget(moveTemplate, end, target);
               moveList.move[moveList.tail++] = move;
             }
           }
@@ -784,7 +784,7 @@ public final class MoveGenerator {
     assert moveDelta != null;
 
     boolean sliding = Piece.isSliding(piece);
-    int moveTemplate = IntMove.createMove(IntMove.NORMAL, position, position, piece, Piece.NOPIECE, Piece.NOPIECE);
+    int moveTemplate = Move.createMove(Move.NORMAL, position, position, piece, Piece.NOPIECE, Piece.NOPIECE);
 
     for (int delta : moveDelta) {
       int end = position + delta;
@@ -792,7 +792,7 @@ public final class MoveGenerator {
       // Get moves to empty squares
       while ((end & 0x88) == 0 && Position.board[end] == Piece.NOPIECE) {
         if (targetPosition == IntPosition.NOPOSITION || end == targetPosition) {
-          int move = IntMove.setEndPosition(moveTemplate, end);
+          int move = Move.setEndPosition(moveTemplate, end);
           moveList.move[moveList.tail++] = move;
         }
 
@@ -820,7 +820,7 @@ public final class MoveGenerator {
 
     boolean sliding = Piece.isSliding(piece);
     int attackDeltaStart = Attack.deltas[kingPosition - chessmanPosition + 127];
-    int moveTemplate = IntMove.createMove(IntMove.NORMAL, chessmanPosition, chessmanPosition, piece, Piece.NOPIECE, Piece.NOPIECE);
+    int moveTemplate = Move.createMove(Move.NORMAL, chessmanPosition, chessmanPosition, piece, Piece.NOPIECE, Piece.NOPIECE);
 
     for (int delta : moveDelta) {
       int end = chessmanPosition + delta;
@@ -831,11 +831,11 @@ public final class MoveGenerator {
           // We are pinned. Test if we move on the line.
           int attackDeltaEnd = Attack.deltas[kingPosition - end + 127];
           if (attackDeltaStart != attackDeltaEnd) {
-            int move = IntMove.setEndPosition(moveTemplate, end);
+            int move = Move.setEndPosition(moveTemplate, end);
             moveList.move[moveList.tail++] = move;
           }
         } else if (board.canAttack(chessman, chessmanColor, end, kingPosition)) {
-          int move = IntMove.setEndPosition(moveTemplate, end);
+          int move = Move.setEndPosition(moveTemplate, end);
           moveList.move[moveList.tail++] = move;
         }
 
@@ -863,7 +863,7 @@ public final class MoveGenerator {
 
     boolean sliding = Piece.isSliding(piece);
     int oppositeColor = Piece.getColorOpposite(piece);
-    int moveTemplate = IntMove.createMove(IntMove.NORMAL, position, position, piece, Piece.NOPIECE, Piece.NOPIECE);
+    int moveTemplate = Move.createMove(Move.NORMAL, position, position, piece, Piece.NOPIECE, Piece.NOPIECE);
 
     for (int delta : moveDelta) {
       int end = position + delta;
@@ -873,7 +873,7 @@ public final class MoveGenerator {
         int target = Position.board[end];
         if (target == Piece.NOPIECE) {
           if (targetPosition == IntPosition.NOPOSITION || end == targetPosition) {
-            int move = IntMove.setEndPosition(moveTemplate, end);
+            int move = Move.setEndPosition(moveTemplate, end);
             nonCaptureMoveList.move[nonCaptureMoveList.tail++] = move;
           }
 
@@ -887,7 +887,7 @@ public final class MoveGenerator {
             // Get the move to the square the next chessman is standing on
             if (Piece.getColor(target) == oppositeColor
                 && Piece.getChessman(target) != Piece.KING) {
-              int move = IntMove.setEndPositionAndTarget(moveTemplate, end, target);
+              int move = Move.setEndPositionAndTarget(moveTemplate, end, target);
               moveList.move[moveList.tail++] = move;
             }
           }
@@ -925,17 +925,17 @@ public final class MoveGenerator {
       // GenericRank.R1 = position < 8
       if ((end > 111 && pawnColor == Color.WHITE)
           || (end < 8 && pawnColor == Color.BLACK)) {
-        int moveTemplate = IntMove.createMove(IntMove.PAWNPROMOTION, pawnPosition, end, pawn, Piece.NOPIECE, Piece.NOPIECE);
-        int move = IntMove.setPromotion(moveTemplate, Piece.QUEEN);
+        int moveTemplate = Move.createMove(Move.PAWNPROMOTION, pawnPosition, end, pawn, Piece.NOPIECE, Piece.NOPIECE);
+        int move = Move.setPromotion(moveTemplate, Piece.QUEEN);
         moveList.move[moveList.tail++] = move;
-        move = IntMove.setPromotion(moveTemplate, Piece.ROOK);
+        move = Move.setPromotion(moveTemplate, Piece.ROOK);
         moveList.move[moveList.tail++] = move;
-        move = IntMove.setPromotion(moveTemplate, Piece.BISHOP);
+        move = Move.setPromotion(moveTemplate, Piece.BISHOP);
         moveList.move[moveList.tail++] = move;
-        move = IntMove.setPromotion(moveTemplate, Piece.KNIGHT);
+        move = Move.setPromotion(moveTemplate, Piece.KNIGHT);
         moveList.move[moveList.tail++] = move;
       } else {
-        int move = IntMove.createMove(IntMove.NORMAL, pawnPosition, end, pawn, Piece.NOPIECE, Piece.NOPIECE);
+        int move = Move.createMove(Move.NORMAL, pawnPosition, end, pawn, Piece.NOPIECE, Piece.NOPIECE);
         moveList.move[moveList.tail++] = move;
 
         // Move two squares forward
@@ -947,7 +947,7 @@ public final class MoveGenerator {
               || ((end >>> 4) == 4 && pawnColor == Color.BLACK)) {
             assert ((pawnPosition >>> 4) == 1 && (end >>> 4) == 3 && pawnColor == Color.WHITE) || ((pawnPosition >>> 4) == 6 && (end >>> 4) == 4 && pawnColor == Color.BLACK);
 
-            move = IntMove.createMove(IntMove.PAWNDOUBLE, pawnPosition, end, pawn, Piece.NOPIECE, Piece.NOPIECE);
+            move = Move.createMove(Move.PAWNDOUBLE, pawnPosition, end, pawn, Piece.NOPIECE, Piece.NOPIECE);
             moveList.move[moveList.tail++] = move;
           }
         }
@@ -988,17 +988,17 @@ public final class MoveGenerator {
             // GenericRank.R1 = position < 8
             if ((targetPosition > 111 && pawnColor == Color.WHITE)
                 || (targetPosition < 8 && pawnColor == Color.BLACK)) {
-              int moveTemplate = IntMove.createMove(IntMove.PAWNPROMOTION, pawnPosition, targetPosition, pawn, Piece.NOPIECE, Piece.NOPIECE);
-              int move = IntMove.setPromotion(moveTemplate, Piece.QUEEN);
+              int moveTemplate = Move.createMove(Move.PAWNPROMOTION, pawnPosition, targetPosition, pawn, Piece.NOPIECE, Piece.NOPIECE);
+              int move = Move.setPromotion(moveTemplate, Piece.QUEEN);
               moveList.move[moveList.tail++] = move;
-              move = IntMove.setPromotion(moveTemplate, Piece.ROOK);
+              move = Move.setPromotion(moveTemplate, Piece.ROOK);
               moveList.move[moveList.tail++] = move;
-              move = IntMove.setPromotion(moveTemplate, Piece.BISHOP);
+              move = Move.setPromotion(moveTemplate, Piece.BISHOP);
               moveList.move[moveList.tail++] = move;
-              move = IntMove.setPromotion(moveTemplate, Piece.KNIGHT);
+              move = Move.setPromotion(moveTemplate, Piece.KNIGHT);
               moveList.move[moveList.tail++] = move;
             } else {
-              int move = IntMove.createMove(IntMove.NORMAL, pawnPosition, targetPosition, pawn, Piece.NOPIECE, Piece.NOPIECE);
+              int move = Move.createMove(Move.NORMAL, pawnPosition, targetPosition, pawn, Piece.NOPIECE, Piece.NOPIECE);
               moveList.move[moveList.tail++] = move;
             }
           }
@@ -1016,7 +1016,7 @@ public final class MoveGenerator {
             pawn = Position.board[pawnPosition];
             if (pawn != Piece.NOPIECE && pawn == pawnPiece) {
               if (!board.isPinned(pawnPosition, pawnColor)) {
-                int move = IntMove.createMove(IntMove.PAWNDOUBLE, pawnPosition, targetPosition, pawn, Piece.NOPIECE, Piece.NOPIECE);
+                int move = Move.createMove(Move.PAWNDOUBLE, pawnPosition, targetPosition, pawn, Piece.NOPIECE, Piece.NOPIECE);
                 moveList.move[moveList.tail++] = move;
               }
             }
@@ -1051,29 +1051,29 @@ public final class MoveGenerator {
       // GenericRank.R1 = position < 8
       if ((end > 111 && color == Color.WHITE)
           || (end < 8 && color == Color.BLACK)) {
-        int moveTemplate = IntMove.createMove(IntMove.PAWNPROMOTION, pawnPosition, end, pawn, Piece.NOPIECE, Piece.NOPIECE);
-        int move = IntMove.setPromotion(moveTemplate, Piece.QUEEN);
+        int moveTemplate = Move.createMove(Move.PAWNPROMOTION, pawnPosition, end, pawn, Piece.NOPIECE, Piece.NOPIECE);
+        int move = Move.setPromotion(moveTemplate, Piece.QUEEN);
         board.makeMove(move);
         boolean isCheck = board.isAttacked(kingPosition, color);
         board.undoMove(move);
         if (isCheck) {
           moveList.move[moveList.tail++] = move;
         }
-        move = IntMove.setPromotion(moveTemplate, Piece.ROOK);
+        move = Move.setPromotion(moveTemplate, Piece.ROOK);
         board.makeMove(move);
         isCheck = board.isAttacked(kingPosition, color);
         board.undoMove(move);
         if (isCheck) {
           moveList.move[moveList.tail++] = move;
         }
-        move = IntMove.setPromotion(moveTemplate, Piece.BISHOP);
+        move = Move.setPromotion(moveTemplate, Piece.BISHOP);
         board.makeMove(move);
         isCheck = board.isAttacked(kingPosition, color);
         board.undoMove(move);
         if (isCheck) {
           moveList.move[moveList.tail++] = move;
         }
-        move = IntMove.setPromotion(moveTemplate, Piece.KNIGHT);
+        move = Move.setPromotion(moveTemplate, Piece.KNIGHT);
         board.makeMove(move);
         isCheck = board.isAttacked(kingPosition, color);
         board.undoMove(move);
@@ -1086,11 +1086,11 @@ public final class MoveGenerator {
           int attackDeltaStart = Attack.deltas[kingPosition - pawnPosition + 127];
           int attackDeltaEnd = Attack.deltas[kingPosition - end + 127];
           if (attackDeltaStart != attackDeltaEnd) {
-            int move = IntMove.createMove(IntMove.NORMAL, pawnPosition, end, pawn, Piece.NOPIECE, Piece.NOPIECE);
+            int move = Move.createMove(Move.NORMAL, pawnPosition, end, pawn, Piece.NOPIECE, Piece.NOPIECE);
             moveList.move[moveList.tail++] = move;
           }
         } else if (board.canAttack(Piece.PAWN, color, end, kingPosition)) {
-          int move = IntMove.createMove(IntMove.NORMAL, pawnPosition, end, pawn, Piece.NOPIECE, Piece.NOPIECE);
+          int move = Move.createMove(Move.NORMAL, pawnPosition, end, pawn, Piece.NOPIECE, Piece.NOPIECE);
           moveList.move[moveList.tail++] = move;
         }
 
@@ -1108,11 +1108,11 @@ public final class MoveGenerator {
               int attackDeltaStart = Attack.deltas[kingPosition - pawnPosition + 127];
               int attackDeltaEnd = Attack.deltas[kingPosition - end + 127];
               if (attackDeltaStart != attackDeltaEnd) {
-                int move = IntMove.createMove(IntMove.PAWNDOUBLE, pawnPosition, end, pawn, Piece.NOPIECE, Piece.NOPIECE);
+                int move = Move.createMove(Move.PAWNDOUBLE, pawnPosition, end, pawn, Piece.NOPIECE, Piece.NOPIECE);
                 moveList.move[moveList.tail++] = move;
               }
             } else if (board.canAttack(Piece.PAWN, color, end, kingPosition)) {
-              int move = IntMove.createMove(IntMove.PAWNDOUBLE, pawnPosition, end, pawn, Piece.NOPIECE, Piece.NOPIECE);
+              int move = Move.createMove(Move.PAWNDOUBLE, pawnPosition, end, pawn, Piece.NOPIECE, Piece.NOPIECE);
               moveList.move[moveList.tail++] = move;
             }
           }
@@ -1155,17 +1155,17 @@ public final class MoveGenerator {
             // GenericRank.R1 = position < 8
             if ((end > 111 && pawnColor == Color.WHITE)
                 || (end < 8 && pawnColor == Color.BLACK)) {
-              int moveTemplate = IntMove.createMove(IntMove.PAWNPROMOTION, pawnPosition, end, pawn, target, Piece.NOPIECE);
-              int move = IntMove.setPromotion(moveTemplate, Piece.QUEEN);
+              int moveTemplate = Move.createMove(Move.PAWNPROMOTION, pawnPosition, end, pawn, target, Piece.NOPIECE);
+              int move = Move.setPromotion(moveTemplate, Piece.QUEEN);
               moveList.move[moveList.tail++] = move;
-              move = IntMove.setPromotion(moveTemplate, Piece.ROOK);
+              move = Move.setPromotion(moveTemplate, Piece.ROOK);
               moveList.move[moveList.tail++] = move;
-              move = IntMove.setPromotion(moveTemplate, Piece.BISHOP);
+              move = Move.setPromotion(moveTemplate, Piece.BISHOP);
               moveList.move[moveList.tail++] = move;
-              move = IntMove.setPromotion(moveTemplate, Piece.KNIGHT);
+              move = Move.setPromotion(moveTemplate, Piece.KNIGHT);
               moveList.move[moveList.tail++] = move;
             } else {
-              int move = IntMove.createMove(IntMove.NORMAL, pawnPosition, end, pawn, target, Piece.NOPIECE);
+              int move = Move.createMove(Move.NORMAL, pawnPosition, end, pawn, target, Piece.NOPIECE);
               moveList.move[moveList.tail++] = move;
             }
           }
@@ -1187,7 +1187,7 @@ public final class MoveGenerator {
           assert Piece.getChessman(target) == Piece.PAWN;
           assert Piece.getColor(target) == Color.switchColor(pawnColor);
 
-          int move = IntMove.createMove(IntMove.ENPASSANT, pawnPosition, end, pawn, target, Piece.NOPIECE);
+          int move = Move.createMove(Move.ENPASSANT, pawnPosition, end, pawn, target, Piece.NOPIECE);
           moveList.move[moveList.tail++] = move;
         }
       }
@@ -1238,17 +1238,17 @@ public final class MoveGenerator {
             // GenericRank.R1 = position < 8
             if ((targetPosition > 111 && pawnColor == Color.WHITE)
                 || (targetPosition < 8 && pawnColor == Color.BLACK)) {
-              int moveTemplate = IntMove.createMove(IntMove.PAWNPROMOTION, pawnPosition, targetPosition, pawn, target, Piece.NOPIECE);
-              int move = IntMove.setPromotion(moveTemplate, Piece.QUEEN);
+              int moveTemplate = Move.createMove(Move.PAWNPROMOTION, pawnPosition, targetPosition, pawn, target, Piece.NOPIECE);
+              int move = Move.setPromotion(moveTemplate, Piece.QUEEN);
               moveList.move[moveList.tail++] = move;
-              move = IntMove.setPromotion(moveTemplate, Piece.ROOK);
+              move = Move.setPromotion(moveTemplate, Piece.ROOK);
               moveList.move[moveList.tail++] = move;
-              move = IntMove.setPromotion(moveTemplate, Piece.BISHOP);
+              move = Move.setPromotion(moveTemplate, Piece.BISHOP);
               moveList.move[moveList.tail++] = move;
-              move = IntMove.setPromotion(moveTemplate, Piece.KNIGHT);
+              move = Move.setPromotion(moveTemplate, Piece.KNIGHT);
               moveList.move[moveList.tail++] = move;
             } else {
-              int move = IntMove.createMove(IntMove.NORMAL, pawnPosition, targetPosition, pawn, target, Piece.NOPIECE);
+              int move = Move.createMove(Move.NORMAL, pawnPosition, targetPosition, pawn, target, Piece.NOPIECE);
               moveList.move[moveList.tail++] = move;
             }
           }
@@ -1267,7 +1267,7 @@ public final class MoveGenerator {
               assert ((enPassantPosition >>> 4) == 2 && pawnColor == Color.BLACK) || ((enPassantPosition >>> 4) == 5 && pawnColor == Color.WHITE);
               assert Piece.getChessman(target) == Piece.PAWN;
 
-              int move = IntMove.createMove(IntMove.ENPASSANT, pawnPosition, enPassantPosition, pawn, target, Piece.NOPIECE);
+              int move = Move.createMove(Move.ENPASSANT, pawnPosition, enPassantPosition, pawn, target, Piece.NOPIECE);
               moveList.move[moveList.tail++] = move;
             }
           }
@@ -1296,7 +1296,7 @@ public final class MoveGenerator {
         assert Position.board[IntPosition.e1] == Piece.WHITE_KING;
         assert Position.board[IntPosition.h1] == Piece.WHITE_ROOK;
 
-        int move = IntMove.createMove(IntMove.CASTLING, kingPosition, IntPosition.g1, king, Piece.NOPIECE, Piece.NOPIECE);
+        int move = Move.createMove(Move.CASTLING, kingPosition, IntPosition.g1, king, Piece.NOPIECE, Piece.NOPIECE);
         moveList.move[moveList.tail++] = move;
       }
       // Do not test c1 whether it is attacked as we will test it in isLegal()
@@ -1308,7 +1308,7 @@ public final class MoveGenerator {
         assert Position.board[IntPosition.e1] == Piece.WHITE_KING;
         assert Position.board[IntPosition.a1] == Piece.WHITE_ROOK;
 
-        int move = IntMove.createMove(IntMove.CASTLING, kingPosition, IntPosition.c1, king, Piece.NOPIECE, Piece.NOPIECE);
+        int move = Move.createMove(Move.CASTLING, kingPosition, IntPosition.c1, king, Piece.NOPIECE, Piece.NOPIECE);
         moveList.move[moveList.tail++] = move;
       }
     } else {
@@ -1322,7 +1322,7 @@ public final class MoveGenerator {
         assert Position.board[IntPosition.e8] == Piece.BLACK_KING;
         assert Position.board[IntPosition.h8] == Piece.BLACK_ROOK;
 
-        int move = IntMove.createMove(IntMove.CASTLING, kingPosition, IntPosition.g8, king, Piece.NOPIECE, Piece.NOPIECE);
+        int move = Move.createMove(Move.CASTLING, kingPosition, IntPosition.g8, king, Piece.NOPIECE, Piece.NOPIECE);
         moveList.move[moveList.tail++] = move;
       }
       // Do not test c8 whether it is attacked as we will test it in isLegal()
@@ -1334,7 +1334,7 @@ public final class MoveGenerator {
         assert Position.board[IntPosition.e8] == Piece.BLACK_KING;
         assert Position.board[IntPosition.a8] == Piece.BLACK_ROOK;
 
-        int move = IntMove.createMove(IntMove.CASTLING, kingPosition, IntPosition.c8, king, Piece.NOPIECE, Piece.NOPIECE);
+        int move = Move.createMove(Move.CASTLING, kingPosition, IntPosition.c8, king, Piece.NOPIECE, Piece.NOPIECE);
         moveList.move[moveList.tail++] = move;
       }
     }
@@ -1362,7 +1362,7 @@ public final class MoveGenerator {
         assert Position.board[IntPosition.h1] == Piece.WHITE_ROOK;
 
         if (board.canAttack(Piece.ROOK, color, IntPosition.f1, targetPosition)) {
-          int move = IntMove.createMove(IntMove.CASTLING, kingPosition, IntPosition.g1, king, Piece.NOPIECE, Piece.NOPIECE);
+          int move = Move.createMove(Move.CASTLING, kingPosition, IntPosition.g1, king, Piece.NOPIECE, Piece.NOPIECE);
           moveList.move[moveList.tail++] = move;
         }
       }
@@ -1376,7 +1376,7 @@ public final class MoveGenerator {
         assert Position.board[IntPosition.a1] == Piece.WHITE_ROOK;
 
         if (board.canAttack(Piece.ROOK, color, IntPosition.d1, targetPosition)) {
-          int move = IntMove.createMove(IntMove.CASTLING, kingPosition, IntPosition.c1, king, Piece.NOPIECE, Piece.NOPIECE);
+          int move = Move.createMove(Move.CASTLING, kingPosition, IntPosition.c1, king, Piece.NOPIECE, Piece.NOPIECE);
           moveList.move[moveList.tail++] = move;
         }
       }
@@ -1392,7 +1392,7 @@ public final class MoveGenerator {
         assert Position.board[IntPosition.h8] == Piece.BLACK_ROOK;
 
         if (board.canAttack(Piece.ROOK, color, IntPosition.f8, targetPosition)) {
-          int move = IntMove.createMove(IntMove.CASTLING, kingPosition, IntPosition.g8, king, Piece.NOPIECE, Piece.NOPIECE);
+          int move = Move.createMove(Move.CASTLING, kingPosition, IntPosition.g8, king, Piece.NOPIECE, Piece.NOPIECE);
           moveList.move[moveList.tail++] = move;
         }
       }
@@ -1406,7 +1406,7 @@ public final class MoveGenerator {
         assert Position.board[IntPosition.a8] == Piece.BLACK_ROOK;
 
         if (board.canAttack(Piece.ROOK, color, IntPosition.d8, targetPosition)) {
-          int move = IntMove.createMove(IntMove.CASTLING, kingPosition, IntPosition.c8, king, Piece.NOPIECE, Piece.NOPIECE);
+          int move = Move.createMove(Move.CASTLING, kingPosition, IntPosition.c8, king, Piece.NOPIECE, Piece.NOPIECE);
           moveList.move[moveList.tail++] = move;
         }
       }

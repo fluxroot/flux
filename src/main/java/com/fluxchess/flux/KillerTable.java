@@ -34,8 +34,8 @@ public final class KillerTable {
    */
   public KillerTable() {
     for (int i = 0; i < MAXSIZE; i++) {
-      primaryKiller[i] = IntMove.NOMOVE;
-      secondaryKiller[i] = IntMove.NOMOVE;
+      primaryKiller[i] = Move.NOMOVE;
+      secondaryKiller[i] = Move.NOMOVE;
     }
   }
 
@@ -46,7 +46,7 @@ public final class KillerTable {
    * @param height the height.
    */
   public void add(int killer, int height) {
-    assert killer != IntMove.NOMOVE;
+    assert killer != Move.NOMOVE;
     assert height >= 0;
 
     // Update killers

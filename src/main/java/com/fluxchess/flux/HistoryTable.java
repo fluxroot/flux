@@ -38,12 +38,12 @@ public final class HistoryTable {
    * @return the number of hits.
    */
   public int get(int move) {
-    assert move != IntMove.NOMOVE;
+    assert move != Move.NOMOVE;
 
-    int piece = IntMove.getChessmanPiece(move);
-    int end = IntMove.getEnd(move);
-    assert IntMove.getChessman(move) != Piece.NOPIECE;
-    assert IntMove.getChessmanColor(move) != Color.NOCOLOR;
+    int piece = Move.getChessmanPiece(move);
+    int end = Move.getEnd(move);
+    assert Move.getChessman(move) != Piece.NOPIECE;
+    assert Move.getChessmanColor(move) != Color.NOCOLOR;
     assert (end & 0x88) == 0;
 
     return historyTable[piece][end];
@@ -55,12 +55,12 @@ public final class HistoryTable {
    * @param move the IntMove.
    */
   public void add(int move, int depth) {
-    assert move != IntMove.NOMOVE;
+    assert move != Move.NOMOVE;
 
-    int piece = IntMove.getChessmanPiece(move);
-    int end = IntMove.getEnd(move);
-    assert IntMove.getChessman(move) != Piece.NOPIECE;
-    assert IntMove.getChessmanColor(move) != Color.NOCOLOR;
+    int piece = Move.getChessmanPiece(move);
+    int end = Move.getEnd(move);
+    assert Move.getChessman(move) != Piece.NOPIECE;
+    assert Move.getChessmanColor(move) != Color.NOCOLOR;
     assert (end & 0x88) == 0;
 
     historyTable[piece][end] += depth;

@@ -100,18 +100,18 @@ public class MoveGeneratorTest {
     int totalNodes = 0;
 
     Attack attack = board.getAttack(board.activeColor);
-    MoveGenerator.initializeMain(attack, 0, IntMove.NOMOVE);
+    MoveGenerator.initializeMain(attack, 0, Move.NOMOVE);
 
     int nodes = 0;
     int move = MoveGenerator.getNextMove();
-    while (move != IntMove.NOMOVE) {
+    while (move != Move.NOMOVE) {
       boolean isCheckingMove = board.isCheckingMove(move);
       GenericBoard oldBoard = board.getBoard();
 
       int captureSquare = board.captureSquare;
       board.makeMove(move);
       boolean isCheckingMoveReal = board.getAttack(board.activeColor).isCheck();
-      assertEquals(oldBoard.toString() + ", " + IntMove.toCommandMove(move).toString(), isCheckingMoveReal, isCheckingMove);
+      assertEquals(oldBoard.toString() + ", " + Move.toCommandMove(move).toString(), isCheckingMoveReal, isCheckingMove);
       nodes = miniMax(board, generator, depth - 1, maxDepth);
       board.undoMove(move);
       assert captureSquare == board.captureSquare;
@@ -192,7 +192,7 @@ public class MoveGeneratorTest {
     MoveList quiescentMoveList = new MoveList();
     MoveGenerator.initializeQuiescent(attack, true);
     int move = MoveGenerator.getNextMove();
-    while (move != IntMove.NOMOVE) {
+    while (move != Move.NOMOVE) {
       quiescentMoveList.move[quiescentMoveList.tail++] = move;
       move = MoveGenerator.getNextMove();
     }
@@ -200,11 +200,11 @@ public class MoveGeneratorTest {
 
     // Do main moves and count
     MoveList mainMoveList = new MoveList();
-    MoveGenerator.initializeMain(attack, 0, IntMove.NOMOVE);
+    MoveGenerator.initializeMain(attack, 0, Move.NOMOVE);
     move = MoveGenerator.getNextMove();
-    while (move != IntMove.NOMOVE) {
+    while (move != Move.NOMOVE) {
       if (!attack.isCheck()) {
-        if ((IntMove.getTarget(move) != Piece.NOPIECE && isGoodCapture(move, board)) || (IntMove.getTarget(move) == Piece.NOPIECE && board.isCheckingMove(move)) && MoveSee.seeMove(move, IntMove.getChessmanColor(move)) >= 0) {
+        if ((Move.getTarget(move) != Piece.NOPIECE && isGoodCapture(move, board)) || (Move.getTarget(move) == Piece.NOPIECE && board.isCheckingMove(move)) && MoveSee.seeMove(move, Move.getChessmanColor(move)) >= 0) {
           board.makeMove(move);
           miniMaxQuiescentCheckingMoves(board, depth - 1, maxDepth);
           board.undoMove(move);
@@ -233,13 +233,13 @@ public class MoveGeneratorTest {
 
     result += "     Main:";
     for (int i = 0; i < main.tail; i++) {
-      result += " " + IntMove.toCommandMove(main.move[i]).toString();
+      result += " " + Move.toCommandMove(main.move[i]).toString();
     }
     result += "\n";
 
     result += "Quiescent:";
     for (int i = 0; i < quiescent.tail; i++) {
-      result += " " + IntMove.toCommandMove(quiescent.move[i]).toString();
+      result += " " + Move.toCommandMove(quiescent.move[i]).toString();
     }
     result += "\n";
 
@@ -247,16 +247,16 @@ public class MoveGeneratorTest {
   }
 
   private static boolean isGoodCapture(int move, Position board) {
-    if (IntMove.getType(move) == IntMove.PAWNPROMOTION) {
-      if (IntMove.getPromotion(move) == Piece.QUEEN) {
+    if (Move.getType(move) == Move.PAWNPROMOTION) {
+      if (Move.getPromotion(move) == Piece.QUEEN) {
         return true;
       } else {
         return false;
       }
     }
 
-    int chessman = IntMove.getChessman(move);
-    int target = IntMove.getTarget(move);
+    int chessman = Move.getChessman(move);
+    int target = Move.getTarget(move);
 
     assert chessman != Piece.NOPIECE;
     assert target != Piece.NOPIECE;
@@ -265,7 +265,7 @@ public class MoveGeneratorTest {
       return true;
     }
 
-    return MoveSee.seeMove(move, IntMove.getChessmanColor(move)) >= 0;
+    return MoveSee.seeMove(move, Move.getChessmanColor(move)) >= 0;
   }
 
 }

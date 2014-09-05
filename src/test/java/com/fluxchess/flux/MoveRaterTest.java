@@ -29,35 +29,35 @@ public class MoveRaterTest {
     MoveList list = new MoveList();
 
     // Pawn -> Rook
-    int move1 = IntMove.createMove(IntMove.NORMAL, 16, 0, Piece.NOPIECE, Piece.NOPIECE, Piece.NOPIECE);
+    int move1 = Move.createMove(Move.NORMAL, 16, 0, Piece.NOPIECE, Piece.NOPIECE, Piece.NOPIECE);
     list.move[list.tail++] = move1;
 
     // Knight -> Rook
-    int move2 = IntMove.createMove(IntMove.NORMAL, 1, 0, Piece.NOPIECE, Piece.NOPIECE, Piece.NOPIECE);
+    int move2 = Move.createMove(Move.NORMAL, 1, 0, Piece.NOPIECE, Piece.NOPIECE, Piece.NOPIECE);
     list.move[list.tail++] = move2;
 
     // Pawn -> Knight
-    int move3 = IntMove.createMove(IntMove.NORMAL, 16, 1, Piece.NOPIECE, Piece.NOPIECE, Piece.NOPIECE);
+    int move3 = Move.createMove(Move.NORMAL, 16, 1, Piece.NOPIECE, Piece.NOPIECE, Piece.NOPIECE);
     list.move[list.tail++] = move3;
 
     // Rook -> Knight
-    int move4 = IntMove.createMove(IntMove.NORMAL, 0, 1, Piece.NOPIECE, Piece.NOPIECE, Piece.NOPIECE);
+    int move4 = Move.createMove(Move.NORMAL, 0, 1, Piece.NOPIECE, Piece.NOPIECE, Piece.NOPIECE);
     list.move[list.tail++] = move4;
 
     // Rook -> Rook
-    int move5 = IntMove.createMove(IntMove.NORMAL, 0, 7, Piece.NOPIECE, Piece.NOPIECE, Piece.NOPIECE);
+    int move5 = Move.createMove(Move.NORMAL, 0, 7, Piece.NOPIECE, Piece.NOPIECE, Piece.NOPIECE);
     list.move[list.tail++] = move5;
 
     // King -> Empty
-    int move6 = IntMove.createMove(IntMove.NORMAL, 4, 32, Piece.NOPIECE, Piece.NOPIECE, Piece.NOPIECE);
+    int move6 = Move.createMove(Move.NORMAL, 4, 32, Piece.NOPIECE, Piece.NOPIECE, Piece.NOPIECE);
     list.move[list.tail++] = move6;
 
     // Pawn -> Pawn
-    int move7 = IntMove.createMove(IntMove.NORMAL, 16, 17, Piece.NOPIECE, Piece.NOPIECE, Piece.NOPIECE);
+    int move7 = Move.createMove(Move.NORMAL, 16, 17, Piece.NOPIECE, Piece.NOPIECE, Piece.NOPIECE);
     list.move[list.tail++] = move7;
 
     // Pawn -> Empty
-    int move8 = IntMove.createMove(IntMove.NORMAL, 16, 32, Piece.NOPIECE, Piece.NOPIECE, Piece.NOPIECE);
+    int move8 = Move.createMove(Move.NORMAL, 16, 32, Piece.NOPIECE, Piece.NOPIECE, Piece.NOPIECE);
     list.move[list.tail++] = move8;
 
     rater.rateFromMVVLVA(list);
