@@ -116,8 +116,8 @@ final class Evaluation {
   private static final int[] drawFactor = new int[Color.ARRAY_DIMENSION];
 
   // The hash tables
-  private final EvaluationTable evaluationTable = new EvaluationTable(Configuration.defaultEvaluationTableSize * 1024 * 1024 / EvaluationTable.ENTRYSIZE);
-  private final PawnTable pawnHashtable = new PawnTable(Configuration.defaultPawnTableSize * 1024 * 1024 / PawnTable.ENTRYSIZE);
+  private final EvaluationTable evaluationTable = new EvaluationTable(1024 * 1024);
+  private final PawnTable pawnHashtable = new PawnTable(1024 * 1024);
 
   /**
    * Prints the evaluation of the board.

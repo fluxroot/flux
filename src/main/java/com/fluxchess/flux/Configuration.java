@@ -23,33 +23,33 @@ import com.fluxchess.jcpi.options.*;
 final class Configuration {
 
   // Search
-  static final boolean useAspirationWindows = true;
-  static final boolean useInternalIterativeDeepening = true;
+  static boolean useAspirationWindows = true;
+  static boolean useInternalIterativeDeepening = true;
 
   // Pruning
-  static final boolean useMateDistancePruning = true;
-  static final boolean useNullMovePruning = true;
-  static final boolean useVerifiedNullMovePruning = true;
-  static final boolean useFutilityPruning = true;
-  static final boolean useExtendedFutilityPruning = true;
-  static final boolean useLateMoveReduction = true;
-  static final boolean useLateMoveReductionResearch = true;
-  static final boolean useDeltaPruning = true;
-  static final boolean useMinorPromotionPruning = true;
+  static boolean useMateDistancePruning = true;
+  static boolean useNullMovePruning = true;
+  static boolean useVerifiedNullMovePruning = true;
+  static boolean useFutilityPruning = true;
+  static boolean useExtendedFutilityPruning = true;
+  static boolean useLateMoveReduction = true;
+  static boolean useLateMoveReductionResearch = true;
+  static boolean useDeltaPruning = true;
+  static boolean useMinorPromotionPruning = true;
 
   // Tables
-  static final boolean useTranspositionTable = true;
-  static final boolean useKillerTable = true;
-  static final boolean useHistoryTable = true;
-  static final boolean useEvaluationTable = true;
-  static final boolean usePawnTable = true;
+  static boolean useTranspositionTable = true;
+  static boolean useKillerTable = true;
+  static boolean useHistoryTable = true;
+  static boolean useEvaluationTable = true;
+  static boolean usePawnTable = true;
 
   // Extensions
-  static final boolean useSingleReplyExtension = true;
-  static final boolean useRecaptureExtension = true;
-  static final boolean useCheckExtension = true;
-  static final boolean usePawnExtension = true;
-  static final boolean useMateThreatExtension = true;
+  static boolean useSingleReplyExtension = true;
+  static boolean useRecaptureExtension = true;
+  static boolean useCheckExtension = true;
+  static boolean usePawnExtension = true;
+  static boolean useMateThreatExtension = true;
 
   static boolean ponder = true;
   static final CheckboxOption ponderOption = Options.newPonderOption(ponder);
@@ -63,10 +63,6 @@ final class Configuration {
   static final SpinnerOption hashOption = Options.newHashOption(transpositionTableSize, 4, 256);
 
   static final ButtonOption clearHashOption = new ButtonOption("Clear Hash");
-
-  static final int defaultEvaluationTableSize = 4;
-
-  static final int defaultPawnTableSize = 4;
 
   static boolean showRefutations = false;
   static final CheckboxOption uciShowRefutationsOption = Options.newUciShowRefutationsOption(showRefutations);
