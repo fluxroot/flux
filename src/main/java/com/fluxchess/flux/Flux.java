@@ -36,7 +36,7 @@ public final class Flux extends AbstractEngine {
 
   private Position board = null;
   private TranspositionTable transpositionTable;
-  private final int[] timeTable = new int[Depth.MAX_HEIGHT + 1];
+  private final int[] timeTable = new int[Depth.MAX_PLY + 1];
   private Search search;
 
   /**

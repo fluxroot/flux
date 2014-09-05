@@ -20,10 +20,17 @@ package com.fluxchess.flux;
 
 final class Depth {
 
-  static final int MAX_DEPTH = 64;
-  static final int MAX_HEIGHT = 256;
+  static final int MAX_PLY = 256;
+  static final int MAX_DEPTH = 128;
+  static final int MIN_DEPTH = -MAX_DEPTH;
+
+  static final int NODEPTH = -MAX_PLY;
 
   private Depth() {
+  }
+
+  static boolean isValid(int depth) {
+    return MIN_DEPTH <= depth && depth <= MAX_PLY;
   }
 
 }

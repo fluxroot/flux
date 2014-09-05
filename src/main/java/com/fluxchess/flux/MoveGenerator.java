@@ -32,7 +32,7 @@ final class MoveGenerator {
   static final int[] moveDeltaQueen = {+16, +17, +1, -15, -16, -17, -1, +15};
   static final int[] moveDeltaKing = {+16, +17, +1, -15, -16, -17, -1, +15};
 
-  private static final int HISTORYSIZE = Depth.MAX_HEIGHT + 1;
+  private static final int HISTORYSIZE = Depth.MAX_PLY + 1;
   private static final int STATELISTSIZE = 256;
 
   // States

@@ -89,7 +89,7 @@ final class Search implements Runnable {
   private static HistoryTable historyTable;
 
   // Search information
-  private static final MoveList[] pvList = new MoveList[Depth.MAX_HEIGHT + 1];
+  private static final MoveList[] pvList = new MoveList[Depth.MAX_PLY + 1];
   private static final HashMap<Integer, PrincipalVariation> multiPvMap = new HashMap<>(MAX_MOVES);
   private Result bestResult = null;
   private final int[] timeTable;
@@ -684,7 +684,7 @@ final class Search implements Runnable {
     updateSearch(height);
 
     // Abort conditions
-    if ((this.stopped && this.canStop) || height == Depth.MAX_HEIGHT) {
+    if ((this.stopped && this.canStop) || height == Depth.MAX_PLY) {
       return this.evaluation.evaluate(board);
     }
 
@@ -895,7 +895,7 @@ final class Search implements Runnable {
     updateSearch(height);
 
     // Abort conditions
-    if ((this.stopped && this.canStop) || height == Depth.MAX_HEIGHT) {
+    if ((this.stopped && this.canStop) || height == Depth.MAX_PLY) {
       return this.evaluation.evaluate(board);
     }
 
@@ -1308,7 +1308,7 @@ final class Search implements Runnable {
     updateSearch(height);
 
     // Abort conditions
-    if ((this.stopped && this.canStop) || height == Depth.MAX_HEIGHT) {
+    if ((this.stopped && this.canStop) || height == Depth.MAX_PLY) {
       return this.evaluation.evaluate(board);
     }
 
