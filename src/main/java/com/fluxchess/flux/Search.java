@@ -93,7 +93,7 @@ public final class Search implements Runnable {
   private int showPvNumber = 1;
 
   // Search logic
-  private IEvaluation evaluation;
+  private Evaluation evaluation;
   private static Hex88Board board;
   private final int myColor;
 
@@ -126,7 +126,7 @@ public final class Search implements Runnable {
     }
   }
 
-  public Search(IEvaluation newEvaluation, Hex88Board newBoard, TranspositionTable newTranspositionTable, InformationTimer newInfo, int[] timeTable) {
+  public Search(Evaluation newEvaluation, Hex88Board newBoard, TranspositionTable newTranspositionTable, InformationTimer newInfo, int[] timeTable) {
     assert newEvaluation != null;
     assert newBoard != null;
     assert newTranspositionTable != null;

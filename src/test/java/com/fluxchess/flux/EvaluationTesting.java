@@ -32,7 +32,7 @@ public class EvaluationTesting {
     try {
       String token = reader.readLine();
       while (!token.equalsIgnoreCase("quit")) {
-        IEvaluation evaluation = new Evaluation(new EvaluationTable(1024), new PawnTable(1024));
+        Evaluation evaluation = new Evaluation(new EvaluationTable(1024), new PawnTable(1024));
         try {
           Hex88Board board = new Hex88Board(new GenericBoard(token));
           new MoveSee(board);

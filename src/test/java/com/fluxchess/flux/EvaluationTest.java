@@ -28,7 +28,7 @@ public class EvaluationTest {
 
   @Test
   public void testEvaluate() {
-    IEvaluation evaluation = new Evaluation(new EvaluationTable(1024), new PawnTable(1024));
+    Evaluation evaluation = new Evaluation(new EvaluationTable(1024), new PawnTable(1024));
     Hex88Board board = null;
 
     try {
