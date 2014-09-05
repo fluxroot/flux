@@ -41,8 +41,6 @@ public final class Flux extends AbstractEngine {
 
   /**
    * Creates a new Flux.
-   *
-   * @param protocol the protocol.
    */
   public Flux() {
     initialize();

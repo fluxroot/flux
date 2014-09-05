@@ -133,16 +133,6 @@ final class MoveList {
   }
 
   /**
-   * Rates the move according to SEE.
-   *
-   */
-  void rateFromSEE() {
-    for (int i = head; i < tail; i++) {
-      values[i] = See.seeMove(moves[i], Move.getChessmanColor(moves[i]));
-    }
-  }
-
-  /**
    * Rates the move according to the MVV/LVA.
    */
   void rateFromMVVLVA() {

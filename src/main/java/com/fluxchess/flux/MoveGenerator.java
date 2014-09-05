@@ -55,8 +55,6 @@ final class MoveGenerator {
     int secondaryKillerMove = Move.NOMOVE;
   }
 
-  ;
-
   // Board
   private static Position board;
 
@@ -102,7 +100,7 @@ final class MoveGenerator {
     stateList[position++] = GEN_END;
 
     statePositionEvasion = position;
-    stateList[position++] = GEN_END;
+    stateList[position] = GEN_END;
   }
 
   /**
@@ -372,7 +370,7 @@ final class MoveGenerator {
       case MoveType.NORMAL:
         break;
       case MoveType.PAWNDOUBLE:
-        int delta = 0;
+        int delta;
         if (color == Color.WHITE) {
           delta = 16;
         } else {
@@ -458,7 +456,7 @@ final class MoveGenerator {
 
     // Check pawn move
     if (chessman == PieceType.PAWN) {
-      int delta = 0;
+      int delta;
       if (color == Color.WHITE) {
         delta = 16;
       } else {
@@ -517,11 +515,7 @@ final class MoveGenerator {
 
   private static boolean isGoodCapture(int move) {
     if (Move.getType(move) == MoveType.PAWNPROMOTION) {
-      if (Move.getPromotion(move) == PieceType.QUEEN) {
-        return true;
-      } else {
-        return false;
-      }
+      return Move.getPromotion(move) == PieceType.QUEEN;
     }
 
     int chessman = Move.getChessman(move);
@@ -539,9 +533,6 @@ final class MoveGenerator {
 
   /**
    * Generates the pseudo legal move list.
-   *
-   * @param color the color of the player.
-   * @return the pseudo legal move list.
    */
   private static void generateNonCaptures() {
     assert board != null;
@@ -1177,8 +1168,6 @@ final class MoveGenerator {
           if (pawnColor == Color.WHITE) {
             enPassantTargetPosition = end - 16;
           } else {
-            assert pawnColor == Color.BLACK;
-
             enPassantTargetPosition = end + 16;
           }
           target = Position.board[enPassantTargetPosition];

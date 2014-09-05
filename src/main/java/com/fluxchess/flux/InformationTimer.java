@@ -226,9 +226,6 @@ final class InformationTimer {
 
   /**
    * Sends the centipawn information.
-   *
-   * @param currentCentipawns the current centipawn value.
-   * @param currentMoveList   the current move list/principal variation.
    */
   void sendInformationCentipawns(PrincipalVariation pv, int pvNumber) {
     assert pv != null;
@@ -262,7 +259,6 @@ final class InformationTimer {
    * Sends the mate information.
    *
    * @param currentMateDepth the current mate depth.
-   * @param currentMoveList  the current move list/principal variation.
    */
   void sendInformationMate(PrincipalVariation pv, int currentMateDepth, int pvNumber) {
     assert pv != null;

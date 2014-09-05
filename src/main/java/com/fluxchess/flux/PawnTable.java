@@ -61,11 +61,7 @@ final class PawnTable {
   boolean exists(long newZobristCode) {
     int position = (int) (newZobristCode % this.size);
 
-    if (this.zobristCode[position] == newZobristCode) {
-      return true;
-    } else {
-      return false;
-    }
+    return this.zobristCode[position] == newZobristCode;
   }
 
   /**

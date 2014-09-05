@@ -111,8 +111,8 @@ final class TranspositionTable {
     this.currentAge = 0;
     this.slotsUsed = 0;
 
-    for (int i = 0; i < this.entry.length; i++) {
-      this.entry[i].clear();
+    for (TranspositionTableEntry anEntry : this.entry) {
+      anEntry.clear();
     }
   }
 

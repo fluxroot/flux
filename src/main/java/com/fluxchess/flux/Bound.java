@@ -35,38 +35,9 @@ final class Bound {
   static final int BETA = 2;
 
   /**
-   * IntValue mask
-   */
-  static final int MASK = 0x3;
-
-  /**
    * IntValue cannot be instantiated.
    */
   private Bound() {
-  }
-
-  /**
-   * Returns the IntValue value of the EnumValue.
-   *
-   * @param value the EnumValue.
-   * @return the IntValue value.
-   */
-  static int valueOfValue(GenericScore value) {
-    assert value != null;
-
-    switch (value) {
-      case EXACT:
-        return EXACT;
-      case ALPHA:
-        return ALPHA;
-      case BETA:
-        return BETA;
-      default:
-        assert false : value;
-        break;
-    }
-
-    throw new IllegalArgumentException();
   }
 
   /**

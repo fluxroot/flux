@@ -42,11 +42,6 @@ final class GamePhase {
   };
 
   /**
-   * GamePhase mask
-   */
-  static final int MASK = 0x2;
-
-  /**
    * IntGamePhase cannot be instantiated.
    */
   private GamePhase() {

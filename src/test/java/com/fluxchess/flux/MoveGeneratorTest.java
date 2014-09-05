@@ -44,7 +44,7 @@ public class MoveGeneratorTest {
 //			testBoard.makeMove(IntMove.createMove(IntMove.NORMAL, IntPosition.e7, IntPosition.d6, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN));
 //			testBoard.makeMove(IntMove.createMove(IntMove.NORMAL, IntPosition.e1, IntPosition.d1, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN));
 //			testBoard.makeMove(IntMove.createMove(IntMove.PAWNDOUBLE, IntPosition.c7, IntPosition.c5, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN));
-      int result = miniMax(testBoard, new MoveGenerator(testBoard, new KillerTable(), new HistoryTable()), 5, 5);
+      miniMax(testBoard, new MoveGenerator(testBoard, new KillerTable(), new HistoryTable()), 5, 5);
     } catch (IllegalNotationException e) {
       fail();
     }
@@ -73,17 +73,13 @@ public class MoveGeneratorTest {
             Position testBoard = new Position(board);
             new See(testBoard);
 
-            long startTime = System.currentTimeMillis();
             int result = miniMax(testBoard, new MoveGenerator(testBoard, new KillerTable(), new HistoryTable()), depth, depth);
-            long endTime = System.currentTimeMillis();
             assertEquals(tokens[0].trim(), nodesNumber, result);
           }
 
           line = file.readLine();
         }
-      } catch (IOException e) {
-        fail();
-      } catch (IllegalNotationException e) {
+      } catch (IOException | IllegalNotationException e) {
         fail();
       }
     }
@@ -99,7 +95,7 @@ public class MoveGeneratorTest {
     Attack attack = board.getAttack(board.activeColor);
     MoveGenerator.initializeMain(attack, 0, Move.NOMOVE);
 
-    int nodes = 0;
+    int nodes;
     int move = MoveGenerator.getNextMove();
     while (move != Move.NOMOVE) {
       boolean isCheckingMove = board.isCheckingMove(move);
@@ -158,7 +154,6 @@ public class MoveGeneratorTest {
           if (tokens.length > i) {
             String[] data = tokens[i].trim().split(" ");
             int depth = Integer.parseInt(data[0].substring(1));
-            int nodesNumber = Integer.parseInt(data[1]);
 
             Position testBoard = new Position(board);
             new See(testBoard);
@@ -169,9 +164,7 @@ public class MoveGeneratorTest {
 
           line = file.readLine();
         }
-      } catch (IOException e) {
-        fail();
-      } catch (IllegalNotationException e) {
+      } catch (IOException | IllegalNotationException e) {
         fail();
       }
     }
@@ -217,8 +210,6 @@ public class MoveGeneratorTest {
     MoveGenerator.destroy();
 
     assertEquals(printDifference(board, mainMoveList, quiescentMoveList), mainMoveList.getLength(), quiescentMoveList.getLength());
-
-    return;
   }
 
   private String printDifference(Position board, MoveList main, MoveList quiescent) {
@@ -244,11 +235,7 @@ public class MoveGeneratorTest {
 
   private static boolean isGoodCapture(int move, Position board) {
     if (Move.getType(move) == MoveType.PAWNPROMOTION) {
-      if (Move.getPromotion(move) == PieceType.QUEEN) {
-        return true;
-      } else {
-        return false;
-      }
+      return Move.getPromotion(move) == PieceType.QUEEN;
     }
 
     int chessman = Move.getChessman(move);

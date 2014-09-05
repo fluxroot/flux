@@ -221,7 +221,7 @@ final class PositionValues {
   /**
    * Creates a new PositionValues.
    */
-  PositionValues() {
+  private PositionValues() {
   }
 
   static int getPositionValue(int phase, int chessman, int chessmanColor, int chessmanPosition) {

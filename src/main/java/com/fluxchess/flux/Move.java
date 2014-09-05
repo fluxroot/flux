@@ -48,12 +48,6 @@ final class Move {
    */
   static final int NULLMOVE;
 
-  /**
-   * IntMove
-   */
-  static final int INTMOVE_MASK = 0xFFFFFFF;
-  static final int INTMOVE_SIZE = 28;
-
   // Position value
   // We do not use 127 because there all bits are set
   private static final int INTERNAL_NOPOSITION = 126;

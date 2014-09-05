@@ -34,10 +34,6 @@ final class EvaluationTable {
     EvaluationTableEntry() {
     }
 
-    void clear() {
-      this.zobristCode = 0;
-      this.evaluation = -Value.INFINITY;
-    }
   }
 
   EvaluationTable(int newSize) {

@@ -30,11 +30,6 @@ final class PositionList {
     this.position = new int[MAXSIZE];
   }
 
-  PositionList(int MAXSIZE) {
-    this.MAXSIZE = MAXSIZE;
-    this.position = new int[MAXSIZE];
-  }
-
   /**
    * Adds the position to the list.
    *  @param position the position.
@@ -42,7 +37,6 @@ final class PositionList {
    */
   void addPosition(int position) {
     assert (position & 0x88) == 0;
-    assert this != null;
     assert size >= 0 && size < MAXSIZE;
 
     // Iterate over the list from the end
@@ -69,7 +63,6 @@ final class PositionList {
    */
   void removePosition(int position) {
     assert (position & 0x88) == 0;
-    assert this != null;
     assert size > 0 && size <= MAXSIZE;
 
     // Iterate over the list from the beginning

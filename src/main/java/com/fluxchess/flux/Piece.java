@@ -39,14 +39,6 @@ final class Piece {
    * Bit operations
    */
   private static final int BIT_SLIDING = 4;
-  static final int BIT_DIAGONAL_SLIDING = 1;
-  static final int BIT_STRAIGHT_SLIDING = 2;
-
-  /**
-   * Chessman
-   */
-  static final int INTCHESSMAN_MASK = 0x7FF;
-  static final int INTCHESSMAN_SIZE = 11;
 
   // Bit operation values
   private static final int CHESSMAN_SHIFT = 0;
@@ -89,7 +81,6 @@ final class Piece {
    * Piece
    */
   static final int PIECE_MASK = 0xF;
-  static final int PIECE_SIZE = 4;
   static final int PIECE_VALUE_SIZE = 16;
 
   /**

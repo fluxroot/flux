@@ -31,7 +31,6 @@ final class See {
 
     final int[] chessman = new int[MAXSIZE];
     final int[] position = new int[MAXSIZE];
-    int head = 0;
     int size = 0;
 
     List() {
@@ -56,13 +55,11 @@ final class See {
     // Clear the chessman list
     List myList = chessmanList[myColor];
     List enemyList = chessmanList[enemyColor];
-    myList.head = 0;
     myList.size = 0;
-    enemyList.head = 0;
     enemyList.size = 0;
 
     // Get the attacker value
-    int attackerValue = 0;
+    int attackerValue;
     if (type == MoveType.PAWNPROMOTION) {
       attackerValue = Piece.getValueFromChessman(Move.getPromotion(move));
     } else {
@@ -138,7 +135,7 @@ final class See {
     }
 
     // Get the attacker value
-    int attackerValue = 0;
+    int attackerValue;
     int chessman = Piece.getChessman(attacker);
     if (chessman == PieceType.PAWN
         && ((targetPosition > 111 && myColor == Color.WHITE)

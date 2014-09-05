@@ -171,7 +171,6 @@ final class Position {
    * Creates a new board.
    *
    * @param newBoard the board to setup our own board.
-   * @throws SquareNotEmptyException if a square is not empty.
    */
   Position(GenericBoard newBoard) {
     // Initialize repetition table
@@ -715,11 +714,7 @@ final class Position {
       int attacker = board[end];
       if (attacker != Piece.NOPIECE) {
         int attackerColor = Piece.getColor(attacker);
-        if (kingColor != attackerColor && canSliderPseudoAttack(attacker, end, myKingPosition)) {
-          return true;
-        } else {
-          return false;
-        }
+        return kingColor != attackerColor && canSliderPseudoAttack(attacker, end, myKingPosition);
       } else {
         end -= delta;
       }
@@ -741,7 +736,7 @@ final class Position {
     assert (attackerPosition & 0x88) == 0;
     assert (targetPosition & 0x88) == 0;
 
-    int attackVector = Attack.N;
+    int attackVector;
 
     switch (Piece.getChessman(attacker)) {
       case PieceType.PAWN:
@@ -1076,11 +1071,8 @@ final class Position {
     while ((end & 0x88) == 0 && end != targetPosition && board[end] == Piece.NOPIECE) {
       end += attackDelta;
     }
-    if (end == targetPosition) {
-      return true;
-    }
 
-    return false;
+    return end == targetPosition;
   }
 
   /**
@@ -1344,7 +1336,7 @@ final class Position {
 
     // Save the captured chessman
     int endPosition = Move.getEnd(move);
-    int target = Piece.NOPIECE;
+    int target;
     if (board[endPosition] != Piece.NOPIECE) {
       // Save the castling rights
       castlingHistory[this.castlingHistorySize++] = castling;
@@ -1447,8 +1439,6 @@ final class Position {
     if (pawnColor == Color.WHITE) {
       targetPosition = endPosition - 16;
     } else {
-      assert pawnColor == Color.BLACK;
-
       targetPosition = endPosition + 16;
     }
 

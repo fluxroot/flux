@@ -322,8 +322,8 @@ final class Evaluation {
 
     // Evaluate the pawn structures
     long pawnZobristCode = board.pawnZobristCode;
-    int pawnStructureOpening = 0;
-    int pawnStructureEndgame = 0;
+    int pawnStructureOpening;
+    int pawnStructureEndgame;
     if (Configuration.usePawnTable && this.pawnHashtable.exists(pawnZobristCode)) {
       pawnStructureOpening = this.pawnHashtable.getOpening(pawnZobristCode);
       pawnStructureEndgame = this.pawnHashtable.getEndgame(pawnZobristCode);
@@ -985,7 +985,7 @@ final class Evaluation {
     }
 
     // Evaluate king safety
-    int attackedSquare = Square.NOPOSITION;
+    int attackedSquare;
     int attackCount = 0;
     byte flag = 0;
 
@@ -1110,8 +1110,6 @@ final class Evaluation {
     if (myColor == Color.BLACK) {
       castlingPositionKingside = Square.BLACK_CASTLING_KINGSIDE;
       castlingPositionQueenside = Square.BLACK_CASTLING_QUEENSIDE;
-    } else {
-      assert myColor == Color.WHITE;
     }
 
     // Evaluate pawn shield

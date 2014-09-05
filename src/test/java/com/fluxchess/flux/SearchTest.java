@@ -33,7 +33,7 @@ import static org.junit.Assert.assertEquals;
 
 public class SearchTest implements IProtocolHandler {
 
-  final BlockingQueue<IEngineCommand> commandQueue = new LinkedBlockingQueue<IEngineCommand>();
+  final BlockingQueue<IEngineCommand> commandQueue = new LinkedBlockingQueue<>();
   boolean found = false;
 
   public SearchTest() {
@@ -53,10 +53,6 @@ public class SearchTest implements IProtocolHandler {
   public void testMate30() {
     new Flux(this).run();
     assertEquals(this.found, true);
-  }
-
-  public void send(IProtocolCommand command) {
-    command.accept(this);
   }
 
   public IEngineCommand receive() {

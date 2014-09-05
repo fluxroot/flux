@@ -87,7 +87,7 @@ final class Search implements Runnable {
 
   // Search information
   private static final MoveList[] pvList = new MoveList[Depth.MAX_HEIGHT + 1];
-  private static final HashMap<Integer, PrincipalVariation> multiPvMap = new HashMap<Integer, PrincipalVariation>(MAX_MOVES);
+  private static final HashMap<Integer, PrincipalVariation> multiPvMap = new HashMap<>(MAX_MOVES);
   private Result bestResult = null;
   private final int[] timeTable;
 
@@ -417,7 +417,7 @@ final class Search implements Runnable {
     if (this.searchMoveList.getLength() == 0) {
       MoveGenerator.initializeMain(attack, 0, transpositionMove);
 
-      int move = Move.NOMOVE;
+      int move;
       while ((move = MoveGenerator.getNextMove()) != Move.NOMOVE) {
         rootMoveList.moves[rootMoveList.tail++] = move;
       }
@@ -705,11 +705,7 @@ final class Search implements Runnable {
 
     // Initialize Single-Response Extension
     boolean isSingleReply;
-    if (isCheck && rootMoveList.getLength() == 1) {
-      isSingleReply = true;
-    } else {
-      isSingleReply = false;
-    }
+    isSingleReply = isCheck && rootMoveList.getLength() == 1;
 
     for (int j = rootMoveList.head; j < rootMoveList.tail; j++) {
       int move = rootMoveList.moves[j];
@@ -765,7 +761,7 @@ final class Search implements Runnable {
       }
 
       // Add pv to list
-      List<GenericMove> commandMoveList = new ArrayList<GenericMove>();
+      List<GenericMove> commandMoveList = new ArrayList<>();
       commandMoveList.add(Move.toCommandMove(move));
       for (int i = pvList[height + 1].head; i < pvList[height + 1].tail; i++) {
         commandMoveList.add(Move.toCommandMove(pvList[height + 1].moves[i]));
@@ -798,7 +794,7 @@ final class Search implements Runnable {
       if (this.showPvNumber > 1) {
         assert currentMoveNumber <= this.showPvNumber || lastMultiPv != null;
         if (currentMoveNumber <= this.showPvNumber || pv.compareTo(lastMultiPv) < 0) {
-          PriorityQueue<PrincipalVariation> tempPvList = new PriorityQueue<PrincipalVariation>(multiPvMap.values());
+          PriorityQueue<PrincipalVariation> tempPvList = new PriorityQueue<>(multiPvMap.values());
           for (int i = 1; i <= this.showPvNumber && !tempPvList.isEmpty(); i++) {
             lastMultiPv = tempPvList.remove();
             sendInformation(lastMultiPv, i);
@@ -1117,13 +1113,9 @@ final class Search implements Runnable {
 
     // Initialize Single-Response Extension
     boolean isSingleReply;
-    if (isCheck && attack.numberOfMoves == 1) {
-      isSingleReply = true;
-    } else {
-      isSingleReply = false;
-    }
+    isSingleReply = isCheck && attack.numberOfMoves == 1;
 
-    int move = Move.NOMOVE;
+    int move;
     while ((move = MoveGenerator.getNextMove()) != Move.NOMOVE) {
       //## BEGIN Minor Promotion Pruning
       if (Configuration.useMinorPromotionPruning
@@ -1425,7 +1417,7 @@ final class Search implements Runnable {
     // Initialize the move generator
     MoveGenerator.initializeQuiescent(attack, checkingDepth >= 0);
 
-    int move = Move.NOMOVE;
+    int move;
     while ((move = MoveGenerator.getNextMove()) != Move.NOMOVE) {
       //## BEGIN Futility Pruning
       if (Configuration.useDeltaPruning) {

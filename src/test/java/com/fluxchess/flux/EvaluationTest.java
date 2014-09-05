@@ -29,7 +29,7 @@ public class EvaluationTest {
   @Test
   public void testEvaluate() {
     Evaluation evaluation = new Evaluation();
-    Position board = null;
+    Position board;
 
     try {
       board = new Position(new GenericBoard("r6r/1bk2ppp/p2qp3/2b1Q3/Pp3P2/1B2P3/1P2N1PP/R1B3K1 w - -"));
