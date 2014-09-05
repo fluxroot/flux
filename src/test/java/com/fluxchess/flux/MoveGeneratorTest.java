@@ -45,7 +45,6 @@ public class MoveGeneratorTest {
 //			testBoard.makeMove(IntMove.createMove(IntMove.NORMAL, IntPosition.e1, IntPosition.d1, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN));
 //			testBoard.makeMove(IntMove.createMove(IntMove.PAWNDOUBLE, IntPosition.c7, IntPosition.c5, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN));
       int result = miniMax(testBoard, new MoveGenerator(testBoard, new KillerTable(), new HistoryTable()), 5, 5);
-      System.out.println(result);
     } catch (IllegalNotationException e) {
       fail();
     }
@@ -74,11 +73,9 @@ public class MoveGeneratorTest {
             Position testBoard = new Position(board);
             new See(testBoard);
 
-            System.out.print("Testing " + tokens[0].trim() + " depth " + depth + " with nodes number " + nodesNumber + ": ");
             long startTime = System.currentTimeMillis();
             int result = miniMax(testBoard, new MoveGenerator(testBoard, new KillerTable(), new HistoryTable()), depth, depth);
             long endTime = System.currentTimeMillis();
-            System.out.println(endTime - startTime);
             assertEquals(tokens[0].trim(), nodesNumber, result);
           }
 
@@ -166,7 +163,6 @@ public class MoveGeneratorTest {
             Position testBoard = new Position(board);
             new See(testBoard);
 
-            System.out.println("Testing " + tokens[0].trim() + " depth " + depth + " with nodes number " + nodesNumber + ":");
             new MoveGenerator(testBoard, new KillerTable(), new HistoryTable());
             miniMaxQuiescentCheckingMoves(testBoard, depth, depth);
           }

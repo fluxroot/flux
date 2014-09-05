@@ -68,22 +68,17 @@ public class SearchTest implements IProtocolHandler {
     }
     assert command != null;
 
-    System.out.println(command);
-
     return command;
   }
 
   public void send(ProtocolInitializeAnswerCommand command) {
-    System.out.println(command);
   }
 
   public void send(ProtocolReadyAnswerCommand command) {
-    System.out.println(command);
   }
 
   public void send(ProtocolBestMoveCommand command) {
     this.commandQueue.add(new EngineQuitCommand());
-    System.out.println(command);
   }
 
   public void send(ProtocolInformationCommand command) {
@@ -92,7 +87,6 @@ public class SearchTest implements IProtocolHandler {
         this.found = true;
       }
     }
-    System.out.println(command);
   }
 
   public String toString() {
