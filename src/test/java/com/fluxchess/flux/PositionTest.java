@@ -22,8 +22,7 @@ import com.fluxchess.jcpi.models.*;
 import org.junit.Assert;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 public class PositionTest {
 
@@ -68,6 +67,34 @@ public class PositionTest {
 
     // Test material value
     Assert.assertEquals(Piece.VALUE_KING + Piece.VALUE_QUEEN + 2 * Piece.VALUE_ROOK + 2 * Piece.VALUE_BISHOP + 2 * Piece.VALUE_KNIGHT + 8 * Piece.VALUE_PAWN, Position.materialValue[Color.WHITE]);
+  }
+
+  @Test
+  public void testIsRepetition() {
+    GenericBoard genericBoard = new GenericBoard(GenericBoard.STANDARDSETUP);
+    Position board = new Position(genericBoard);
+
+    // Move white knight
+    int move = Move.createMove(MoveType.NORMAL, Square.b1, Square.c3, Piece.WHITE_KNIGHT, Piece.NOPIECE, Piece.NOPIECE);
+    board.makeMove(move);
+
+    // Move black knight
+    move = Move.createMove(MoveType.NORMAL, Square.b8, Square.c6, Piece.BLACK_KNIGHT, Piece.NOPIECE, Piece.NOPIECE);
+    board.makeMove(move);
+
+    // Move white knight
+    move = Move.createMove(MoveType.NORMAL, Square.g1, Square.f3, Piece.WHITE_KNIGHT, Piece.NOPIECE, Piece.NOPIECE);
+    board.makeMove(move);
+
+    // Move black knight
+    move = Move.createMove(MoveType.NORMAL, Square.c6, Square.b8, Piece.BLACK_KNIGHT, Piece.NOPIECE, Piece.NOPIECE);
+    board.makeMove(move);
+
+    // Move white knight
+    move = Move.createMove(MoveType.NORMAL, Square.f3, Square.g1, Piece.WHITE_KNIGHT, Piece.NOPIECE, Piece.NOPIECE);
+    board.makeMove(move);
+
+    assertTrue(board.isRepetition());
   }
 
   @Test

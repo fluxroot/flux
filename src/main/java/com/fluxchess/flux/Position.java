@@ -105,9 +105,6 @@ final class Position {
   static final int[] positionValueOpening = new int[Color.ARRAY_DIMENSION];
   static final int[] positionValueEndgame = new int[Color.ARRAY_DIMENSION];
 
-  // Our repetition table
-  private static RepetitionTable repetitionTable;
-
   // Attack
   private static final Attack[][] attackHistory = new Attack[STACKSIZE + 1][Color.ARRAY_DIMENSION];
   private int attackHistorySize = 0;
@@ -173,9 +170,6 @@ final class Position {
    * @param newBoard the board to setup our own board.
    */
   Position(GenericBoard newBoard) {
-    // Initialize repetition table
-    repetitionTable = new RepetitionTable();
-
     // Initialize the position lists
     for (int color : Color.values) {
       pawnList[color] = new PositionList();
@@ -606,7 +600,14 @@ final class Position {
    * @return true if this board state is a repetition, false otherwise.
    */
   boolean isRepetition() {
-    return repetitionTable.exists(this.zobristCode);
+    int j = Math.max(0, statesSize - halfMoveClock);
+    for (int i = statesSize - 2; i >= j; i -= 2) {
+      if (zobristCode == states[i].zobristHistory) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   /**
@@ -1103,23 +1104,18 @@ final class Position {
 
     switch (type) {
       case MoveType.NORMAL:
-        repetitionTable.put(this.zobristCode);
         makeMoveNormal(move);
         break;
       case MoveType.PAWNDOUBLE:
-        repetitionTable.put(this.zobristCode);
         makeMovePawnDouble(move);
         break;
       case MoveType.PAWNPROMOTION:
-        repetitionTable.put(this.zobristCode);
         makeMovePawnPromotion(move);
         break;
       case MoveType.ENPASSANT:
-        repetitionTable.put(this.zobristCode);
         makeMoveEnPassant(move);
         break;
       case MoveType.CASTLING:
-        repetitionTable.put(this.zobristCode);
         makeMoveCastling(move);
         break;
       case MoveType.NULL:
@@ -1181,23 +1177,18 @@ final class Position {
     switch (type) {
       case MoveType.NORMAL:
         undoMoveNormal(move);
-        repetitionTable.remove(this.zobristCode);
         break;
       case MoveType.PAWNDOUBLE:
         undoMovePawnDouble(move);
-        repetitionTable.remove(this.zobristCode);
         break;
       case MoveType.PAWNPROMOTION:
         undoMovePawnPromotion(move);
-        repetitionTable.remove(this.zobristCode);
         break;
       case MoveType.ENPASSANT:
         undoMoveEnPassant(move);
-        repetitionTable.remove(this.zobristCode);
         break;
       case MoveType.CASTLING:
         undoMoveCastling(move);
-        repetitionTable.remove(this.zobristCode);
         break;
       case MoveType.NULL:
         break;
