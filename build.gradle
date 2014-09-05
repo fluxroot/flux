@@ -80,15 +80,11 @@ cobertura.coverageFormats = ['html', 'xml']
 
 sourceSets {
   integration
-  testing
 }
 
 configurations {
   integrationCompile.extendsFrom testCompile
   integrationRuntime.extendsFrom testRuntime
-
-  testingCompile.extendsFrom testCompile
-  testingRuntime.extendsFrom testRuntime
 }
 
 dependencies {
@@ -101,8 +97,6 @@ dependencies {
   testCompile 'log4j:log4j:1.2.+'
 
   integrationCompile project(path: ':', configuration: 'testRuntime')
-
-  testingCompile project(path: ':', configuration: 'testRuntime')
 }
 
 sourceCompatibility = 1.7
@@ -264,15 +258,4 @@ def downloadFile(srcUrl, destUrl) {
 
 task wrapper(type: Wrapper) {
   gradleVersion = '1.10'
-}
-
-apply plugin: 'idea'
-
-idea {
-  module {
-    testSourceDirs += sourceSets.integration.java.srcDirs
-    testSourceDirs += sourceSets.integration.resources.srcDirs
-    testSourceDirs += sourceSets.testing.java.srcDirs
-    testSourceDirs += sourceSets.testing.resources.srcDirs
-  }
 }
