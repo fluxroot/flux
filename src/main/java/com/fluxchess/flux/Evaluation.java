@@ -1363,7 +1363,7 @@ public final class Evaluation {
               else if (((promotionDistance <= 2 && (myAttackTable[pawnPosition] & BIT_KING) != 0)
                   || (promotionDistance <= 3 && (myAttackTable[pawnPosition + 16] & BIT_KING) != 0 && board.activeColor == myColor))
                   && (myKingFile != pawnFile
-                  || (pawnFile != Square.fileA && pawnFile != Square.fileH))) {
+                  || (pawnFile != File.a && pawnFile != File.h))) {
                 endgameMax += EVAL_PAWN_PASSER_UNSTOPPABLE;
               }
             }
@@ -1402,7 +1402,7 @@ public final class Evaluation {
               else if (((promotionDistance <= 2 && (myAttackTable[pawnPosition] & BIT_KING) != 0)
                   || (promotionDistance <= 3 && (myAttackTable[pawnPosition - 16] & BIT_KING) != 0 && board.activeColor == myColor))
                   && (myKingFile != pawnFile
-                  || (pawnFile != Square.fileA && pawnFile != Square.fileH))) {
+                  || (pawnFile != File.a && pawnFile != File.h))) {
                 endgameMax += EVAL_PAWN_PASSER_UNSTOPPABLE;
               }
             }

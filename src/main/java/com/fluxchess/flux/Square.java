@@ -85,30 +85,6 @@ public final class Square {
   };
 
   /**
-   * File values
-   */
-  public static final int fileA = 0;
-  public static final int fileB = 1;
-  public static final int fileC = 2;
-  public static final int fileD = 3;
-  public static final int fileE = 4;
-  public static final int fileF = 5;
-  public static final int fileG = 6;
-  public static final int fileH = 7;
-
-  /**
-   * Rank values
-   */
-  public static final int rank1 = 0;
-  public static final int rank2 = 1;
-  public static final int rank3 = 2;
-  public static final int rank4 = 3;
-  public static final int rank5 = 4;
-  public static final int rank6 = 5;
-  public static final int rank7 = 6;
-  public static final int rank8 = 7;
-
-  /**
    * Castling positions
    */
   public static final int WHITE_CASTLING_KINGSIDE = g1;

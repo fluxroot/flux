@@ -1534,7 +1534,7 @@ public final class Search implements Runnable {
     //## Pawn Extension
     else if (Configuration.usePawnExtension
         && Move.getChessman(move) == Piece.PAWN
-        && Square.getRelativeRank(Move.getEnd(move), board.activeColor) == Square.rank7) {
+        && Square.getRelativeRank(Move.getEnd(move), board.activeColor) == Rank.r7) {
       newDepth++;
     }
 
@@ -1564,7 +1564,7 @@ public final class Search implements Runnable {
   private static boolean isDangerousMove(int move) {
     int chessman = Move.getChessman(move);
     int relativeRank = Square.getRelativeRank(Move.getEnd(move), board.activeColor);
-    if (chessman == Piece.PAWN && relativeRank >= Square.rank7) {
+    if (chessman == Piece.PAWN && relativeRank >= Rank.r7) {
       return true;
     }
 
