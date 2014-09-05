@@ -18,9 +18,9 @@
  */
 package com.fluxchess.flux;
 
-final class PositionValues {
+final class PieceSquareTable {
 
-  private static final int[][] positionValueOpening = {
+  private static final int[][] OPENING = {
       { // Empty
       //    a1,   b1,   c1,   d1,   e1,   f1,   g1,   h1
              0,    0,    0,    0,    0,    0,    0,    0,     0,0,0,0,0,0,0,0,
@@ -119,7 +119,7 @@ final class PositionValues {
       }
   };
 
-  private static final int[][] positionValueEndgame = {
+  private static final int[][] ENDGAME = {
       { // Empty
       //    a1,   b1,   c1,   d1,   e1,   f1,   g1,   h1
              0,    0,    0,    0,    0,    0,    0,    0,     0,0,0,0,0,0,0,0,
@@ -218,28 +218,22 @@ final class PositionValues {
       }
   };
 
-  /**
-   * Creates a new PositionValues.
-   */
-  private PositionValues() {
+  private PieceSquareTable() {
   }
 
-  static int getPositionValue(int phase, int chessman, int chessmanColor, int chessmanPosition) {
+  static int getValue(int phase, int piecetype, int color, int square) {
     assert phase != GamePhase.NOGAMEPHASE;
-    assert chessmanColor != Color.NOCOLOR;
-    assert (chessmanPosition & 0x88) == 0;
+    assert color != Color.NOCOLOR;
+    assert (square & 0x88) == 0;
 
-    int position = chessmanPosition;
-    if (chessmanColor == Color.BLACK) {
-      position = 127 - 8 - chessmanPosition;
-    } else {
-      assert chessmanColor == Color.WHITE;
+    if (color == Color.BLACK) {
+      square = 127 - 8 - square;
     }
 
     if (phase == GamePhase.ENDGAME) {
-      return positionValueEndgame[chessman][position];
+      return ENDGAME[piecetype][square];
     } else {
-      return positionValueOpening[chessman][position];
+      return OPENING[piecetype][square];
     }
   }
 

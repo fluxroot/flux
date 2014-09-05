@@ -22,7 +22,7 @@ import com.fluxchess.jcpi.models.GenericChessman;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class PositionValuesTest {
+public class PieceSquareTableTest {
 
   @Test
   public void testGetPositionValue() {
@@ -30,7 +30,7 @@ public class PositionValuesTest {
       for (GenericChessman chessman : GenericChessman.values()) {
         for (int position = 0; position < Position.BOARDSIZE; position++) {
           if ((position & 0x88) == 0) {
-            Assert.assertEquals(PositionValues.getPositionValue(phase, Piece.valueOfChessman(chessman), Color.WHITE, position), PositionValues.getPositionValue(phase, Piece.valueOfChessman(chessman), Color.BLACK, 119 - position));
+            Assert.assertEquals(PieceSquareTable.getValue(phase, Piece.valueOfChessman(chessman), Color.WHITE, position), PieceSquareTable.getValue(phase, Piece.valueOfChessman(chessman), Color.BLACK, 119 - position));
           } else {
             position += 7;
           }

@@ -309,8 +309,8 @@ final class Position {
     materialValue[color] += Piece.getValueFromChessman(chessman);
     if (update) {
       this.zobristCode ^= zobristChessman[chessman][color][position];
-      positionValueOpening[color] += PositionValues.getPositionValue(GamePhase.OPENING, chessman, color, position);
-      positionValueEndgame[color] += PositionValues.getPositionValue(GamePhase.ENDGAME, chessman, color, position);
+      positionValueOpening[color] += PieceSquareTable.getValue(GamePhase.OPENING, chessman, color, position);
+      positionValueEndgame[color] += PieceSquareTable.getValue(GamePhase.ENDGAME, chessman, color, position);
     }
   }
 
@@ -373,8 +373,8 @@ final class Position {
     materialValue[color] -= Piece.getValueFromChessman(chessman);
     if (update) {
       this.zobristCode ^= zobristChessman[chessman][color][position];
-      positionValueOpening[color] -= PositionValues.getPositionValue(GamePhase.OPENING, chessman, color, position);
-      positionValueEndgame[color] -= PositionValues.getPositionValue(GamePhase.ENDGAME, chessman, color, position);
+      positionValueOpening[color] -= PieceSquareTable.getValue(GamePhase.OPENING, chessman, color, position);
+      positionValueEndgame[color] -= PieceSquareTable.getValue(GamePhase.ENDGAME, chessman, color, position);
     }
 
     return piece;
@@ -443,10 +443,10 @@ final class Position {
       long[] tempZobristChessman = zobristChessman[chessman][color];
       this.zobristCode ^= tempZobristChessman[start];
       this.zobristCode ^= tempZobristChessman[end];
-      positionValueOpening[color] -= PositionValues.getPositionValue(GamePhase.OPENING, chessman, color, start);
-      positionValueEndgame[color] -= PositionValues.getPositionValue(GamePhase.ENDGAME, chessman, color, start);
-      positionValueOpening[color] += PositionValues.getPositionValue(GamePhase.OPENING, chessman, color, end);
-      positionValueEndgame[color] += PositionValues.getPositionValue(GamePhase.ENDGAME, chessman, color, end);
+      positionValueOpening[color] -= PieceSquareTable.getValue(GamePhase.OPENING, chessman, color, start);
+      positionValueEndgame[color] -= PieceSquareTable.getValue(GamePhase.ENDGAME, chessman, color, start);
+      positionValueOpening[color] += PieceSquareTable.getValue(GamePhase.OPENING, chessman, color, end);
+      positionValueEndgame[color] += PieceSquareTable.getValue(GamePhase.ENDGAME, chessman, color, end);
     }
 
     return piece;
