@@ -32,28 +32,28 @@ public class SeeTest {
     try {
       // Pawn capture
       Position board = new Position(new GenericBoard("8/8/8/4p1k1/2KP4/8/8/8 w - -"));
-      int move = Move.createMove(Move.NORMAL, Square.d4, Square.e5, Position.board[Square.d4], Position.board[Square.e5], Piece.NOPIECE);
+      int move = Move.createMove(MoveType.NORMAL, Square.d4, Square.e5, Position.board[Square.d4], Position.board[Square.e5], Piece.NOPIECE);
       new See(board);
       int value = See.seeMove(move, Color.WHITE);
       assertEquals(Piece.VALUE_PAWN, value);
 
       // En passant capture
       board = new Position(new GenericBoard("8/8/K7/6k1/2Pp4/8/1P6/8 b - c3"));
-      move = Move.createMove(Move.ENPASSANT, Square.d4, Square.c3, Position.board[Square.d4], Position.board[Square.c4], Piece.NOPIECE);
+      move = Move.createMove(MoveType.ENPASSANT, Square.d4, Square.c3, Position.board[Square.d4], Position.board[Square.c4], Piece.NOPIECE);
       new See(board);
       value = See.seeMove(move, Color.BLACK);
       assertEquals(0, value);
 
       // En passant capture with hidden attacker
       board = new Position(new GenericBoard("8/6k1/4r3/8/4Pp2/8/1K1P4/8 b - e3"));
-      move = Move.createMove(Move.ENPASSANT, Square.f4, Square.e3, Position.board[Square.f4], Position.board[Square.e4], Piece.NOPIECE);
+      move = Move.createMove(MoveType.ENPASSANT, Square.f4, Square.e3, Position.board[Square.f4], Position.board[Square.e4], Piece.NOPIECE);
       new See(board);
       value = See.seeMove(move, Color.BLACK);
       assertEquals(Piece.VALUE_PAWN, value);
 
       // Pawn promotion capture
       board = new Position(new GenericBoard("8/8/K7/6k1/8/5B2/4p3/3R4 b - -"));
-      move = Move.createMove(Move.PAWNPROMOTION, Square.e2, Square.d1, Position.board[Square.e2], Position.board[Square.d1], Piece.ROOK);
+      move = Move.createMove(MoveType.PAWNPROMOTION, Square.e2, Square.d1, Position.board[Square.e2], Position.board[Square.d1], Piece.ROOK);
       new See(board);
       value = See.seeMove(move, Color.BLACK);
       assertEquals(
@@ -63,7 +63,7 @@ public class SeeTest {
 
       // King capture abort
       board = new Position(new GenericBoard("8/6k1/8/4q3/8/5p2/1R1KP3/8 b - -"));
-      move = Move.createMove(Move.NORMAL, Square.f3, Square.e2, Position.board[Square.f3], Position.board[Square.e2], Piece.NOPIECE);
+      move = Move.createMove(MoveType.NORMAL, Square.f3, Square.e2, Position.board[Square.f3], Position.board[Square.e2], Piece.NOPIECE);
       new See(board);
       value = See.seeMove(move, Color.BLACK);
       assertEquals(
@@ -73,7 +73,7 @@ public class SeeTest {
 
       // Complex capture
       board = new Position(new GenericBoard("R1B3q1/N1KP4/3n4/8/6b1/2R5/6k1/8 b - -"));
-      move = Move.createMove(Move.NORMAL, Square.d6, Square.c8, Position.board[Square.d6], Position.board[Square.c8], Piece.NOPIECE);
+      move = Move.createMove(MoveType.NORMAL, Square.d6, Square.c8, Position.board[Square.d6], Position.board[Square.c8], Piece.NOPIECE);
       new See(board);
       value = See.seeMove(move, Color.BLACK);
       assertEquals(
@@ -87,7 +87,7 @@ public class SeeTest {
 
       // Same piece capture test
       board = new Position(new GenericBoard("r4rk1/5ppp/2Np4/p2P2b1/Pp3Rq1/1R1pP2P/1PP3P1/7K w - -"));
-      move = Move.createMove(Move.NORMAL, Square.c6, Square.b4, Position.board[Square.c6], Position.board[Square.b4], Piece.NOPIECE);
+      move = Move.createMove(MoveType.NORMAL, Square.c6, Square.b4, Position.board[Square.c6], Position.board[Square.b4], Piece.NOPIECE);
       new See(board);
       value = See.seeMove(move, Color.WHITE);
       assertEquals(
@@ -99,7 +99,7 @@ public class SeeTest {
 
       // Non-capture move
       board = new Position(new GenericBoard("8/6k1/4r3/8/5p2/8/1K1PP3/8 w - -"));
-      move = Move.createMove(Move.NORMAL, Square.e2, Square.e3, Position.board[Square.e2], Position.board[Square.e3], Piece.NOPIECE);
+      move = Move.createMove(MoveType.NORMAL, Square.e2, Square.e3, Position.board[Square.e2], Position.board[Square.e3], Piece.NOPIECE);
       new See(board);
       value = See.seeMove(move, Color.WHITE);
       assertEquals(-Piece.VALUE_PAWN, value);

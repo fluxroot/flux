@@ -49,33 +49,6 @@ public final class Move {
   public static final int NULLMOVE;
 
   /**
-   * Move values
-   */
-  public static final int NORMAL = 0;
-  public static final int PAWNDOUBLE = 1;
-  public static final int PAWNPROMOTION = 2;
-  public static final int ENPASSANT = 3;
-  public static final int CASTLING = 4;
-  public static final int NULL = 5;
-
-  /**
-   * IntMove array
-   */
-  public static final int[] values = {
-      NORMAL,
-      PAWNDOUBLE,
-      PAWNPROMOTION,
-      ENPASSANT,
-      CASTLING,
-      NULL
-  };
-
-  /**
-   * Move mask
-   */
-  public static final int MASK = 0x7;
-
-  /**
    * IntMove
    */
   public static final int INTMOVE_MASK = 0xFFFFFFF;
@@ -105,10 +78,10 @@ public final class Move {
   private static final int PROMOTION_SHIFT = 22;
   private static final int PROMOTION_MASK = Piece.MASK << PROMOTION_SHIFT;
   private static final int MOVE_SHIFT = 25;
-  private static final int MOVE_MASK = MASK << MOVE_SHIFT;
+  private static final int MOVE_MASK = MoveType.MASK << MOVE_SHIFT;
 
   static {
-    NULLMOVE = Move.createMove(Move.NULL, Square.NOPOSITION, Square.NOPOSITION, Piece.NOPIECE, Piece.NOPIECE, Piece.NOPIECE);
+    NULLMOVE = Move.createMove(MoveType.NULL, Square.NOPOSITION, Square.NOPOSITION, Piece.NOPIECE, Piece.NOPIECE, Piece.NOPIECE);
   }
 
   /**
@@ -130,13 +103,13 @@ public final class Move {
    */
   public static int createMove(int type, int start, int end, int piece, int target, int promotion) {
     assert type != NOMOVE;
-    assert (type == NULL && start == Square.NOPOSITION) || (start & 0x88) == 0;
-    assert (type == NULL && end == Square.NOPOSITION) || (end & 0x88) == 0;
+    assert (type == MoveType.NULL && start == Square.NOPOSITION) || (start & 0x88) == 0;
+    assert (type == MoveType.NULL && end == Square.NOPOSITION) || (end & 0x88) == 0;
 
     int move = 0;
 
     // Check for special case Move.NULL
-    if (type == NULL) {
+    if (type == MoveType.NULL) {
       start = INTERNAL_NOPOSITION;
       end = INTERNAL_NOPOSITION;
     }
@@ -181,12 +154,12 @@ public final class Move {
     move |= promotion << PROMOTION_SHIFT;
 
     // Encode move
-    assert (type == NORMAL)
-        || (type == PAWNDOUBLE)
-        || (type == PAWNPROMOTION)
-        || (type == ENPASSANT)
-        || (type == CASTLING)
-        || (type == NULL);
+    assert (type == MoveType.NORMAL)
+        || (type == MoveType.PAWNDOUBLE)
+        || (type == MoveType.PAWNPROMOTION)
+        || (type == MoveType.ENPASSANT)
+        || (type == MoveType.CASTLING)
+        || (type == MoveType.NULL);
     move |= type << MOVE_SHIFT;
 
     return move;
@@ -276,7 +249,7 @@ public final class Move {
 
     int position = (move & START_MASK) >>> START_SHIFT;
 
-    assert getType(move) != Move.NULL;
+    assert getType(move) != MoveType.NULL;
     assert position != INTERNAL_NOPOSITION;
     assert (position & 0x88) == 0;
 
@@ -294,7 +267,7 @@ public final class Move {
 
     int position = (move & END_MASK) >>> END_SHIFT;
 
-    assert getType(move) != Move.NULL;
+    assert getType(move) != MoveType.NULL;
     assert position != INTERNAL_NOPOSITION;
     assert (position & 0x88) == 0;
 
@@ -450,15 +423,15 @@ public final class Move {
       } else {
         promotion = Piece.valueOfChessman(move.promotion);
       }
-      return createMove(PAWNPROMOTION, Square.valueOfPosition(move.from), Square.valueOfPosition(move.to), Position.board[Square.valueOfPosition(move.from)], Position.board[Square.valueOfPosition(move.to)], promotion);
+      return createMove(MoveType.PAWNPROMOTION, Square.valueOfPosition(move.from), Square.valueOfPosition(move.to), Position.board[Square.valueOfPosition(move.from)], Position.board[Square.valueOfPosition(move.to)], promotion);
     } else if (isPawnDouble(move, board)) {
-      return createMove(PAWNDOUBLE, Square.valueOfPosition(move.from), Square.valueOfPosition(move.to), Position.board[Square.valueOfPosition(move.from)], Piece.NOPIECE, Piece.NOPIECE);
+      return createMove(MoveType.PAWNDOUBLE, Square.valueOfPosition(move.from), Square.valueOfPosition(move.to), Position.board[Square.valueOfPosition(move.from)], Piece.NOPIECE, Piece.NOPIECE);
     } else if (isEnPassant(move, board)) {
-      return createMove(ENPASSANT, Square.valueOfPosition(move.from), Square.valueOfPosition(move.to), Position.board[Square.valueOfPosition(move.from)], Position.board[Square.valueOfPosition(GenericPosition.valueOf(move.to.file, move.from.rank))], Piece.NOPIECE);
+      return createMove(MoveType.ENPASSANT, Square.valueOfPosition(move.from), Square.valueOfPosition(move.to), Position.board[Square.valueOfPosition(move.from)], Position.board[Square.valueOfPosition(GenericPosition.valueOf(move.to.file, move.from.rank))], Piece.NOPIECE);
     } else if (isCastling(move, board)) {
-      return createMove(CASTLING, Square.valueOfPosition(move.from), Square.valueOfPosition(move.to), Position.board[Square.valueOfPosition(move.from)], Piece.NOPIECE, Piece.NOPIECE);
+      return createMove(MoveType.CASTLING, Square.valueOfPosition(move.from), Square.valueOfPosition(move.to), Position.board[Square.valueOfPosition(move.from)], Piece.NOPIECE, Piece.NOPIECE);
     } else {
-      return createMove(NORMAL, Square.valueOfPosition(move.from), Square.valueOfPosition(move.to), Position.board[Square.valueOfPosition(move.from)], Position.board[Square.valueOfPosition(move.to)], Piece.NOPIECE);
+      return createMove(MoveType.NORMAL, Square.valueOfPosition(move.from), Square.valueOfPosition(move.to), Position.board[Square.valueOfPosition(move.from)], Position.board[Square.valueOfPosition(move.to)], Piece.NOPIECE);
     }
   }
 
@@ -601,14 +574,14 @@ public final class Move {
     int end = getEnd(move);
 
     switch (type) {
-      case NORMAL:
-      case PAWNDOUBLE:
-      case ENPASSANT:
-      case CASTLING:
+      case MoveType.NORMAL:
+      case MoveType.PAWNDOUBLE:
+      case MoveType.ENPASSANT:
+      case MoveType.CASTLING:
         return new GenericMove(Square.valueOfIntPosition(start), Square.valueOfIntPosition(end));
-      case PAWNPROMOTION:
+      case MoveType.PAWNPROMOTION:
         return new GenericMove(Square.valueOfIntPosition(start), Square.valueOfIntPosition(end), Piece.valueOfIntChessman(getPromotion(move)));
-      case NULL:
+      case MoveType.NULL:
         // TODO:
         return null;
       default:
@@ -621,22 +594,22 @@ public final class Move {
     String string = "<";
 
     switch (getType(move)) {
-      case NORMAL:
+      case MoveType.NORMAL:
         string += "NORMAL";
         break;
-      case PAWNDOUBLE:
+      case MoveType.PAWNDOUBLE:
         string += "PAWNDOUBLE";
         break;
-      case PAWNPROMOTION:
+      case MoveType.PAWNPROMOTION:
         string += "PAWNPROMOTION";
         break;
-      case ENPASSANT:
+      case MoveType.ENPASSANT:
         string += "ENPASSANT";
         break;
-      case CASTLING:
+      case MoveType.CASTLING:
         string += "CASTLING";
         break;
-      case NULL:
+      case MoveType.NULL:
         string += "NULL";
         break;
       default:
@@ -668,7 +641,7 @@ public final class Move {
   }
 
   public static boolean isValidMove(int move) {
-    for (int moveValue : values) {
+    for (int moveValue : MoveType.values) {
       if (move == moveValue) {
         return true;
       }

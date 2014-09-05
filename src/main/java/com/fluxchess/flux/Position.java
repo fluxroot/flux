@@ -625,8 +625,8 @@ public final class Position {
     int enemyKingPosition = kingList[enemyKingColor].position[0];
 
     switch (Move.getType(move)) {
-      case Move.NORMAL:
-      case Move.PAWNDOUBLE:
+      case MoveType.NORMAL:
+      case MoveType.PAWNDOUBLE:
         int chessman = Move.getChessman(move);
 
         // Direct attacks
@@ -644,14 +644,14 @@ public final class Position {
         }
         // Indirect attacks
         break;
-      case Move.PAWNPROMOTION:
-      case Move.ENPASSANT:
+      case MoveType.PAWNPROMOTION:
+      case MoveType.ENPASSANT:
         // We do a slow test for complex moves
         makeMove(move);
         boolean isCheck = isAttacked(enemyKingPosition, chessmanColor);
         undoMove(move);
         return isCheck;
-      case Move.CASTLING:
+      case MoveType.CASTLING:
         int rookEnd = Square.NOPOSITION;
 
         if (endPosition == Square.g1) {
@@ -671,7 +671,7 @@ public final class Position {
         }
 
         return canAttack(Piece.ROOK, chessmanColor, rookEnd, enemyKingPosition);
-      case Move.NULL:
+      case MoveType.NULL:
         assert false;
         break;
       default:
@@ -1110,27 +1110,27 @@ public final class Position {
     int type = Move.getType(move);
 
     switch (type) {
-      case Move.NORMAL:
+      case MoveType.NORMAL:
         repetitionTable.put(this.zobristCode);
         makeMoveNormal(move);
         break;
-      case Move.PAWNDOUBLE:
+      case MoveType.PAWNDOUBLE:
         repetitionTable.put(this.zobristCode);
         makeMovePawnDouble(move);
         break;
-      case Move.PAWNPROMOTION:
+      case MoveType.PAWNPROMOTION:
         repetitionTable.put(this.zobristCode);
         makeMovePawnPromotion(move);
         break;
-      case Move.ENPASSANT:
+      case MoveType.ENPASSANT:
         repetitionTable.put(this.zobristCode);
         makeMoveEnPassant(move);
         break;
-      case Move.CASTLING:
+      case MoveType.CASTLING:
         repetitionTable.put(this.zobristCode);
         makeMoveCastling(move);
         break;
-      case Move.NULL:
+      case MoveType.NULL:
         makeMoveNull(move);
         break;
       default:
@@ -1187,27 +1187,27 @@ public final class Position {
     }
 
     switch (type) {
-      case Move.NORMAL:
+      case MoveType.NORMAL:
         undoMoveNormal(move);
         repetitionTable.remove(this.zobristCode);
         break;
-      case Move.PAWNDOUBLE:
+      case MoveType.PAWNDOUBLE:
         undoMovePawnDouble(move);
         repetitionTable.remove(this.zobristCode);
         break;
-      case Move.PAWNPROMOTION:
+      case MoveType.PAWNPROMOTION:
         undoMovePawnPromotion(move);
         repetitionTable.remove(this.zobristCode);
         break;
-      case Move.ENPASSANT:
+      case MoveType.ENPASSANT:
         undoMoveEnPassant(move);
         repetitionTable.remove(this.zobristCode);
         break;
-      case Move.CASTLING:
+      case MoveType.CASTLING:
         undoMoveCastling(move);
         repetitionTable.remove(this.zobristCode);
         break;
-      case Move.NULL:
+      case MoveType.NULL:
         break;
       default:
         throw new IllegalArgumentException();

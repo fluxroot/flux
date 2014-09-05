@@ -63,7 +63,7 @@ public final class See {
 
     // Get the attacker value
     int attackerValue = 0;
-    if (type == Move.PAWNPROMOTION) {
+    if (type == MoveType.PAWNPROMOTION) {
       attackerValue = Piece.getValueFromChessman(Move.getPromotion(move));
     } else {
       attackerValue = Piece.getValueFromChessman(Move.getChessman(move));
@@ -76,7 +76,7 @@ public final class See {
     if (target != Piece.NOPIECE) {
       value = Piece.getValueFromChessman(target);
     }
-    if (type == Move.PAWNPROMOTION) {
+    if (type == MoveType.PAWNPROMOTION) {
       value += Piece.getValueFromChessman(Move.getPromotion(move)) - Piece.VALUE_PAWN;
     }
 
@@ -85,7 +85,7 @@ public final class See {
     addAllAttackers(enemyList, end, enemyColor);
 
     // Find the attacker hiding behind the en-passant
-    if (type == Move.ENPASSANT) {
+    if (type == MoveType.ENPASSANT) {
       if (myColor == Color.WHITE) {
         addHiddenAttacker(end - 16, end);
       } else {

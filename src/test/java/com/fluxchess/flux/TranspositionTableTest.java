@@ -27,7 +27,7 @@ public class TranspositionTableTest {
   @Test
   public void testTranspositionTable() {
     TranspositionTable table = new TranspositionTable(10);
-    int move1 = Move.createMove(Move.NORMAL, Square.a2, Square.a3, Piece.createPiece(Piece.PAWN, Color.WHITE), Piece.NOPIECE, Piece.NOPIECE);
+    int move1 = Move.createMove(MoveType.NORMAL, Square.a2, Square.a3, Piece.createPiece(Piece.PAWN, Color.WHITE), Piece.NOPIECE, Piece.NOPIECE);
 
     // Put an entry into the table
     table.put(1L, 1, 100, Bound.EXACT, move1, false, 0);

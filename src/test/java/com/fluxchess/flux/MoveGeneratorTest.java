@@ -243,7 +243,7 @@ public class MoveGeneratorTest {
   }
 
   private static boolean isGoodCapture(int move, Position board) {
-    if (Move.getType(move) == Move.PAWNPROMOTION) {
+    if (Move.getType(move) == MoveType.PAWNPROMOTION) {
       if (Move.getPromotion(move) == Piece.QUEEN) {
         return true;
       } else {
