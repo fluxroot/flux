@@ -18,20 +18,27 @@
  */
 package com.fluxchess.flux;
 
-public final class Result {
+import com.fluxchess.jcpi.models.GenericChessman;
+import org.junit.Assert;
+import org.junit.Test;
 
-	public int bestMove = IntMove.NOMOVE;
-	public int ponderMove = IntMove.NOMOVE;
-	public int value = IntValue.NOVALUE;
-	public int resultValue = -Search.INFINITY;
-	public long time = -1;
-	public int moveNumber = 0;
-	public int depth = 0;
-	
-	/**
-	 * Creates a new Result.
-	 */
-	public Result() {
+import static org.junit.Assert.assertEquals;
+
+public class PositionValuesTest {
+
+	@Test
+	public void testGetPositionValue() {
+		for (int phase : IntGamePhase.values) {
+			for (GenericChessman chessman : GenericChessman.values()) {
+				for (int position = 0; position < Hex88Board.BOARDSIZE; position++) {
+					if ((position & 0x88) == 0) {
+						Assert.assertEquals(PositionValues.getPositionValue(phase, IntChessman.valueOfChessman(chessman), IntColor.WHITE, position), PositionValues.getPositionValue(phase, IntChessman.valueOfChessman(chessman), IntColor.BLACK, 119 - position));
+					} else {
+						position += 7;
+					}
+				}
+			}
+		}
 	}
 
 }

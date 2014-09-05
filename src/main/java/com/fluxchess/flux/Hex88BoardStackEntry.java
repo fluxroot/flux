@@ -18,20 +18,30 @@
  */
 package com.fluxchess.flux;
 
-public final class Result {
+public final class Hex88BoardStackEntry {
 
-	public int bestMove = IntMove.NOMOVE;
-	public int ponderMove = IntMove.NOMOVE;
-	public int value = IntValue.NOVALUE;
-	public int resultValue = -Search.INFINITY;
-	public long time = -1;
-	public int moveNumber = 0;
-	public int depth = 0;
-	
-	/**
-	 * Creates a new Result.
-	 */
-	public Result() {
+	public long zobristHistory = 0;
+	public long pawnZobristHistory = 0;
+	public int halfMoveClockHistory = 0;
+	public int enPassantHistory = 0;
+	public int captureSquareHistory = 0;
+	public final int[] positionValueOpening = new int[IntColor.ARRAY_DIMENSION];
+	public final int[] positionValueEndgame = new int[IntColor.ARRAY_DIMENSION];
+
+	public Hex88BoardStackEntry() {
+		clear();
+	}
+
+	public void clear() {
+		this.zobristHistory = 0;
+		this.pawnZobristHistory = 0;
+		this.halfMoveClockHistory = 0;
+		this.enPassantHistory = 0;
+		this.captureSquareHistory = 0;
+		for (int color : IntColor.values) {
+			this.positionValueOpening[color] = 0;
+			this.positionValueEndgame[color] = 0;
+		}
 	}
 
 }

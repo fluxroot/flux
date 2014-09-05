@@ -18,20 +18,28 @@
  */
 package com.fluxchess.flux;
 
-public final class Result {
+/**
+ * Notes: Ideas from Fruit
+ */
+public final class Attack {
 
-	public int bestMove = IntMove.NOMOVE;
-	public int ponderMove = IntMove.NOMOVE;
-	public int value = IntValue.NOVALUE;
-	public int resultValue = -Search.INFINITY;
-	public long time = -1;
-	public int moveNumber = 0;
-	public int depth = 0;
-	
+	public static final int MAXATTACK = 16;
+
 	/**
-	 * Creates a new Result.
+	 * Represents no attack
 	 */
-	public Result() {
+	public static final int NOATTACK = -3;
+	
+	public int count = NOATTACK;
+	public int[] delta = new int[MAXATTACK];
+	public int[] position = new int[MAXATTACK];
+	public int numberOfMoves = -1;
+
+	public Attack() {
+	}
+
+	public boolean isCheck() {
+		return this.count != 0;
 	}
 
 }

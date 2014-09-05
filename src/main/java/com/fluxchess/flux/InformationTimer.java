@@ -22,9 +22,6 @@ import com.fluxchess.jcpi.commands.IProtocol;
 import com.fluxchess.jcpi.commands.ProtocolBestMoveCommand;
 import com.fluxchess.jcpi.commands.ProtocolInformationCommand;
 import com.fluxchess.jcpi.models.GenericMove;
-import com.fluxchess.flux.move.IntValue;
-import com.fluxchess.flux.move.PrincipalVariation;
-import com.fluxchess.flux.table.TranspositionTable;
 
 import java.util.List;
 

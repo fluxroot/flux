@@ -18,20 +18,33 @@
  */
 package com.fluxchess.flux;
 
-public final class Result {
+import org.junit.Test;
 
-	public int bestMove = IntMove.NOMOVE;
-	public int ponderMove = IntMove.NOMOVE;
-	public int value = IntValue.NOVALUE;
-	public int resultValue = -Search.INFINITY;
-	public long time = -1;
-	public int moveNumber = 0;
-	public int depth = 0;
-	
-	/**
-	 * Creates a new Result.
-	 */
-	public Result() {
+import static org.junit.Assert.assertEquals;
+
+public class MoveListTest {
+
+	@Test
+	public void testRemove() {
+		MoveList moveList = new MoveList();
+
+		moveList.newList();
+		assertEquals(0, moveList.getLength());
+		moveList.move[moveList.tail++] = 1;
+		assertEquals(1, moveList.getLength());
+		
+		moveList.newList();
+		assertEquals(0, moveList.getLength());
+		moveList.move[moveList.tail++] = 1;
+		moveList.move[moveList.tail++] = 1;
+		moveList.move[moveList.tail++] = 1;
+		assertEquals(3, moveList.getLength());
+		
+		moveList.deleteList();
+		assertEquals(1, moveList.getLength());
+
+		moveList.deleteList();
+		assertEquals(0, moveList.getLength());
 	}
 
 }

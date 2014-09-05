@@ -18,20 +18,25 @@
  */
 package com.fluxchess.flux;
 
-public final class Result {
+public final class IntCastling {
 
-	public int bestMove = IntMove.NOMOVE;
-	public int ponderMove = IntMove.NOMOVE;
-	public int value = IntValue.NOVALUE;
-	public int resultValue = -Search.INFINITY;
-	public long time = -1;
-	public int moveNumber = 0;
-	public int depth = 0;
-	
 	/**
-	 * Creates a new Result.
+	 * IntCastling values
 	 */
-	public Result() {
+	public static final int WHITE_KINGSIDE = 1 << 0;
+	public static final int WHITE_QUEENSIDE = 1 << 1;
+	public static final int BLACK_KINGSIDE = 1 << 2;
+	public static final int BLACK_QUEENSIDE = 1 << 3;
+
+	/**
+	 * IntCastling constants
+	 */
+	public static final int ARRAY_DIMENSION = 16;
+
+	/**
+	 * IntCastling cannot be instantiated.
+	 */
+	private IntCastling() {
 	}
 
 }

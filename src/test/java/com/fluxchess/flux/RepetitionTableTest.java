@@ -18,20 +18,31 @@
  */
 package com.fluxchess.flux;
 
-public final class Result {
+import org.junit.Test;
 
-	public int bestMove = IntMove.NOMOVE;
-	public int ponderMove = IntMove.NOMOVE;
-	public int value = IntValue.NOVALUE;
-	public int resultValue = -Search.INFINITY;
-	public long time = -1;
-	public int moveNumber = 0;
-	public int depth = 0;
-	
-	/**
-	 * Creates a new Result.
-	 */
-	public Result() {
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+public class RepetitionTableTest {
+
+	@Test
+	public void testTable() {
+		RepetitionTable table = new RepetitionTable();
+
+		// Put a first entry
+		table.put(1);
+		assertTrue(table.exists(1));
+		
+		// Put a secondy entry
+		table.put(1);
+		
+		// Remove one entry
+		table.remove(1);
+		assertTrue(table.exists(1));
+		
+		// Remove the second entry
+		table.remove(1);
+		assertFalse(table.exists(1));
 	}
 
 }

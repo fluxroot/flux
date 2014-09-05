@@ -18,20 +18,21 @@
  */
 package com.fluxchess.flux;
 
-public final class Result {
+public final class PositionList {
 
-	public int bestMove = IntMove.NOMOVE;
-	public int ponderMove = IntMove.NOMOVE;
-	public int value = IntValue.NOVALUE;
-	public int resultValue = -Search.INFINITY;
-	public long time = -1;
-	public int moveNumber = 0;
-	public int depth = 0;
+	public final int MAXSIZE;
+
+	public final int[] position;
+	public int size = 0;
+
+	public PositionList() {
+		this.MAXSIZE = 64;
+		this.position = new int[MAXSIZE];
+	}
 	
-	/**
-	 * Creates a new Result.
-	 */
-	public Result() {
+	public PositionList(int MAXSIZE) {
+		this.MAXSIZE = MAXSIZE;
+		this.position = new int[MAXSIZE];
 	}
 
 }

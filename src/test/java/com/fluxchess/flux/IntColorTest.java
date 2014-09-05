@@ -18,20 +18,18 @@
  */
 package com.fluxchess.flux;
 
-public final class Result {
+import com.fluxchess.jcpi.models.GenericColor;
+import org.junit.Assert;
+import org.junit.Test;
 
-	public int bestMove = IntMove.NOMOVE;
-	public int ponderMove = IntMove.NOMOVE;
-	public int value = IntValue.NOVALUE;
-	public int resultValue = -Search.INFINITY;
-	public long time = -1;
-	public int moveNumber = 0;
-	public int depth = 0;
-	
-	/**
-	 * Creates a new Result.
-	 */
-	public Result() {
+import static org.junit.Assert.assertEquals;
+
+public class IntColorTest {
+
+	@Test
+	public void testIntColor() {
+		Assert.assertEquals(IntColor.valueOfColor(GenericColor.WHITE), IntColor.WHITE);
+		assertEquals(IntColor.valueOfIntColor(IntColor.WHITE), GenericColor.WHITE);
 	}
 
 }

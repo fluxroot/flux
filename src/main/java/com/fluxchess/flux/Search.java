@@ -18,14 +18,7 @@
  */
 package com.fluxchess.flux;
 
-import com.fluxchess.flux.board.*;
-import com.fluxchess.flux.evaluation.IEvaluation;
 import com.fluxchess.jcpi.models.GenericMove;
-import com.fluxchess.flux.move.*;
-import com.fluxchess.flux.table.HistoryTable;
-import com.fluxchess.flux.table.KillerTable;
-import com.fluxchess.flux.table.TranspositionTable;
-import com.fluxchess.flux.table.TranspositionTableEntry;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;

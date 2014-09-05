@@ -18,20 +18,23 @@
  */
 package com.fluxchess.flux;
 
-public final class Result {
+import org.junit.Test;
 
-	public int bestMove = IntMove.NOMOVE;
-	public int ponderMove = IntMove.NOMOVE;
-	public int value = IntValue.NOVALUE;
-	public int resultValue = -Search.INFINITY;
-	public long time = -1;
-	public int moveNumber = 0;
-	public int depth = 0;
-	
-	/**
-	 * Creates a new Result.
-	 */
-	public Result() {
+import static org.junit.Assert.assertEquals;
+
+public class HistoryTableTest {
+
+	@Test
+	public void testHistoryTable() {
+		HistoryTable table = new HistoryTable();
+		
+		int move1 = IntMove.createMove(IntMove.NORMAL, 16, 32, IntChessman.PAWN, IntChessman.NOPIECE, IntChessman.NOPIECE);
+		table.add(move1, 1);
+		assertEquals(1, table.get(move1));
+
+		int move2 = IntMove.createMove(IntMove.NORMAL, 16, 32, IntChessman.PAWN, IntChessman.NOPIECE, IntChessman.NOPIECE);
+		table.add(move2, 1);
+		assertEquals(2, table.get(move2));
 	}
 
 }

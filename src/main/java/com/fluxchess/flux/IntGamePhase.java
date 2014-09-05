@@ -18,20 +18,38 @@
  */
 package com.fluxchess.flux;
 
-public final class Result {
+public class IntGamePhase {
 
-	public int bestMove = IntMove.NOMOVE;
-	public int ponderMove = IntMove.NOMOVE;
-	public int value = IntValue.NOVALUE;
-	public int resultValue = -Search.INFINITY;
-	public long time = -1;
-	public int moveNumber = 0;
-	public int depth = 0;
-	
 	/**
-	 * Creates a new Result.
+	 * Represents no game phase
 	 */
-	public Result() {
+	public static final int NOGAMEPHASE = -5;
+
+	/**
+	 * GamePhase values
+	 */
+	public static final int OPENING = 0;
+	public static final int MIDDLE = 1;
+	public static final int ENDGAME = 2;
+
+	/**
+	 * GamePhase array
+	 */
+	public static final int[] values = {
+		OPENING,
+		MIDDLE,
+		ENDGAME
+	};
+
+	/**
+	 * GamePhase mask
+	 */
+	public static final int MASK = 0x2;
+
+	/**
+	 * IntGamePhase cannot be instantiated.
+	 */
+	private IntGamePhase() {
 	}
 
 }

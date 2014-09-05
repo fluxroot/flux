@@ -18,20 +18,19 @@
  */
 package com.fluxchess.flux;
 
-public final class Result {
+import com.fluxchess.flux.Search;
 
-	public int bestMove = IntMove.NOMOVE;
-	public int ponderMove = IntMove.NOMOVE;
-	public int value = IntValue.NOVALUE;
-	public int resultValue = -Search.INFINITY;
-	public long time = -1;
-	public int moveNumber = 0;
-	public int depth = 0;
-	
-	/**
-	 * Creates a new Result.
-	 */
-	public Result() {
+public final class EvaluationTableEntry {
+
+	public long zobristCode = 0;
+	public int evaluation = -Search.INFINITY;
+
+	public EvaluationTableEntry() {
+	}
+
+	public void clear() {
+		this.zobristCode = 0;
+		this.evaluation = -Search.INFINITY;
 	}
 
 }
