@@ -235,7 +235,7 @@ public final class Evaluation {
 
     // Check the evaluation table
     if (Configuration.useEvaluationTable) {
-      EvaluationTableEntry entry = this.evaluationTable.get(board.zobristCode);
+      EvaluationTable.EvaluationTableEntry entry = this.evaluationTable.get(board.zobristCode);
       if (entry != null) {
         return entry.evaluation;
       }
