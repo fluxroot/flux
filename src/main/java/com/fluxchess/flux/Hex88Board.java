@@ -638,8 +638,8 @@ public final class Hex88Board {
 
         if (isPinned(startPosition, enemyKingColor)) {
           // We are pinned. Test if we move on the line.
-          int attackDeltaStart = AttackVector.delta[enemyKingPosition - startPosition + 127];
-          int attackDeltaEnd = AttackVector.delta[enemyKingPosition - endPosition + 127];
+          int attackDeltaStart = AttackVector.deltas[enemyKingPosition - startPosition + 127];
+          int attackDeltaEnd = AttackVector.deltas[enemyKingPosition - endPosition + 127];
           return attackDeltaStart != attackDeltaEnd;
         }
         // Indirect attacks
@@ -695,7 +695,7 @@ public final class Hex88Board {
       return false;
     }
 
-    int delta = AttackVector.delta[myKingPosition - chessmanPosition + 127];
+    int delta = AttackVector.deltas[myKingPosition - chessmanPosition + 127];
 
     // Walk towards the king
     int end = chessmanPosition + delta;
@@ -857,7 +857,7 @@ public final class Hex88Board {
         if (stop) {
           return true;
         }
-        assert AttackVector.delta[targetPosition - pawnAttackerPosition + 127] == sign * -15;
+        assert AttackVector.deltas[targetPosition - pawnAttackerPosition + 127] == sign * -15;
         attack.position[attack.count] = pawnAttackerPosition;
         attack.delta[attack.count] = sign * -15;
         attack.count++;
@@ -870,7 +870,7 @@ public final class Hex88Board {
         if (stop) {
           return true;
         }
-        assert AttackVector.delta[targetPosition - pawnAttackerPosition + 127] == sign * -17;
+        assert AttackVector.deltas[targetPosition - pawnAttackerPosition + 127] == sign * -17;
         attack.position[attack.count] = pawnAttackerPosition;
         attack.delta[attack.count] = sign * -17;
         attack.count++;
@@ -887,7 +887,7 @@ public final class Hex88Board {
         if (stop) {
           return true;
         }
-        int attackDelta = AttackVector.delta[targetPosition - attackerPosition + 127];
+        int attackDelta = AttackVector.deltas[targetPosition - attackerPosition + 127];
         assert attackDelta != 0;
         attack.position[attack.count] = attackerPosition;
         attack.delta[attack.count] = attackDelta;
@@ -905,7 +905,7 @@ public final class Hex88Board {
         if (stop) {
           return true;
         }
-        int attackDelta = AttackVector.delta[targetPosition - attackerPosition + 127];
+        int attackDelta = AttackVector.deltas[targetPosition - attackerPosition + 127];
         assert attackDelta != 0;
         attack.position[attack.count] = attackerPosition;
         attack.delta[attack.count] = attackDelta;
@@ -923,7 +923,7 @@ public final class Hex88Board {
         if (stop) {
           return true;
         }
-        int attackDelta = AttackVector.delta[targetPosition - attackerPosition + 127];
+        int attackDelta = AttackVector.deltas[targetPosition - attackerPosition + 127];
         assert attackDelta != 0;
         attack.position[attack.count] = attackerPosition;
         attack.delta[attack.count] = attackDelta;
@@ -941,7 +941,7 @@ public final class Hex88Board {
         if (stop) {
           return true;
         }
-        int attackDelta = AttackVector.delta[targetPosition - attackerPosition + 127];
+        int attackDelta = AttackVector.deltas[targetPosition - attackerPosition + 127];
         assert attackDelta != 0;
         attack.position[attack.count] = attackerPosition;
         attack.delta[attack.count] = attackDelta;
@@ -958,7 +958,7 @@ public final class Hex88Board {
       if (stop) {
         return true;
       }
-      int attackDelta = AttackVector.delta[targetPosition - attackerPosition + 127];
+      int attackDelta = AttackVector.deltas[targetPosition - attackerPosition + 127];
       assert attackDelta != 0;
       attack.position[attack.count] = attackerPosition;
       attack.delta[attack.count] = attackDelta;
@@ -1070,7 +1070,7 @@ public final class Hex88Board {
     assert (attackerPosition & 0x88) == 0;
     assert (targetPosition & 0x88) == 0;
 
-    int attackDelta = AttackVector.delta[targetPosition - attackerPosition + 127];
+    int attackDelta = AttackVector.deltas[targetPosition - attackerPosition + 127];
 
     int end = attackerPosition + attackDelta;
     while ((end & 0x88) == 0 && end != targetPosition && board[end] == IntChessman.NOPIECE) {

@@ -240,7 +240,7 @@ public final class MoveSee {
     }
 
     // Get the reverse delta
-    int delta = AttackVector.delta[chessmanPosition - targetPosition + 127];
+    int delta = AttackVector.deltas[chessmanPosition - targetPosition + 127];
 
     // Find the hidden attacker
     int attackerPosition = chessmanPosition + delta;
@@ -269,7 +269,7 @@ public final class MoveSee {
     }
 
     // Get the reverse delta
-    int delta = AttackVector.delta[chessmanPosition - targetPosition + 127];
+    int delta = AttackVector.deltas[chessmanPosition - targetPosition + 127];
 
     // Find the hidden attacker
     int end = chessmanPosition + delta;

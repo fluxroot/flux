@@ -51,7 +51,7 @@ public final class AttackVector {
       N,N,N,N,N,N,N,N                  // 248 - 255
   };
 
-  public static final int[] delta = {
+  public static final int[] deltas = {
         0,  0,  0,  0,  0,  0,  0,  0,                                 //   0 -   7
       -17,  0,  0,  0,  0,  0,  0,-16,  0,  0,  0,  0,  0,  0,-15,  0, //   8 -  23
         0,-17,  0,  0,  0,  0,  0,-16,  0,  0,  0,  0,  0,-15,  0,  0, //  24 -  39
