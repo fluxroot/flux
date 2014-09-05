@@ -396,7 +396,7 @@ public final class Search implements Runnable {
     int transpositionValue = 0;
     int transpositionType = IntValue.NOVALUE;
     if (Configuration.useTranspositionTable) {
-      TranspositionTableEntry entry = this.transpositionTable.get(board.zobristCode);
+      TranspositionTable.TranspositionTableEntry entry = this.transpositionTable.get(board.zobristCode);
       if (entry != null) {
         List<GenericMove> moveList = this.transpositionTable.getMoveList(board, entry.depth, new ArrayList<GenericMove>());
         if (moveList.size() != 0) {
@@ -889,7 +889,7 @@ public final class Search implements Runnable {
     moveResult.moveNumber = currentMoveNumber;
 
     if (Configuration.useTranspositionTable) {
-      TranspositionTableEntry entry = this.transpositionTable.get(board.zobristCode);
+      TranspositionTable.TranspositionTableEntry entry = this.transpositionTable.get(board.zobristCode);
       if (entry != null) {
         for (int i = rootMoveList.head; i < rootMoveList.tail; i++) {
           if (rootMoveList.move[i] == entry.move) {
@@ -947,7 +947,7 @@ public final class Search implements Runnable {
     int transpositionMove = IntMove.NOMOVE;
     boolean mateThreat = false;
     if (Configuration.useTranspositionTable) {
-      TranspositionTableEntry entry = this.transpositionTable.get(board.zobristCode);
+      TranspositionTable.TranspositionTableEntry entry = this.transpositionTable.get(board.zobristCode);
       if (entry != null) {
         transpositionMove = entry.move;
         mateThreat = entry.mateThreat;
@@ -1362,7 +1362,7 @@ public final class Search implements Runnable {
 
     // Check the transposition table first
     if (Configuration.useTranspositionTable && useTranspositionTable) {
-      TranspositionTableEntry entry = this.transpositionTable.get(board.zobristCode);
+      TranspositionTable.TranspositionTableEntry entry = this.transpositionTable.get(board.zobristCode);
       if (entry != null) {
         assert entry.depth >= checkingDepth;
         int value = entry.getValue(height);
