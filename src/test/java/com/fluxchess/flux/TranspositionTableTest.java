@@ -30,38 +30,38 @@ public class TranspositionTableTest {
     int move1 = Move.createMove(Move.NORMAL, Square.a2, Square.a3, Piece.createPiece(Piece.PAWN, Color.WHITE), Piece.NOPIECE, Piece.NOPIECE);
 
     // Put an entry into the table
-    table.put(1L, 1, 100, IntValue.EXACT, move1, false, 0);
+    table.put(1L, 1, 100, Bound.EXACT, move1, false, 0);
 
     TranspositionTable.TranspositionTableEntry entry = table.get(1L);
     assertNotNull(entry);
 
     assertEquals(1, entry.depth);
     assertEquals(100, entry.getValue(0));
-    assertEquals(IntValue.EXACT, entry.type);
+    assertEquals(Bound.EXACT, entry.type);
     assertEquals(move1, entry.move);
     assertEquals(100, table.getPermillUsed());
 
     // Overwrite the entry with a new one
-    table.put(1L, 2, 200, IntValue.BETA, move1, false, 0);
+    table.put(1L, 2, 200, Bound.BETA, move1, false, 0);
 
     entry = table.get(1L);
     assertNotNull(entry);
 
     assertEquals(2, entry.depth);
     assertEquals(200, entry.getValue(0));
-    assertEquals(IntValue.BETA, entry.type);
+    assertEquals(Bound.BETA, entry.type);
     assertEquals(move1, entry.move);
     assertEquals(100, table.getPermillUsed());
 
     // Put an mate entry into the table
-    table.put(2L, 0, Search.CHECKMATE - 5, IntValue.EXACT, move1, false, 3);
+    table.put(2L, 0, Search.CHECKMATE - 5, Bound.EXACT, move1, false, 3);
 
     entry = table.get(2L);
     assertNotNull(entry);
 
     assertEquals(0, entry.depth);
     assertEquals(Search.CHECKMATE - 4, entry.getValue(2));
-    assertEquals(IntValue.EXACT, entry.type);
+    assertEquals(Bound.EXACT, entry.type);
     assertEquals(move1, entry.move);
     assertEquals(200, table.getPermillUsed());
 

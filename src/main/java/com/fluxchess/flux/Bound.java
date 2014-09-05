@@ -20,7 +20,7 @@ package com.fluxchess.flux;
 
 import com.fluxchess.jcpi.models.GenericScore;
 
-public class IntValue {
+public class Bound {
 
   /**
    * Represents no value
@@ -42,7 +42,7 @@ public class IntValue {
   /**
    * IntValue cannot be instantiated.
    */
-  private IntValue() {
+  private Bound() {
   }
 
   /**

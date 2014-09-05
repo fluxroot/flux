@@ -43,7 +43,7 @@ public final class TranspositionTable {
     public int age = -1;
     public int depth = -1;
     private int value = -Search.INFINITY;
-    public int type = IntValue.NOVALUE;
+    public int type = Bound.NOVALUE;
     public int move = Move.NOMOVE;
     public boolean mateThreat = false;
 
@@ -55,7 +55,7 @@ public final class TranspositionTable {
       this.age = -1;
       this.depth = -1;
       this.value = -Search.INFINITY;
-      this.type = IntValue.NOVALUE;
+      this.type = Bound.NOVALUE;
       this.move = Move.NOMOVE;
       this.mateThreat = false;
     }
@@ -135,7 +135,7 @@ public final class TranspositionTable {
    */
   public void put(long zobristCode, int depth, int value, int type, int move, boolean mateThreat, int height) {
     assert depth >= 0;
-    assert type != IntValue.NOVALUE;
+    assert type != Bound.NOVALUE;
     assert height >= 0;
 
     int position = (int) (zobristCode % this.size);

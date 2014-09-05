@@ -22,7 +22,7 @@ public final class Result {
 
   public int bestMove = Move.NOMOVE;
   public int ponderMove = Move.NOMOVE;
-  public int value = IntValue.NOVALUE;
+  public int value = Bound.NOVALUE;
   public int resultValue = -Search.INFINITY;
   public long time = -1;
   public int moveNumber = 0;

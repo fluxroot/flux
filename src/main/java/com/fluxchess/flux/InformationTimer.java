@@ -245,7 +245,7 @@ public final class InformationTimer {
       command.setNodes(pv.totalNodes);
 
       command.setCentipawns(pv.value);
-      command.setValue(IntValue.valueOfIntValue(pv.type));
+      command.setValue(Bound.valueOfIntValue(pv.type));
       command.setMoveList(pv.pv);
 
       if (Configuration.showPvNumber > 1) {
@@ -279,7 +279,7 @@ public final class InformationTimer {
       command.setNodes(pv.totalNodes);
 
       command.setMate(currentMateDepth);
-      command.setValue(IntValue.valueOfIntValue(pv.type));
+      command.setValue(Bound.valueOfIntValue(pv.type));
       command.setMoveList(pv.pv);
 
       if (Configuration.showPvNumber > 1) {
