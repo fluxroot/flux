@@ -438,7 +438,7 @@ public final class IntMove {
    * @param board the Hex88Board.
    * @return the IntMove.
    */
-  public static int convertMove(GenericMove move, Hex88Board board) {
+  public static int convertMove(GenericMove move, Position board) {
     assert move != null;
     assert board != null;
 
@@ -450,15 +450,15 @@ public final class IntMove {
       } else {
         promotion = IntChessman.valueOfChessman(move.promotion);
       }
-      return createMove(PAWNPROMOTION, IntPosition.valueOfPosition(move.from), IntPosition.valueOfPosition(move.to), Hex88Board.board[IntPosition.valueOfPosition(move.from)], Hex88Board.board[IntPosition.valueOfPosition(move.to)], promotion);
+      return createMove(PAWNPROMOTION, IntPosition.valueOfPosition(move.from), IntPosition.valueOfPosition(move.to), Position.board[IntPosition.valueOfPosition(move.from)], Position.board[IntPosition.valueOfPosition(move.to)], promotion);
     } else if (isPawnDouble(move, board)) {
-      return createMove(PAWNDOUBLE, IntPosition.valueOfPosition(move.from), IntPosition.valueOfPosition(move.to), Hex88Board.board[IntPosition.valueOfPosition(move.from)], IntChessman.NOPIECE, IntChessman.NOPIECE);
+      return createMove(PAWNDOUBLE, IntPosition.valueOfPosition(move.from), IntPosition.valueOfPosition(move.to), Position.board[IntPosition.valueOfPosition(move.from)], IntChessman.NOPIECE, IntChessman.NOPIECE);
     } else if (isEnPassant(move, board)) {
-      return createMove(ENPASSANT, IntPosition.valueOfPosition(move.from), IntPosition.valueOfPosition(move.to), Hex88Board.board[IntPosition.valueOfPosition(move.from)], Hex88Board.board[IntPosition.valueOfPosition(GenericPosition.valueOf(move.to.file, move.from.rank))], IntChessman.NOPIECE);
+      return createMove(ENPASSANT, IntPosition.valueOfPosition(move.from), IntPosition.valueOfPosition(move.to), Position.board[IntPosition.valueOfPosition(move.from)], Position.board[IntPosition.valueOfPosition(GenericPosition.valueOf(move.to.file, move.from.rank))], IntChessman.NOPIECE);
     } else if (isCastling(move, board)) {
-      return createMove(CASTLING, IntPosition.valueOfPosition(move.from), IntPosition.valueOfPosition(move.to), Hex88Board.board[IntPosition.valueOfPosition(move.from)], IntChessman.NOPIECE, IntChessman.NOPIECE);
+      return createMove(CASTLING, IntPosition.valueOfPosition(move.from), IntPosition.valueOfPosition(move.to), Position.board[IntPosition.valueOfPosition(move.from)], IntChessman.NOPIECE, IntChessman.NOPIECE);
     } else {
-      return createMove(NORMAL, IntPosition.valueOfPosition(move.from), IntPosition.valueOfPosition(move.to), Hex88Board.board[IntPosition.valueOfPosition(move.from)], Hex88Board.board[IntPosition.valueOfPosition(move.to)], IntChessman.NOPIECE);
+      return createMove(NORMAL, IntPosition.valueOfPosition(move.from), IntPosition.valueOfPosition(move.to), Position.board[IntPosition.valueOfPosition(move.from)], Position.board[IntPosition.valueOfPosition(move.to)], IntChessman.NOPIECE);
     }
   }
 
@@ -469,13 +469,13 @@ public final class IntMove {
    * @param board the Hex88Board.
    * @return true if the CommandMove is a pawn promotion, false otherwise.
    */
-  private static boolean isPawnPromotion(GenericMove move, Hex88Board board) {
+  private static boolean isPawnPromotion(GenericMove move, Position board) {
     assert move != null;
     assert board != null;
 
     int position = IntPosition.valueOfPosition(move.from);
 
-    int piece = Hex88Board.board[position];
+    int piece = Position.board[position];
     if (piece != IntChessman.NOPIECE) {
       if ((piece == IntChessman.WHITE_PAWN && move.from.rank == GenericRank.R7 && move.to.rank == GenericRank.R8)
           || (piece == IntChessman.BLACK_PAWN && move.from.rank == GenericRank.R2 && move.to.rank == GenericRank.R1)) {
@@ -493,13 +493,13 @@ public final class IntMove {
    * @param board the Hex88Board.
    * @return true if the CommandMove is a pawn double advance, false otherwise.
    */
-  private static boolean isPawnDouble(GenericMove move, Hex88Board board) {
+  private static boolean isPawnDouble(GenericMove move, Position board) {
     assert move != null;
     assert board != null;
 
     int position = IntPosition.valueOfPosition(move.from);
 
-    int piece = Hex88Board.board[position];
+    int piece = Position.board[position];
     if (piece != IntChessman.NOPIECE) {
       if ((piece == IntChessman.WHITE_PAWN && move.from.rank == GenericRank.R2 && move.to.rank == GenericRank.R4)
           || (piece == IntChessman.BLACK_PAWN && move.from.rank == GenericRank.R7 && move.to.rank == GenericRank.R5)) {
@@ -517,7 +517,7 @@ public final class IntMove {
    * @param board the Hex88Board.
    * @return true if the CommandMove is a en passant move, false otherwise.
    */
-  private static boolean isEnPassant(GenericMove move, Hex88Board board) {
+  private static boolean isEnPassant(GenericMove move, Position board) {
     assert move != null;
     assert board != null;
 
@@ -525,8 +525,8 @@ public final class IntMove {
     GenericPosition targetPosition = GenericPosition.valueOf(move.to.file, move.from.rank);
     int targetIntPosition = IntPosition.valueOfPosition(targetPosition);
 
-    int piece = Hex88Board.board[position];
-    int target = Hex88Board.board[targetIntPosition];
+    int piece = Position.board[position];
+    int target = Position.board[targetIntPosition];
     if (piece != IntChessman.NOPIECE && target != IntChessman.NOPIECE) {
       if (IntChessman.getChessman(piece) == IntChessman.PAWN && IntChessman.getChessman(target) == IntChessman.PAWN) {
         if (IntChessman.getColor(piece) == IntChessman.getColorOpposite(target)) {
@@ -547,13 +547,13 @@ public final class IntMove {
    * @param board the Hex88Board.
    * @return true if the CommandMove is a castling move, false otherwise.
    */
-  private static boolean isCastling(GenericMove move, Hex88Board board) {
+  private static boolean isCastling(GenericMove move, Position board) {
     assert move != null;
     assert board != null;
 
     int position = IntPosition.valueOfPosition(move.from);
 
-    int piece = Hex88Board.board[position];
+    int piece = Position.board[position];
     if (piece != IntChessman.NOPIECE) {
       if (IntChessman.getChessman(piece) == IntChessman.KING) {
         if (move.from.file == GenericFile.Fe

@@ -34,7 +34,7 @@ import java.util.List;
  */
 public final class Flux extends AbstractEngine {
 
-  private Hex88Board board = null;
+  private Position board = null;
   private TranspositionTable transpositionTable;
   private EvaluationTable evaluationTable;
   private PawnTable pawnTable;
@@ -62,7 +62,7 @@ public final class Flux extends AbstractEngine {
     initializePawnTable();
 
     // Create a new search
-    this.search = new Search(new Evaluation(this.evaluationTable, this.pawnTable), new Hex88Board(new GenericBoard(GenericBoard.STANDARDSETUP)), this.transpositionTable, new InformationTimer(getProtocol(), this.transpositionTable), this.timeTable);
+    this.search = new Search(new Evaluation(this.evaluationTable, this.pawnTable), new Position(new GenericBoard(GenericBoard.STANDARDSETUP)), this.transpositionTable, new InformationTimer(getProtocol(), this.transpositionTable), this.timeTable);
   }
 
   private void initializeTranspositionTable() {
@@ -156,7 +156,7 @@ public final class Flux extends AbstractEngine {
     }
 
     // Create a new board
-    this.board = new Hex88Board(command.board);
+    this.board = new Position(command.board);
 
     // Make all moves
     List<GenericMove> moveList = command.moves;

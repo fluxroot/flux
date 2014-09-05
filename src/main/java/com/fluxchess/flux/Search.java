@@ -93,7 +93,7 @@ public final class Search implements Runnable {
 
   // Search logic
   private Evaluation evaluation;
-  private static Hex88Board board;
+  private static Position board;
   private final int myColor;
 
   // Search tables
@@ -120,7 +120,7 @@ public final class Search implements Runnable {
     }
   }
 
-  public Search(Evaluation newEvaluation, Hex88Board newBoard, TranspositionTable newTranspositionTable, InformationTimer newInfo, int[] timeTable) {
+  public Search(Evaluation newEvaluation, Position newBoard, TranspositionTable newTranspositionTable, InformationTimer newInfo, int[] timeTable) {
     assert newEvaluation != null;
     assert newBoard != null;
     assert newTranspositionTable != null;
@@ -1551,8 +1551,8 @@ public final class Search implements Runnable {
     }
 
     // Extend another ply if we enter a pawn endgame
-    if (Hex88Board.materialCount[board.activeColor] == 0
-        && Hex88Board.materialCount[IntColor.switchColor(board.activeColor)] == 1
+    if (Position.materialCount[board.activeColor] == 0
+        && Position.materialCount[IntColor.switchColor(board.activeColor)] == 1
         && IntMove.getTarget(move) != IntChessman.NOPIECE
         && IntMove.getTarget(move) != IntChessman.PAWN) {
       newDepth++;

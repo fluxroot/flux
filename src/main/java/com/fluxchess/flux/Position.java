@@ -22,7 +22,7 @@ import com.fluxchess.jcpi.models.*;
 
 import java.util.Random;
 
-public final class Hex88Board {
+public final class Position {
 
   /**
    * The size of the 0x88 board
@@ -65,8 +65,8 @@ public final class Hex88Board {
   public static final PositionList[] kingList = new PositionList[IntColor.ARRAY_DIMENSION];
 
   // Board stack
-  private static final Hex88BoardStackEntry[] stack = new Hex88BoardStackEntry[STACKSIZE];
-  private int stackSize = 0;
+  private static final State[] states = new State[STACKSIZE];
+  private int statesSize = 0;
 
   // Zobrist code
   public long zobristCode = 0;
@@ -113,7 +113,7 @@ public final class Hex88Board {
   private int attackHistorySize = 0;
   private static final Attack tempAttack = new Attack();
 
-  public static final class Hex88BoardStackEntry {
+  private static final class State {
     public long zobristHistory = 0;
     public long pawnZobristHistory = 0;
     public int halfMoveClockHistory = 0;
@@ -122,7 +122,7 @@ public final class Hex88Board {
     public final int[] positionValueOpening = new int[IntColor.ARRAY_DIMENSION];
     public final int[] positionValueEndgame = new int[IntColor.ARRAY_DIMENSION];
 
-    public Hex88BoardStackEntry() {
+    public State() {
       clear();
     }
 
@@ -162,8 +162,8 @@ public final class Hex88Board {
       zobristEnPassant[i] = Math.abs(random.nextLong());
     }
 
-    for (int i = 0; i < stack.length; i++) {
-      stack[i] = new Hex88BoardStackEntry();
+    for (int i = 0; i < states.length; i++) {
+      states[i] = new State();
     }
   }
 
@@ -173,7 +173,7 @@ public final class Hex88Board {
    * @param newBoard the board to setup our own board.
    * @throws SquareNotEmptyException if a square is not empty.
    */
-  public Hex88Board(GenericBoard newBoard) {
+  public Position(GenericBoard newBoard) {
     // Initialize repetition table
     repetitionTable = new RepetitionTable();
 
@@ -1090,7 +1090,7 @@ public final class Hex88Board {
    */
   public void makeMove(int move) {
     // Get current stack entry
-    Hex88BoardStackEntry currentStackEntry = stack[this.stackSize];
+    State currentStackEntry = states[this.statesSize];
 
     // Save history
     currentStackEntry.zobristHistory = this.zobristCode;
@@ -1104,8 +1104,8 @@ public final class Hex88Board {
     }
 
     // Update stack size
-    this.stackSize++;
-    assert this.stackSize < STACKSIZE;
+    this.statesSize++;
+    assert this.statesSize < STACKSIZE;
 
     int type = IntMove.getType(move);
 
@@ -1169,11 +1169,11 @@ public final class Hex88Board {
     this.halfMoveNumber--;
 
     // Update stack size
-    this.stackSize--;
-    assert this.stackSize >= 0;
+    this.statesSize--;
+    assert this.statesSize >= 0;
 
     // Get current stack entry
-    Hex88BoardStackEntry currentStackEntry = stack[this.stackSize];
+    State currentStackEntry = states[this.statesSize];
 
     // Restore zobrist history
     this.zobristCode = currentStackEntry.zobristHistory;

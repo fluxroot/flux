@@ -34,7 +34,7 @@ public class EvaluationTesting {
       while (!token.equalsIgnoreCase("quit")) {
         Evaluation evaluation = new Evaluation(new EvaluationTable(1024), new PawnTable(1024));
         try {
-          Hex88Board board = new Hex88Board(new GenericBoard(token));
+          Position board = new Position(new GenericBoard(token));
           new MoveSee(board);
           evaluation.print(board);
         } catch (IllegalNotationException e) {

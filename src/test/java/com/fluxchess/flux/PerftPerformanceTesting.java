@@ -27,7 +27,7 @@ import java.io.InputStreamReader;
 
 public class PerftPerformanceTesting {
 
-  private static long miniMax(Hex88Board board, MoveGenerator generator, int depth, int maxDepth) {
+  private static long miniMax(Position board, MoveGenerator generator, int depth, int maxDepth) {
     if (depth == 0) {
       return 1;
     }
@@ -56,7 +56,7 @@ public class PerftPerformanceTesting {
       String token = reader.readLine();
       while (!token.equalsIgnoreCase("quit")) {
         try {
-          Hex88Board testBoard = new Hex88Board(new GenericBoard(token));
+          Position testBoard = new Position(new GenericBoard(token));
           new MoveSee(testBoard);
           KillerTable killerTable = new KillerTable();
           HistoryTable historyTable = new HistoryTable();

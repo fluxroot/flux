@@ -89,13 +89,13 @@ public final class Evaluation {
   private static final byte BIT_QUEEN = 1 << 6;
   private static final byte BIT_KING = -128;
   private static final byte MASK_ATTACKERS = 31;
-  private static final byte[][] attackTable = new byte[IntColor.ARRAY_DIMENSION][Hex88Board.BOARDSIZE];
+  private static final byte[][] attackTable = new byte[IntColor.ARRAY_DIMENSION][Position.BOARDSIZE];
 
   // Our pawn structure table. 8 + 2 -> 2 Sentinels for each side.
   private static final byte[][] pawnTable = new byte[IntColor.ARRAY_DIMENSION][10];
 
   // Our total values
-  private static final int PHASE_INTERVAL = Hex88Board.GAMEPHASE_OPENING_VALUE - Hex88Board.GAMEPHASE_ENDGAME_VALUE;
+  private static final int PHASE_INTERVAL = Position.GAMEPHASE_OPENING_VALUE - Position.GAMEPHASE_ENDGAME_VALUE;
   private static final int TOTAL_OPENING = 0;
   private static final int TOTAL_ENDGAME = 1;
   private static int[][] totalPawn = new int[IntColor.ARRAY_DIMENSION][2];
@@ -130,7 +130,7 @@ public final class Evaluation {
   /**
    * Prints the evaluation of the board.
    */
-  public void print(Hex88Board board) {
+  public void print(Position board) {
     evaluate(board);
 
     int myColor = board.activeColor;
@@ -142,19 +142,19 @@ public final class Evaluation {
         IntColor.valueOfIntColor(myColor).toString(),
         IntColor.valueOfIntColor(enemyColor).toString());
     System.out.printf("%20s: Opening %5d (%5d:%5d) Endgame %5d (%5d:%5d)\n", "Total Material",
-        Hex88Board.materialValue[myColor] - Hex88Board.materialValue[enemyColor],
-        Hex88Board.materialValue[myColor],
-        Hex88Board.materialValue[enemyColor],
-        Hex88Board.materialValue[myColor] - Hex88Board.materialValue[enemyColor],
-        Hex88Board.materialValue[myColor],
-        Hex88Board.materialValue[enemyColor]);
+        Position.materialValue[myColor] - Position.materialValue[enemyColor],
+        Position.materialValue[myColor],
+        Position.materialValue[enemyColor],
+        Position.materialValue[myColor] - Position.materialValue[enemyColor],
+        Position.materialValue[myColor],
+        Position.materialValue[enemyColor]);
     System.out.printf("%20s: Opening %5d (%5d:%5d) Endgame %5d (%5d:%5d)\n", "Total Position",
-        Hex88Board.positionValueOpening[myColor] - Hex88Board.positionValueOpening[enemyColor],
-        Hex88Board.positionValueOpening[myColor],
-        Hex88Board.positionValueOpening[enemyColor],
-        Hex88Board.positionValueEndgame[myColor] - Hex88Board.positionValueEndgame[enemyColor],
-        Hex88Board.positionValueEndgame[myColor],
-        Hex88Board.positionValueEndgame[enemyColor]);
+        Position.positionValueOpening[myColor] - Position.positionValueOpening[enemyColor],
+        Position.positionValueOpening[myColor],
+        Position.positionValueOpening[enemyColor],
+        Position.positionValueEndgame[myColor] - Position.positionValueEndgame[enemyColor],
+        Position.positionValueEndgame[myColor],
+        Position.positionValueEndgame[enemyColor]);
     System.out.printf("%20s: Opening %5d (%5d:%5d) Endgame %5d (%5d:%5d)\n", "Total Pawn",
         totalPawn[myColor][TOTAL_OPENING] - totalPawn[enemyColor][TOTAL_OPENING],
         totalPawn[myColor][TOTAL_OPENING],
@@ -230,7 +230,7 @@ public final class Evaluation {
    * @param board the board.
    * @return the evaluation value in centipawns.
    */
-  public int evaluate(Hex88Board board) {
+  public int evaluate(Position board) {
     assert board != null;
 
     // Check the evaluation table
@@ -283,8 +283,8 @@ public final class Evaluation {
     totalEndgame += myMaterialValue - enemyMaterialValue;
 
     // Evaluate position
-    totalOpening += Hex88Board.positionValueOpening[myColor] - Hex88Board.positionValueOpening[enemyColor];
-    totalEndgame += Hex88Board.positionValueEndgame[myColor] - Hex88Board.positionValueEndgame[enemyColor];
+    totalOpening += Position.positionValueOpening[myColor] - Position.positionValueOpening[enemyColor];
+    totalEndgame += Position.positionValueEndgame[myColor] - Position.positionValueEndgame[enemyColor];
 
     // Evaluate pawns
     evaluatePawn(myColor);
@@ -363,12 +363,12 @@ public final class Evaluation {
     // This allows us to make a smooth transition from the opening to the
     // ending
     int phase = (myMaterialValue + enemyMaterialValue) / 2;
-    if (phase > Hex88Board.GAMEPHASE_OPENING_VALUE) {
+    if (phase > Position.GAMEPHASE_OPENING_VALUE) {
       phase = PHASE_INTERVAL;
-    } else if (phase < Hex88Board.GAMEPHASE_ENDGAME_VALUE) {
+    } else if (phase < Position.GAMEPHASE_ENDGAME_VALUE) {
       phase = 0;
     } else {
-      phase -= Hex88Board.GAMEPHASE_ENDGAME_VALUE;
+      phase -= Position.GAMEPHASE_ENDGAME_VALUE;
     }
     total = (totalOpening * phase + totalEndgame * (PHASE_INTERVAL - phase)) / PHASE_INTERVAL;
 
@@ -394,7 +394,7 @@ public final class Evaluation {
   }
 
   private static int evaluateMaterial(int myColor, int enemyColor) {
-    int myMaterialValue = Hex88Board.materialValue[myColor];
+    int myMaterialValue = Position.materialValue[myColor];
 
     // Correct material value based on Larry Kaufman's paper
     // TODO: Check this one
@@ -411,31 +411,31 @@ public final class Evaluation {
     return myMaterialValue;
   }
 
-  private static void evaluateDraw(Hex88Board board) {
+  private static void evaluateDraw(Position board) {
     for (int myColor : IntColor.values) {
       int enemyColor = IntColor.switchColor(myColor);
       byte[] enemyAttackTable = attackTable[enemyColor];
 
-      assert Hex88Board.kingList[myColor].size != 0;
-      assert Hex88Board.kingList[enemyColor].size != 0;
+      assert Position.kingList[myColor].size != 0;
+      assert Position.kingList[enemyColor].size != 0;
 
-      if (Hex88Board.queenList[myColor].size == 0) {
-        if (Hex88Board.rookList[myColor].size == 0) {
-          if (Hex88Board.bishopList[myColor].size == 0) {
-            if (Hex88Board.knightList[myColor].size == 0) {
-              if (Hex88Board.pawnList[myColor].size == 0) {
+      if (Position.queenList[myColor].size == 0) {
+        if (Position.rookList[myColor].size == 0) {
+          if (Position.bishopList[myColor].size == 0) {
+            if (Position.knightList[myColor].size == 0) {
+              if (Position.pawnList[myColor].size == 0) {
                 // KK*
 
-                assert Hex88Board.materialCountAll[myColor] == 0;
+                assert Position.materialCountAll[myColor] == 0;
                 drawFactor[myColor] = 0;
-              } else if (Hex88Board.pawnList[myColor].size == 1) {
+              } else if (Position.pawnList[myColor].size == 1) {
                 // KPK*
 
-                if (Hex88Board.queenList[enemyColor].size == 0) {
-                  if (Hex88Board.rookList[enemyColor].size == 0) {
-                    if (Hex88Board.bishopList[enemyColor].size == 0) {
-                      if (Hex88Board.knightList[enemyColor].size == 1) {
-                        if (Hex88Board.pawnList[enemyColor].size == 0) {
+                if (Position.queenList[enemyColor].size == 0) {
+                  if (Position.rookList[enemyColor].size == 0) {
+                    if (Position.bishopList[enemyColor].size == 0) {
+                      if (Position.knightList[enemyColor].size == 1) {
+                        if (Position.pawnList[enemyColor].size == 0) {
                           // KPKN
 
                           // Check the promotion path
@@ -445,9 +445,9 @@ public final class Evaluation {
                           } else {
                             assert myColor == IntColor.WHITE;
                           }
-                          int end = Hex88Board.pawnList[myColor].position[0] + delta;
+                          int end = Position.pawnList[myColor].position[0] + delta;
                           while ((end & 0x88) == 0) {
-                            int chessman = Hex88Board.board[end];
+                            int chessman = Position.board[end];
                             if ((chessman != IntChessman.NOPIECE && IntChessman.getColor(chessman) == enemyColor) || (enemyAttackTable[end] & BIT_MINOR) != 0) {
                               drawFactor[myColor] = 1;
                               break;
@@ -457,9 +457,9 @@ public final class Evaluation {
                           }
                         }
                       }
-                    } else if (Hex88Board.bishopList[enemyColor].size == 1) {
-                      if (Hex88Board.knightList[enemyColor].size == 0) {
-                        if (Hex88Board.pawnList[enemyColor].size == 0) {
+                    } else if (Position.bishopList[enemyColor].size == 1) {
+                      if (Position.knightList[enemyColor].size == 0) {
+                        if (Position.pawnList[enemyColor].size == 0) {
                           // KPKB
 
                           // Check the promotion path
@@ -469,9 +469,9 @@ public final class Evaluation {
                           } else {
                             assert myColor == IntColor.WHITE;
                           }
-                          int end = Hex88Board.pawnList[myColor].position[0] + delta;
+                          int end = Position.pawnList[myColor].position[0] + delta;
                           while ((end & 0x88) == 0) {
-                            int chessman = Hex88Board.board[end];
+                            int chessman = Position.board[end];
                             if ((chessman != IntChessman.NOPIECE && IntChessman.getColor(chessman) == enemyColor) || (enemyAttackTable[end] & BIT_MINOR) != 0) {
                               drawFactor[myColor] = 1;
                               break;
@@ -485,27 +485,27 @@ public final class Evaluation {
                   }
                 }
               }
-            } else if (Hex88Board.knightList[myColor].size == 1) {
-              if (Hex88Board.pawnList[myColor].size == 0) {
+            } else if (Position.knightList[myColor].size == 1) {
+              if (Position.pawnList[myColor].size == 0) {
                 // KNK*
 
                 drawFactor[myColor] = 0;
               }
-            } else if (Hex88Board.knightList[myColor].size == 2) {
-              if (Hex88Board.pawnList[myColor].size == 0) {
+            } else if (Position.knightList[myColor].size == 2) {
+              if (Position.pawnList[myColor].size == 0) {
                 // KNNK*
 
-                if (Hex88Board.queenList[enemyColor].size == 0) {
-                  if (Hex88Board.rookList[enemyColor].size == 0) {
-                    if (Hex88Board.bishopList[enemyColor].size == 0) {
-                      if (Hex88Board.knightList[enemyColor].size == 0) {
-                        if (Hex88Board.pawnList[enemyColor].size == 0) {
+                if (Position.queenList[enemyColor].size == 0) {
+                  if (Position.rookList[enemyColor].size == 0) {
+                    if (Position.bishopList[enemyColor].size == 0) {
+                      if (Position.knightList[enemyColor].size == 0) {
+                        if (Position.pawnList[enemyColor].size == 0) {
                           // KNNK
 
                           drawFactor[myColor] = 0;
                         }
-                      } else if (Hex88Board.knightList[enemyColor].size == 1) {
-                        if (Hex88Board.pawnList[enemyColor].size == 0) {
+                      } else if (Position.knightList[enemyColor].size == 1) {
+                        if (Position.pawnList[enemyColor].size == 0) {
                           // KNNKN
 
                           drawFactor[myColor] = 0;
@@ -516,22 +516,22 @@ public final class Evaluation {
                 }
               }
             }
-          } else if (Hex88Board.bishopList[myColor].size == 1) {
-            if (Hex88Board.knightList[myColor].size == 0) {
-              if (Hex88Board.pawnList[myColor].size == 0) {
+          } else if (Position.bishopList[myColor].size == 1) {
+            if (Position.knightList[myColor].size == 0) {
+              if (Position.pawnList[myColor].size == 0) {
                 // KBK*
 
                 drawFactor[myColor] = 0;
               }
-            } else if (Hex88Board.knightList[myColor].size == 1) {
-              if (Hex88Board.pawnList[myColor].size == 0) {
+            } else if (Position.knightList[myColor].size == 1) {
+              if (Position.pawnList[myColor].size == 0) {
                 // KBNK*
 
-                if (Hex88Board.queenList[enemyColor].size == 0) {
-                  if (Hex88Board.rookList[enemyColor].size == 0) {
-                    if (Hex88Board.bishopList[enemyColor].size == 0) {
-                      if (Hex88Board.knightList[enemyColor].size == 1) {
-                        if (Hex88Board.pawnList[enemyColor].size == 0) {
+                if (Position.queenList[enemyColor].size == 0) {
+                  if (Position.rookList[enemyColor].size == 0) {
+                    if (Position.bishopList[enemyColor].size == 0) {
+                      if (Position.knightList[enemyColor].size == 1) {
+                        if (Position.pawnList[enemyColor].size == 0) {
                           // KBNKN
 
                           drawFactor[myColor] = 1;
@@ -542,24 +542,24 @@ public final class Evaluation {
                 }
               }
             }
-          } else if (Hex88Board.bishopList[myColor].size == 2) {
-            if (Hex88Board.knightList[myColor].size == 0) {
-              if (Hex88Board.pawnList[myColor].size == 0) {
+          } else if (Position.bishopList[myColor].size == 2) {
+            if (Position.knightList[myColor].size == 0) {
+              if (Position.pawnList[myColor].size == 0) {
                 // KBBK*
 
-                if (Hex88Board.queenList[enemyColor].size == 0) {
-                  if (Hex88Board.rookList[enemyColor].size == 0) {
-                    if (Hex88Board.bishopList[enemyColor].size == 0) {
-                      if (Hex88Board.knightList[enemyColor].size == 1) {
-                        if (Hex88Board.pawnList[enemyColor].size == 0) {
+                if (Position.queenList[enemyColor].size == 0) {
+                  if (Position.rookList[enemyColor].size == 0) {
+                    if (Position.bishopList[enemyColor].size == 0) {
+                      if (Position.knightList[enemyColor].size == 1) {
+                        if (Position.pawnList[enemyColor].size == 0) {
                           // KBBKN
 
                           drawFactor[myColor] = 8;
                         }
                       }
-                    } else if (Hex88Board.bishopList[enemyColor].size == 1) {
-                      if (Hex88Board.knightList[enemyColor].size == 0) {
-                        if (Hex88Board.pawnList[enemyColor].size == 0) {
+                    } else if (Position.bishopList[enemyColor].size == 1) {
+                      if (Position.knightList[enemyColor].size == 0) {
+                        if (Position.pawnList[enemyColor].size == 0) {
                           // KBBKB
 
                           drawFactor[myColor] = 2;
@@ -571,35 +571,35 @@ public final class Evaluation {
               }
             }
           }
-        } else if (Hex88Board.rookList[myColor].size == 1) {
-          if (Hex88Board.bishopList[myColor].size == 0) {
-            if (Hex88Board.knightList[myColor].size == 0) {
-              if (Hex88Board.pawnList[myColor].size == 0) {
+        } else if (Position.rookList[myColor].size == 1) {
+          if (Position.bishopList[myColor].size == 0) {
+            if (Position.knightList[myColor].size == 0) {
+              if (Position.pawnList[myColor].size == 0) {
                 // KRK*
 
-                if (Hex88Board.queenList[enemyColor].size == 0) {
-                  if (Hex88Board.rookList[enemyColor].size == 0) {
-                    if (Hex88Board.bishopList[enemyColor].size == 0) {
-                      if (Hex88Board.knightList[enemyColor].size == 1) {
-                        if (Hex88Board.pawnList[enemyColor].size == 0) {
+                if (Position.queenList[enemyColor].size == 0) {
+                  if (Position.rookList[enemyColor].size == 0) {
+                    if (Position.bishopList[enemyColor].size == 0) {
+                      if (Position.knightList[enemyColor].size == 1) {
+                        if (Position.pawnList[enemyColor].size == 0) {
                           // KRKN
 
                           drawFactor[myColor] = 1;
                         }
                       }
-                    } else if (Hex88Board.bishopList[enemyColor].size == 1) {
-                      if (Hex88Board.knightList[enemyColor].size == 0) {
-                        if (Hex88Board.pawnList[enemyColor].size == 0) {
+                    } else if (Position.bishopList[enemyColor].size == 1) {
+                      if (Position.knightList[enemyColor].size == 0) {
+                        if (Position.pawnList[enemyColor].size == 0) {
                           // KRKB
 
                           drawFactor[myColor] = 1;
                         }
                       }
                     }
-                  } else if (Hex88Board.rookList[enemyColor].size == 1) {
-                    if (Hex88Board.bishopList[enemyColor].size == 0) {
-                      if (Hex88Board.knightList[enemyColor].size == 0) {
-                        if (Hex88Board.pawnList[enemyColor].size == 0) {
+                  } else if (Position.rookList[enemyColor].size == 1) {
+                    if (Position.bishopList[enemyColor].size == 0) {
+                      if (Position.knightList[enemyColor].size == 0) {
+                        if (Position.pawnList[enemyColor].size == 0) {
                           // KRKR
 
                           drawFactor[myColor] = 0;
@@ -612,18 +612,18 @@ public final class Evaluation {
             }
           }
         }
-      } else if (Hex88Board.queenList[myColor].size == 1) {
-        if (Hex88Board.rookList[myColor].size == 0) {
-          if (Hex88Board.bishopList[myColor].size == 0) {
-            if (Hex88Board.knightList[myColor].size == 0) {
-              if (Hex88Board.pawnList[myColor].size == 0) {
+      } else if (Position.queenList[myColor].size == 1) {
+        if (Position.rookList[myColor].size == 0) {
+          if (Position.bishopList[myColor].size == 0) {
+            if (Position.knightList[myColor].size == 0) {
+              if (Position.pawnList[myColor].size == 0) {
                 // KQK*
 
-                if (Hex88Board.queenList[enemyColor].size == 1) {
-                  if (Hex88Board.rookList[enemyColor].size == 0) {
-                    if (Hex88Board.bishopList[enemyColor].size == 0) {
-                      if (Hex88Board.knightList[enemyColor].size == 0) {
-                        if (Hex88Board.pawnList[enemyColor].size == 0) {
+                if (Position.queenList[enemyColor].size == 1) {
+                  if (Position.rookList[enemyColor].size == 0) {
+                    if (Position.bishopList[enemyColor].size == 0) {
+                      if (Position.knightList[enemyColor].size == 0) {
+                        if (Position.pawnList[enemyColor].size == 0) {
                           // KQKQ
 
                           drawFactor[myColor] = 0;
@@ -646,7 +646,7 @@ public final class Evaluation {
     // Initialize
     byte[] myAttackTable = attackTable[myColor];
     byte[] myPawnTable = pawnTable[myColor];
-    PositionList myPawnList = Hex88Board.pawnList[myColor];
+    PositionList myPawnList = Position.pawnList[myColor];
 
     // Evaluate each pawn
     for (int i = 0; i < myPawnList.size; i++) {
@@ -684,14 +684,14 @@ public final class Evaluation {
     }
   }
 
-  private static void evaluateKnight(int myColor, int enemyColor, Hex88Board board) {
+  private static void evaluateKnight(int myColor, int enemyColor, Position board) {
     assert myColor != IntColor.NOCOLOR;
 
     // Initialize
     int[] total = totalKnight[myColor];
     byte[] myAttackTable = attackTable[myColor];
     byte[] enemyAttackTable = attackTable[enemyColor];
-    PositionList myKnightList = Hex88Board.knightList[myColor];
+    PositionList myKnightList = Position.knightList[myColor];
 
     // Evaluate each knight
     for (int i = 0; i < myKnightList.size; i++) {
@@ -706,7 +706,7 @@ public final class Evaluation {
           myAttackTable[targetPosition]++;
           myAttackTable[targetPosition] |= BIT_MINOR;
 
-          int target = Hex88Board.board[targetPosition];
+          int target = Position.board[targetPosition];
           if (target == IntChessman.NOPIECE) {
             allMobility++;
           } else {
@@ -729,7 +729,7 @@ public final class Evaluation {
     }
   }
 
-  private static void evaluateBishop(int myColor, int enemyColor, Hex88Board board) {
+  private static void evaluateBishop(int myColor, int enemyColor, Position board) {
     assert myColor != IntColor.NOCOLOR;
     assert board != null;
 
@@ -737,7 +737,7 @@ public final class Evaluation {
     int[] total = totalBishop[myColor];
     byte[] myAttackTable = attackTable[myColor];
     byte[] enemyAttackTable = attackTable[enemyColor];
-    PositionList myBishopList = Hex88Board.bishopList[myColor];
+    PositionList myBishopList = Position.bishopList[myColor];
 
     // Evaluate each bishop
     for (int i = 0; i < myBishopList.size; i++) {
@@ -752,7 +752,7 @@ public final class Evaluation {
           myAttackTable[targetPosition]++;
           myAttackTable[targetPosition] |= BIT_MINOR;
 
-          int target = Hex88Board.board[targetPosition];
+          int target = Position.board[targetPosition];
           if (target == IntChessman.NOPIECE) {
             allMobility++;
             targetPosition += delta;
@@ -783,7 +783,7 @@ public final class Evaluation {
     }
   }
 
-  private static void evaluateRook(int myColor, int enemyColor, Hex88Board board) {
+  private static void evaluateRook(int myColor, int enemyColor, Position board) {
     assert myColor != IntColor.NOCOLOR;
     assert board != null;
 
@@ -793,7 +793,7 @@ public final class Evaluation {
     byte[] enemyAttackTable = attackTable[enemyColor];
     byte[] myPawnTable = pawnTable[myColor];
     byte[] enemyPawnTable = pawnTable[enemyColor];
-    PositionList myRookList = Hex88Board.rookList[myColor];
+    PositionList myRookList = Position.rookList[myColor];
 
     int totalRook7th = 0;
 
@@ -813,7 +813,7 @@ public final class Evaluation {
           myAttackTable[targetPosition]++;
           myAttackTable[targetPosition] |= BIT_ROOK;
 
-          int target = Hex88Board.board[targetPosition];
+          int target = Position.board[targetPosition];
           if (target == IntChessman.NOPIECE) {
             allMobility++;
             targetPosition += delta;
@@ -845,7 +845,7 @@ public final class Evaluation {
         if (enemyPawnTable[tableFile] == 0) {
           totalOpenFile += EVAL_ROOK_OPENFILE / 2;
         }
-        int kingPosition = Hex88Board.kingList[enemyColor].position[0];
+        int kingPosition = Position.kingList[enemyColor].position[0];
         int kingFile = IntPosition.getFile(kingPosition);
         int delta = Math.abs(kingFile - rookFile);
         if (delta <= 1) {
@@ -868,7 +868,7 @@ public final class Evaluation {
         assert myColor == IntColor.WHITE;
       }
       if (rookRank == seventhRank) {
-        int kingPosition = Hex88Board.kingList[enemyColor].position[0];
+        int kingPosition = Position.kingList[enemyColor].position[0];
         int kingRank = IntPosition.getRank(kingPosition);
         boolean enemyPawnExists = false;
         for (int j = 1; j < enemyPawnTable.length - 1; j++) {
@@ -892,7 +892,7 @@ public final class Evaluation {
     }
   }
 
-  private static void evaluateQueen(int myColor, int enemyColor, Hex88Board board) {
+  private static void evaluateQueen(int myColor, int enemyColor, Position board) {
     assert myColor != IntColor.NOCOLOR;
     assert board != null;
 
@@ -901,7 +901,7 @@ public final class Evaluation {
     byte[] myAttackTable = attackTable[myColor];
     byte[] enemyAttackTable = attackTable[enemyColor];
     byte[] enemyPawnTable = pawnTable[enemyColor];
-    PositionList myQueenList = Hex88Board.queenList[myColor];
+    PositionList myQueenList = Position.queenList[myColor];
 
     // Evaluate the queen
     for (int i = 0; i < myQueenList.size; i++) {
@@ -917,7 +917,7 @@ public final class Evaluation {
           myAttackTable[targetPosition]++;
           myAttackTable[targetPosition] |= BIT_QUEEN;
 
-          int target = Hex88Board.board[targetPosition];
+          int target = Position.board[targetPosition];
           if (target == IntChessman.NOPIECE) {
             allMobility++;
             targetPosition += delta;
@@ -952,7 +952,7 @@ public final class Evaluation {
         assert myColor == IntColor.WHITE;
       }
       if (queenRank == seventhRank) {
-        int kingPosition = Hex88Board.kingList[enemyColor].position[0];
+        int kingPosition = Position.kingList[enemyColor].position[0];
         int kingRank = IntPosition.getRank(kingPosition);
         boolean enemyPawnExists = false;
         for (int j = 1; j < enemyPawnTable.length - 1; j++) {
@@ -969,7 +969,7 @@ public final class Evaluation {
     }
   }
 
-  private static void evaluateKing(int myColor, int enemyColor, Hex88Board board) {
+  private static void evaluateKing(int myColor, int enemyColor, Position board) {
     assert myColor != IntColor.NOCOLOR;
     assert board != null;
 
@@ -977,7 +977,7 @@ public final class Evaluation {
     int[] total = totalKing[myColor];
     byte[] myAttackTable = attackTable[myColor];
     byte[] enemyAttackTable = attackTable[enemyColor];
-    PositionList myKingList = Hex88Board.kingList[myColor];
+    PositionList myKingList = Position.kingList[myColor];
 
     // Evaluate the king
     assert myKingList.size == 1;
@@ -1011,7 +1011,7 @@ public final class Evaluation {
     if ((attackedSquare & 0x88) == 0 && enemyAttackTable[attackedSquare] != 0) {
       attackCount += 4;
       flag |= enemyAttackTable[attackedSquare];
-      int chessman = Hex88Board.board[attackedSquare];
+      int chessman = Position.board[attackedSquare];
       if (chessman == IntChessman.NOPIECE || IntChessman.getColor(chessman) == enemyColor) {
         attackCount += 3;
       }
@@ -1023,7 +1023,7 @@ public final class Evaluation {
     if ((attackedSquare & 0x88) == 0 && enemyAttackTable[attackedSquare] != 0) {
       attackCount += 4;
       flag |= enemyAttackTable[attackedSquare];
-      int chessman = Hex88Board.board[attackedSquare];
+      int chessman = Position.board[attackedSquare];
       if (chessman == IntChessman.NOPIECE || IntChessman.getColor(chessman) == enemyColor) {
         attackCount += 3;
       }
@@ -1035,7 +1035,7 @@ public final class Evaluation {
     if ((attackedSquare & 0x88) == 0 && enemyAttackTable[attackedSquare] != 0) {
       attackCount += 4;
       flag |= enemyAttackTable[attackedSquare];
-      int chessman = Hex88Board.board[attackedSquare];
+      int chessman = Position.board[attackedSquare];
       if (chessman == IntChessman.NOPIECE || IntChessman.getColor(chessman) == enemyColor) {
         attackCount += 3;
       }
@@ -1047,7 +1047,7 @@ public final class Evaluation {
     if ((attackedSquare & 0x88) == 0 && enemyAttackTable[attackedSquare] != 0) {
       attackCount += 4;
       flag |= enemyAttackTable[attackedSquare];
-      int chessman = Hex88Board.board[attackedSquare];
+      int chessman = Position.board[attackedSquare];
       if (chessman == IntChessman.NOPIECE || IntChessman.getColor(chessman) == enemyColor) {
         attackCount += 3;
       }
@@ -1059,7 +1059,7 @@ public final class Evaluation {
     if ((attackedSquare & 0x88) == 0 && enemyAttackTable[attackedSquare] != 0) {
       attackCount += 4;
       flag |= enemyAttackTable[attackedSquare];
-      int chessman = Hex88Board.board[attackedSquare];
+      int chessman = Position.board[attackedSquare];
       if (chessman == IntChessman.NOPIECE || IntChessman.getColor(chessman) == enemyColor) {
         attackCount += 3;
       }
@@ -1071,7 +1071,7 @@ public final class Evaluation {
     if ((attackedSquare & 0x88) == 0 && enemyAttackTable[attackedSquare] != 0) {
       attackCount += 4;
       flag |= enemyAttackTable[attackedSquare];
-      int chessman = Hex88Board.board[attackedSquare];
+      int chessman = Position.board[attackedSquare];
       if (chessman == IntChessman.NOPIECE || IntChessman.getColor(chessman) == enemyColor) {
         attackCount += 3;
       }
@@ -1083,7 +1083,7 @@ public final class Evaluation {
     if ((attackedSquare & 0x88) == 0 && enemyAttackTable[attackedSquare] != 0) {
       attackCount += 4;
       flag |= enemyAttackTable[attackedSquare];
-      int chessman = Hex88Board.board[attackedSquare];
+      int chessman = Position.board[attackedSquare];
       if (chessman == IntChessman.NOPIECE || IntChessman.getColor(chessman) == enemyColor) {
         attackCount += 3;
       }
@@ -1095,7 +1095,7 @@ public final class Evaluation {
     if ((attackedSquare & 0x88) == 0 && enemyAttackTable[attackedSquare] != 0) {
       attackCount += 4;
       flag |= enemyAttackTable[attackedSquare];
-      int chessman = Hex88Board.board[attackedSquare];
+      int chessman = Position.board[attackedSquare];
       if (chessman == IntChessman.NOPIECE || IntChessman.getColor(chessman) == enemyColor) {
         attackCount += 3;
       }
@@ -1126,13 +1126,13 @@ public final class Evaluation {
     int positionPenalty = getPawnShieldPenalty(myColor, kingPosition);
     int castlingPenalty = positionPenalty;
 
-    if ((Hex88Board.castling & castlingKingside) != 0) {
+    if ((Position.castling & castlingKingside) != 0) {
       int tempPenalty = getPawnShieldPenalty(myColor, castlingPositionKingside);
       if (tempPenalty < castlingPenalty) {
         castlingPenalty = tempPenalty;
       }
     }
-    if ((Hex88Board.castling & castlingQueenside) != 0) {
+    if ((Position.castling & castlingQueenside) != 0) {
       int tempPenalty = getPawnShieldPenalty(myColor, castlingPositionQueenside);
       if (tempPenalty < castlingPenalty) {
         castlingPenalty = tempPenalty;
@@ -1144,7 +1144,7 @@ public final class Evaluation {
     total[TOTAL_OPENING] -= pawnShieldPenalty;
   }
 
-  private static void evaluatePawnStructure(int myColor, int enemyColor, Hex88Board board) {
+  private static void evaluatePawnStructure(int myColor, int enemyColor, Position board) {
     assert myColor != IntColor.NOCOLOR;
     assert board != null;
 
@@ -1153,7 +1153,7 @@ public final class Evaluation {
     byte[] myAttackTable = attackTable[myColor];
     byte[] enemyAttackTable = attackTable[enemyColor];
     byte[] myPawnTable = pawnTable[myColor];
-    PositionList myPawnList = Hex88Board.pawnList[myColor];
+    PositionList myPawnList = Position.pawnList[myColor];
 
     // Evaluate each pawn
     for (int i = 0; i < myPawnList.size; i++) {
@@ -1205,7 +1205,7 @@ public final class Evaluation {
             // We are protecting a buddy on the left or right side
             // Check whether we can advance
             assert ((pawnPosition + sign * 16) & 0x88) == 0;
-            int chessman = Hex88Board.board[pawnPosition + sign * 16];
+            int chessman = Position.board[pawnPosition + sign * 16];
             if ((chessman == IntChessman.NOPIECE || IntChessman.getChessman(chessman) != IntChessman.PAWN)
                 && (enemyAttackTable[pawnPosition] & BIT_PAWN) == 0
                 && (enemyAttackTable[pawnPosition + sign * 16] & BIT_PAWN) == 0) {
@@ -1216,8 +1216,8 @@ public final class Evaluation {
               || myPawnTable[tableFile - 1] == pawnRank + sign * 2)) {
             // We can do a pawn double advance
             assert ((pawnPosition + sign * 32) & 0x88) == 0;
-            int chessman1 = Hex88Board.board[pawnPosition + sign * 16];
-            int chessman2 = Hex88Board.board[pawnPosition + sign * 32];
+            int chessman1 = Position.board[pawnPosition + sign * 16];
+            int chessman2 = Position.board[pawnPosition + sign * 32];
             if ((chessman1 == IntChessman.NOPIECE || IntChessman.getChessman(chessman1) != IntChessman.PAWN)
                 && (chessman2 == IntChessman.NOPIECE || IntChessman.getChessman(chessman2) != IntChessman.PAWN)
                 && (enemyAttackTable[pawnPosition] & BIT_PAWN) == 0
@@ -1236,7 +1236,7 @@ public final class Evaluation {
     }
   }
 
-  private static void evaluatePawnPasser(int myColor, int enemyColor, Hex88Board board) {
+  private static void evaluatePawnPasser(int myColor, int enemyColor, Position board) {
     assert myColor != IntColor.NOCOLOR;
     assert board != null;
 
@@ -1244,14 +1244,14 @@ public final class Evaluation {
     int[] total = totalPawnPasser[myColor];
     byte[] myAttackTable = attackTable[myColor];
     byte[] enemyPawnTable = pawnTable[enemyColor];
-    PositionList myPawnList = Hex88Board.pawnList[myColor];
+    PositionList myPawnList = Position.pawnList[myColor];
 
-    assert Hex88Board.kingList[enemyColor].size == 1;
-    int enemyKingPosition = Hex88Board.kingList[enemyColor].position[0];
+    assert Position.kingList[enemyColor].size == 1;
+    int enemyKingPosition = Position.kingList[enemyColor].position[0];
     int enemyKingFile = IntPosition.getFile(enemyKingPosition);
     int enemyKingRank = IntPosition.getRank(enemyKingPosition);
-    assert Hex88Board.kingList[myColor].size == 1;
-    int myKingPosition = Hex88Board.kingList[myColor].position[0];
+    assert Position.kingList[myColor].size == 1;
+    int myKingPosition = Position.kingList[myColor].position[0];
     int myKingFile = IntPosition.getFile(myKingPosition);
     int myKingRank = IntPosition.getRank(myKingPosition);
 
@@ -1260,7 +1260,7 @@ public final class Evaluation {
       int pawnPosition = myPawnList.position[i];
       int pawnFile = IntPosition.getFile(pawnPosition);
       int pawnRank = IntPosition.getRank(pawnPosition);
-      int pawn = Hex88Board.board[pawnPosition];
+      int pawn = Position.board[pawnPosition];
       int tableFile = pawnFile + 1;
 
       // Passed pawn
@@ -1278,7 +1278,7 @@ public final class Evaluation {
             // Check whether the rook is in front of us
             int endPosition = pawnPosition + 16;
             for (int j = pawnRank + 1; j <= 7; j++) {
-              int chessman = Hex88Board.board[endPosition];
+              int chessman = Position.board[endPosition];
               if (chessman != IntChessman.NOPIECE) {
                 if (IntChessman.getChessman(chessman) == IntChessman.ROOK && IntChessman.getColor(chessman) == myColor) {
                   // We have no bad rook
@@ -1305,7 +1305,7 @@ public final class Evaluation {
             // Check whether the rook is in front of us
             int endPosition = pawnPosition - 16;
             for (int j = pawnRank - 1; j >= 0; j--) {
-              int chessman = Hex88Board.board[endPosition];
+              int chessman = Position.board[endPosition];
               if (chessman != IntChessman.NOPIECE) {
                 if (IntChessman.getChessman(chessman) == IntChessman.ROOK && IntChessman.getColor(chessman) == myColor) {
                   // We have no bad rook
@@ -1336,14 +1336,14 @@ public final class Evaluation {
         endgameMax -= myKingDistance * EVAL_PAWN_MYKING_DISTANCE;
         endgameMax += enemyKingDistance * EVAL_PAWN_ENEMYKING_DISTANCE;
 
-        if (Hex88Board.materialCount[enemyColor] == 0) {
+        if (Position.materialCount[enemyColor] == 0) {
           // Unstoppable passer
           if (myColor == IntColor.WHITE) {
             // Is a friendly chessman blocking our promotion path?
             boolean pathClear = true;
             int endPosition = pawnPosition + 16;
             for (int j = pawnRank + 1; j <= 7; j++) {
-              int chessman = Hex88Board.board[endPosition];
+              int chessman = Position.board[endPosition];
               if (chessman != IntChessman.NOPIECE && IntChessman.getColor(chessman) == myColor) {
                 pathClear = false;
               }
@@ -1382,7 +1382,7 @@ public final class Evaluation {
             boolean pathClear = true;
             int endPosition = pawnPosition - 16;
             for (int j = pawnRank - 1; j >= 0; j--) {
-              int chessman = Hex88Board.board[endPosition];
+              int chessman = Position.board[endPosition];
               if (chessman != IntChessman.NOPIECE && IntChessman.getColor(chessman) == myColor) {
                 pathClear = false;
               }
@@ -1418,7 +1418,7 @@ public final class Evaluation {
         } else {
           // Free passer
           assert ((pawnPosition + sign * 16) & 0x88) == 0;
-          if (Hex88Board.board[pawnPosition + sign * 16] == IntChessman.NOPIECE) {
+          if (Position.board[pawnPosition + sign * 16] == IntChessman.NOPIECE) {
             // TODO: Do we have to consider promotion moves?
             int move = IntMove.createMove(IntMove.NORMAL, pawnPosition, pawnPosition + sign * 16, pawn, IntChessman.NOPIECE, IntChessman.NOPIECE);
             if (MoveSee.seeMove(move, myColor) >= 0) {
@@ -1436,7 +1436,7 @@ public final class Evaluation {
     }
   }
 
-  private static void evaluatePatterns(int myColor, Hex88Board board) {
+  private static void evaluatePatterns(int myColor, Position board) {
     assert myColor != IntColor.NOCOLOR;
     assert board != null;
 
@@ -1445,79 +1445,79 @@ public final class Evaluation {
 
     if (myColor == IntColor.WHITE) {
       // Trapped white bishop
-      if (Hex88Board.board[IntPosition.a7] == IntChessman.WHITE_BISHOP
-          && Hex88Board.board[IntPosition.b6] == IntChessman.BLACK_PAWN) {
+      if (Position.board[IntPosition.a7] == IntChessman.WHITE_BISHOP
+          && Position.board[IntPosition.b6] == IntChessman.BLACK_PAWN) {
         total[TOTAL_OPENING] -= 100;
         total[TOTAL_ENDGAME] -= 100;
-        if (Hex88Board.board[IntPosition.c7] == IntChessman.BLACK_PAWN) {
+        if (Position.board[IntPosition.c7] == IntChessman.BLACK_PAWN) {
           total[TOTAL_OPENING] -= 50;
           total[TOTAL_ENDGAME] -= 50;
         }
       }
-      if (Hex88Board.board[IntPosition.b8] == IntChessman.WHITE_BISHOP
-          && Hex88Board.board[IntPosition.c7] == IntChessman.BLACK_PAWN) {
+      if (Position.board[IntPosition.b8] == IntChessman.WHITE_BISHOP
+          && Position.board[IntPosition.c7] == IntChessman.BLACK_PAWN) {
         total[TOTAL_OPENING] -= 100;
         total[TOTAL_ENDGAME] -= 100;
       }
-      if (Hex88Board.board[IntPosition.h7] == IntChessman.WHITE_BISHOP
-          && Hex88Board.board[IntPosition.g6] == IntChessman.BLACK_PAWN) {
+      if (Position.board[IntPosition.h7] == IntChessman.WHITE_BISHOP
+          && Position.board[IntPosition.g6] == IntChessman.BLACK_PAWN) {
         total[TOTAL_OPENING] -= 100;
         total[TOTAL_ENDGAME] -= 100;
-        if (Hex88Board.board[IntPosition.f7] == IntChessman.BLACK_PAWN) {
+        if (Position.board[IntPosition.f7] == IntChessman.BLACK_PAWN) {
           total[TOTAL_OPENING] -= 50;
           total[TOTAL_ENDGAME] -= 50;
         }
       }
-      if (Hex88Board.board[IntPosition.g8] == IntChessman.WHITE_BISHOP
-          && Hex88Board.board[IntPosition.f7] == IntChessman.BLACK_PAWN) {
+      if (Position.board[IntPosition.g8] == IntChessman.WHITE_BISHOP
+          && Position.board[IntPosition.f7] == IntChessman.BLACK_PAWN) {
         total[TOTAL_OPENING] -= 100;
         total[TOTAL_ENDGAME] -= 100;
       }
-      if (Hex88Board.board[IntPosition.a6] == IntChessman.WHITE_BISHOP
-          && Hex88Board.board[IntPosition.b5] == IntChessman.BLACK_PAWN) {
+      if (Position.board[IntPosition.a6] == IntChessman.WHITE_BISHOP
+          && Position.board[IntPosition.b5] == IntChessman.BLACK_PAWN) {
         total[TOTAL_OPENING] -= 50;
         total[TOTAL_ENDGAME] -= 50;
       }
-      if (Hex88Board.board[IntPosition.h6] == IntChessman.WHITE_BISHOP
-          && Hex88Board.board[IntPosition.g5] == IntChessman.BLACK_PAWN) {
+      if (Position.board[IntPosition.h6] == IntChessman.WHITE_BISHOP
+          && Position.board[IntPosition.g5] == IntChessman.BLACK_PAWN) {
         total[TOTAL_OPENING] -= 50;
         total[TOTAL_ENDGAME] -= 50;
       }
 
       // Blocked center pawn
-      if (Hex88Board.board[IntPosition.d2] == IntChessman.WHITE_PAWN
-          && Hex88Board.board[IntPosition.d3] != IntChessman.NOPIECE) {
+      if (Position.board[IntPosition.d2] == IntChessman.WHITE_PAWN
+          && Position.board[IntPosition.d3] != IntChessman.NOPIECE) {
         total[TOTAL_OPENING] -= 20;
         total[TOTAL_ENDGAME] -= 20;
-        if (Hex88Board.board[IntPosition.c1] == IntChessman.WHITE_BISHOP) {
+        if (Position.board[IntPosition.c1] == IntChessman.WHITE_BISHOP) {
           total[TOTAL_OPENING] -= 30;
           total[TOTAL_ENDGAME] -= 30;
         }
       }
-      if (Hex88Board.board[IntPosition.e2] == IntChessman.WHITE_PAWN
-          && Hex88Board.board[IntPosition.e3] != IntChessman.NOPIECE) {
+      if (Position.board[IntPosition.e2] == IntChessman.WHITE_PAWN
+          && Position.board[IntPosition.e3] != IntChessman.NOPIECE) {
         total[TOTAL_OPENING] -= 20;
         total[TOTAL_ENDGAME] -= 20;
-        if (Hex88Board.board[IntPosition.f1] == IntChessman.WHITE_BISHOP) {
+        if (Position.board[IntPosition.f1] == IntChessman.WHITE_BISHOP) {
           total[TOTAL_OPENING] -= 30;
           total[TOTAL_ENDGAME] -= 30;
         }
       }
 
       // Blocked rook
-      if ((Hex88Board.board[IntPosition.c1] == IntChessman.WHITE_KING
-          || Hex88Board.board[IntPosition.b1] == IntChessman.WHITE_KING)
-          && (Hex88Board.board[IntPosition.a1] == IntChessman.WHITE_ROOK
-          || Hex88Board.board[IntPosition.a2] == IntChessman.WHITE_ROOK
-          || Hex88Board.board[IntPosition.b1] == IntChessman.WHITE_ROOK)) {
+      if ((Position.board[IntPosition.c1] == IntChessman.WHITE_KING
+          || Position.board[IntPosition.b1] == IntChessman.WHITE_KING)
+          && (Position.board[IntPosition.a1] == IntChessman.WHITE_ROOK
+          || Position.board[IntPosition.a2] == IntChessman.WHITE_ROOK
+          || Position.board[IntPosition.b1] == IntChessman.WHITE_ROOK)) {
         total[TOTAL_OPENING] -= 50;
         total[TOTAL_ENDGAME] -= 50;
       }
-      if ((Hex88Board.board[IntPosition.f1] == IntChessman.WHITE_KING
-          || Hex88Board.board[IntPosition.g1] == IntChessman.WHITE_KING)
-          && (Hex88Board.board[IntPosition.h1] == IntChessman.WHITE_ROOK
-          || Hex88Board.board[IntPosition.h2] == IntChessman.WHITE_ROOK
-          || Hex88Board.board[IntPosition.g1] == IntChessman.WHITE_ROOK)) {
+      if ((Position.board[IntPosition.f1] == IntChessman.WHITE_KING
+          || Position.board[IntPosition.g1] == IntChessman.WHITE_KING)
+          && (Position.board[IntPosition.h1] == IntChessman.WHITE_ROOK
+          || Position.board[IntPosition.h2] == IntChessman.WHITE_ROOK
+          || Position.board[IntPosition.g1] == IntChessman.WHITE_ROOK)) {
         total[TOTAL_OPENING] -= 50;
         total[TOTAL_ENDGAME] -= 50;
       }
@@ -1525,79 +1525,79 @@ public final class Evaluation {
       assert myColor == IntColor.BLACK;
 
       // Trapped black bishop
-      if (Hex88Board.board[IntPosition.a2] == IntChessman.BLACK_BISHOP
-          && Hex88Board.board[IntPosition.b3] == IntChessman.WHITE_PAWN) {
+      if (Position.board[IntPosition.a2] == IntChessman.BLACK_BISHOP
+          && Position.board[IntPosition.b3] == IntChessman.WHITE_PAWN) {
         total[TOTAL_OPENING] -= 100;
         total[TOTAL_ENDGAME] -= 100;
-        if (Hex88Board.board[IntPosition.c2] == IntChessman.WHITE_PAWN) {
+        if (Position.board[IntPosition.c2] == IntChessman.WHITE_PAWN) {
           total[TOTAL_OPENING] -= 50;
           total[TOTAL_ENDGAME] -= 50;
         }
       }
-      if (Hex88Board.board[IntPosition.b1] == IntChessman.BLACK_BISHOP
-          && Hex88Board.board[IntPosition.c2] == IntChessman.WHITE_PAWN) {
+      if (Position.board[IntPosition.b1] == IntChessman.BLACK_BISHOP
+          && Position.board[IntPosition.c2] == IntChessman.WHITE_PAWN) {
         total[TOTAL_OPENING] -= 100;
         total[TOTAL_ENDGAME] -= 100;
       }
-      if (Hex88Board.board[IntPosition.h2] == IntChessman.BLACK_BISHOP
-          && Hex88Board.board[IntPosition.g3] == IntChessman.WHITE_PAWN) {
+      if (Position.board[IntPosition.h2] == IntChessman.BLACK_BISHOP
+          && Position.board[IntPosition.g3] == IntChessman.WHITE_PAWN) {
         total[TOTAL_OPENING] -= 100;
         total[TOTAL_ENDGAME] -= 100;
-        if (Hex88Board.board[IntPosition.f2] == IntChessman.WHITE_PAWN) {
+        if (Position.board[IntPosition.f2] == IntChessman.WHITE_PAWN) {
           total[TOTAL_OPENING] -= 50;
           total[TOTAL_ENDGAME] -= 50;
         }
       }
-      if (Hex88Board.board[IntPosition.g1] == IntChessman.BLACK_BISHOP
-          && Hex88Board.board[IntPosition.f2] == IntChessman.WHITE_PAWN) {
+      if (Position.board[IntPosition.g1] == IntChessman.BLACK_BISHOP
+          && Position.board[IntPosition.f2] == IntChessman.WHITE_PAWN) {
         total[TOTAL_OPENING] -= 100;
         total[TOTAL_ENDGAME] -= 100;
       }
-      if (Hex88Board.board[IntPosition.a3] == IntChessman.BLACK_BISHOP
-          && Hex88Board.board[IntPosition.b4] == IntChessman.WHITE_PAWN) {
+      if (Position.board[IntPosition.a3] == IntChessman.BLACK_BISHOP
+          && Position.board[IntPosition.b4] == IntChessman.WHITE_PAWN) {
         total[TOTAL_OPENING] -= 50;
         total[TOTAL_ENDGAME] -= 50;
       }
-      if (Hex88Board.board[IntPosition.h3] == IntChessman.BLACK_BISHOP
-          && Hex88Board.board[IntPosition.g4] == IntChessman.WHITE_PAWN) {
+      if (Position.board[IntPosition.h3] == IntChessman.BLACK_BISHOP
+          && Position.board[IntPosition.g4] == IntChessman.WHITE_PAWN) {
         total[TOTAL_OPENING] -= 50;
         total[TOTAL_ENDGAME] -= 50;
       }
 
       // Blocked center pawn
-      if (Hex88Board.board[IntPosition.d7] == IntChessman.BLACK_PAWN
-          && Hex88Board.board[IntPosition.d6] != IntChessman.NOPIECE) {
+      if (Position.board[IntPosition.d7] == IntChessman.BLACK_PAWN
+          && Position.board[IntPosition.d6] != IntChessman.NOPIECE) {
         total[TOTAL_OPENING] -= 20;
         total[TOTAL_ENDGAME] -= 20;
-        if (Hex88Board.board[IntPosition.c8] == IntChessman.BLACK_BISHOP) {
+        if (Position.board[IntPosition.c8] == IntChessman.BLACK_BISHOP) {
           total[TOTAL_OPENING] -= 30;
           total[TOTAL_ENDGAME] -= 30;
         }
       }
-      if (Hex88Board.board[IntPosition.e7] == IntChessman.BLACK_PAWN
-          && Hex88Board.board[IntPosition.e6] != IntChessman.NOPIECE) {
+      if (Position.board[IntPosition.e7] == IntChessman.BLACK_PAWN
+          && Position.board[IntPosition.e6] != IntChessman.NOPIECE) {
         total[TOTAL_OPENING] -= 20;
         total[TOTAL_ENDGAME] -= 20;
-        if (Hex88Board.board[IntPosition.f8] == IntChessman.BLACK_BISHOP) {
+        if (Position.board[IntPosition.f8] == IntChessman.BLACK_BISHOP) {
           total[TOTAL_OPENING] -= 30;
           total[TOTAL_ENDGAME] -= 30;
         }
       }
 
       // Blocked rook
-      if ((Hex88Board.board[IntPosition.c8] == IntChessman.BLACK_KING
-          || Hex88Board.board[IntPosition.b8] == IntChessman.BLACK_KING)
-          && (Hex88Board.board[IntPosition.a8] == IntChessman.BLACK_ROOK
-          || Hex88Board.board[IntPosition.a7] == IntChessman.BLACK_ROOK
-          || Hex88Board.board[IntPosition.b8] == IntChessman.BLACK_ROOK)) {
+      if ((Position.board[IntPosition.c8] == IntChessman.BLACK_KING
+          || Position.board[IntPosition.b8] == IntChessman.BLACK_KING)
+          && (Position.board[IntPosition.a8] == IntChessman.BLACK_ROOK
+          || Position.board[IntPosition.a7] == IntChessman.BLACK_ROOK
+          || Position.board[IntPosition.b8] == IntChessman.BLACK_ROOK)) {
         total[TOTAL_OPENING] -= 50;
         total[TOTAL_ENDGAME] -= 50;
       }
-      if ((Hex88Board.board[IntPosition.f8] == IntChessman.BLACK_KING
-          || Hex88Board.board[IntPosition.g8] == IntChessman.BLACK_KING)
-          && (Hex88Board.board[IntPosition.h8] == IntChessman.BLACK_ROOK
-          || Hex88Board.board[IntPosition.h7] == IntChessman.BLACK_ROOK
-          || Hex88Board.board[IntPosition.g8] == IntChessman.BLACK_ROOK)) {
+      if ((Position.board[IntPosition.f8] == IntChessman.BLACK_KING
+          || Position.board[IntPosition.g8] == IntChessman.BLACK_KING)
+          && (Position.board[IntPosition.h8] == IntChessman.BLACK_ROOK
+          || Position.board[IntPosition.h7] == IntChessman.BLACK_ROOK
+          || Position.board[IntPosition.g8] == IntChessman.BLACK_ROOK)) {
         total[TOTAL_OPENING] -= 50;
         total[TOTAL_ENDGAME] -= 50;
       }

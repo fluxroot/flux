@@ -37,7 +37,7 @@ public class MoveGeneratorTest {
     GenericBoard board;
     try {
       board = new GenericBoard("1k6/8/8/5pP1/4K1P1/8/8/8 w - f6");
-      Hex88Board testBoard = new Hex88Board(board);
+      Position testBoard = new Position(board);
       new MoveSee(testBoard);
 
 //			testBoard.makeMove(IntMove.createMove(IntMove.NORMAL, IntPosition.d2, IntPosition.c1, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN, IntChessman.NOCHESSMAN));
@@ -71,7 +71,7 @@ public class MoveGeneratorTest {
             int depth = Integer.parseInt(data[0].substring(1));
             int nodesNumber = Integer.parseInt(data[1]);
 
-            Hex88Board testBoard = new Hex88Board(board);
+            Position testBoard = new Position(board);
             new MoveSee(testBoard);
 
             System.out.print("Testing " + tokens[0].trim() + " depth " + depth + " with nodes number " + nodesNumber + ": ");
@@ -92,7 +92,7 @@ public class MoveGeneratorTest {
     }
   }
 
-  private int miniMax(Hex88Board board, MoveGenerator generator, int depth, int maxDepth) {
+  private int miniMax(Position board, MoveGenerator generator, int depth, int maxDepth) {
     if (depth == 0) {
       return 1;
     }
@@ -134,7 +134,7 @@ public class MoveGeneratorTest {
     GenericBoard board;
     try {
       board = new GenericBoard("8/8/3K4/3Nn3/3nN3/4k3/8/8 b - - 0 1");
-      Hex88Board testBoard = new Hex88Board(board);
+      Position testBoard = new Position(board);
 
       new MoveGenerator(testBoard, new KillerTable(), new HistoryTable());
       miniMaxQuiescentCheckingMoves(testBoard, 3, 3);
@@ -163,7 +163,7 @@ public class MoveGeneratorTest {
             int depth = Integer.parseInt(data[0].substring(1));
             int nodesNumber = Integer.parseInt(data[1]);
 
-            Hex88Board testBoard = new Hex88Board(board);
+            Position testBoard = new Position(board);
             new MoveSee(testBoard);
 
             System.out.println("Testing " + tokens[0].trim() + " depth " + depth + " with nodes number " + nodesNumber + ":");
@@ -181,7 +181,7 @@ public class MoveGeneratorTest {
     }
   }
 
-  private void miniMaxQuiescentCheckingMoves(Hex88Board board, int depth, int maxDepth) {
+  private void miniMaxQuiescentCheckingMoves(Position board, int depth, int maxDepth) {
     if (depth == 0) {
       return;
     }
@@ -225,7 +225,7 @@ public class MoveGeneratorTest {
     return;
   }
 
-  private String printDifference(Hex88Board board, MoveList main, MoveList quiescent) {
+  private String printDifference(Position board, MoveList main, MoveList quiescent) {
     String result = board.getBoard().toString() + "\n";
 
     new MoveRater(new HistoryTable()).rateFromMVVLVA(main);
@@ -246,7 +246,7 @@ public class MoveGeneratorTest {
     return result;
   }
 
-  private static boolean isGoodCapture(int move, Hex88Board board) {
+  private static boolean isGoodCapture(int move, Position board) {
     if (IntMove.getType(move) == IntMove.PAWNPROMOTION) {
       if (IntMove.getPromotion(move) == IntChessman.QUEEN) {
         return true;

@@ -23,7 +23,7 @@ package com.fluxchess.flux;
  */
 public final class MoveSee {
 
-  private static Hex88Board board = null;
+  private static Position board = null;
   private static SeeList[] chessmanList = new SeeList[IntColor.ARRAY_DIMENSION];
 
   public static final class SeeList {
@@ -38,7 +38,7 @@ public final class MoveSee {
     }
   }
 
-  public MoveSee(Hex88Board newBoard) {
+  public MoveSee(Position newBoard) {
     board = newBoard;
     chessmanList[IntColor.WHITE] = new SeeList();
     chessmanList[IntColor.BLACK] = new SeeList();
@@ -169,35 +169,35 @@ public final class MoveSee {
       assert myColor == IntColor.WHITE;
     }
     int pawnPosition = targetPosition - sign * 15;
-    if ((pawnPosition & 0x88) == 0 && Hex88Board.board[pawnPosition] == pawn) {
+    if ((pawnPosition & 0x88) == 0 && Position.board[pawnPosition] == pawn) {
       list.chessman[list.size] = pawn;
       list.position[list.size] = pawnPosition;
       list.size++;
     }
     pawnPosition = targetPosition - sign * 17;
-    if ((pawnPosition & 0x88) == 0 && Hex88Board.board[pawnPosition] == pawn) {
+    if ((pawnPosition & 0x88) == 0 && Position.board[pawnPosition] == pawn) {
       list.chessman[list.size] = pawn;
       list.position[list.size] = pawnPosition;
       list.size++;
     }
 
     // Knight attacks
-    PositionList tempPositionList = Hex88Board.knightList[myColor];
+    PositionList tempPositionList = Position.knightList[myColor];
     for (int i = 0; i < tempPositionList.size; i++) {
       int position = tempPositionList.position[i];
       if (board.canAttack(IntChessman.KNIGHT, myColor, position, targetPosition)) {
-        list.chessman[list.size] = Hex88Board.board[position];
+        list.chessman[list.size] = Position.board[position];
         list.position[list.size] = position;
         list.size++;
       }
     }
 
     // Bishop attacks
-    tempPositionList = Hex88Board.bishopList[myColor];
+    tempPositionList = Position.bishopList[myColor];
     for (int i = 0; i < tempPositionList.size; i++) {
       int position = tempPositionList.position[i];
       if (board.canAttack(IntChessman.BISHOP, myColor, position, targetPosition)) {
-        int bishop = Hex88Board.board[position];
+        int bishop = Position.board[position];
         if (hasHiddenAttacker(position, targetPosition)) {
           addAttacker(list, bishop, position, true);
         } else {
@@ -207,11 +207,11 @@ public final class MoveSee {
     }
 
     // Rook attacks
-    tempPositionList = Hex88Board.rookList[myColor];
+    tempPositionList = Position.rookList[myColor];
     for (int i = 0; i < tempPositionList.size; i++) {
       int position = tempPositionList.position[i];
       if (board.canAttack(IntChessman.ROOK, myColor, position, targetPosition)) {
-        int rook = Hex88Board.board[position];
+        int rook = Position.board[position];
         if (hasHiddenAttacker(position, targetPosition)) {
           addAttacker(list, rook, position, true);
         } else {
@@ -221,11 +221,11 @@ public final class MoveSee {
     }
 
     // Queen attacks
-    tempPositionList = Hex88Board.queenList[myColor];
+    tempPositionList = Position.queenList[myColor];
     for (int i = 0; i < tempPositionList.size; i++) {
       int position = tempPositionList.position[i];
       if (board.canAttack(IntChessman.QUEEN, myColor, position, targetPosition)) {
-        int queen = Hex88Board.board[position];
+        int queen = Position.board[position];
         if (hasHiddenAttacker(position, targetPosition)) {
           addAttacker(list, queen, position, true);
         } else {
@@ -235,10 +235,10 @@ public final class MoveSee {
     }
 
     // King attacks
-    assert Hex88Board.kingList[myColor].size == 1;
-    int position = Hex88Board.kingList[myColor].position[0];
+    assert Position.kingList[myColor].size == 1;
+    int position = Position.kingList[myColor].position[0];
     if (board.canAttack(IntChessman.KING, myColor, position, targetPosition)) {
-      list.chessman[list.size] = Hex88Board.board[position];
+      list.chessman[list.size] = Position.board[position];
       list.position[list.size] = position;
       list.size++;
     }
@@ -257,7 +257,7 @@ public final class MoveSee {
     // Find the hidden attacker
     int attackerPosition = chessmanPosition + delta;
     while ((attackerPosition & 0x88) == 0) {
-      int attacker = Hex88Board.board[attackerPosition];
+      int attacker = Position.board[attackerPosition];
       if (attacker == IntChessman.NOPIECE) {
         attackerPosition += delta;
       } else {
@@ -286,7 +286,7 @@ public final class MoveSee {
     // Find the hidden attacker
     int end = chessmanPosition + delta;
     while ((end & 0x88) == 0) {
-      int chessman = Hex88Board.board[end];
+      int chessman = Position.board[end];
       if (chessman == IntChessman.NOPIECE) {
         end += delta;
       } else {

@@ -25,19 +25,19 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-public class Hex88BoardTest {
+public class PositionTest {
 
   @Test
   public void testClassCreation() {
     // Setup a new board
     GenericBoard board = new GenericBoard(GenericBoard.STANDARDSETUP);
-    Hex88Board testBoard = new Hex88Board(board);
+    Position testBoard = new Position(board);
 
     // Test chessman setup
     for (GenericFile file : GenericFile.values()) {
       for (GenericRank rank : GenericRank.values()) {
         GenericPiece piece = board.getPiece(GenericPosition.valueOf(file, rank));
-        int testChessman = Hex88Board.board[IntPosition.valueOfPosition(GenericPosition.valueOf(file, rank))];
+        int testChessman = Position.board[IntPosition.valueOfPosition(GenericPosition.valueOf(file, rank))];
         if (piece == null) {
           Assert.assertEquals(IntChessman.NOPIECE, testChessman);
         } else {
@@ -67,13 +67,13 @@ public class Hex88BoardTest {
     assertEquals(IntGamePhase.OPENING, testBoard.getGamePhase());
 
     // Test material value
-    Assert.assertEquals(IntChessman.VALUE_KING + IntChessman.VALUE_QUEEN + 2 * IntChessman.VALUE_ROOK + 2 * IntChessman.VALUE_BISHOP + 2 * IntChessman.VALUE_KNIGHT + 8 * IntChessman.VALUE_PAWN, Hex88Board.materialValue[IntColor.WHITE]);
+    Assert.assertEquals(IntChessman.VALUE_KING + IntChessman.VALUE_QUEEN + 2 * IntChessman.VALUE_ROOK + 2 * IntChessman.VALUE_BISHOP + 2 * IntChessman.VALUE_KNIGHT + 8 * IntChessman.VALUE_PAWN, Position.materialValue[IntColor.WHITE]);
   }
 
   @Test
   public void testMakeMoveNormalMove() {
     GenericBoard board = new GenericBoard(GenericBoard.STANDARDSETUP);
-    Hex88Board testBoard = new Hex88Board(board);
+    Position testBoard = new Position(board);
 
     int move = IntMove.createMove(IntMove.NORMAL, 16, 32, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
     testBoard.makeMove(move);
@@ -91,7 +91,7 @@ public class Hex88BoardTest {
       e.printStackTrace();
       fail();
     }
-    Hex88Board testBoard = new Hex88Board(board);
+    Position testBoard = new Position(board);
 
     int move = IntMove.createMove(IntMove.PAWNPROMOTION, 96, 112, IntChessman.createPiece(IntChessman.PAWN, IntColor.WHITE), IntChessman.NOPIECE, IntChessman.QUEEN);
     testBoard.makeMove(move);
@@ -103,7 +103,7 @@ public class Hex88BoardTest {
   @Test
   public void testMakeMovePawnDoubleMove() {
     GenericBoard board = new GenericBoard(GenericBoard.STANDARDSETUP);
-    Hex88Board testBoard = new Hex88Board(board);
+    Position testBoard = new Position(board);
 
     int move = IntMove.createMove(IntMove.PAWNDOUBLE, 16, 48, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
     testBoard.makeMove(move);
@@ -121,7 +121,7 @@ public class Hex88BoardTest {
       e.printStackTrace();
       fail();
     }
-    Hex88Board testBoard = new Hex88Board(board);
+    Position testBoard = new Position(board);
 
     int move = IntMove.createMove(IntMove.CASTLING, 4, 2, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
     testBoard.makeMove(move);
@@ -143,7 +143,7 @@ public class Hex88BoardTest {
       e.printStackTrace();
       fail();
     }
-    Hex88Board testBoard = new Hex88Board(board);
+    Position testBoard = new Position(board);
 
     // Make en passant move
     int move = IntMove.createMove(IntMove.ENPASSANT, IntPosition.e4, IntPosition.d3, IntChessman.createPiece(IntChessman.PAWN, IntColor.BLACK), IntChessman.createPiece(IntChessman.PAWN, IntColor.WHITE), IntChessman.NOPIECE);
@@ -156,7 +156,7 @@ public class Hex88BoardTest {
   @Test
   public void testMakeMoveNullMove() {
     GenericBoard board = new GenericBoard(GenericBoard.STANDARDSETUP);
-    Hex88Board testBoard = new Hex88Board(board);
+    Position testBoard = new Position(board);
 
     int move = IntMove.createMove(IntMove.NULL, IntPosition.NOPOSITION, IntPosition.NOPOSITION, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
     testBoard.makeMove(move);
@@ -175,7 +175,7 @@ public class Hex88BoardTest {
       fail();
     }
 
-    Hex88Board testBoard = new Hex88Board(board);
+    Position testBoard = new Position(board);
     // Move white bishop
     int move = IntMove.createMove(IntMove.NORMAL, IntPosition.d2, IntPosition.e3, IntChessman.createPiece(IntChessman.BISHOP, IntColor.WHITE), IntChessman.NOPIECE, IntChessman.NOPIECE);
     testBoard.makeMove(move);
@@ -194,7 +194,7 @@ public class Hex88BoardTest {
     long zobrist1 = testBoard.zobristCode;
     long pawnZobrist1 = testBoard.pawnZobristCode;
 
-    testBoard = new Hex88Board(board);
+    testBoard = new Position(board);
     // Move white pawn
     move = IntMove.createMove(IntMove.PAWNDOUBLE, IntPosition.c2, IntPosition.c4, IntChessman.createPiece(IntChessman.PAWN, IntColor.WHITE), IntChessman.NOPIECE, IntChessman.NOPIECE);
     testBoard.makeMove(move);
@@ -220,7 +220,7 @@ public class Hex88BoardTest {
   @Test
   public void testActiveColor() {
     GenericBoard board = new GenericBoard(GenericBoard.STANDARDSETUP);
-    Hex88Board testBoard = new Hex88Board(board);
+    Position testBoard = new Position(board);
 
     // Move white pawn
     int move = IntMove.createMove(IntMove.NORMAL, 16, 32, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
@@ -236,7 +236,7 @@ public class Hex88BoardTest {
   @Test
   public void testHalfMoveClock() {
     GenericBoard board = new GenericBoard(GenericBoard.STANDARDSETUP);
-    Hex88Board testBoard = new Hex88Board(board);
+    Position testBoard = new Position(board);
 
     // Move white pawn
     int move = IntMove.createMove(IntMove.NORMAL, 16, 32, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);
@@ -255,7 +255,7 @@ public class Hex88BoardTest {
   @Test
   public void testFullMoveNumber() {
     GenericBoard board = new GenericBoard(GenericBoard.STANDARDSETUP);
-    Hex88Board testBoard = new Hex88Board(board);
+    Position testBoard = new Position(board);
 
     // Move white pawn
     int move = IntMove.createMove(IntMove.NORMAL, 16, 32, IntChessman.NOPIECE, IntChessman.NOPIECE, IntChessman.NOPIECE);

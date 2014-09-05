@@ -28,7 +28,7 @@ public final class HistoryTable {
    * Creates a new HistoryTable.
    */
   public HistoryTable() {
-    historyTable = new int[IntChessman.PIECE_VALUE_SIZE][Hex88Board.BOARDSIZE];
+    historyTable = new int[IntChessman.PIECE_VALUE_SIZE][Position.BOARDSIZE];
   }
 
   /**

@@ -57,7 +57,7 @@ public class IntMoveTest {
     assertEquals(move, move2);
 
     GenericMove commandMove = new GenericMove(GenericPosition.valueOf(GenericFile.Fa, GenericRank.R2), GenericPosition.valueOf(GenericFile.Fa, GenericRank.R4));
-    move = IntMove.convertMove(commandMove, new Hex88Board(new GenericBoard(GenericBoard.STANDARDSETUP)));
+    move = IntMove.convertMove(commandMove, new Position(new GenericBoard(GenericBoard.STANDARDSETUP)));
     assertEquals(IntMove.PAWNDOUBLE, IntMove.getType(move));
     assertEquals(16, IntMove.getStart(move));
     assertEquals(48, IntMove.getEnd(move));

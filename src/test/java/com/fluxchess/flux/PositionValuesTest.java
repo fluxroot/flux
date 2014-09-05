@@ -28,7 +28,7 @@ public class PositionValuesTest {
   public void testGetPositionValue() {
     for (int phase : IntGamePhase.values) {
       for (GenericChessman chessman : GenericChessman.values()) {
-        for (int position = 0; position < Hex88Board.BOARDSIZE; position++) {
+        for (int position = 0; position < Position.BOARDSIZE; position++) {
           if ((position & 0x88) == 0) {
             Assert.assertEquals(PositionValues.getPositionValue(phase, IntChessman.valueOfChessman(chessman), IntColor.WHITE, position), PositionValues.getPositionValue(phase, IntChessman.valueOfChessman(chessman), IntColor.BLACK, 119 - position));
           } else {

@@ -198,7 +198,7 @@ public final class TranspositionTable {
    * @param moveList the move list.
    * @return the move list.
    */
-  public List<GenericMove> getMoveList(Hex88Board board, int depth, List<GenericMove> moveList) {
+  public List<GenericMove> getMoveList(Position board, int depth, List<GenericMove> moveList) {
     assert board != null;
     assert depth >= 0;
     assert moveList != null;
