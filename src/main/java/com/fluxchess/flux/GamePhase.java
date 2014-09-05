@@ -18,7 +18,7 @@
  */
 package com.fluxchess.flux;
 
-public class IntGamePhase {
+public class GamePhase {
 
   /**
    * Represents no game phase
@@ -49,7 +49,7 @@ public class IntGamePhase {
   /**
    * IntGamePhase cannot be instantiated.
    */
-  private IntGamePhase() {
+  private GamePhase() {
   }
 
 }

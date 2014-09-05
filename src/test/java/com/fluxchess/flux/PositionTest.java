@@ -64,7 +64,7 @@ public class PositionTest {
     assertEquals(board.getFullMoveNumber(), testBoard.getFullMoveNumber());
 
     // Test game phase
-    assertEquals(IntGamePhase.OPENING, testBoard.getGamePhase());
+    assertEquals(GamePhase.OPENING, testBoard.getGamePhase());
 
     // Test material value
     Assert.assertEquals(Piece.VALUE_KING + Piece.VALUE_QUEEN + 2 * Piece.VALUE_ROOK + 2 * Piece.VALUE_BISHOP + 2 * Piece.VALUE_KNIGHT + 8 * Piece.VALUE_PAWN, Position.materialValue[Color.WHITE]);

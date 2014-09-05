@@ -225,7 +225,7 @@ public final class PositionValues {
   }
 
   public static int getPositionValue(int phase, int chessman, int chessmanColor, int chessmanPosition) {
-    assert phase != IntGamePhase.NOGAMEPHASE;
+    assert phase != GamePhase.NOGAMEPHASE;
     assert chessmanColor != Color.NOCOLOR;
     assert (chessmanPosition & 0x88) == 0;
 
@@ -236,7 +236,7 @@ public final class PositionValues {
       assert chessmanColor == Color.WHITE;
     }
 
-    if (phase == IntGamePhase.ENDGAME) {
+    if (phase == GamePhase.ENDGAME) {
       return positionValueEndgame[chessman][position];
     } else {
       return positionValueOpening[chessman][position];

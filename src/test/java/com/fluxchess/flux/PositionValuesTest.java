@@ -26,7 +26,7 @@ public class PositionValuesTest {
 
   @Test
   public void testGetPositionValue() {
-    for (int phase : IntGamePhase.values) {
+    for (int phase : GamePhase.values) {
       for (GenericChessman chessman : GenericChessman.values()) {
         for (int position = 0; position < Position.BOARDSIZE; position++) {
           if ((position & 0x88) == 0) {

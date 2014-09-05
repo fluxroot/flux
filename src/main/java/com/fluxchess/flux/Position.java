@@ -316,8 +316,8 @@ public final class Position {
     materialValue[color] += Piece.getValueFromChessman(chessman);
     if (update) {
       this.zobristCode ^= zobristChessman[chessman][color][position];
-      positionValueOpening[color] += PositionValues.getPositionValue(IntGamePhase.OPENING, chessman, color, position);
-      positionValueEndgame[color] += PositionValues.getPositionValue(IntGamePhase.ENDGAME, chessman, color, position);
+      positionValueOpening[color] += PositionValues.getPositionValue(GamePhase.OPENING, chessman, color, position);
+      positionValueEndgame[color] += PositionValues.getPositionValue(GamePhase.ENDGAME, chessman, color, position);
     }
   }
 
@@ -380,8 +380,8 @@ public final class Position {
     materialValue[color] -= Piece.getValueFromChessman(chessman);
     if (update) {
       this.zobristCode ^= zobristChessman[chessman][color][position];
-      positionValueOpening[color] -= PositionValues.getPositionValue(IntGamePhase.OPENING, chessman, color, position);
-      positionValueEndgame[color] -= PositionValues.getPositionValue(IntGamePhase.ENDGAME, chessman, color, position);
+      positionValueOpening[color] -= PositionValues.getPositionValue(GamePhase.OPENING, chessman, color, position);
+      positionValueEndgame[color] -= PositionValues.getPositionValue(GamePhase.ENDGAME, chessman, color, position);
     }
 
     return piece;
@@ -450,10 +450,10 @@ public final class Position {
       long[] tempZobristChessman = zobristChessman[chessman][color];
       this.zobristCode ^= tempZobristChessman[start];
       this.zobristCode ^= tempZobristChessman[end];
-      positionValueOpening[color] -= PositionValues.getPositionValue(IntGamePhase.OPENING, chessman, color, start);
-      positionValueEndgame[color] -= PositionValues.getPositionValue(IntGamePhase.ENDGAME, chessman, color, start);
-      positionValueOpening[color] += PositionValues.getPositionValue(IntGamePhase.OPENING, chessman, color, end);
-      positionValueEndgame[color] += PositionValues.getPositionValue(IntGamePhase.ENDGAME, chessman, color, end);
+      positionValueOpening[color] -= PositionValues.getPositionValue(GamePhase.OPENING, chessman, color, start);
+      positionValueEndgame[color] -= PositionValues.getPositionValue(GamePhase.ENDGAME, chessman, color, start);
+      positionValueOpening[color] += PositionValues.getPositionValue(GamePhase.OPENING, chessman, color, end);
+      positionValueEndgame[color] += PositionValues.getPositionValue(GamePhase.ENDGAME, chessman, color, end);
     }
 
     return piece;
@@ -592,12 +592,12 @@ public final class Position {
    */
   public int getGamePhase() {
     if (materialValue[Color.WHITE] >= GAMEPHASE_OPENING_VALUE && materialValue[Color.BLACK] >= GAMEPHASE_OPENING_VALUE) {
-      return IntGamePhase.OPENING;
+      return GamePhase.OPENING;
     } else if (materialValue[Color.WHITE] <= GAMEPHASE_ENDGAME_VALUE || materialValue[Color.BLACK] <= GAMEPHASE_ENDGAME_VALUE
         || materialCount[Color.WHITE] <= GAMEPHASE_ENDGAME_COUNT || materialCount[Color.BLACK] <= GAMEPHASE_ENDGAME_COUNT) {
-      return IntGamePhase.ENDGAME;
+      return GamePhase.ENDGAME;
     } else {
-      return IntGamePhase.MIDDLE;
+      return GamePhase.MIDDLE;
     }
   }
 

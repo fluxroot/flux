@@ -981,7 +981,7 @@ public final class Search implements Runnable {
           && doNull
           && !isCheck
           && !mateThreat
-          && board.getGamePhase() != IntGamePhase.ENDGAME
+          && board.getGamePhase() != GamePhase.ENDGAME
           && (evalValue = this.evaluation.evaluate(board)) >= beta) {
         // Depth reduction
         int newDepth = depth - 1 - NULLMOVE_REDUCTION;
