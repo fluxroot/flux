@@ -105,7 +105,7 @@ final class Search implements Runnable {
   private static final class Result {
     int bestMove = Move.NOMOVE;
     int ponderMove = Move.NOMOVE;
-    int value = Bound.NOVALUE;
+    int value = Bound.NOBOUND;
     int resultValue = -Value.INFINITY;
     long time = -1;
     int moveNumber = 0;
@@ -382,7 +382,7 @@ final class Search implements Runnable {
     int transpositionMove = Move.NOMOVE;
     int transpositionDepth = -1;
     int transpositionValue = 0;
-    int transpositionType = Bound.NOVALUE;
+    int transpositionType = Bound.NOBOUND;
     if (Configuration.useTranspositionTable) {
       TranspositionTable.TranspositionTableEntry entry = this.transpositionTable.get(board.zobristCode);
       if (entry != null) {
@@ -689,7 +689,7 @@ final class Search implements Runnable {
     }
 
     // Initialize
-    int hashType = Bound.ALPHA;
+    int hashType = Bound.UPPER;
     int bestValue = -Value.INFINITY;
     int bestMove = Move.NOMOVE;
     int oldAlpha = alpha;
@@ -743,12 +743,12 @@ final class Search implements Runnable {
       int moveType;
       if (value <= alpha) {
         value = alpha;
-        moveType = Bound.ALPHA;
+        moveType = Bound.UPPER;
         rootMoveList.values[j] = oldAlpha;
         sortValue = -Value.INFINITY;
       } else if (value >= beta) {
         value = beta;
-        moveType = Bound.BETA;
+        moveType = Bound.LOWER;
         rootMoveList.values[j] = beta;
         sortValue = Value.INFINITY;
       } else {
@@ -821,7 +821,7 @@ final class Search implements Runnable {
           if (value >= beta) {
             // Cut-off
 
-            hashType = Bound.BETA;
+            hashType = Bound.LOWER;
             break;
           }
         }
@@ -937,12 +937,12 @@ final class Search implements Runnable {
           int type = entry.type;
 
           switch (type) {
-            case Bound.BETA:
+            case Bound.LOWER:
               if (value >= beta) {
                 return value;
               }
               break;
-            case Bound.ALPHA:
+            case Bound.UPPER:
               if (value <= alpha) {
                 return value;
               }
@@ -1013,7 +1013,7 @@ final class Search implements Runnable {
 
           if (!(this.stopped && this.canStop)) {
             // Store the value into the transposition table
-            this.transpositionTable.put(board.zobristCode, depth, value, Bound.BETA, Move.NOMOVE, mateThreat, height);
+            this.transpositionTable.put(board.zobristCode, depth, value, Bound.LOWER, Move.NOMOVE, mateThreat, height);
           }
 
           return value;
@@ -1023,7 +1023,7 @@ final class Search implements Runnable {
     //## ENDOF Null-Move Forward Pruning
 
     // Initialize
-    int hashType = Bound.ALPHA;
+    int hashType = Bound.UPPER;
     int bestValue = -Value.INFINITY;
     int bestMove = Move.NOMOVE;
     int searchedMoves = 0;
@@ -1272,7 +1272,7 @@ final class Search implements Runnable {
           if (value >= beta) {
             // Cut-off
 
-            hashType = Bound.BETA;
+            hashType = Bound.LOWER;
             break;
           }
         }
@@ -1345,12 +1345,12 @@ final class Search implements Runnable {
         int type = entry.type;
 
         switch (type) {
-          case Bound.BETA:
+          case Bound.LOWER:
             if (value >= beta) {
               return value;
             }
             break;
-          case Bound.ALPHA:
+          case Bound.UPPER:
             if (value <= alpha) {
               return value;
             }
@@ -1371,7 +1371,7 @@ final class Search implements Runnable {
     boolean isCheck = attack.isCheck();
 
     // Initialize
-    int hashType = Bound.ALPHA;
+    int hashType = Bound.UPPER;
     int bestValue = -Value.INFINITY;
     int evalValue = Value.INFINITY;
 
@@ -1394,7 +1394,7 @@ final class Search implements Runnable {
         if (value >= beta) {
           // Cut-off
 
-          hashType = Bound.BETA;
+          hashType = Bound.LOWER;
 
           if (useTranspositionTable) {
             assert checkingDepth == 0;
@@ -1466,7 +1466,7 @@ final class Search implements Runnable {
           if (value >= beta) {
             // Cut-off
 
-            hashType = Bound.BETA;
+            hashType = Bound.LOWER;
             break;
           }
         }
@@ -1725,7 +1725,7 @@ final class Search implements Runnable {
       command.setNodes(pv.totalNodes);
 
       command.setCentipawns(pv.value);
-      command.setValue(Bound.valueOfIntValue(pv.type));
+      command.setValue(Bound.toGenericScore(pv.type));
       command.setMoveList(pv.pv);
 
       if (Configuration.showPvNumber > 1) {
@@ -1757,7 +1757,7 @@ final class Search implements Runnable {
       command.setNodes(pv.totalNodes);
 
       command.setMate(currentMateDepth);
-      command.setValue(Bound.valueOfIntValue(pv.type));
+      command.setValue(Bound.toGenericScore(pv.type));
       command.setMoveList(pv.pv);
 
       if (Configuration.showPvNumber > 1) {

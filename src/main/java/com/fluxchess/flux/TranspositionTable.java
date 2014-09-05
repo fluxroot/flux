@@ -40,7 +40,7 @@ final class TranspositionTable {
     int age = -1;
     int depth = -1;
     private int value = -Value.INFINITY;
-    int type = Bound.NOVALUE;
+    int type = Bound.NOBOUND;
     int move = Move.NOMOVE;
     boolean mateThreat = false;
 
@@ -52,7 +52,7 @@ final class TranspositionTable {
       this.age = -1;
       this.depth = -1;
       this.value = -Value.INFINITY;
-      this.type = Bound.NOVALUE;
+      this.type = Bound.NOBOUND;
       this.move = Move.NOMOVE;
       this.mateThreat = false;
     }
@@ -129,7 +129,7 @@ final class TranspositionTable {
    */
   void put(long zobristCode, int depth, int value, int type, int move, boolean mateThreat, int height) {
     assert depth >= 0;
-    assert type != Bound.NOVALUE;
+    assert type != Bound.NOBOUND;
     assert height >= 0;
 
     int position = (int) (zobristCode % this.size);

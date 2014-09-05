@@ -22,43 +22,37 @@ import com.fluxchess.jcpi.models.GenericScore;
 
 final class Bound {
 
-  /**
-   * Represents no value
-   */
-  static final int NOVALUE = -9;
-
-  /**
-   * IntValue values
-   */
   static final int EXACT = 0;
-  static final int ALPHA = 1;
-  static final int BETA = 2;
+  static final int UPPER = 1;
+  static final int LOWER = 2;
+  static final int NOBOUND = 3;
 
-  /**
-   * IntValue cannot be instantiated.
-   */
+  static final int[] values = {
+      EXACT, UPPER, LOWER
+  };
+
+  private static final GenericScore[] toGenericScore = {
+      GenericScore.EXACT, GenericScore.ALPHA, GenericScore.BETA
+  };
+
   private Bound() {
   }
 
-  /**
-   * Returns the EnumValue of the IntValue value.
-   *
-   * @param value the IntValue value.
-   * @return the EnumValue.
-   */
-  static GenericScore valueOfIntValue(int value) {
-    assert value != NOVALUE;
-
-    switch (value) {
+  static boolean isValid(int bound) {
+    switch (bound) {
       case EXACT:
-        return GenericScore.EXACT;
-      case ALPHA:
-        return GenericScore.ALPHA;
-      case BETA:
-        return GenericScore.BETA;
+      case UPPER:
+      case LOWER:
+        return true;
       default:
-        throw new IllegalArgumentException();
+        return false;
     }
+  }
+
+  static GenericScore toGenericScore(int bound) {
+    assert isValid(bound);
+
+    return toGenericScore[bound];
   }
 
 }

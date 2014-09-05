@@ -41,14 +41,14 @@ public class TranspositionTableTest {
     assertEquals(move1, entry.move);
 
     // Overwrite the entry with a new one
-    table.put(1L, 2, 200, Bound.BETA, move1, false, 0);
+    table.put(1L, 2, 200, Bound.LOWER, move1, false, 0);
 
     entry = table.get(1L);
     assertNotNull(entry);
 
     assertEquals(2, entry.depth);
     assertEquals(200, entry.getValue(0));
-    assertEquals(Bound.BETA, entry.type);
+    assertEquals(Bound.LOWER, entry.type);
     assertEquals(move1, entry.move);
 
     // Put an mate entry into the table
