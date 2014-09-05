@@ -30,7 +30,7 @@ public final class Hex88Board {
   public static final int BOARDSIZE = 128;
 
   // The size of the history stack
-  private static final int STACKSIZE = ISearch.MAX_MOVES;
+  private static final int STACKSIZE = Search.MAX_MOVES;
 
   // Game phase thresholds
   public static final int GAMEPHASE_OPENING_VALUE =
