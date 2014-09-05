@@ -67,7 +67,7 @@ public final class HistoryTable {
 
     if (historyTable[piece][end] >= MAX_HISTORYVALUE) {
       for (int pieceValue : Piece.pieceValues) {
-        for (int positionValue : IntPosition.values) {
+        for (int positionValue : Square.values) {
           historyTable[pieceValue][positionValue] /= 2;
         }
       }

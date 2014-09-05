@@ -27,7 +27,7 @@ public class MoveTest {
 
   @Test
   public void testIntMove() {
-    int move = Move.createMove(Move.NULL, IntPosition.NOPOSITION, IntPosition.NOPOSITION, Piece.NOPIECE, Piece.NOPIECE, Piece.NOPIECE);
+    int move = Move.createMove(Move.NULL, Square.NOPOSITION, Square.NOPOSITION, Piece.NOPIECE, Piece.NOPIECE, Piece.NOPIECE);
     assertEquals(Move.NULL, Move.getType(move));
 //		assertEquals(IntPosition.NOPOSITION, IntMove.getStart(move));
 //		assertEquals(IntPosition.NOPOSITION, IntMove.getEnd(move));
@@ -71,11 +71,11 @@ public class MoveTest {
 
   @Test
   public void testSetEndPosition() {
-    int move = Move.createMove(Move.NORMAL, IntPosition.a2, IntPosition.a3, Piece.createPiece(Piece.PAWN, Color.WHITE), Piece.NOPIECE, Piece.NOPIECE);
-    assertEquals(IntPosition.a3, Move.getEnd(move));
+    int move = Move.createMove(Move.NORMAL, Square.a2, Square.a3, Piece.createPiece(Piece.PAWN, Color.WHITE), Piece.NOPIECE, Piece.NOPIECE);
+    assertEquals(Square.a3, Move.getEnd(move));
 
-    move = Move.setEndPosition(move, IntPosition.a4);
-    assertEquals(IntPosition.a4, Move.getEnd(move));
+    move = Move.setEndPosition(move, Square.a4);
+    assertEquals(Square.a4, Move.getEnd(move));
   }
 
 }

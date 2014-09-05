@@ -24,7 +24,7 @@ import com.fluxchess.jcpi.models.GenericRank;
 
 import java.util.Arrays;
 
-public final class IntPosition {
+public final class Square {
 
   /**
    * Represents no position
@@ -124,7 +124,7 @@ public final class IntPosition {
   /**
    * IntPosition cannot be instantiated.
    */
-  private IntPosition() {
+  private Square() {
   }
 
   /**

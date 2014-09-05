@@ -75,7 +75,7 @@ public final class Position {
   public long pawnZobristCode = 0;
 
   // En Passant square
-  public int enPassantSquare = IntPosition.NOPOSITION;
+  public int enPassantSquare = Square.NOPOSITION;
 
   // Castling
   public static int castling;
@@ -83,7 +83,7 @@ public final class Position {
   private int castlingHistorySize = 0;
 
   // Capture
-  public int captureSquare = IntPosition.NOPOSITION;
+  public int captureSquare = Square.NOPOSITION;
   private static final int[] captureHistory = new int[STACKSIZE];
   private int captureHistorySize = 0;
 
@@ -208,10 +208,10 @@ public final class Position {
     }
 
     // Initialize the board
-    for (int position : IntPosition.values) {
+    for (int position : Square.values) {
       board[position] = Piece.NOPIECE;
 
-      GenericPiece genericPiece = newBoard.getPiece(IntPosition.valueOfIntPosition(position));
+      GenericPiece genericPiece = newBoard.getPiece(Square.valueOfIntPosition(position));
       if (genericPiece != null) {
         int piece = Piece.createPiece(Piece.valueOfChessman(genericPiece.chessman), Color.valueOfColor(genericPiece.color));
         put(piece, position, true);
@@ -220,8 +220,8 @@ public final class Position {
 
     // Initialize en passant
     if (newBoard.getEnPassant() != null) {
-      this.enPassantSquare = IntPosition.valueOfPosition(newBoard.getEnPassant());
-      this.zobristCode ^= zobristEnPassant[IntPosition.valueOfPosition(newBoard.getEnPassant())];
+      this.enPassantSquare = Square.valueOfPosition(newBoard.getEnPassant());
+      this.zobristCode ^= zobristEnPassant[Square.valueOfPosition(newBoard.getEnPassant())];
     }
 
     // Initialize castling
@@ -473,61 +473,61 @@ public final class Position {
 
       for (int index = 0; index < pawnList[intColor].size; index++) {
         int intPosition = pawnList[intColor].position[index];
-        assert intPosition != IntPosition.NOPOSITION;
+        assert intPosition != Square.NOPOSITION;
         assert Piece.getChessman(board[intPosition]) == Piece.PAWN;
         assert Piece.getColor(board[intPosition]) == intColor;
 
-        GenericPosition position = IntPosition.valueOfIntPosition(intPosition);
+        GenericPosition position = Square.valueOfIntPosition(intPosition);
         newBoard.setPiece(GenericPiece.valueOf(color, GenericChessman.PAWN), position);
       }
 
       for (int index = 0; index < knightList[intColor].size; index++) {
         int intPosition = knightList[intColor].position[index];
-        assert intPosition != IntPosition.NOPOSITION;
+        assert intPosition != Square.NOPOSITION;
         assert Piece.getChessman(board[intPosition]) == Piece.KNIGHT;
         assert Piece.getColor(board[intPosition]) == intColor;
 
-        GenericPosition position = IntPosition.valueOfIntPosition(intPosition);
+        GenericPosition position = Square.valueOfIntPosition(intPosition);
         newBoard.setPiece(GenericPiece.valueOf(color, GenericChessman.KNIGHT), position);
       }
 
       for (int index = 0; index < bishopList[intColor].size; index++) {
         int intPosition = bishopList[intColor].position[index];
-        assert intPosition != IntPosition.NOPOSITION;
+        assert intPosition != Square.NOPOSITION;
         assert Piece.getChessman(board[intPosition]) == Piece.BISHOP;
         assert Piece.getColor(board[intPosition]) == intColor;
 
-        GenericPosition position = IntPosition.valueOfIntPosition(intPosition);
+        GenericPosition position = Square.valueOfIntPosition(intPosition);
         newBoard.setPiece(GenericPiece.valueOf(color, GenericChessman.BISHOP), position);
       }
 
       for (int index = 0; index < rookList[intColor].size; index++) {
         int intPosition = rookList[intColor].position[index];
-        assert intPosition != IntPosition.NOPOSITION;
+        assert intPosition != Square.NOPOSITION;
         assert Piece.getChessman(board[intPosition]) == Piece.ROOK;
         assert Piece.getColor(board[intPosition]) == intColor;
 
-        GenericPosition position = IntPosition.valueOfIntPosition(intPosition);
+        GenericPosition position = Square.valueOfIntPosition(intPosition);
         newBoard.setPiece(GenericPiece.valueOf(color, GenericChessman.ROOK), position);
       }
 
       for (int index = 0; index < queenList[intColor].size; index++) {
         int intPosition = queenList[intColor].position[index];
-        assert intPosition != IntPosition.NOPOSITION;
+        assert intPosition != Square.NOPOSITION;
         assert Piece.getChessman(board[intPosition]) == Piece.QUEEN;
         assert Piece.getColor(board[intPosition]) == intColor;
 
-        GenericPosition position = IntPosition.valueOfIntPosition(intPosition);
+        GenericPosition position = Square.valueOfIntPosition(intPosition);
         newBoard.setPiece(GenericPiece.valueOf(color, GenericChessman.QUEEN), position);
       }
 
       assert kingList[intColor].size == 1;
       int intPosition = kingList[intColor].position[0];
-      assert intPosition != IntPosition.NOPOSITION;
+      assert intPosition != Square.NOPOSITION;
       assert Piece.getChessman(board[intPosition]) == Piece.KING;
       assert Piece.getColor(board[intPosition]) == intColor;
 
-      GenericPosition position = IntPosition.valueOfIntPosition(intPosition);
+      GenericPosition position = Square.valueOfIntPosition(intPosition);
       newBoard.setPiece(GenericPiece.valueOf(color, GenericChessman.KING), position);
     }
 
@@ -549,8 +549,8 @@ public final class Position {
     }
 
     // Set en passant
-    if (this.enPassantSquare != IntPosition.NOPOSITION) {
-      newBoard.setEnPassant(IntPosition.valueOfIntPosition(this.enPassantSquare));
+    if (this.enPassantSquare != Square.NOPOSITION) {
+      newBoard.setEnPassant(Square.valueOfIntPosition(this.enPassantSquare));
     }
 
     // Set half move clock
@@ -652,20 +652,20 @@ public final class Position {
         undoMove(move);
         return isCheck;
       case Move.CASTLING:
-        int rookEnd = IntPosition.NOPOSITION;
+        int rookEnd = Square.NOPOSITION;
 
-        if (endPosition == IntPosition.g1) {
+        if (endPosition == Square.g1) {
           assert chessmanColor == Color.WHITE;
-          rookEnd = IntPosition.f1;
-        } else if (endPosition == IntPosition.g8) {
+          rookEnd = Square.f1;
+        } else if (endPosition == Square.g8) {
           assert chessmanColor == Color.BLACK;
-          rookEnd = IntPosition.f8;
-        } else if (endPosition == IntPosition.c1) {
+          rookEnd = Square.f8;
+        } else if (endPosition == Square.c1) {
           assert chessmanColor == Color.WHITE;
-          rookEnd = IntPosition.d1;
-        } else if (endPosition == IntPosition.c8) {
+          rookEnd = Square.d1;
+        } else if (endPosition == Square.c8) {
           assert chessmanColor == Color.BLACK;
-          rookEnd = IntPosition.d8;
+          rookEnd = Square.d8;
         } else {
           assert false : endPosition;
         }
@@ -683,7 +683,7 @@ public final class Position {
   }
 
   public boolean isPinned(int chessmanPosition, int kingColor) {
-    assert chessmanPosition != IntPosition.NOPOSITION;
+    assert chessmanPosition != Square.NOPOSITION;
     assert kingColor != Color.NOCOLOR;
 
     int myKingPosition = kingList[kingColor].position[0];
@@ -836,7 +836,7 @@ public final class Position {
    */
   private boolean getAttack(Attack attack, int targetPosition, int attackerColor, boolean stop) {
     assert attack != null;
-    assert targetPosition != IntPosition.NOPOSITION;
+    assert targetPosition != Square.NOPOSITION;
     assert attackerColor != Color.NOCOLOR;
 
     attack.count = 0;
@@ -880,7 +880,7 @@ public final class Position {
     for (int index = 0; index < tempChessmanList.size; index++) {
       int attackerPosition = tempChessmanList.position[index];
       assert Piece.getChessman(board[attackerPosition]) == Piece.KNIGHT;
-      assert attackerPosition != IntPosition.NOPOSITION;
+      assert attackerPosition != Square.NOPOSITION;
       assert board[attackerPosition] != Piece.NOPIECE;
       assert attackerColor == Piece.getColor(board[attackerPosition]);
       if (canAttack(Piece.KNIGHT, attackerColor, attackerPosition, targetPosition)) {
@@ -898,7 +898,7 @@ public final class Position {
     for (int index = 0; index < tempChessmanList.size; index++) {
       int attackerPosition = tempChessmanList.position[index];
       assert Piece.getChessman(board[attackerPosition]) == Piece.BISHOP;
-      assert attackerPosition != IntPosition.NOPOSITION;
+      assert attackerPosition != Square.NOPOSITION;
       assert board[attackerPosition] != Piece.NOPIECE;
       assert attackerColor == Piece.getColor(board[attackerPosition]);
       if (canAttack(Piece.BISHOP, attackerColor, attackerPosition, targetPosition)) {
@@ -916,7 +916,7 @@ public final class Position {
     for (int index = 0; index < tempChessmanList.size; index++) {
       int attackerPosition = tempChessmanList.position[index];
       assert Piece.getChessman(board[attackerPosition]) == Piece.ROOK;
-      assert attackerPosition != IntPosition.NOPOSITION;
+      assert attackerPosition != Square.NOPOSITION;
       assert board[attackerPosition] != Piece.NOPIECE;
       assert attackerColor == Piece.getColor(board[attackerPosition]);
       if (canAttack(Piece.ROOK, attackerColor, attackerPosition, targetPosition)) {
@@ -934,7 +934,7 @@ public final class Position {
     for (int index = 0; index < tempChessmanList.size; index++) {
       int attackerPosition = tempChessmanList.position[index];
       assert Piece.getChessman(board[attackerPosition]) == Piece.QUEEN;
-      assert attackerPosition != IntPosition.NOPOSITION;
+      assert attackerPosition != Square.NOPOSITION;
       assert board[attackerPosition] != Piece.NOPIECE;
       assert attackerColor == Piece.getColor(board[attackerPosition]);
       if (canAttack(Piece.QUEEN, attackerColor, attackerPosition, targetPosition)) {
@@ -951,7 +951,7 @@ public final class Position {
     assert kingList[attackerColor].size == 1;
     int attackerPosition = kingList[attackerColor].position[0];
     assert Piece.getChessman(board[attackerPosition]) == Piece.KING;
-    assert attackerPosition != IntPosition.NOPOSITION;
+    assert attackerPosition != Square.NOPOSITION;
     assert board[attackerPosition] != Piece.NOPIECE;
     assert attackerColor == Piece.getColor(board[attackerPosition]);
     if (canAttack(Piece.KING, attackerColor, attackerPosition, targetPosition)) {
@@ -1229,22 +1229,22 @@ public final class Position {
       this.captureSquare = endPosition;
 
       switch (endPosition) {
-        case IntPosition.a1:
+        case Square.a1:
           newCastling &= ~Castling.WHITE_QUEENSIDE;
           break;
-        case IntPosition.a8:
+        case Square.a8:
           newCastling &= ~Castling.BLACK_QUEENSIDE;
           break;
-        case IntPosition.h1:
+        case Square.h1:
           newCastling &= ~Castling.WHITE_KINGSIDE;
           break;
-        case IntPosition.h8:
+        case Square.h8:
           newCastling &= ~Castling.BLACK_KINGSIDE;
           break;
-        case IntPosition.e1:
+        case Square.e1:
           newCastling &= ~(Castling.WHITE_KINGSIDE | Castling.WHITE_QUEENSIDE);
           break;
-        case IntPosition.e8:
+        case Square.e8:
           newCastling &= ~(Castling.BLACK_KINGSIDE | Castling.BLACK_QUEENSIDE);
           break;
         default:
@@ -1261,7 +1261,7 @@ public final class Position {
         castling = newCastling;
       }
     } else {
-      this.captureSquare = IntPosition.NOPOSITION;
+      this.captureSquare = Square.NOPOSITION;
     }
 
     // Move the piece
@@ -1271,22 +1271,22 @@ public final class Position {
 
     // Update castling
     switch (startPosition) {
-      case IntPosition.a1:
+      case Square.a1:
         newCastling &= ~Castling.WHITE_QUEENSIDE;
         break;
-      case IntPosition.a8:
+      case Square.a8:
         newCastling &= ~Castling.BLACK_QUEENSIDE;
         break;
-      case IntPosition.h1:
+      case Square.h1:
         newCastling &= ~Castling.WHITE_KINGSIDE;
         break;
-      case IntPosition.h8:
+      case Square.h8:
         newCastling &= ~Castling.BLACK_KINGSIDE;
         break;
-      case IntPosition.e1:
+      case Square.e1:
         newCastling &= ~(Castling.WHITE_KINGSIDE | Castling.WHITE_QUEENSIDE);
         break;
-      case IntPosition.e8:
+      case Square.e8:
         newCastling &= ~(Castling.BLACK_KINGSIDE | Castling.BLACK_QUEENSIDE);
         break;
       default:
@@ -1304,9 +1304,9 @@ public final class Position {
     }
 
     // Update en passant
-    if (this.enPassantSquare != IntPosition.NOPOSITION) {
+    if (this.enPassantSquare != Square.NOPOSITION) {
       this.zobristCode ^= zobristEnPassant[this.enPassantSquare];
-      this.enPassantSquare = IntPosition.NOPOSITION;
+      this.enPassantSquare = Square.NOPOSITION;
     }
 
     // Update half move clock
@@ -1356,22 +1356,22 @@ public final class Position {
       this.captureSquare = endPosition;
 
       switch (endPosition) {
-        case IntPosition.a1:
+        case Square.a1:
           newCastling &= ~Castling.WHITE_QUEENSIDE;
           break;
-        case IntPosition.a8:
+        case Square.a8:
           newCastling &= ~Castling.BLACK_QUEENSIDE;
           break;
-        case IntPosition.h1:
+        case Square.h1:
           newCastling &= ~Castling.WHITE_KINGSIDE;
           break;
-        case IntPosition.h8:
+        case Square.h8:
           newCastling &= ~Castling.BLACK_KINGSIDE;
           break;
-        case IntPosition.e1:
+        case Square.e1:
           newCastling &= ~(Castling.WHITE_KINGSIDE | Castling.WHITE_QUEENSIDE);
           break;
-        case IntPosition.e8:
+        case Square.e8:
           newCastling &= ~(Castling.BLACK_KINGSIDE | Castling.BLACK_QUEENSIDE);
           break;
         default:
@@ -1388,7 +1388,7 @@ public final class Position {
         castling = newCastling;
       }
     } else {
-      this.captureSquare = IntPosition.NOPOSITION;
+      this.captureSquare = Square.NOPOSITION;
     }
 
     // Create the promotion chessman
@@ -1397,9 +1397,9 @@ public final class Position {
     put(promotionPiece, endPosition, true);
 
     // Update en passant
-    if (this.enPassantSquare != IntPosition.NOPOSITION) {
+    if (this.enPassantSquare != Square.NOPOSITION) {
       this.zobristCode ^= zobristEnPassant[this.enPassantSquare];
-      this.enPassantSquare = IntPosition.NOPOSITION;
+      this.enPassantSquare = Square.NOPOSITION;
     }
 
     // Update half move clock
@@ -1440,7 +1440,7 @@ public final class Position {
     assert Math.abs(startPosition - endPosition) == 32;
 
     // Update the capture square
-    this.captureSquare = IntPosition.NOPOSITION;
+    this.captureSquare = Square.NOPOSITION;
 
     // Calculate the en passant position
     int targetPosition;
@@ -1456,7 +1456,7 @@ public final class Position {
     assert Math.abs(startPosition - targetPosition) == 16;
 
     // Update en passant
-    if (this.enPassantSquare != IntPosition.NOPOSITION) {
+    if (this.enPassantSquare != Square.NOPOSITION) {
       this.zobristCode ^= zobristEnPassant[this.enPassantSquare];
     }
 
@@ -1487,24 +1487,24 @@ public final class Position {
     int rookStartPosition;
     int rookEndPosition;
     switch (kingEndPosition) {
-      case IntPosition.g1:
-        rookStartPosition = IntPosition.h1;
-        rookEndPosition = IntPosition.f1;
+      case Square.g1:
+        rookStartPosition = Square.h1;
+        rookEndPosition = Square.f1;
         newCastling &= ~(Castling.WHITE_KINGSIDE | Castling.WHITE_QUEENSIDE);
         break;
-      case IntPosition.c1:
-        rookStartPosition = IntPosition.a1;
-        rookEndPosition = IntPosition.d1;
+      case Square.c1:
+        rookStartPosition = Square.a1;
+        rookEndPosition = Square.d1;
         newCastling &= ~(Castling.WHITE_KINGSIDE | Castling.WHITE_QUEENSIDE);
         break;
-      case IntPosition.g8:
-        rookStartPosition = IntPosition.h8;
-        rookEndPosition = IntPosition.f8;
+      case Square.g8:
+        rookStartPosition = Square.h8;
+        rookEndPosition = Square.f8;
         newCastling &= ~(Castling.BLACK_KINGSIDE | Castling.BLACK_QUEENSIDE);
         break;
-      case IntPosition.c8:
-        rookStartPosition = IntPosition.a8;
-        rookEndPosition = IntPosition.d8;
+      case Square.c8:
+        rookStartPosition = Square.a8;
+        rookEndPosition = Square.d8;
         newCastling &= ~(Castling.BLACK_KINGSIDE | Castling.BLACK_QUEENSIDE);
         break;
       default:
@@ -1526,12 +1526,12 @@ public final class Position {
     castling = newCastling;
 
     // Update the capture square
-    this.captureSquare = IntPosition.NOPOSITION;
+    this.captureSquare = Square.NOPOSITION;
 
     // Update en passant
-    if (this.enPassantSquare != IntPosition.NOPOSITION) {
+    if (this.enPassantSquare != Square.NOPOSITION) {
       this.zobristCode ^= zobristEnPassant[this.enPassantSquare];
-      this.enPassantSquare = IntPosition.NOPOSITION;
+      this.enPassantSquare = Square.NOPOSITION;
     }
 
     // Update half move clock
@@ -1545,21 +1545,21 @@ public final class Position {
     int rookStartPosition;
     int rookEndPosition;
     switch (kingEndPosition) {
-      case IntPosition.g1:
-        rookStartPosition = IntPosition.h1;
-        rookEndPosition = IntPosition.f1;
+      case Square.g1:
+        rookStartPosition = Square.h1;
+        rookEndPosition = Square.f1;
         break;
-      case IntPosition.c1:
-        rookStartPosition = IntPosition.a1;
-        rookEndPosition = IntPosition.d1;
+      case Square.c1:
+        rookStartPosition = Square.a1;
+        rookEndPosition = Square.d1;
         break;
-      case IntPosition.g8:
-        rookStartPosition = IntPosition.h8;
-        rookEndPosition = IntPosition.f8;
+      case Square.g8:
+        rookStartPosition = Square.h8;
+        rookEndPosition = Square.f8;
         break;
-      case IntPosition.c8:
-        rookStartPosition = IntPosition.a8;
-        rookEndPosition = IntPosition.d8;
+      case Square.c8:
+        rookStartPosition = Square.a8;
+        rookEndPosition = Square.d8;
         break;
       default:
         throw new IllegalArgumentException();
@@ -1605,9 +1605,9 @@ public final class Position {
     this.captureSquare = endPosition;
 
     // Update en passant
-    if (this.enPassantSquare != IntPosition.NOPOSITION) {
+    if (this.enPassantSquare != Square.NOPOSITION) {
       this.zobristCode ^= zobristEnPassant[this.enPassantSquare];
-      this.enPassantSquare = IntPosition.NOPOSITION;
+      this.enPassantSquare = Square.NOPOSITION;
     }
 
     // Update half move clock
@@ -1635,12 +1635,12 @@ public final class Position {
 
   private void makeMoveNull(int move) {
     // Update the capture square
-    this.captureSquare = IntPosition.NOPOSITION;
+    this.captureSquare = Square.NOPOSITION;
 
     // Update en passant
-    if (this.enPassantSquare != IntPosition.NOPOSITION) {
+    if (this.enPassantSquare != Square.NOPOSITION) {
       this.zobristCode ^= zobristEnPassant[this.enPassantSquare];
-      this.enPassantSquare = IntPosition.NOPOSITION;
+      this.enPassantSquare = Square.NOPOSITION;
     }
 
     // Update half move clock

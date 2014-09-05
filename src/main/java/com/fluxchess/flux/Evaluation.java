@@ -651,8 +651,8 @@ public final class Evaluation {
     // Evaluate each pawn
     for (int i = 0; i < myPawnList.size; i++) {
       int pawnPosition = myPawnList.position[i];
-      int pawnFile = IntPosition.getFile(pawnPosition);
-      int pawnRank = IntPosition.getRank(pawnPosition);
+      int pawnFile = Square.getFile(pawnPosition);
+      int pawnRank = Square.getRank(pawnPosition);
 
       // Fill attack table
       for (int j = 1; j < MoveGenerator.moveDeltaPawn.length; j++) {
@@ -800,8 +800,8 @@ public final class Evaluation {
     // Evaluate each rook
     for (int i = 0; i < myRookList.size; i++) {
       int rookPosition = myRookList.position[i];
-      int rookFile = IntPosition.getFile(rookPosition);
-      int rookRank = IntPosition.getRank(rookPosition);
+      int rookFile = Square.getFile(rookPosition);
+      int rookRank = Square.getRank(rookPosition);
       int tableFile = rookFile + 1;
 
       int allMobility = EVAL_ROOK_MOBILITY_BASE;
@@ -846,7 +846,7 @@ public final class Evaluation {
           totalOpenFile += EVAL_ROOK_OPENFILE / 2;
         }
         int kingPosition = Position.kingList[enemyColor].position[0];
-        int kingFile = IntPosition.getFile(kingPosition);
+        int kingFile = Square.getFile(kingPosition);
         int delta = Math.abs(kingFile - rookFile);
         if (delta <= 1) {
           total[TOTAL_OPENING] += EVAL_ROOK_NEARKINGFILE;
@@ -869,7 +869,7 @@ public final class Evaluation {
       }
       if (rookRank == seventhRank) {
         int kingPosition = Position.kingList[enemyColor].position[0];
-        int kingRank = IntPosition.getRank(kingPosition);
+        int kingRank = Square.getRank(kingPosition);
         boolean enemyPawnExists = false;
         for (int j = 1; j < enemyPawnTable.length - 1; j++) {
           if (enemyPawnTable[j] == seventhRank) {
@@ -906,7 +906,7 @@ public final class Evaluation {
     // Evaluate the queen
     for (int i = 0; i < myQueenList.size; i++) {
       int queenPosition = myQueenList.position[i];
-      int queenRank = IntPosition.getRank(queenPosition);
+      int queenRank = Square.getRank(queenPosition);
 
       int allMobility = EVAL_QUEEN_MOBILITY_BASE;
 
@@ -953,7 +953,7 @@ public final class Evaluation {
       }
       if (queenRank == seventhRank) {
         int kingPosition = Position.kingList[enemyColor].position[0];
-        int kingRank = IntPosition.getRank(kingPosition);
+        int kingRank = Square.getRank(kingPosition);
         boolean enemyPawnExists = false;
         for (int j = 1; j < enemyPawnTable.length - 1; j++) {
           if (enemyPawnTable[j] == seventhRank) {
@@ -993,7 +993,7 @@ public final class Evaluation {
     }
 
     // Evaluate king safety
-    int attackedSquare = IntPosition.NOPOSITION;
+    int attackedSquare = Square.NOPOSITION;
     int attackCount = 0;
     byte flag = 0;
 
@@ -1113,11 +1113,11 @@ public final class Evaluation {
 
     total[TOTAL_OPENING] -= kingSafety;
 
-    int castlingPositionKingside = IntPosition.WHITE_CASTLING_KINGSIDE;
-    int castlingPositionQueenside = IntPosition.WHITE_CASTLING_QUEENSIDE;
+    int castlingPositionKingside = Square.WHITE_CASTLING_KINGSIDE;
+    int castlingPositionQueenside = Square.WHITE_CASTLING_QUEENSIDE;
     if (myColor == Color.BLACK) {
-      castlingPositionKingside = IntPosition.BLACK_CASTLING_KINGSIDE;
-      castlingPositionQueenside = IntPosition.BLACK_CASTLING_QUEENSIDE;
+      castlingPositionKingside = Square.BLACK_CASTLING_KINGSIDE;
+      castlingPositionQueenside = Square.BLACK_CASTLING_QUEENSIDE;
     } else {
       assert myColor == Color.WHITE;
     }
@@ -1158,8 +1158,8 @@ public final class Evaluation {
     // Evaluate each pawn
     for (int i = 0; i < myPawnList.size; i++) {
       int pawnPosition = myPawnList.position[i];
-      int pawnFile = IntPosition.getFile(pawnPosition);
-      int pawnRank = IntPosition.getRank(pawnPosition);
+      int pawnFile = Square.getFile(pawnPosition);
+      int pawnRank = Square.getRank(pawnPosition);
       int tableFile = pawnFile + 1;
 
       // Doubled pawns
@@ -1248,18 +1248,18 @@ public final class Evaluation {
 
     assert Position.kingList[enemyColor].size == 1;
     int enemyKingPosition = Position.kingList[enemyColor].position[0];
-    int enemyKingFile = IntPosition.getFile(enemyKingPosition);
-    int enemyKingRank = IntPosition.getRank(enemyKingPosition);
+    int enemyKingFile = Square.getFile(enemyKingPosition);
+    int enemyKingRank = Square.getRank(enemyKingPosition);
     assert Position.kingList[myColor].size == 1;
     int myKingPosition = Position.kingList[myColor].position[0];
-    int myKingFile = IntPosition.getFile(myKingPosition);
-    int myKingRank = IntPosition.getRank(myKingPosition);
+    int myKingFile = Square.getFile(myKingPosition);
+    int myKingRank = Square.getRank(myKingPosition);
 
     // Evaluate each pawn
     for (int i = 0; i < myPawnList.size; i++) {
       int pawnPosition = myPawnList.position[i];
-      int pawnFile = IntPosition.getFile(pawnPosition);
-      int pawnRank = IntPosition.getRank(pawnPosition);
+      int pawnFile = Square.getFile(pawnPosition);
+      int pawnRank = Square.getRank(pawnPosition);
       int pawn = Position.board[pawnPosition];
       int tableFile = pawnFile + 1;
 
@@ -1371,7 +1371,7 @@ public final class Evaluation {
               else if (((promotionDistance <= 2 && (myAttackTable[pawnPosition] & BIT_KING) != 0)
                   || (promotionDistance <= 3 && (myAttackTable[pawnPosition + 16] & BIT_KING) != 0 && board.activeColor == myColor))
                   && (myKingFile != pawnFile
-                  || (pawnFile != IntPosition.fileA && pawnFile != IntPosition.fileH))) {
+                  || (pawnFile != Square.fileA && pawnFile != Square.fileH))) {
                 endgameMax += EVAL_PAWN_PASSER_UNSTOPPABLE;
               }
             }
@@ -1410,7 +1410,7 @@ public final class Evaluation {
               else if (((promotionDistance <= 2 && (myAttackTable[pawnPosition] & BIT_KING) != 0)
                   || (promotionDistance <= 3 && (myAttackTable[pawnPosition - 16] & BIT_KING) != 0 && board.activeColor == myColor))
                   && (myKingFile != pawnFile
-                  || (pawnFile != IntPosition.fileA && pawnFile != IntPosition.fileH))) {
+                  || (pawnFile != Square.fileA && pawnFile != Square.fileH))) {
                 endgameMax += EVAL_PAWN_PASSER_UNSTOPPABLE;
               }
             }
@@ -1445,79 +1445,79 @@ public final class Evaluation {
 
     if (myColor == Color.WHITE) {
       // Trapped white bishop
-      if (Position.board[IntPosition.a7] == Piece.WHITE_BISHOP
-          && Position.board[IntPosition.b6] == Piece.BLACK_PAWN) {
+      if (Position.board[Square.a7] == Piece.WHITE_BISHOP
+          && Position.board[Square.b6] == Piece.BLACK_PAWN) {
         total[TOTAL_OPENING] -= 100;
         total[TOTAL_ENDGAME] -= 100;
-        if (Position.board[IntPosition.c7] == Piece.BLACK_PAWN) {
+        if (Position.board[Square.c7] == Piece.BLACK_PAWN) {
           total[TOTAL_OPENING] -= 50;
           total[TOTAL_ENDGAME] -= 50;
         }
       }
-      if (Position.board[IntPosition.b8] == Piece.WHITE_BISHOP
-          && Position.board[IntPosition.c7] == Piece.BLACK_PAWN) {
+      if (Position.board[Square.b8] == Piece.WHITE_BISHOP
+          && Position.board[Square.c7] == Piece.BLACK_PAWN) {
         total[TOTAL_OPENING] -= 100;
         total[TOTAL_ENDGAME] -= 100;
       }
-      if (Position.board[IntPosition.h7] == Piece.WHITE_BISHOP
-          && Position.board[IntPosition.g6] == Piece.BLACK_PAWN) {
+      if (Position.board[Square.h7] == Piece.WHITE_BISHOP
+          && Position.board[Square.g6] == Piece.BLACK_PAWN) {
         total[TOTAL_OPENING] -= 100;
         total[TOTAL_ENDGAME] -= 100;
-        if (Position.board[IntPosition.f7] == Piece.BLACK_PAWN) {
+        if (Position.board[Square.f7] == Piece.BLACK_PAWN) {
           total[TOTAL_OPENING] -= 50;
           total[TOTAL_ENDGAME] -= 50;
         }
       }
-      if (Position.board[IntPosition.g8] == Piece.WHITE_BISHOP
-          && Position.board[IntPosition.f7] == Piece.BLACK_PAWN) {
+      if (Position.board[Square.g8] == Piece.WHITE_BISHOP
+          && Position.board[Square.f7] == Piece.BLACK_PAWN) {
         total[TOTAL_OPENING] -= 100;
         total[TOTAL_ENDGAME] -= 100;
       }
-      if (Position.board[IntPosition.a6] == Piece.WHITE_BISHOP
-          && Position.board[IntPosition.b5] == Piece.BLACK_PAWN) {
+      if (Position.board[Square.a6] == Piece.WHITE_BISHOP
+          && Position.board[Square.b5] == Piece.BLACK_PAWN) {
         total[TOTAL_OPENING] -= 50;
         total[TOTAL_ENDGAME] -= 50;
       }
-      if (Position.board[IntPosition.h6] == Piece.WHITE_BISHOP
-          && Position.board[IntPosition.g5] == Piece.BLACK_PAWN) {
+      if (Position.board[Square.h6] == Piece.WHITE_BISHOP
+          && Position.board[Square.g5] == Piece.BLACK_PAWN) {
         total[TOTAL_OPENING] -= 50;
         total[TOTAL_ENDGAME] -= 50;
       }
 
       // Blocked center pawn
-      if (Position.board[IntPosition.d2] == Piece.WHITE_PAWN
-          && Position.board[IntPosition.d3] != Piece.NOPIECE) {
+      if (Position.board[Square.d2] == Piece.WHITE_PAWN
+          && Position.board[Square.d3] != Piece.NOPIECE) {
         total[TOTAL_OPENING] -= 20;
         total[TOTAL_ENDGAME] -= 20;
-        if (Position.board[IntPosition.c1] == Piece.WHITE_BISHOP) {
+        if (Position.board[Square.c1] == Piece.WHITE_BISHOP) {
           total[TOTAL_OPENING] -= 30;
           total[TOTAL_ENDGAME] -= 30;
         }
       }
-      if (Position.board[IntPosition.e2] == Piece.WHITE_PAWN
-          && Position.board[IntPosition.e3] != Piece.NOPIECE) {
+      if (Position.board[Square.e2] == Piece.WHITE_PAWN
+          && Position.board[Square.e3] != Piece.NOPIECE) {
         total[TOTAL_OPENING] -= 20;
         total[TOTAL_ENDGAME] -= 20;
-        if (Position.board[IntPosition.f1] == Piece.WHITE_BISHOP) {
+        if (Position.board[Square.f1] == Piece.WHITE_BISHOP) {
           total[TOTAL_OPENING] -= 30;
           total[TOTAL_ENDGAME] -= 30;
         }
       }
 
       // Blocked rook
-      if ((Position.board[IntPosition.c1] == Piece.WHITE_KING
-          || Position.board[IntPosition.b1] == Piece.WHITE_KING)
-          && (Position.board[IntPosition.a1] == Piece.WHITE_ROOK
-          || Position.board[IntPosition.a2] == Piece.WHITE_ROOK
-          || Position.board[IntPosition.b1] == Piece.WHITE_ROOK)) {
+      if ((Position.board[Square.c1] == Piece.WHITE_KING
+          || Position.board[Square.b1] == Piece.WHITE_KING)
+          && (Position.board[Square.a1] == Piece.WHITE_ROOK
+          || Position.board[Square.a2] == Piece.WHITE_ROOK
+          || Position.board[Square.b1] == Piece.WHITE_ROOK)) {
         total[TOTAL_OPENING] -= 50;
         total[TOTAL_ENDGAME] -= 50;
       }
-      if ((Position.board[IntPosition.f1] == Piece.WHITE_KING
-          || Position.board[IntPosition.g1] == Piece.WHITE_KING)
-          && (Position.board[IntPosition.h1] == Piece.WHITE_ROOK
-          || Position.board[IntPosition.h2] == Piece.WHITE_ROOK
-          || Position.board[IntPosition.g1] == Piece.WHITE_ROOK)) {
+      if ((Position.board[Square.f1] == Piece.WHITE_KING
+          || Position.board[Square.g1] == Piece.WHITE_KING)
+          && (Position.board[Square.h1] == Piece.WHITE_ROOK
+          || Position.board[Square.h2] == Piece.WHITE_ROOK
+          || Position.board[Square.g1] == Piece.WHITE_ROOK)) {
         total[TOTAL_OPENING] -= 50;
         total[TOTAL_ENDGAME] -= 50;
       }
@@ -1525,79 +1525,79 @@ public final class Evaluation {
       assert myColor == Color.BLACK;
 
       // Trapped black bishop
-      if (Position.board[IntPosition.a2] == Piece.BLACK_BISHOP
-          && Position.board[IntPosition.b3] == Piece.WHITE_PAWN) {
+      if (Position.board[Square.a2] == Piece.BLACK_BISHOP
+          && Position.board[Square.b3] == Piece.WHITE_PAWN) {
         total[TOTAL_OPENING] -= 100;
         total[TOTAL_ENDGAME] -= 100;
-        if (Position.board[IntPosition.c2] == Piece.WHITE_PAWN) {
+        if (Position.board[Square.c2] == Piece.WHITE_PAWN) {
           total[TOTAL_OPENING] -= 50;
           total[TOTAL_ENDGAME] -= 50;
         }
       }
-      if (Position.board[IntPosition.b1] == Piece.BLACK_BISHOP
-          && Position.board[IntPosition.c2] == Piece.WHITE_PAWN) {
+      if (Position.board[Square.b1] == Piece.BLACK_BISHOP
+          && Position.board[Square.c2] == Piece.WHITE_PAWN) {
         total[TOTAL_OPENING] -= 100;
         total[TOTAL_ENDGAME] -= 100;
       }
-      if (Position.board[IntPosition.h2] == Piece.BLACK_BISHOP
-          && Position.board[IntPosition.g3] == Piece.WHITE_PAWN) {
+      if (Position.board[Square.h2] == Piece.BLACK_BISHOP
+          && Position.board[Square.g3] == Piece.WHITE_PAWN) {
         total[TOTAL_OPENING] -= 100;
         total[TOTAL_ENDGAME] -= 100;
-        if (Position.board[IntPosition.f2] == Piece.WHITE_PAWN) {
+        if (Position.board[Square.f2] == Piece.WHITE_PAWN) {
           total[TOTAL_OPENING] -= 50;
           total[TOTAL_ENDGAME] -= 50;
         }
       }
-      if (Position.board[IntPosition.g1] == Piece.BLACK_BISHOP
-          && Position.board[IntPosition.f2] == Piece.WHITE_PAWN) {
+      if (Position.board[Square.g1] == Piece.BLACK_BISHOP
+          && Position.board[Square.f2] == Piece.WHITE_PAWN) {
         total[TOTAL_OPENING] -= 100;
         total[TOTAL_ENDGAME] -= 100;
       }
-      if (Position.board[IntPosition.a3] == Piece.BLACK_BISHOP
-          && Position.board[IntPosition.b4] == Piece.WHITE_PAWN) {
+      if (Position.board[Square.a3] == Piece.BLACK_BISHOP
+          && Position.board[Square.b4] == Piece.WHITE_PAWN) {
         total[TOTAL_OPENING] -= 50;
         total[TOTAL_ENDGAME] -= 50;
       }
-      if (Position.board[IntPosition.h3] == Piece.BLACK_BISHOP
-          && Position.board[IntPosition.g4] == Piece.WHITE_PAWN) {
+      if (Position.board[Square.h3] == Piece.BLACK_BISHOP
+          && Position.board[Square.g4] == Piece.WHITE_PAWN) {
         total[TOTAL_OPENING] -= 50;
         total[TOTAL_ENDGAME] -= 50;
       }
 
       // Blocked center pawn
-      if (Position.board[IntPosition.d7] == Piece.BLACK_PAWN
-          && Position.board[IntPosition.d6] != Piece.NOPIECE) {
+      if (Position.board[Square.d7] == Piece.BLACK_PAWN
+          && Position.board[Square.d6] != Piece.NOPIECE) {
         total[TOTAL_OPENING] -= 20;
         total[TOTAL_ENDGAME] -= 20;
-        if (Position.board[IntPosition.c8] == Piece.BLACK_BISHOP) {
+        if (Position.board[Square.c8] == Piece.BLACK_BISHOP) {
           total[TOTAL_OPENING] -= 30;
           total[TOTAL_ENDGAME] -= 30;
         }
       }
-      if (Position.board[IntPosition.e7] == Piece.BLACK_PAWN
-          && Position.board[IntPosition.e6] != Piece.NOPIECE) {
+      if (Position.board[Square.e7] == Piece.BLACK_PAWN
+          && Position.board[Square.e6] != Piece.NOPIECE) {
         total[TOTAL_OPENING] -= 20;
         total[TOTAL_ENDGAME] -= 20;
-        if (Position.board[IntPosition.f8] == Piece.BLACK_BISHOP) {
+        if (Position.board[Square.f8] == Piece.BLACK_BISHOP) {
           total[TOTAL_OPENING] -= 30;
           total[TOTAL_ENDGAME] -= 30;
         }
       }
 
       // Blocked rook
-      if ((Position.board[IntPosition.c8] == Piece.BLACK_KING
-          || Position.board[IntPosition.b8] == Piece.BLACK_KING)
-          && (Position.board[IntPosition.a8] == Piece.BLACK_ROOK
-          || Position.board[IntPosition.a7] == Piece.BLACK_ROOK
-          || Position.board[IntPosition.b8] == Piece.BLACK_ROOK)) {
+      if ((Position.board[Square.c8] == Piece.BLACK_KING
+          || Position.board[Square.b8] == Piece.BLACK_KING)
+          && (Position.board[Square.a8] == Piece.BLACK_ROOK
+          || Position.board[Square.a7] == Piece.BLACK_ROOK
+          || Position.board[Square.b8] == Piece.BLACK_ROOK)) {
         total[TOTAL_OPENING] -= 50;
         total[TOTAL_ENDGAME] -= 50;
       }
-      if ((Position.board[IntPosition.f8] == Piece.BLACK_KING
-          || Position.board[IntPosition.g8] == Piece.BLACK_KING)
-          && (Position.board[IntPosition.h8] == Piece.BLACK_ROOK
-          || Position.board[IntPosition.h7] == Piece.BLACK_ROOK
-          || Position.board[IntPosition.g8] == Piece.BLACK_ROOK)) {
+      if ((Position.board[Square.f8] == Piece.BLACK_KING
+          || Position.board[Square.g8] == Piece.BLACK_KING)
+          && (Position.board[Square.h8] == Piece.BLACK_ROOK
+          || Position.board[Square.h7] == Piece.BLACK_ROOK
+          || Position.board[Square.g8] == Piece.BLACK_ROOK)) {
         total[TOTAL_OPENING] -= 50;
         total[TOTAL_ENDGAME] -= 50;
       }
@@ -1611,8 +1611,8 @@ public final class Evaluation {
     // Initialize
     byte[] myPawnTable = pawnTable[myColor];
 
-    int kingFile = IntPosition.getFile(kingPosition);
-    int kingRank = IntPosition.getRank(kingPosition);
+    int kingFile = Square.getFile(kingPosition);
+    int kingRank = Square.getRank(kingPosition);
     int tableFile = kingFile + 1;
 
     // Evaluate pawn shield

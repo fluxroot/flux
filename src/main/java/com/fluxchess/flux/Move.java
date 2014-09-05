@@ -87,9 +87,9 @@ public final class Move {
 
   // Bit operation values
   private static final int START_SHIFT = 0;
-  private static final int START_MASK = IntPosition.MASK << START_SHIFT;
+  private static final int START_MASK = Square.MASK << START_SHIFT;
   private static final int END_SHIFT = 7;
-  private static final int END_MASK = IntPosition.MASK << END_SHIFT;
+  private static final int END_MASK = Square.MASK << END_SHIFT;
   private static final int CHESSMAN_SHIFT = 14;
   private static final int CHESSMAN_MASK = Piece.MASK << CHESSMAN_SHIFT;
   private static final int CHESSMAN_COLOR_SHIFT = 17;
@@ -108,7 +108,7 @@ public final class Move {
   private static final int MOVE_MASK = MASK << MOVE_SHIFT;
 
   static {
-    NULLMOVE = Move.createMove(Move.NULL, IntPosition.NOPOSITION, IntPosition.NOPOSITION, Piece.NOPIECE, Piece.NOPIECE, Piece.NOPIECE);
+    NULLMOVE = Move.createMove(Move.NULL, Square.NOPOSITION, Square.NOPOSITION, Piece.NOPIECE, Piece.NOPIECE, Piece.NOPIECE);
   }
 
   /**
@@ -130,8 +130,8 @@ public final class Move {
    */
   public static int createMove(int type, int start, int end, int piece, int target, int promotion) {
     assert type != NOMOVE;
-    assert (type == NULL && start == IntPosition.NOPOSITION) || (start & 0x88) == 0;
-    assert (type == NULL && end == IntPosition.NOPOSITION) || (end & 0x88) == 0;
+    assert (type == NULL && start == Square.NOPOSITION) || (start & 0x88) == 0;
+    assert (type == NULL && end == Square.NOPOSITION) || (end & 0x88) == 0;
 
     int move = 0;
 
@@ -201,7 +201,7 @@ public final class Move {
    */
   public static int setEndPosition(int move, int endPosition) {
     assert move != Move.NOMOVE;
-    assert endPosition != IntPosition.NOPOSITION;
+    assert endPosition != Square.NOPOSITION;
 
     // Zero out the end position
     move &= ~END_MASK;
@@ -222,7 +222,7 @@ public final class Move {
    */
   public static int setEndPositionAndTarget(int move, int endPosition, int target) {
     assert move != Move.NOMOVE;
-    assert endPosition != IntPosition.NOPOSITION;
+    assert endPosition != Square.NOPOSITION;
     assert target != Piece.NOPIECE;
 
     // Zero out the end position and the target piece
@@ -450,15 +450,15 @@ public final class Move {
       } else {
         promotion = Piece.valueOfChessman(move.promotion);
       }
-      return createMove(PAWNPROMOTION, IntPosition.valueOfPosition(move.from), IntPosition.valueOfPosition(move.to), Position.board[IntPosition.valueOfPosition(move.from)], Position.board[IntPosition.valueOfPosition(move.to)], promotion);
+      return createMove(PAWNPROMOTION, Square.valueOfPosition(move.from), Square.valueOfPosition(move.to), Position.board[Square.valueOfPosition(move.from)], Position.board[Square.valueOfPosition(move.to)], promotion);
     } else if (isPawnDouble(move, board)) {
-      return createMove(PAWNDOUBLE, IntPosition.valueOfPosition(move.from), IntPosition.valueOfPosition(move.to), Position.board[IntPosition.valueOfPosition(move.from)], Piece.NOPIECE, Piece.NOPIECE);
+      return createMove(PAWNDOUBLE, Square.valueOfPosition(move.from), Square.valueOfPosition(move.to), Position.board[Square.valueOfPosition(move.from)], Piece.NOPIECE, Piece.NOPIECE);
     } else if (isEnPassant(move, board)) {
-      return createMove(ENPASSANT, IntPosition.valueOfPosition(move.from), IntPosition.valueOfPosition(move.to), Position.board[IntPosition.valueOfPosition(move.from)], Position.board[IntPosition.valueOfPosition(GenericPosition.valueOf(move.to.file, move.from.rank))], Piece.NOPIECE);
+      return createMove(ENPASSANT, Square.valueOfPosition(move.from), Square.valueOfPosition(move.to), Position.board[Square.valueOfPosition(move.from)], Position.board[Square.valueOfPosition(GenericPosition.valueOf(move.to.file, move.from.rank))], Piece.NOPIECE);
     } else if (isCastling(move, board)) {
-      return createMove(CASTLING, IntPosition.valueOfPosition(move.from), IntPosition.valueOfPosition(move.to), Position.board[IntPosition.valueOfPosition(move.from)], Piece.NOPIECE, Piece.NOPIECE);
+      return createMove(CASTLING, Square.valueOfPosition(move.from), Square.valueOfPosition(move.to), Position.board[Square.valueOfPosition(move.from)], Piece.NOPIECE, Piece.NOPIECE);
     } else {
-      return createMove(NORMAL, IntPosition.valueOfPosition(move.from), IntPosition.valueOfPosition(move.to), Position.board[IntPosition.valueOfPosition(move.from)], Position.board[IntPosition.valueOfPosition(move.to)], Piece.NOPIECE);
+      return createMove(NORMAL, Square.valueOfPosition(move.from), Square.valueOfPosition(move.to), Position.board[Square.valueOfPosition(move.from)], Position.board[Square.valueOfPosition(move.to)], Piece.NOPIECE);
     }
   }
 
@@ -473,7 +473,7 @@ public final class Move {
     assert move != null;
     assert board != null;
 
-    int position = IntPosition.valueOfPosition(move.from);
+    int position = Square.valueOfPosition(move.from);
 
     int piece = Position.board[position];
     if (piece != Piece.NOPIECE) {
@@ -497,7 +497,7 @@ public final class Move {
     assert move != null;
     assert board != null;
 
-    int position = IntPosition.valueOfPosition(move.from);
+    int position = Square.valueOfPosition(move.from);
 
     int piece = Position.board[position];
     if (piece != Piece.NOPIECE) {
@@ -521,16 +521,16 @@ public final class Move {
     assert move != null;
     assert board != null;
 
-    int position = IntPosition.valueOfPosition(move.from);
+    int position = Square.valueOfPosition(move.from);
     GenericPosition targetPosition = GenericPosition.valueOf(move.to.file, move.from.rank);
-    int targetIntPosition = IntPosition.valueOfPosition(targetPosition);
+    int targetIntPosition = Square.valueOfPosition(targetPosition);
 
     int piece = Position.board[position];
     int target = Position.board[targetIntPosition];
     if (piece != Piece.NOPIECE && target != Piece.NOPIECE) {
       if (Piece.getChessman(piece) == Piece.PAWN && Piece.getChessman(target) == Piece.PAWN) {
         if (Piece.getColor(piece) == Piece.getColorOpposite(target)) {
-          if (board.enPassantSquare == IntPosition.valueOfPosition(move.to)) {
+          if (board.enPassantSquare == Square.valueOfPosition(move.to)) {
             return true;
           }
         }
@@ -551,7 +551,7 @@ public final class Move {
     assert move != null;
     assert board != null;
 
-    int position = IntPosition.valueOfPosition(move.from);
+    int position = Square.valueOfPosition(move.from);
 
     int piece = Position.board[position];
     if (piece != Piece.NOPIECE) {
@@ -605,9 +605,9 @@ public final class Move {
       case PAWNDOUBLE:
       case ENPASSANT:
       case CASTLING:
-        return new GenericMove(IntPosition.valueOfIntPosition(start), IntPosition.valueOfIntPosition(end));
+        return new GenericMove(Square.valueOfIntPosition(start), Square.valueOfIntPosition(end));
       case PAWNPROMOTION:
-        return new GenericMove(IntPosition.valueOfIntPosition(start), IntPosition.valueOfIntPosition(end), Piece.valueOfIntChessman(getPromotion(move)));
+        return new GenericMove(Square.valueOfIntPosition(start), Square.valueOfIntPosition(end), Piece.valueOfIntChessman(getPromotion(move)));
       case NULL:
         // TODO:
         return null;
