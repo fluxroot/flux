@@ -18,7 +18,7 @@
  */
 package com.fluxchess.flux;
 
-public final class RepetitionTable {
+final class RepetitionTable {
 
   private static final int MAXSIZE = Search.MAX_MOVES;
 
@@ -28,7 +28,7 @@ public final class RepetitionTable {
   /**
    * Creates a new RepetitionTable.
    */
-  public RepetitionTable() {
+  RepetitionTable() {
     zobristCode = new long[MAXSIZE];
   }
 
@@ -37,7 +37,7 @@ public final class RepetitionTable {
    *
    * @param newZobristCode the zobrist code.
    */
-  public void put(long newZobristCode) {
+  void put(long newZobristCode) {
     zobristCode[this.size++] = newZobristCode;
   }
 
@@ -46,7 +46,7 @@ public final class RepetitionTable {
    *
    * @param newZobristCode the zobrist code.
    */
-  public void remove(long newZobristCode) {
+  void remove(long newZobristCode) {
     int index = -1;
 
     // Find the zobrist code from the end of the list
@@ -79,7 +79,7 @@ public final class RepetitionTable {
    * @param newZobristCode the zobrist code.
    * @return true if the zobrist code exists in the table, false otherwise.
    */
-  public boolean exists(long newZobristCode) {
+  boolean exists(long newZobristCode) {
     for (int i = this.size - 1; i >= 0; i--) {
       if (zobristCode[i] == newZobristCode) {
         return true;

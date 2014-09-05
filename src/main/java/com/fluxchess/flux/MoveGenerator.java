@@ -22,15 +22,15 @@ package com.fluxchess.flux;
  * Notes: Ideas from Fruit. I specially like the Idea how to handle the state
  * list.
  */
-public final class MoveGenerator {
+final class MoveGenerator {
 
   // Move deltas
-  public static final int[] moveDeltaPawn = {16, 17, 15};
-  public static final int[] moveDeltaKnight = {+33, +18, -14, -31, -33, -18, +14, +31};
-  public static final int[] moveDeltaBishop = {+17, -15, -17, +15};
-  public static final int[] moveDeltaRook = {+16, +1, -16, -1};
-  public static final int[] moveDeltaQueen = {+16, +17, +1, -15, -16, -17, -1, +15};
-  public static final int[] moveDeltaKing = {+16, +17, +1, -15, -16, -17, -1, +15};
+  static final int[] moveDeltaPawn = {16, 17, 15};
+  static final int[] moveDeltaKnight = {+33, +18, -14, -31, -33, -18, +14, +31};
+  static final int[] moveDeltaBishop = {+17, -15, -17, +15};
+  static final int[] moveDeltaRook = {+16, +1, -16, -1};
+  static final int[] moveDeltaQueen = {+16, +17, +1, -15, -16, -17, -1, +15};
+  static final int[] moveDeltaKing = {+16, +17, +1, -15, -16, -17, -1, +15};
 
   private static final int HISTORYSIZE = Depth.MAX_HEIGHT + 1;
   private static final int STATELISTSIZE = 256;
@@ -48,11 +48,11 @@ public final class MoveGenerator {
 
   // Generator
   private final class Generator {
-    public int statePosition = -1;
-    public int testState = GEN_END;
-    public int transpositionMove = Move.NOMOVE;
-    public int primaryKillerMove = Move.NOMOVE;
-    public int secondaryKillerMove = Move.NOMOVE;
+    int statePosition = -1;
+    int testState = GEN_END;
+    int transpositionMove = Move.NOMOVE;
+    int primaryKillerMove = Move.NOMOVE;
+    int secondaryKillerMove = Move.NOMOVE;
   }
 
   ;
@@ -110,7 +110,7 @@ public final class MoveGenerator {
    *
    * @param newBoard the board.
    */
-  public MoveGenerator(Position newBoard, KillerTable newKillerTable, HistoryTable newHistoryTable) {
+  MoveGenerator(Position newBoard, KillerTable newKillerTable, HistoryTable newHistoryTable) {
     assert newBoard != null;
     assert newKillerTable != null;
     assert newHistoryTable != null;
@@ -130,7 +130,7 @@ public final class MoveGenerator {
     generatorHistory = 0;
   }
 
-  public static void initializeMain(Attack attack, int height, int transpositionMove) {
+  static void initializeMain(Attack attack, int height, int transpositionMove) {
     moveList.newList();
     tempMoveList.newList();
     nonCaptureMoveList.newList();
@@ -154,7 +154,7 @@ public final class MoveGenerator {
     }
   }
 
-  public static void initializeQuiescent(Attack attack, boolean generateCheckingMoves) {
+  static void initializeQuiescent(Attack attack, boolean generateCheckingMoves) {
     moveList.newList();
     tempMoveList.newList();
     nonCaptureMoveList.newList();
@@ -180,14 +180,14 @@ public final class MoveGenerator {
     }
   }
 
-  public static void destroy() {
+  static void destroy() {
     generatorHistory--;
     nonCaptureMoveList.deleteList();
     tempMoveList.deleteList();
     moveList.deleteList();
   }
 
-  public static int getNextMove() {
+  static int getNextMove() {
     while (true) {
       if (moveList.index < moveList.tail) {
         int move = moveList.moves[moveList.index++];

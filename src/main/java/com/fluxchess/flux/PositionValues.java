@@ -18,7 +18,7 @@
  */
 package com.fluxchess.flux;
 
-public final class PositionValues {
+final class PositionValues {
 
   private static final int[][] positionValueOpening = {
       { // Empty
@@ -221,10 +221,10 @@ public final class PositionValues {
   /**
    * Creates a new PositionValues.
    */
-  public PositionValues() {
+  PositionValues() {
   }
 
-  public static int getPositionValue(int phase, int chessman, int chessmanColor, int chessmanPosition) {
+  static int getPositionValue(int phase, int chessman, int chessmanColor, int chessmanPosition) {
     assert phase != GamePhase.NOGAMEPHASE;
     assert chessmanColor != Color.NOCOLOR;
     assert (chessmanPosition & 0x88) == 0;

@@ -18,16 +18,16 @@
  */
 package com.fluxchess.flux;
 
-public final class HistoryTable {
+final class HistoryTable {
 
-  public static final int MAX_HISTORYVALUE = 65536;
+  static final int MAX_HISTORYVALUE = 65536;
 
   private static int[][] historyTable;
 
   /**
    * Creates a new HistoryTable.
    */
-  public HistoryTable() {
+  HistoryTable() {
     historyTable = new int[Piece.PIECE_VALUE_SIZE][Position.BOARDSIZE];
   }
 
@@ -37,7 +37,7 @@ public final class HistoryTable {
    * @param move the IntMove.
    * @return the number of hits.
    */
-  public int get(int move) {
+  int get(int move) {
     assert move != Move.NOMOVE;
 
     int piece = Move.getChessmanPiece(move);
@@ -54,7 +54,7 @@ public final class HistoryTable {
    *
    * @param move the IntMove.
    */
-  public void add(int move, int depth) {
+  void add(int move, int depth) {
     assert move != Move.NOMOVE;
 
     int piece = Move.getChessmanPiece(move);

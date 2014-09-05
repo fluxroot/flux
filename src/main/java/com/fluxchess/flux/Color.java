@@ -20,28 +20,28 @@ package com.fluxchess.flux;
 
 import com.fluxchess.jcpi.models.GenericColor;
 
-public final class Color {
+final class Color {
 
   /**
    * Represents no color
    */
-  public static final int NOCOLOR = -4;
+  static final int NOCOLOR = -4;
 
   /**
    * IntColor values
    */
-  public static final int WHITE = 0;
-  public static final int BLACK = 1;
+  static final int WHITE = 0;
+  static final int BLACK = 1;
 
   /**
    * IntColor constants
    */
-  public static final int ARRAY_DIMENSION = 2;
+  static final int ARRAY_DIMENSION = 2;
 
   /**
    * IntColor array
    */
-  public static final int[] values = {
+  static final int[] values = {
       WHITE,
       BLACK
   };
@@ -49,7 +49,7 @@ public final class Color {
   /**
    * IntColor mask
    */
-  public static final int MASK = 0x1;
+  static final int MASK = 0x1;
 
   /**
    * IntColor cannot be instantiated.
@@ -63,7 +63,7 @@ public final class Color {
    * @param color the GenericColor.
    * @return the IntColor value.
    */
-  public static int valueOfColor(GenericColor color) {
+  static int valueOfColor(GenericColor color) {
     assert color != null;
 
     switch (color) {
@@ -85,7 +85,7 @@ public final class Color {
    * @param color the color value.
    * @return the GenericColor.
    */
-  public static GenericColor valueOfIntColor(int color) {
+  static GenericColor valueOfIntColor(int color) {
     assert color != NOCOLOR;
 
     switch (color) {
@@ -104,14 +104,14 @@ public final class Color {
    * @param color the color.
    * @return the opposite color.
    */
-  public static int switchColor(int color) {
+  static int switchColor(int color) {
     assert color != NOCOLOR && (color == WHITE || color == BLACK);
 
     assert (color ^ MASK) == WHITE || (color ^ MASK) == BLACK;
     return color ^ MASK;
   }
 
-  public static boolean isValidColor(int color) {
+  static boolean isValidColor(int color) {
     for (int colorValue : values) {
       if (color == colorValue) {
         return true;

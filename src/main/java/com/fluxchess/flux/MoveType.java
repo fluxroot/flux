@@ -18,18 +18,18 @@
  */
 package com.fluxchess.flux;
 
-public final class MoveType {
+final class MoveType {
 
-  public static final int MASK = 0x7;
+  static final int MASK = 0x7;
 
-  public static final int NORMAL = 0;
-  public static final int PAWNDOUBLE = 1;
-  public static final int PAWNPROMOTION = 2;
-  public static final int ENPASSANT = 3;
-  public static final int CASTLING = 4;
-  public static final int NULL = 5;
+  static final int NORMAL = 0;
+  static final int PAWNDOUBLE = 1;
+  static final int PAWNPROMOTION = 2;
+  static final int ENPASSANT = 3;
+  static final int CASTLING = 4;
+  static final int NULL = 5;
 
-  public static final int[] values = {
+  static final int[] values = {
       NORMAL,
       PAWNDOUBLE,
       PAWNPROMOTION,

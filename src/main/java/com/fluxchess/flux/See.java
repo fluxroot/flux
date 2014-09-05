@@ -21,30 +21,30 @@ package com.fluxchess.flux;
 /**
  * Notes: Ideas from Fruit
  */
-public final class See {
+final class See {
 
   private static Position board = null;
-  private static List[] chessmanList = new List[Color.ARRAY_DIMENSION];
+  private static final List[] chessmanList = new List[Color.ARRAY_DIMENSION];
 
   private static final class List {
     private static final int MAXSIZE = 16;
 
-    public final int[] chessman = new int[MAXSIZE];
-    public final int[] position = new int[MAXSIZE];
-    public int head = 0;
-    public int size = 0;
+    final int[] chessman = new int[MAXSIZE];
+    final int[] position = new int[MAXSIZE];
+    int head = 0;
+    int size = 0;
 
-    public List() {
+    List() {
     }
   }
 
-  public See(Position newBoard) {
+  See(Position newBoard) {
     board = newBoard;
     chessmanList[Color.WHITE] = new List();
     chessmanList[Color.BLACK] = new List();
   }
 
-  public static int seeMove(int move, int myColor) {
+  static int seeMove(int move, int myColor) {
     int start = Move.getStart(move);
     int end = Move.getEnd(move);
     int target = Move.getTarget(move);

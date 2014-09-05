@@ -18,29 +18,29 @@
  */
 package com.fluxchess.flux;
 
-public final class EvaluationTable {
+final class EvaluationTable {
 
   // Size of one evaluation entry
-  public static final int ENTRYSIZE = 28;
+  static final int ENTRYSIZE = 28;
 
   private final int size;
 
   private final EvaluationTableEntry[] entry;
 
-  public static final class EvaluationTableEntry {
-    public long zobristCode = 0;
-    public int evaluation = -Value.INFINITY;
+  static final class EvaluationTableEntry {
+    long zobristCode = 0;
+    int evaluation = -Value.INFINITY;
 
-    public EvaluationTableEntry() {
+    EvaluationTableEntry() {
     }
 
-    public void clear() {
+    void clear() {
       this.zobristCode = 0;
       this.evaluation = -Value.INFINITY;
     }
   }
 
-  public EvaluationTable(int newSize) {
+  EvaluationTable(int newSize) {
     assert newSize >= 1;
 
     this.size = newSize;
@@ -58,7 +58,7 @@ public final class EvaluationTable {
    * @param newZobristCode the zobrist code.
    * @param newEvaluation  the evaluation value.
    */
-  public void put(long newZobristCode, int newEvaluation) {
+  void put(long newZobristCode, int newEvaluation) {
     int position = (int) (newZobristCode % this.size);
     EvaluationTableEntry currentEntry = this.entry[position];
 
@@ -72,7 +72,7 @@ public final class EvaluationTable {
    * @param newZobristCode the zobrist code.
    * @return the evaluation table entry or null if there exists no entry.
    */
-  public EvaluationTableEntry get(long newZobristCode) {
+  EvaluationTableEntry get(long newZobristCode) {
     int position = (int) (newZobristCode % this.size);
     EvaluationTableEntry currentEntry = this.entry[position];
 

@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-public final class VersionInfo {
+final class VersionInfo {
 
   private static final String versionInfoProperty = "/com/fluxchess/flux/version-info.properties";
   private static final VersionInfo CURRENT;
@@ -51,7 +51,7 @@ public final class VersionInfo {
     }
   }
 
-  public static VersionInfo current() {
+  static VersionInfo current() {
     return CURRENT;
   }
 
@@ -70,15 +70,15 @@ public final class VersionInfo {
     return String.format("Flux %s", version);
   }
 
-  public String getVersion() {
+  String getVersion() {
     return version;
   }
 
-  public String getBuildNumber() {
+  String getBuildNumber() {
     return buildNumber;
   }
 
-  public String getRevisionNumber() {
+  String getRevisionNumber() {
     return revisionNumber;
   }
 

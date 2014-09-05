@@ -20,61 +20,61 @@ package com.fluxchess.flux;
 
 import com.fluxchess.jcpi.options.*;
 
-public final class Configuration {
+final class Configuration {
 
   // Search
-  public static final boolean useAspirationWindows = true;
-  public static final boolean useInternalIterativeDeepening = true;
+  static final boolean useAspirationWindows = true;
+  static final boolean useInternalIterativeDeepening = true;
 
   // Pruning
-  public static final boolean useMateDistancePruning = true;
-  public static final boolean useNullMovePruning = true;
-  public static final boolean useVerifiedNullMovePruning = true;
-  public static final boolean useFutilityPruning = true;
-  public static final boolean useExtendedFutilityPruning = true;
-  public static final boolean useLateMoveReduction = true;
-  public static final boolean useLateMoveReductionResearch = true;
-  public static final boolean useDeltaPruning = true;
-  public static final boolean useMinorPromotionPruning = true;
+  static final boolean useMateDistancePruning = true;
+  static final boolean useNullMovePruning = true;
+  static final boolean useVerifiedNullMovePruning = true;
+  static final boolean useFutilityPruning = true;
+  static final boolean useExtendedFutilityPruning = true;
+  static final boolean useLateMoveReduction = true;
+  static final boolean useLateMoveReductionResearch = true;
+  static final boolean useDeltaPruning = true;
+  static final boolean useMinorPromotionPruning = true;
 
   // Tables
-  public static final boolean useTranspositionTable = true;
-  public static final boolean useKillerTable = true;
-  public static final boolean useHistoryTable = true;
-  public static final boolean useEvaluationTable = true;
-  public static final boolean usePawnTable = true;
+  static final boolean useTranspositionTable = true;
+  static final boolean useKillerTable = true;
+  static final boolean useHistoryTable = true;
+  static final boolean useEvaluationTable = true;
+  static final boolean usePawnTable = true;
 
   // Extensions
-  public static final boolean useSingleReplyExtension = true;
-  public static final boolean useRecaptureExtension = true;
-  public static final boolean useCheckExtension = true;
-  public static final boolean usePawnExtension = true;
-  public static final boolean useMateThreatExtension = true;
+  static final boolean useSingleReplyExtension = true;
+  static final boolean useRecaptureExtension = true;
+  static final boolean useCheckExtension = true;
+  static final boolean usePawnExtension = true;
+  static final boolean useMateThreatExtension = true;
 
-  public static boolean ponder = true;
-  public static final CheckboxOption ponderOption = Options.newPonderOption(ponder);
+  static boolean ponder = true;
+  static final CheckboxOption ponderOption = Options.newPonderOption(ponder);
 
-  public static final int defaultShowPvNumber = 1;
-  public static int showPvNumber = defaultShowPvNumber;
-  public static final SpinnerOption multiPVOption = Options.newMultiPVOption(showPvNumber, 1, 256);
+  static final int defaultShowPvNumber = 1;
+  static int showPvNumber = defaultShowPvNumber;
+  static final SpinnerOption multiPVOption = Options.newMultiPVOption(showPvNumber, 1, 256);
 
-  public static final int defaultTranspositionTableSize = 16;
-  public static int transpositionTableSize = defaultTranspositionTableSize;
-  public static final SpinnerOption hashOption = Options.newHashOption(transpositionTableSize, 4, 256);
+  static final int defaultTranspositionTableSize = 16;
+  static int transpositionTableSize = defaultTranspositionTableSize;
+  static final SpinnerOption hashOption = Options.newHashOption(transpositionTableSize, 4, 256);
 
-  public static final ButtonOption clearHashOption = new ButtonOption("Clear Hash");
+  static final ButtonOption clearHashOption = new ButtonOption("Clear Hash");
 
-  public static final int defaultEvaluationTableSize = 4;
+  static final int defaultEvaluationTableSize = 4;
 
-  public static final int defaultPawnTableSize = 4;
+  static final int defaultPawnTableSize = 4;
 
-  public static boolean showRefutations = false;
-  public static final CheckboxOption uciShowRefutationsOption = Options.newUciShowRefutationsOption(showRefutations);
+  static boolean showRefutations = false;
+  static final CheckboxOption uciShowRefutationsOption = Options.newUciShowRefutationsOption(showRefutations);
 
-  public static boolean analyzeMode = false;
-  public static final CheckboxOption uciAnalyzeModeOption = Options.newUciAnalyseModeOption(analyzeMode);
+  static boolean analyzeMode = false;
+  static final CheckboxOption uciAnalyzeModeOption = Options.newUciAnalyseModeOption(analyzeMode);
 
-  public static final AbstractOption[] options = new AbstractOption[]{
+  static final AbstractOption[] options = new AbstractOption[]{
       ponderOption,
       multiPVOption,
       hashOption,

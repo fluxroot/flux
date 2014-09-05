@@ -18,19 +18,19 @@
  */
 package com.fluxchess.flux;
 
-public final class PositionList {
+final class PositionList {
 
-  public final int MAXSIZE;
+  private final int MAXSIZE;
 
-  public final int[] position;
-  public int size = 0;
+  final int[] position;
+  int size = 0;
 
-  public PositionList() {
+  PositionList() {
     this.MAXSIZE = 64;
     this.position = new int[MAXSIZE];
   }
 
-  public PositionList(int MAXSIZE) {
+  PositionList(int MAXSIZE) {
     this.MAXSIZE = MAXSIZE;
     this.position = new int[MAXSIZE];
   }

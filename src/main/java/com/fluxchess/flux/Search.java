@@ -23,12 +23,12 @@ import com.fluxchess.jcpi.models.GenericMove;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
-public final class Search implements Runnable {
+final class Search implements Runnable {
 
   /**
    * The maximum number of moves.
    */
-  public static final int MAX_MOVES = 4096;
+  static final int MAX_MOVES = 4096;
 
   private static final int ASPIRATIONWINDOW = 20;
   private static final int ASPIRATIONWINDOW_ADJUSTMENT = 200;
@@ -50,8 +50,8 @@ public final class Search implements Runnable {
 
   // Objects
   private InformationTimer info;
-  private Thread thread = new Thread(this);
-  private Semaphore semaphore = new Semaphore(0);
+  private final Thread thread = new Thread(this);
+  private final Semaphore semaphore = new Semaphore(0);
 
   // Search control
   private Timer timer = null;
@@ -92,18 +92,18 @@ public final class Search implements Runnable {
   private final int[] timeTable;
 
   private static final class Result {
-    public int bestMove = Move.NOMOVE;
-    public int ponderMove = Move.NOMOVE;
-    public int value = Bound.NOVALUE;
-    public int resultValue = -Value.INFINITY;
-    public long time = -1;
-    public int moveNumber = 0;
-    public int depth = 0;
+    int bestMove = Move.NOMOVE;
+    int ponderMove = Move.NOMOVE;
+    int value = Bound.NOVALUE;
+    int resultValue = -Value.INFINITY;
+    long time = -1;
+    int moveNumber = 0;
+    int depth = 0;
 
     /**
      * Creates a new Result.
      */
-    public Result() {
+    Result() {
     }
   }
 
@@ -120,7 +120,7 @@ public final class Search implements Runnable {
     }
   }
 
-  public Search(Evaluation newEvaluation, Position newBoard, TranspositionTable newTranspositionTable, InformationTimer newInfo, int[] timeTable) {
+  Search(Evaluation newEvaluation, Position newBoard, TranspositionTable newTranspositionTable, InformationTimer newInfo, int[] timeTable) {
     assert newEvaluation != null;
     assert newBoard != null;
     assert newTranspositionTable != null;
@@ -192,7 +192,7 @@ public final class Search implements Runnable {
     this.evaluation = null;
   }
 
-  public void start() {
+  void start() {
     this.thread.start();
     try {
       // Wait for initialization
@@ -202,7 +202,7 @@ public final class Search implements Runnable {
     }
   }
 
-  public void stop() {
+  void stop() {
     this.stopped = true;
     this.canStop = true;
     try {
@@ -213,7 +213,7 @@ public final class Search implements Runnable {
     }
   }
 
-  public void ponderhit() {
+  void ponderhit() {
     // Enable time management
     this.doTimeManagement = true;
 
@@ -242,11 +242,11 @@ public final class Search implements Runnable {
     }
   }
 
-  public boolean isStopped() {
+  boolean isStopped() {
     return !this.thread.isAlive();
   }
 
-  public void setSearchDepth(int searchDepth) {
+  void setSearchDepth(int searchDepth) {
     assert searchDepth > 0;
 
     this.searchDepth = searchDepth;
@@ -256,7 +256,7 @@ public final class Search implements Runnable {
     this.doTimeManagement = false;
   }
 
-  public void setSearchNodes(long searchNodes) {
+  void setSearchNodes(long searchNodes) {
     assert searchNodes > 0;
 
     this.searchNodes = searchNodes;
@@ -264,7 +264,7 @@ public final class Search implements Runnable {
     this.doTimeManagement = false;
   }
 
-  public void setSearchTime(long searchTime) {
+  void setSearchTime(long searchTime) {
     assert searchTime > 0;
 
     this.searchTime = searchTime;
@@ -273,36 +273,36 @@ public final class Search implements Runnable {
     this.doTimeManagement = false;
   }
 
-  public void setSearchClock(int side, long timeLeft) {
+  void setSearchClock(int side, long timeLeft) {
     assert timeLeft > 0;
 
     this.searchClock[side] = timeLeft;
   }
 
-  public void setSearchClockIncrement(int side, long timeIncrement) {
+  void setSearchClockIncrement(int side, long timeIncrement) {
     assert timeIncrement > 0;
 
     this.searchClockIncrement[side] = timeIncrement;
   }
 
-  public void setSearchMovesToGo(int searchMovesToGo) {
+  void setSearchMovesToGo(int searchMovesToGo) {
     assert searchMovesToGo > 0;
 
     this.searchMovesToGo = searchMovesToGo;
   }
 
-  public void setSearchInfinite() {
+  void setSearchInfinite() {
     this.searchDepth = Depth.MAX_DEPTH;
     this.doTimeManagement = false;
     this.analyzeMode = true;
   }
 
-  public void setSearchPonder() {
+  void setSearchPonder() {
     this.searchDepth = Depth.MAX_DEPTH;
     this.doTimeManagement = false;
   }
 
-  public void setSearchMoveList(List<GenericMove> moveList) {
+  void setSearchMoveList(List<GenericMove> moveList) {
     for (GenericMove move : moveList) {
       this.searchMoveList.moves[this.searchMoveList.tail++] = Move.convertMove(move, board);
     }

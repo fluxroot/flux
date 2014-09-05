@@ -22,7 +22,7 @@ package com.fluxchess.flux;
  * This table is used to store the Killer Moves. We use two slots to
  * differentiate primary and secondary killers.
  */
-public final class KillerTable {
+final class KillerTable {
 
   private static final int MAXSIZE = Depth.MAX_HEIGHT + 1;
 
@@ -32,7 +32,7 @@ public final class KillerTable {
   /**
    * Creates a new KillerTable.
    */
-  public KillerTable() {
+  KillerTable() {
     for (int i = 0; i < MAXSIZE; i++) {
       primaryKiller[i] = Move.NOMOVE;
       secondaryKiller[i] = Move.NOMOVE;
@@ -45,7 +45,7 @@ public final class KillerTable {
    * @param killer the new killer move.
    * @param height the height.
    */
-  public void add(int killer, int height) {
+  void add(int killer, int height) {
     assert killer != Move.NOMOVE;
     assert height >= 0;
 
@@ -65,7 +65,7 @@ public final class KillerTable {
    * @param height the height.
    * @return the primary killer move.
    */
-  public int getPrimaryKiller(int height) {
+  int getPrimaryKiller(int height) {
     assert height >= 0;
 
     return primaryKiller[height];
@@ -77,7 +77,7 @@ public final class KillerTable {
    * @param height the depth.
    * @return the secondary killer move.
    */
-  public int getSecondaryKiller(int height) {
+  int getSecondaryKiller(int height) {
     assert height >= 0;
 
     return secondaryKiller[height];

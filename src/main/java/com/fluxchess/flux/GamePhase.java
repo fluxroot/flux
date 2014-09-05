@@ -18,24 +18,24 @@
  */
 package com.fluxchess.flux;
 
-public class GamePhase {
+final class GamePhase {
 
   /**
    * Represents no game phase
    */
-  public static final int NOGAMEPHASE = -5;
+  static final int NOGAMEPHASE = -5;
 
   /**
    * GamePhase values
    */
-  public static final int OPENING = 0;
-  public static final int MIDDLE = 1;
-  public static final int ENDGAME = 2;
+  static final int OPENING = 0;
+  static final int MIDDLE = 1;
+  static final int ENDGAME = 2;
 
   /**
    * GamePhase array
    */
-  public static final int[] values = {
+  static final int[] values = {
       OPENING,
       MIDDLE,
       ENDGAME
@@ -44,7 +44,7 @@ public class GamePhase {
   /**
    * GamePhase mask
    */
-  public static final int MASK = 0x2;
+  static final int MASK = 0x2;
 
   /**
    * IntGamePhase cannot be instantiated.

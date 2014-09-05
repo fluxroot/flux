@@ -18,10 +18,10 @@
  */
 package com.fluxchess.flux;
 
-public final class Depth {
+final class Depth {
 
-  public static final int MAX_DEPTH = 64;
-  public static final int MAX_HEIGHT = 256;
+  static final int MAX_DEPTH = 64;
+  static final int MAX_HEIGHT = 256;
 
   private Depth() {
   }

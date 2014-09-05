@@ -21,17 +21,17 @@ package com.fluxchess.flux;
 /**
  * Notes: Ideas from Fruit
  */
-public final class Attack {
+final class Attack {
 
-  public static final int N = 0; // Neutral
-  public static final int D = 1; // Diagonal
-  public static final int u = 2; // Diagonal up in one
-  public static final int d = 3; // Diagonal down in one
-  public static final int S = 4; // Straight
-  public static final int s = 5; // Straight in one
-  public static final int K = 6; // Knight
+  static final int N = 0; // Neutral
+  static final int D = 1; // Diagonal
+  static final int u = 2; // Diagonal up in one
+  static final int d = 3; // Diagonal down in one
+  static final int S = 4; // Straight
+  static final int s = 5; // Straight in one
+  static final int K = 6; // Knight
 
-  public static final int[] vector = {
+  static final int[] vector = {
       N,N,N,N,N,N,N,N,                 //   0 -   7
       D,N,N,N,N,N,N,S,N,N,N,N,N,N,D,N, //   8 -  23
       N,D,N,N,N,N,N,S,N,N,N,N,N,D,N,N, //  24 -  39
@@ -51,7 +51,7 @@ public final class Attack {
       N,N,N,N,N,N,N,N                  // 248 - 255
   };
 
-  public static final int[] deltas = {
+  static final int[] deltas = {
         0,  0,  0,  0,  0,  0,  0,  0,                                 //   0 -   7
       -17,  0,  0,  0,  0,  0,  0,-16,  0,  0,  0,  0,  0,  0,-15,  0, //   8 -  23
         0,-17,  0,  0,  0,  0,  0,-16,  0,  0,  0,  0,  0,-15,  0,  0, //  24 -  39
@@ -71,22 +71,22 @@ public final class Attack {
         0,  0,  0,  0,  0,  0,  0, 0                                   // 248 - 255
   };
 
-  public static final int MAXATTACK = 16;
+  private static final int MAXATTACK = 16;
 
   /**
    * Represents no attack
    */
-  public static final int NOATTACK = -3;
+  static final int NOATTACK = -3;
 
-  public int count = NOATTACK;
-  public int[] delta = new int[MAXATTACK];
-  public int[] position = new int[MAXATTACK];
-  public int numberOfMoves = -1;
+  int count = NOATTACK;
+  final int[] delta = new int[MAXATTACK];
+  final int[] position = new int[MAXATTACK];
+  int numberOfMoves = -1;
 
-  public Attack() {
+  Attack() {
   }
 
-  public boolean isCheck() {
+  boolean isCheck() {
     return this.count != 0;
   }
 

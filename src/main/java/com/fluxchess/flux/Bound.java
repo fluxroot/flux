@@ -20,24 +20,24 @@ package com.fluxchess.flux;
 
 import com.fluxchess.jcpi.models.GenericScore;
 
-public class Bound {
+final class Bound {
 
   /**
    * Represents no value
    */
-  public static final int NOVALUE = -9;
+  static final int NOVALUE = -9;
 
   /**
    * IntValue values
    */
-  public static final int EXACT = 0;
-  public static final int ALPHA = 1;
-  public static final int BETA = 2;
+  static final int EXACT = 0;
+  static final int ALPHA = 1;
+  static final int BETA = 2;
 
   /**
    * IntValue mask
    */
-  public static final int MASK = 0x3;
+  static final int MASK = 0x3;
 
   /**
    * IntValue cannot be instantiated.
@@ -51,7 +51,7 @@ public class Bound {
    * @param value the EnumValue.
    * @return the IntValue value.
    */
-  public static int valueOfValue(GenericScore value) {
+  static int valueOfValue(GenericScore value) {
     assert value != null;
 
     switch (value) {
@@ -75,7 +75,7 @@ public class Bound {
    * @param value the IntValue value.
    * @return the EnumValue.
    */
-  public static GenericScore valueOfIntValue(int value) {
+  static GenericScore valueOfIntValue(int value) {
     assert value != NOVALUE;
 
     switch (value) {

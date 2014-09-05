@@ -18,9 +18,9 @@
  */
 package com.fluxchess.flux;
 
-public final class PawnTable {
+final class PawnTable {
 
-  public static final int ENTRYSIZE = 16;
+  static final int ENTRYSIZE = 16;
 
   private final int size;
 
@@ -28,7 +28,7 @@ public final class PawnTable {
   private final int[] opening;
   private final int[] endgame;
 
-  public PawnTable(int newSize) {
+  PawnTable(int newSize) {
     assert newSize >= 1;
 
     this.size = newSize;
@@ -44,7 +44,7 @@ public final class PawnTable {
    * @param newOpening     the opening value.
    * @param newEndgame     the endgame value.
    */
-  public void put(long newZobristCode, int newOpening, int newEndgame) {
+  void put(long newZobristCode, int newOpening, int newEndgame) {
     int position = (int) (newZobristCode % this.size);
 
     this.zobristCode[position] = newZobristCode;
@@ -58,7 +58,7 @@ public final class PawnTable {
    * @param newZobristCode the zobrist code.
    * @return true if the zobrist code exists in the table, false otherwise.
    */
-  public boolean exists(long newZobristCode) {
+  boolean exists(long newZobristCode) {
     int position = (int) (newZobristCode % this.size);
 
     if (this.zobristCode[position] == newZobristCode) {
@@ -74,7 +74,7 @@ public final class PawnTable {
    * @param newZobristCode the zobrist code.
    * @return the opening value.
    */
-  public int getOpening(long newZobristCode) {
+  int getOpening(long newZobristCode) {
     int position = (int) (newZobristCode % this.size);
 
     if (this.zobristCode[position] == newZobristCode) {
@@ -90,7 +90,7 @@ public final class PawnTable {
    * @param newZobristCode the zobrist code.
    * @return the endgame value.
    */
-  public int getEndgame(long newZobristCode) {
+  int getEndgame(long newZobristCode) {
     int position = (int) (newZobristCode % this.size);
 
     if (this.zobristCode[position] == newZobristCode) {

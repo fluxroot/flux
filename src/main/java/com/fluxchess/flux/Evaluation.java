@@ -20,7 +20,7 @@ package com.fluxchess.flux;
 
 import java.util.Arrays;
 
-public final class Evaluation {
+final class Evaluation {
 
   // Our evaluation constants
   private static final int EVAL_PAWN_DOUBLED_OPENING = 10;
@@ -72,7 +72,7 @@ public final class Evaluation {
   private static final int EVAL_KING_ATTACK = 40;
 
   // Our attack table implementing Idea of Ed Schröder
-  public static final byte[] KING_ATTACK_PATTERN = {
+  private static final byte[] KING_ATTACK_PATTERN = {
       // . P   P   P   P   P   P   P   P   P   P   P   P   P   P   P   P
       //     M M     M M     M M     M M     M M     M M     M M     M M
       //         R R R R         R R R R         R R R R         R R R R
@@ -98,22 +98,22 @@ public final class Evaluation {
   private static final int PHASE_INTERVAL = Position.GAMEPHASE_OPENING_VALUE - Position.GAMEPHASE_ENDGAME_VALUE;
   private static final int TOTAL_OPENING = 0;
   private static final int TOTAL_ENDGAME = 1;
-  private static int[][] totalPawn = new int[Color.ARRAY_DIMENSION][2];
-  private static int[][] totalKnight = new int[Color.ARRAY_DIMENSION][2];
-  private static int[][] totalBishop = new int[Color.ARRAY_DIMENSION][2];
-  private static int[][] totalRook = new int[Color.ARRAY_DIMENSION][2];
-  private static int[][] totalQueen = new int[Color.ARRAY_DIMENSION][2];
-  private static int[][] totalKing = new int[Color.ARRAY_DIMENSION][2];
-  private static int[][] totalPawnStructure = new int[Color.ARRAY_DIMENSION][2];
-  private static int[][] totalPawnPasser = new int[Color.ARRAY_DIMENSION][2];
-  private static int[][] totalPatterns = new int[Color.ARRAY_DIMENSION][2];
+  private static final int[][] totalPawn = new int[Color.ARRAY_DIMENSION][2];
+  private static final int[][] totalKnight = new int[Color.ARRAY_DIMENSION][2];
+  private static final int[][] totalBishop = new int[Color.ARRAY_DIMENSION][2];
+  private static final int[][] totalRook = new int[Color.ARRAY_DIMENSION][2];
+  private static final int[][] totalQueen = new int[Color.ARRAY_DIMENSION][2];
+  private static final int[][] totalKing = new int[Color.ARRAY_DIMENSION][2];
+  private static final int[][] totalPawnStructure = new int[Color.ARRAY_DIMENSION][2];
+  private static final int[][] totalPawnPasser = new int[Color.ARRAY_DIMENSION][2];
+  private static final int[][] totalPatterns = new int[Color.ARRAY_DIMENSION][2];
   private static int totalOpening = 0;
   private static int totalEndgame = 0;
   private static int total = 0;
 
   // Draw values
   private static final int DRAW_FACTOR = 16;
-  private static int[] drawFactor = new int[Color.ARRAY_DIMENSION];
+  private static final int[] drawFactor = new int[Color.ARRAY_DIMENSION];
 
   // The hash tables
   private final EvaluationTable evaluationTable = new EvaluationTable(Configuration.defaultEvaluationTableSize * 1024 * 1024 / EvaluationTable.ENTRYSIZE);
@@ -122,7 +122,7 @@ public final class Evaluation {
   /**
    * Prints the evaluation of the board.
    */
-  public void print(Position board) {
+  void print(Position board) {
     evaluate(board);
 
     int myColor = board.activeColor;
@@ -222,7 +222,7 @@ public final class Evaluation {
    * @param board the board.
    * @return the evaluation value in centipawns.
    */
-  public int evaluate(Position board) {
+  int evaluate(Position board) {
     assert board != null;
 
     // Check the evaluation table

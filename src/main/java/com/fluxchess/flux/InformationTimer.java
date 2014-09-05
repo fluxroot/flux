@@ -25,17 +25,17 @@ import com.fluxchess.jcpi.models.GenericMove;
 
 import java.util.List;
 
-public final class InformationTimer {
+final class InformationTimer {
 
   private final IProtocol protocol;
   private final TranspositionTable transpositionTable;
   private Search search = null;
 
   // InfoCommand values
-  public int currentDepth = 0;
-  public int currentMaxDepth = 0;
-  public long totalTimeStart = 0;
-  public long totalNodes = 0;
+  int currentDepth = 0;
+  int currentMaxDepth = 0;
+  long totalTimeStart = 0;
+  long totalNodes = 0;
 
   // Used for output status
   private long currentTimeStart = 0;
@@ -49,7 +49,7 @@ public final class InformationTimer {
    *
    * @param protocol the protocol.
    */
-  public InformationTimer(IProtocol protocol, TranspositionTable transpositionTable) {
+  InformationTimer(IProtocol protocol, TranspositionTable transpositionTable) {
     assert protocol != null;
     assert transpositionTable != null;
 
@@ -62,14 +62,14 @@ public final class InformationTimer {
    *
    * @param search the search.
    */
-  public void setSearch(Search search) {
+  void setSearch(Search search) {
     this.search = search;
   }
 
   /**
    * Starts the InformationTimer.
    */
-  public void start() {
+  void start() {
     if (this.search == null) throw new IllegalStateException();
 
     // Set the current time
@@ -80,7 +80,7 @@ public final class InformationTimer {
   /**
    * Stops the InformationTimer.
    */
-  public void stop() {
+  void stop() {
     // Do nothing
   }
 
@@ -89,7 +89,7 @@ public final class InformationTimer {
    *
    * @param currentDepth the current depth.
    */
-  public void setCurrentDepth(int currentDepth) {
+  void setCurrentDepth(int currentDepth) {
     assert currentDepth >= 0;
 
     this.currentDepth = currentDepth;
@@ -101,7 +101,7 @@ public final class InformationTimer {
    *
    * @param currentDepth the current depth.
    */
-  public void setCurrentMaxDepth(int currentDepth) {
+  void setCurrentMaxDepth(int currentDepth) {
     assert currentDepth >= 0;
 
     if (currentDepth > this.currentMaxDepth) {
@@ -115,7 +115,7 @@ public final class InformationTimer {
    * @param bestMove   the best move or null if there's no best move.
    * @param ponderMove the ponder move or null if there's no ponder move.
    */
-  public void sendBestMove(GenericMove bestMove, GenericMove ponderMove) {
+  void sendBestMove(GenericMove bestMove, GenericMove ponderMove) {
     this.protocol.send(new ProtocolBestMoveCommand(bestMove, ponderMove));
   }
 
@@ -125,7 +125,7 @@ public final class InformationTimer {
    * @param currentMove       the current move.
    * @param currentMoveNumber the current move number.
    */
-  public void sendInformationMove(GenericMove currentMove, int currentMoveNumber) {
+  void sendInformationMove(GenericMove currentMove, int currentMoveNumber) {
     assert currentMove != null;
     assert currentMoveNumber >= 0;
 
@@ -149,7 +149,7 @@ public final class InformationTimer {
    *
    * @param refutationList the current refutation move list.
    */
-  public void sendInformationRefutations(List<GenericMove> refutationList) {
+  void sendInformationRefutations(List<GenericMove> refutationList) {
     assert refutationList != null;
 
     // Safety guard: Reduce output pollution
@@ -166,7 +166,7 @@ public final class InformationTimer {
   /**
    * Sends the current depth.
    */
-  public void sendInformationDepth() {
+  void sendInformationDepth() {
     // Safety guard: Reduce output pollution
     long currentTimeDelta = System.currentTimeMillis() - this.totalTimeStart;
     if (currentTimeDelta >= 1000) {
@@ -182,7 +182,7 @@ public final class InformationTimer {
   /**
    * Sends the current status.
    */
-  public void sendInformationStatus() {
+  void sendInformationStatus() {
     long currentTimeDelta = System.currentTimeMillis() - this.currentTimeStart;
     if (currentTimeDelta >= 1000) {
       // Only output after a delay of 1 second
@@ -209,7 +209,7 @@ public final class InformationTimer {
   /**
    * Sends the current status.
    */
-  public void sendInformationSummary() {
+  void sendInformationSummary() {
     ProtocolInformationCommand command = new ProtocolInformationCommand();
 
     command.setDepth(this.currentDepth);
@@ -230,7 +230,7 @@ public final class InformationTimer {
    * @param currentCentipawns the current centipawn value.
    * @param currentMoveList   the current move list/principal variation.
    */
-  public void sendInformationCentipawns(PrincipalVariation pv, int pvNumber) {
+  void sendInformationCentipawns(PrincipalVariation pv, int pvNumber) {
     assert pv != null;
     assert pvNumber >= 1;
 
@@ -264,7 +264,7 @@ public final class InformationTimer {
    * @param currentMateDepth the current mate depth.
    * @param currentMoveList  the current move list/principal variation.
    */
-  public void sendInformationMate(PrincipalVariation pv, int currentMateDepth, int pvNumber) {
+  void sendInformationMate(PrincipalVariation pv, int currentMateDepth, int pvNumber) {
     assert pv != null;
     assert pvNumber >= 1;
 
@@ -297,7 +297,7 @@ public final class InformationTimer {
    *
    * @return the current nps.
    */
-  public long getCurrentNps() {
+  long getCurrentNps() {
     long currentNps = 0;
     long currentTimeDelta = System.currentTimeMillis() - this.totalTimeStart;
     if (currentTimeDelta >= 1000) {

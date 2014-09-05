@@ -18,20 +18,20 @@
  */
 package com.fluxchess.flux;
 
-public final class Castling {
+final class Castling {
 
   /**
    * IntCastling values
    */
-  public static final int WHITE_KINGSIDE = 1 << 0;
-  public static final int WHITE_QUEENSIDE = 1 << 1;
-  public static final int BLACK_KINGSIDE = 1 << 2;
-  public static final int BLACK_QUEENSIDE = 1 << 3;
+  static final int WHITE_KINGSIDE = 1 << 0;
+  static final int WHITE_QUEENSIDE = 1 << 1;
+  static final int BLACK_KINGSIDE = 1 << 2;
+  static final int BLACK_QUEENSIDE = 1 << 3;
 
   /**
    * IntCastling constants
    */
-  public static final int ARRAY_DIMENSION = 16;
+  static final int ARRAY_DIMENSION = 16;
 
   /**
    * IntCastling cannot be instantiated.

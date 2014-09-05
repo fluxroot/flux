@@ -36,23 +36,23 @@ import com.fluxchess.jcpi.models.GenericRank;
  * 22 - 24: the promotion chessman (optional)
  * 25 - 27: the type (required)
  */
-public final class Move {
+final class Move {
 
   /**
    * Represents no move
    */
-  public static final int NOMOVE = -8;
+  static final int NOMOVE = -8;
 
   /**
    * Null move
    */
-  public static final int NULLMOVE;
+  static final int NULLMOVE;
 
   /**
    * IntMove
    */
-  public static final int INTMOVE_MASK = 0xFFFFFFF;
-  public static final int INTMOVE_SIZE = 28;
+  static final int INTMOVE_MASK = 0xFFFFFFF;
+  static final int INTMOVE_SIZE = 28;
 
   // Position value
   // We do not use 127 because there all bits are set
@@ -101,7 +101,7 @@ public final class Move {
    * @param promotion the promotion.
    * @return the IntMove.
    */
-  public static int createMove(int type, int start, int end, int piece, int target, int promotion) {
+  static int createMove(int type, int start, int end, int piece, int target, int promotion) {
     assert type != NOMOVE;
     assert (type == MoveType.NULL && start == Square.NOPOSITION) || (start & 0x88) == 0;
     assert (type == MoveType.NULL && end == Square.NOPOSITION) || (end & 0x88) == 0;
@@ -172,7 +172,7 @@ public final class Move {
    * @param endPosition the end position.
    * @return the move.
    */
-  public static int setEndPosition(int move, int endPosition) {
+  static int setEndPosition(int move, int endPosition) {
     assert move != Move.NOMOVE;
     assert endPosition != Square.NOPOSITION;
 
@@ -193,7 +193,7 @@ public final class Move {
    * @param target      the target piece.
    * @return the move.
    */
-  public static int setEndPositionAndTarget(int move, int endPosition, int target) {
+  static int setEndPositionAndTarget(int move, int endPosition, int target) {
     assert move != Move.NOMOVE;
     assert endPosition != Square.NOPOSITION;
     assert target != Piece.NOPIECE;
@@ -225,7 +225,7 @@ public final class Move {
    * @param promotion the promotion chessman.
    * @return the move.
    */
-  public static int setPromotion(int move, int promotion) {
+  static int setPromotion(int move, int promotion) {
     assert move != Move.NOMOVE;
     assert promotion != Piece.NOPIECE;
 
@@ -244,7 +244,7 @@ public final class Move {
    * @param move the move.
    * @return the start position value of the move.
    */
-  public static int getStart(int move) {
+  static int getStart(int move) {
     assert move != NOMOVE;
 
     int position = (move & START_MASK) >>> START_SHIFT;
@@ -262,7 +262,7 @@ public final class Move {
    * @param move the move.
    * @return the end position value of the move.
    */
-  public static int getEnd(int move) {
+  static int getEnd(int move) {
     assert move != NOMOVE;
 
     int position = (move & END_MASK) >>> END_SHIFT;
@@ -280,7 +280,7 @@ public final class Move {
    * @param move the IntMove.
    * @return the chessman.
    */
-  public static int getChessman(int move) {
+  static int getChessman(int move) {
     assert move != NOMOVE;
 
     int chessman = (move & CHESSMAN_MASK) >>> CHESSMAN_SHIFT;
@@ -300,7 +300,7 @@ public final class Move {
    * @param move the IntMove.
    * @return the chessman IntColor.
    */
-  public static int getChessmanColor(int move) {
+  static int getChessmanColor(int move) {
     assert move != NOMOVE;
     assert getChessman(move) != Piece.NOPIECE;
 
@@ -316,7 +316,7 @@ public final class Move {
    * @param move the move.
    * @return the piece.
    */
-  public static int getChessmanPiece(int move) {
+  static int getChessmanPiece(int move) {
     assert move != NOMOVE;
 
     return (move & CHESSMAN_PIECE_MASK) >>> CHESSMAN_PIECE_SHIFT;
@@ -328,7 +328,7 @@ public final class Move {
    * @param move the move.
    * @return the target chessman.
    */
-  public static int getTarget(int move) {
+  static int getTarget(int move) {
     assert move != NOMOVE;
 
     int chessman = (move & TARGET_MASK) >>> TARGET_SHIFT;
@@ -349,7 +349,7 @@ public final class Move {
    * @param move the move.
    * @return the target IntColor.
    */
-  public static int getTargetColor(int move) {
+  static int getTargetColor(int move) {
     assert move != NOMOVE;
     assert getTarget(move) != Piece.NOPIECE;
 
@@ -365,7 +365,7 @@ public final class Move {
    * @param move the move.
    * @return the piece.
    */
-  public static int getTargetPiece(int move) {
+  static int getTargetPiece(int move) {
     assert move != NOMOVE;
 
     return (move & TARGET_PIECE_MASK) >>> TARGET_PIECE_SHIFT;
@@ -377,7 +377,7 @@ public final class Move {
    * @param move the move.
    * @return the promotion chessman.
    */
-  public static int getPromotion(int move) {
+  static int getPromotion(int move) {
     assert move != NOMOVE;
 
     int promotion = (move & PROMOTION_MASK) >>> PROMOTION_SHIFT;
@@ -395,7 +395,7 @@ public final class Move {
    * @param move the move.
    * @return the type.
    */
-  public static int getType(int move) {
+  static int getType(int move) {
     assert move != NOMOVE;
 
     int type = (move & MOVE_MASK) >>> MOVE_SHIFT;
@@ -411,7 +411,7 @@ public final class Move {
    * @param board the Hex88Board.
    * @return the IntMove.
    */
-  public static int convertMove(GenericMove move, Position board) {
+  static int convertMove(GenericMove move, Position board) {
     assert move != null;
     assert board != null;
 
@@ -566,7 +566,7 @@ public final class Move {
    * @param move the move.
    * @return the CommandMove.
    */
-  public static GenericMove toCommandMove(int move) {
+  static GenericMove toCommandMove(int move) {
     assert move != NOMOVE;
 
     int type = getType(move);
@@ -590,7 +590,7 @@ public final class Move {
 
   }
 
-  public static String toString(int move) {
+  static String toString(int move) {
     String string = "<";
 
     switch (getType(move)) {
@@ -640,7 +640,7 @@ public final class Move {
     return string;
   }
 
-  public static boolean isValidMove(int move) {
+  static boolean isValidMove(int move) {
     for (int moveValue : MoveType.values) {
       if (move == moveValue) {
         return true;

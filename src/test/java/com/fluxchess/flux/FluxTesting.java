@@ -30,8 +30,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class FluxTesting implements IProtocolHandler {
 
-  BlockingQueue<IEngineCommand> commandQueue = new LinkedBlockingQueue<IEngineCommand>();
-  List<GenericMove> moveList = new ArrayList<GenericMove>();
+  private final BlockingQueue<IEngineCommand> commandQueue = new LinkedBlockingQueue<IEngineCommand>();
+  private final List<GenericMove> moveList = new ArrayList<GenericMove>();
 
   public FluxTesting() {
     this.commandQueue.add(new EngineInitializeRequestCommand());

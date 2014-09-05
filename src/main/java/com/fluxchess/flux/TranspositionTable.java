@@ -22,10 +22,10 @@ import com.fluxchess.jcpi.models.GenericMove;
 
 import java.util.List;
 
-public final class TranspositionTable {
+final class TranspositionTable {
 
   // Size of one transposition entry
-  public static final int ENTRYSIZE = 44;
+  static final int ENTRYSIZE = 44;
 
   private final int size;
 
@@ -38,19 +38,19 @@ public final class TranspositionTable {
   // Number of slots used
   private int slotsUsed = 0;
 
-  public static final class TranspositionTableEntry {
-    public long zobristCode = 0;
-    public int age = -1;
-    public int depth = -1;
+  static final class TranspositionTableEntry {
+    long zobristCode = 0;
+    int age = -1;
+    int depth = -1;
     private int value = -Value.INFINITY;
-    public int type = Bound.NOVALUE;
-    public int move = Move.NOMOVE;
-    public boolean mateThreat = false;
+    int type = Bound.NOVALUE;
+    int move = Move.NOMOVE;
+    boolean mateThreat = false;
 
-    public TranspositionTableEntry() {
+    TranspositionTableEntry() {
     }
 
-    public void clear() {
+    void clear() {
       this.zobristCode = 0;
       this.age = -1;
       this.depth = -1;
@@ -60,7 +60,7 @@ public final class TranspositionTable {
       this.mateThreat = false;
     }
 
-    public int getValue(int height) {
+    int getValue(int height) {
       int value = this.value;
       if (value < -Value.CHECKMATE_THRESHOLD) {
         value += height;
@@ -71,7 +71,7 @@ public final class TranspositionTable {
       return value;
     }
 
-    public void setValue(int value, int height) {
+    void setValue(int value, int height) {
       // Normalize mate values
       if (value < -Value.CHECKMATE_THRESHOLD) {
         value -= height;
@@ -89,7 +89,7 @@ public final class TranspositionTable {
    *
    * @param newSize the size.
    */
-  public TranspositionTable(int newSize) {
+  TranspositionTable(int newSize) {
     assert newSize >= 1;
 
     this.size = newSize;
@@ -107,7 +107,7 @@ public final class TranspositionTable {
   /**
    * Clears the Transposition Table.
    */
-  public void clear() {
+  void clear() {
     this.currentAge = 0;
     this.slotsUsed = 0;
 
@@ -119,7 +119,7 @@ public final class TranspositionTable {
   /**
    * Increase the age of the Transposition Table.
    */
-  public void increaseAge() {
+  void increaseAge() {
     this.currentAge++;
     this.slotsUsed = 0;
   }
@@ -133,7 +133,7 @@ public final class TranspositionTable {
    * @param type        the value type.
    * @param move        the move.
    */
-  public void put(long zobristCode, int depth, int value, int type, int move, boolean mateThreat, int height) {
+  void put(long zobristCode, int depth, int value, int type, int move, boolean mateThreat, int height) {
     assert depth >= 0;
     assert type != Bound.NOVALUE;
     assert height >= 0;
@@ -179,7 +179,7 @@ public final class TranspositionTable {
    * @param zobristCode the zobrist code.
    * @return the transposition table entry or null if there exists no entry.
    */
-  public TranspositionTableEntry get(long zobristCode) {
+  TranspositionTableEntry get(long zobristCode) {
     int position = (int) (zobristCode % this.size);
     TranspositionTableEntry currentEntry = this.entry[position];
 
@@ -198,7 +198,7 @@ public final class TranspositionTable {
    * @param moveList the move list.
    * @return the move list.
    */
-  public List<GenericMove> getMoveList(Position board, int depth, List<GenericMove> moveList) {
+  List<GenericMove> getMoveList(Position board, int depth, List<GenericMove> moveList) {
     assert board != null;
     assert depth >= 0;
     assert moveList != null;
@@ -225,7 +225,7 @@ public final class TranspositionTable {
    *
    * @return the permill of slots used.
    */
-  public int getPermillUsed() {
+  int getPermillUsed() {
     return (int) ((1000L * (long) this.slotsUsed) / (long) this.size);
   }
 

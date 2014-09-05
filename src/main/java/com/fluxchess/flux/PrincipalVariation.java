@@ -22,21 +22,21 @@ import com.fluxchess.jcpi.models.GenericMove;
 
 import java.util.List;
 
-public final class PrincipalVariation implements Comparable<PrincipalVariation> {
+final class PrincipalVariation implements Comparable<PrincipalVariation> {
 
-  public final int moveNumber;
-  public final int value;
-  public final int type;
-  public final int sortValue;
-  public final List<GenericMove> pv;
-  public final int depth;
-  public final int maxDepth;
-  public final int hash;
-  public final long nps;
-  public final long time;
-  public final long totalNodes;
+  final int moveNumber;
+  final int value;
+  final int type;
+  final int sortValue;
+  final List<GenericMove> pv;
+  final int depth;
+  final int maxDepth;
+  final int hash;
+  final long nps;
+  final long time;
+  final long totalNodes;
 
-  public PrincipalVariation(int moveNumber, int value, int type, int sortValue, List<GenericMove> pv, int depth, int maxDepth, int hash, long nps, long time, long totalNodes) {
+  PrincipalVariation(int moveNumber, int value, int type, int sortValue, List<GenericMove> pv, int depth, int maxDepth, int hash, long nps, long time, long totalNodes) {
     this.moveNumber = moveNumber;
     this.value = value;
     this.type = type;

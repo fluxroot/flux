@@ -33,7 +33,7 @@ import static org.junit.Assert.assertEquals;
 
 public class SearchTest implements IProtocolHandler {
 
-  BlockingQueue<IEngineCommand> commandQueue = new LinkedBlockingQueue<IEngineCommand>();
+  final BlockingQueue<IEngineCommand> commandQueue = new LinkedBlockingQueue<IEngineCommand>();
   boolean found = false;
 
   public SearchTest() {

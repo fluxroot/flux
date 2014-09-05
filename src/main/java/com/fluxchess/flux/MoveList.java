@@ -18,26 +18,26 @@
  */
 package com.fluxchess.flux;
 
-public final class MoveList {
+final class MoveList {
 
   private static final int MAXSIZE = 4096;
   private static final int HISTORYSIZE = Depth.MAX_HEIGHT + 1;
 
-  public final int[] moves = new int[MAXSIZE];
-  public final int[] values = new int[MAXSIZE];
-  public int head = 0;
-  public int index = 0;
-  public int tail = 0;
+  final int[] moves = new int[MAXSIZE];
+  final int[] values = new int[MAXSIZE];
+  int head = 0;
+  int index = 0;
+  int tail = 0;
 
   private final int[] historyHead = new int[HISTORYSIZE];
   private final int[] historyIndex = new int[HISTORYSIZE];
   private final int[] historyTail = new int[HISTORYSIZE];
   private int historyCount = 0;
 
-  public MoveList() {
+  MoveList() {
   }
 
-  public void newList() {
+  void newList() {
     assert this.historyCount < HISTORYSIZE;
 
     this.historyHead[this.historyCount] = this.head;
@@ -49,7 +49,7 @@ public final class MoveList {
     this.index = this.tail;
   }
 
-  public void deleteList() {
+  void deleteList() {
     assert this.historyCount > 0;
 
     this.historyCount--;
@@ -58,12 +58,12 @@ public final class MoveList {
     this.tail = this.historyTail[this.historyCount];
   }
 
-  public void resetList() {
+  void resetList() {
     this.tail = this.head;
     this.index = this.head;
   }
 
-  public int getLength() {
+  int getLength() {
     return this.tail - this.head;
   }
 
@@ -71,7 +71,7 @@ public final class MoveList {
    * Sorts the MoveList using insertion sort.
    *
    */
-  public void sort() {
+  void sort() {
     this.insertionsort(head, tail - 1);
   }
 
@@ -103,7 +103,7 @@ public final class MoveList {
     }
   }
 
-  public void rateEvasion(int transpositionMove, int primaryKillerMove, int secondaryKillerMove, HistoryTable historyTable) {
+  void rateEvasion(int transpositionMove, int primaryKillerMove, int secondaryKillerMove, HistoryTable historyTable) {
     for (int i = head; i < tail; i++) {
       int move = moves[i];
 
@@ -126,7 +126,7 @@ public final class MoveList {
    * Rates the move list according to the history table.
    *
    */
-  public void rateFromHistory(HistoryTable historyTable) {
+  void rateFromHistory(HistoryTable historyTable) {
     for (int i = head; i < tail; i++) {
       values[i] = historyTable.get(moves[i]);
     }
@@ -136,7 +136,7 @@ public final class MoveList {
    * Rates the move according to SEE.
    *
    */
-  public void rateFromSEE() {
+  void rateFromSEE() {
     for (int i = head; i < tail; i++) {
       values[i] = See.seeMove(moves[i], Move.getChessmanColor(moves[i]));
     }
@@ -145,7 +145,7 @@ public final class MoveList {
   /**
    * Rates the move according to the MVV/LVA.
    */
-  public void rateFromMVVLVA() {
+  void rateFromMVVLVA() {
     for (int i = head; i < tail; i++) {
       values[i] = getMVVLVARating(moves[i]);
     }

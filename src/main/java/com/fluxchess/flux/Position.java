@@ -22,24 +22,24 @@ import com.fluxchess.jcpi.models.*;
 
 import java.util.Random;
 
-public final class Position {
+final class Position {
 
   /**
    * The size of the 0x88 board
    */
-  public static final int BOARDSIZE = 128;
+  static final int BOARDSIZE = 128;
 
   // The size of the history stack
   private static final int STACKSIZE = Search.MAX_MOVES;
 
   // Game phase thresholds
-  public static final int GAMEPHASE_OPENING_VALUE =
+  static final int GAMEPHASE_OPENING_VALUE =
       Piece.VALUE_KING
           + 1 * Piece.VALUE_QUEEN
           + 2 * Piece.VALUE_ROOK
           + 2 * Piece.VALUE_BISHOP
           + 2 * Piece.VALUE_KNIGHT;
-  public static final int GAMEPHASE_ENDGAME_VALUE =
+  static final int GAMEPHASE_ENDGAME_VALUE =
       Piece.VALUE_KING
           + 2 * Piece.VALUE_ROOK;
   private static final int GAMEPHASE_ENDGAME_COUNT = 2;
@@ -53,57 +53,57 @@ public final class Position {
   private static final long[] zobristEnPassant = new long[BOARDSIZE];
 
   //## BEGIN 0x88 Board Representation
-  public static final int[] board = new int[BOARDSIZE];
+  static final int[] board = new int[BOARDSIZE];
   //## ENDOF 0x88 Board Representation
 
   // The chessman lists.
-  public static final PositionList[] pawnList = new PositionList[Color.ARRAY_DIMENSION];
-  public static final PositionList[] knightList = new PositionList[Color.ARRAY_DIMENSION];
-  public static final PositionList[] bishopList = new PositionList[Color.ARRAY_DIMENSION];
-  public static final PositionList[] rookList = new PositionList[Color.ARRAY_DIMENSION];
-  public static final PositionList[] queenList = new PositionList[Color.ARRAY_DIMENSION];
-  public static final PositionList[] kingList = new PositionList[Color.ARRAY_DIMENSION];
+  static final PositionList[] pawnList = new PositionList[Color.ARRAY_DIMENSION];
+  static final PositionList[] knightList = new PositionList[Color.ARRAY_DIMENSION];
+  static final PositionList[] bishopList = new PositionList[Color.ARRAY_DIMENSION];
+  static final PositionList[] rookList = new PositionList[Color.ARRAY_DIMENSION];
+  static final PositionList[] queenList = new PositionList[Color.ARRAY_DIMENSION];
+  static final PositionList[] kingList = new PositionList[Color.ARRAY_DIMENSION];
 
   // Board stack
   private static final State[] states = new State[STACKSIZE];
   private int statesSize = 0;
 
   // Zobrist code
-  public long zobristCode = 0;
+  long zobristCode = 0;
 
   // Pawn zobrist code
-  public long pawnZobristCode = 0;
+  long pawnZobristCode = 0;
 
   // En Passant square
-  public int enPassantSquare = Square.NOPOSITION;
+  int enPassantSquare = Square.NOPOSITION;
 
   // Castling
-  public static int castling;
+  static int castling;
   private static final int[] castlingHistory = new int[STACKSIZE];
   private int castlingHistorySize = 0;
 
   // Capture
-  public int captureSquare = Square.NOPOSITION;
+  int captureSquare = Square.NOPOSITION;
   private static final int[] captureHistory = new int[STACKSIZE];
   private int captureHistorySize = 0;
 
   // Half move clock
-  public int halfMoveClock = 0;
+  int halfMoveClock = 0;
 
   // The half move number
   private int halfMoveNumber;
 
   // The active color
-  public int activeColor = Color.WHITE;
+  int activeColor = Color.WHITE;
 
   // The material value and counter. We always keep the values current.
-  public static final int[] materialValue = new int[Color.ARRAY_DIMENSION];
-  public static final int[] materialCount = new int[Color.ARRAY_DIMENSION];
-  public static final int[] materialCountAll = new int[Color.ARRAY_DIMENSION];
+  static final int[] materialValue = new int[Color.ARRAY_DIMENSION];
+  static final int[] materialCount = new int[Color.ARRAY_DIMENSION];
+  static final int[] materialCountAll = new int[Color.ARRAY_DIMENSION];
 
   // The positional values. We always keep the values current.
-  public static final int[] positionValueOpening = new int[Color.ARRAY_DIMENSION];
-  public static final int[] positionValueEndgame = new int[Color.ARRAY_DIMENSION];
+  static final int[] positionValueOpening = new int[Color.ARRAY_DIMENSION];
+  static final int[] positionValueEndgame = new int[Color.ARRAY_DIMENSION];
 
   // Our repetition table
   private static RepetitionTable repetitionTable;
@@ -114,19 +114,19 @@ public final class Position {
   private static final Attack tempAttack = new Attack();
 
   private static final class State {
-    public long zobristHistory = 0;
-    public long pawnZobristHistory = 0;
-    public int halfMoveClockHistory = 0;
-    public int enPassantHistory = 0;
-    public int captureSquareHistory = 0;
-    public final int[] positionValueOpening = new int[Color.ARRAY_DIMENSION];
-    public final int[] positionValueEndgame = new int[Color.ARRAY_DIMENSION];
+    long zobristHistory = 0;
+    long pawnZobristHistory = 0;
+    int halfMoveClockHistory = 0;
+    int enPassantHistory = 0;
+    int captureSquareHistory = 0;
+    final int[] positionValueOpening = new int[Color.ARRAY_DIMENSION];
+    final int[] positionValueEndgame = new int[Color.ARRAY_DIMENSION];
 
-    public State() {
+    State() {
       clear();
     }
 
-    public void clear() {
+    void clear() {
       this.zobristHistory = 0;
       this.pawnZobristHistory = 0;
       this.halfMoveClockHistory = 0;
@@ -173,7 +173,7 @@ public final class Position {
    * @param newBoard the board to setup our own board.
    * @throws SquareNotEmptyException if a square is not empty.
    */
-  public Position(GenericBoard newBoard) {
+  Position(GenericBoard newBoard) {
     // Initialize repetition table
     repetitionTable = new RepetitionTable();
 
@@ -464,7 +464,7 @@ public final class Position {
    *
    * @return the GenericBoard.
    */
-  public GenericBoard getBoard() {
+  GenericBoard getBoard() {
     GenericBoard newBoard = new GenericBoard();
 
     // Set chessmen
@@ -567,7 +567,7 @@ public final class Position {
    *
    * @return the full move number.
    */
-  public int getFullMoveNumber() {
+  int getFullMoveNumber() {
     return this.halfMoveNumber / 2;
   }
 
@@ -590,7 +590,7 @@ public final class Position {
    *
    * @return the game phase.
    */
-  public int getGamePhase() {
+  int getGamePhase() {
     if (materialValue[Color.WHITE] >= GAMEPHASE_OPENING_VALUE && materialValue[Color.BLACK] >= GAMEPHASE_OPENING_VALUE) {
       return GamePhase.OPENING;
     } else if (materialValue[Color.WHITE] <= GAMEPHASE_ENDGAME_VALUE || materialValue[Color.BLACK] <= GAMEPHASE_ENDGAME_VALUE
@@ -606,7 +606,7 @@ public final class Position {
    *
    * @return true if this board state is a repetition, false otherwise.
    */
-  public boolean isRepetition() {
+  boolean isRepetition() {
     return repetitionTable.exists(this.zobristCode);
   }
 
@@ -616,7 +616,7 @@ public final class Position {
    * @param move the move.
    * @return true if this move checks the opponent king.
    */
-  public boolean isCheckingMove(int move) {
+  boolean isCheckingMove(int move) {
     assert move != Move.NOMOVE;
 
     int chessmanColor = Move.getChessmanColor(move);
@@ -682,7 +682,7 @@ public final class Position {
     return false;
   }
 
-  public boolean isPinned(int chessmanPosition, int kingColor) {
+  boolean isPinned(int chessmanPosition, int kingColor) {
     assert chessmanPosition != Square.NOPOSITION;
     assert kingColor != Color.NOCOLOR;
 
@@ -736,7 +736,7 @@ public final class Position {
    * @param targetPosition the target position.
    * @return if the attacker can attack the target position.
    */
-  public boolean canSliderPseudoAttack(int attacker, int attackerPosition, int targetPosition) {
+  boolean canSliderPseudoAttack(int attacker, int attackerPosition, int targetPosition) {
     assert attacker != Piece.NOPIECE;
     assert (attackerPosition & 0x88) == 0;
     assert (targetPosition & 0x88) == 0;
@@ -797,7 +797,7 @@ public final class Position {
    *
    * @param color the Color of the target king.
    */
-  public Attack getAttack(int color) {
+  Attack getAttack(int color) {
     Attack attack = attackHistory[this.attackHistorySize][color];
     if (attack.count != Attack.NOATTACK) {
       return attack;
@@ -818,7 +818,7 @@ public final class Position {
    * @param attackerColor  the attacker color.
    * @return true if the position is attacked, false otherwise.
    */
-  public boolean isAttacked(int targetPosition, int attackerColor) {
+  boolean isAttacked(int targetPosition, int attackerColor) {
     assert (targetPosition & 0x88) == 0;
     assert attackerColor != Color.NOCOLOR;
 
@@ -977,7 +977,7 @@ public final class Position {
    * @param targetPosition   the target position.
    * @return if the attacker can attack the target position.
    */
-  public boolean canAttack(int attackerChessman, int attackerColor, int attackerPosition, int targetPosition) {
+  boolean canAttack(int attackerChessman, int attackerColor, int attackerPosition, int targetPosition) {
     assert attackerChessman != Piece.NOPIECE;
     assert attackerColor != Color.NOCOLOR;
     assert (attackerPosition & 0x88) == 0;
@@ -1088,7 +1088,7 @@ public final class Position {
    *
    * @param move the move.
    */
-  public void makeMove(int move) {
+  void makeMove(int move) {
     // Get current stack entry
     State currentStackEntry = states[this.statesSize];
 
@@ -1156,7 +1156,7 @@ public final class Position {
    *
    * @param move the IntMove.
    */
-  public void undoMove(int move) {
+  void undoMove(int move) {
     int type = Move.getType(move);
 
     // Update attack list
