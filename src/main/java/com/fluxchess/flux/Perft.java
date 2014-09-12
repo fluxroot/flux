@@ -25,7 +25,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-public class PerftPerformanceTesting {
+public class Perft {
 
   private static long miniMax(Position board, MoveGenerator generator, int depth, int maxDepth) {
     if (depth == 0) {
