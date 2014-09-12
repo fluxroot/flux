@@ -1,5 +1,5 @@
 /*
- * Copyright 2007-2014 the original author or authors.
+ * Copyright (C) 2007-2014 Phokham Nonava
  *
  * This file is part of Flux Chess.
  *
