@@ -29,9 +29,6 @@ import com.fluxchess.jcpi.protocols.IProtocolHandler;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * This is the main entry class.
- */
 public final class Flux extends AbstractEngine {
 
   private Position board = null;
@@ -39,9 +36,6 @@ public final class Flux extends AbstractEngine {
   private final int[] timeTable = new int[Depth.MAX_PLY + 1];
   private Search search;
 
-  /**
-   * Creates a new Flux.
-   */
   public Flux() {
     initialize();
   }
@@ -64,15 +58,6 @@ public final class Flux extends AbstractEngine {
     transpositionTable = new TranspositionTable(numberOfEntries);
 
     Runtime.getRuntime().gc();
-  }
-
-  /**
-   * The main function.
-   *
-   * @param args not used.
-   */
-  public static void main(String[] args) {
-    new Flux().run();
   }
 
   protected void quit() {
