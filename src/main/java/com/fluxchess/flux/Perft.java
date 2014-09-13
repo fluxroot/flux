@@ -19,64 +19,60 @@
 package com.fluxchess.flux;
 
 import com.fluxchess.jcpi.models.GenericBoard;
-import com.fluxchess.jcpi.models.IllegalNotationException;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.util.concurrent.TimeUnit;
 
-public class Perft {
+final class Perft {
 
-  private static long miniMax(Position board, MoveGenerator generator, int depth, int maxDepth) {
+  private static final int MAX_DEPTH = 6;
+
+  void run() {
+    Position position = new Position(new GenericBoard(GenericBoard.STANDARDSETUP));
+    int depth = MAX_DEPTH;
+
+    new MoveGenerator(position, new KillerTable(), new HistoryTable());
+    new See(position);
+
+    System.out.format("Testing %s at depth %d%n", position.toString(), depth);
+
+    long startTime = System.currentTimeMillis();
+    long result = miniMax(position, depth, 0);
+    long endTime = System.currentTimeMillis();
+
+    long duration = endTime - startTime;
+
+    System.out.format(
+        "Nodes: %d%nDuration: %02d:%02d:%02d.%03d%n",
+        result,
+        TimeUnit.MILLISECONDS.toHours(duration),
+        TimeUnit.MILLISECONDS.toMinutes(duration) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(duration)),
+        TimeUnit.MILLISECONDS.toSeconds(duration) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(duration)),
+        duration - TimeUnit.SECONDS.toMillis(TimeUnit.MILLISECONDS.toSeconds(duration))
+    );
+
+    System.out.format("n/ms: %d%n", result / duration);
+  }
+
+  private static long miniMax(Position board, int depth, int ply) {
     if (depth == 0) {
       return 1;
     }
 
+    long totalNodes = 0;
+
     Attack attack = board.getAttack(board.activeColor);
     MoveGenerator.initializeMain(attack, 0, Move.NOMOVE);
 
-    long totalNodes = 0;
-    int move = MoveGenerator.getNextMove();
-    while (move != Move.NOMOVE) {
+    int move;
+    while ((move = MoveGenerator.getNextMove()) != Move.NOMOVE) {
       board.makeMove(move);
-      totalNodes += miniMax(board, generator, depth - 1, maxDepth);
+      totalNodes += miniMax(board, depth - 1, ply + 1);
       board.undoMove(move);
-
-      move = MoveGenerator.getNextMove();
     }
 
     MoveGenerator.destroy();
 
     return totalNodes;
-  }
-
-  public static void main(String[] args) {
-    BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-    try {
-      String token = reader.readLine();
-      while (!token.equalsIgnoreCase("quit")) {
-        try {
-          Position testBoard = new Position(new GenericBoard(token));
-          new See(testBoard);
-          KillerTable killerTable = new KillerTable();
-          HistoryTable historyTable = new HistoryTable();
-          MoveGenerator generator = new MoveGenerator(testBoard, killerTable, historyTable);
-
-          long startTime = System.currentTimeMillis();
-          long result = miniMax(testBoard, generator, 6, 6);
-          long endTime = System.currentTimeMillis();
-
-          System.out.printf("Found %d nodes in %d.%d seconds.", result, (endTime - startTime) / 1000, (endTime - startTime) % 1000);
-          System.out.println();
-        } catch (IllegalNotationException e) {
-          e.printStackTrace();
-          break;
-        }
-        token = reader.readLine();
-      }
-    } catch (IOException e1) {
-      e1.printStackTrace();
-    }
   }
 
 }
