@@ -14,5 +14,4 @@ install: ./gradlew assemble
 script: ./gradlew test check dist integration
 
 after_success:
-- ./gradlew cobertura
-- ./gradlew coveralls
+- ./gradlew jacocoTestReport coveralls

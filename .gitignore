@@ -1,7 +1,6 @@
 # Gradle
 .gradle/
 build/
-vendor/
 
 # Eclipse
 .settings/
@@ -13,3 +12,7 @@ bin/
 .idea/
 out/
 *.iml
+
+# Other
+vendor/
+run/
