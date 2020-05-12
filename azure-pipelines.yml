@@ -1,0 +1,10 @@
+name: $(Build.BuildId)
+jobs:
+  - job: buildFlux
+    displayName: 'Build Flux'
+    pool:
+      vmImage: ubuntu-18.04
+    container: adoptopenjdk:14-jdk-hotspot
+    steps:
+      - script: ./gradlew build
+        displayName: 'Build'
