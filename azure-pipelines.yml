@@ -3,8 +3,8 @@ jobs:
   - job: buildFlux
     displayName: 'Build Flux'
     pool:
-      vmImage: ubuntu-18.04
-    container: adoptopenjdk:14-jdk-hotspot
+      vmImage: ubuntu-20.04
+    container: adoptopenjdk:15-jdk-hotspot
     steps:
       - script: ./gradlew build
         displayName: 'Build'
