@@ -1,10 +1,10 @@
 Flux Chess
 ==========
 
-Copyright (C) 2007-2015 Phokham Nonava <pn@nonava.com>  
-http://www.fluxchess.com
+Copyright 2007-2020 Phokham Nonava  
+https://www.fluxchess.com
 
-[![Build Status](https://travis-ci.org/fluxroot/flux.png?branch=2.x)](https://travis-ci.org/fluxroot/flux) [![Coverage Status](https://coveralls.io/repos/fluxroot/flux/badge.png?branch=2.x)](https://coveralls.io/r/fluxroot/flux?branch=2.x)
+[![Build Status](https://dev.azure.com/fluxroot/flux/_apis/build/status/fluxroot.flux?branchName=master)](https://dev.azure.com/fluxroot/flux/_build/latest?definitionId=5&branchName=master)
 
 
 Introduction
