@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007-2014 Phokham Nonava
+ * Copyright 2007-2020 Phokham Nonava
  *
  * This file is part of Flux Chess.
  *
@@ -16,19 +16,9 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Flux Chess.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.fluxchess.flux;
+object Libs {
 
-import org.junit.Test;
-
-import java.lang.reflect.InvocationTargetException;
-
-import static com.fluxchess.test.AssertUtil.assertUtilityClassWellDefined;
-
-public class ValueTest {
-
-  @Test
-  public void testUtilityClass() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-    assertUtilityClassWellDefined(Value.class);
-  }
-
+	val junitJupiterApi = "org.junit.jupiter:junit-jupiter-api:5.6.0"
+	val junitJupiterEngine = "org.junit.jupiter:junit-jupiter-engine:5.6.0"
+	val assertjCore = "org.assertj:assertj-core:3.15.0"
 }

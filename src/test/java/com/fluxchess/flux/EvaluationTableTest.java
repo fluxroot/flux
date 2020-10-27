@@ -18,24 +18,23 @@
  */
 package com.fluxchess.flux;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class EvaluationTableTest {
 
-  @Test
-  public void testEvaluationTable() {
-    EvaluationTable table = new EvaluationTable(1024);
+	@Test
+	public void testEvaluationTable() {
+		EvaluationTable table = new EvaluationTable(1024);
 
-    table.put(1, 1);
-    assertNotNull(table.get(1));
-    assertEquals(1, table.get(1).evaluation);
+		table.put(1, 1);
+		assertNotNull(table.get(1));
+		assertEquals(1, table.get(1).evaluation);
 
-    table.put(2, 2);
-    assertNotNull(table.get(2));
-    assertEquals(2, table.get(2).evaluation);
-  }
-
+		table.put(2, 2);
+		assertNotNull(table.get(2));
+		assertEquals(2, table.get(2).evaluation);
+	}
 }

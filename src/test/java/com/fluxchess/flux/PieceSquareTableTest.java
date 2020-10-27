@@ -19,24 +19,24 @@
 package com.fluxchess.flux;
 
 import com.fluxchess.jcpi.models.GenericChessman;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class PieceSquareTableTest {
 
-  @Test
-  public void testGetPositionValue() {
-    for (int phase : GamePhase.values) {
-      for (GenericChessman chessman : GenericChessman.values()) {
-        for (int position = 0; position < Position.BOARDSIZE; position++) {
-          if ((position & 0x88) == 0) {
-            Assert.assertEquals(PieceSquareTable.getValue(phase, Piece.valueOfChessman(chessman), Color.WHITE, position), PieceSquareTable.getValue(phase, Piece.valueOfChessman(chessman), Color.BLACK, 119 - position));
-          } else {
-            position += 7;
-          }
-        }
-      }
-    }
-  }
-
+	@Test
+	public void testGetPositionValue() {
+		for (int phase : GamePhase.values) {
+			for (GenericChessman chessman : GenericChessman.values()) {
+				for (int position = 0; position < Position.BOARDSIZE; position++) {
+					if ((position & 0x88) == 0) {
+						assertEquals(PieceSquareTable.getValue(phase, Piece.valueOfChessman(chessman), Color.WHITE, position), PieceSquareTable.getValue(phase, Piece.valueOfChessman(chessman), Color.BLACK, 119 - position));
+					} else {
+						position += 7;
+					}
+				}
+			}
+		}
+	}
 }

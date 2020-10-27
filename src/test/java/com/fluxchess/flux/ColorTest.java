@@ -19,17 +19,15 @@
 package com.fluxchess.flux;
 
 import com.fluxchess.jcpi.models.GenericColor;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ColorTest {
 
-  @Test
-  public void testIntColor() {
-    Assert.assertEquals(Color.valueOfColor(GenericColor.WHITE), Color.WHITE);
-    assertEquals(Color.valueOfIntColor(Color.WHITE), GenericColor.WHITE);
-  }
-
+	@Test
+	public void testIntColor() {
+		assertEquals(Color.valueOfColor(GenericColor.WHITE), Color.WHITE);
+		assertEquals(Color.valueOfIntColor(Color.WHITE), GenericColor.WHITE);
+	}
 }

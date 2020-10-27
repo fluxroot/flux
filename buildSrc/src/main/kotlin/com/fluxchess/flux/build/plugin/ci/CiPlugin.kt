@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007-2014 Phokham Nonava
+ * Copyright 2007-2020 Phokham Nonava
  *
  * This file is part of Flux Chess.
  *
@@ -16,19 +16,22 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Flux Chess.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.fluxchess.flux;
+package com.fluxchess.flux.build.plugin.ci
 
-import org.junit.Test;
+import org.gradle.api.Plugin
+import org.gradle.api.Project
+import org.gradle.kotlin.dsl.create
 
-import java.lang.reflect.InvocationTargetException;
+class CiPlugin : Plugin<Project> {
 
-import static com.fluxchess.test.AssertUtil.assertUtilityClassWellDefined;
+	override fun apply(project: Project) {
+		val extension = project.extensions.create("ci", CiExtension::class, buildingOnCi())
+		if (project == project.rootProject && extension.buildingOnCi) {
+			project.logger.lifecycle("Building on CI.")
+		}
+	}
 
-public class ConfigurationTest {
-
-  @Test
-  public void testUtilityClass() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-    assertUtilityClassWellDefined(Configuration.class);
-  }
-
+	private fun buildingOnCi(): Boolean {
+		return System.getenv("CI") != null
+	}
 }

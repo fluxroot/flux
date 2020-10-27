@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007-2014 Phokham Nonava
+ * Copyright 2007-2020 Phokham Nonava
  *
  * This file is part of Flux Chess.
  *
@@ -16,19 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Flux Chess.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.fluxchess.flux;
+package com.fluxchess.flux.build.plugin.versioning
 
-import org.junit.Test;
-
-import java.lang.reflect.InvocationTargetException;
-
-import static com.fluxchess.test.AssertUtil.assertUtilityClassWellDefined;
-
-public class RankTest {
-
-  @Test
-  public void testUtilityClass() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-    assertUtilityClassWellDefined(Rank.class);
-  }
-
-}
+open class VersioningExtension(
+		val version: String, val buildNo: String, val commitId: String, val abbreviatedId: String)

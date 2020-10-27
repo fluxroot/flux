@@ -19,49 +19,47 @@
 package com.fluxchess.flux;
 
 import com.fluxchess.jcpi.models.GenericChessman;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class PieceTest {
 
-  @Test
-  public void testIntChessman() {
-    Assert.assertEquals(Piece.valueOfChessman(GenericChessman.KING), PieceType.KING);
-    assertEquals(Piece.valueOfIntChessman(PieceType.KING), GenericChessman.KING);
+	@Test
+	public void testIntChessman() {
+		assertEquals(Piece.valueOfChessman(GenericChessman.KING), PieceType.KING);
+		assertEquals(Piece.valueOfIntChessman(PieceType.KING), GenericChessman.KING);
 
-    int piece = Piece.createPiece(PieceType.PAWN, Color.WHITE);
+		int piece = Piece.createPiece(PieceType.PAWN, Color.WHITE);
 
-    assertEquals(PieceType.PAWN, Piece.getChessman(piece));
-    assertEquals(Color.WHITE, Piece.getColor(piece));
-    assertEquals(Color.BLACK, Piece.getColorOpposite(piece));
-    assertEquals(Piece.VALUE_PAWN, Piece.getValueFromPiece(piece));
-    assertFalse(Piece.isSliding(piece));
+		assertEquals(PieceType.PAWN, Piece.getChessman(piece));
+		assertEquals(Color.WHITE, Piece.getColor(piece));
+		assertEquals(Color.BLACK, Piece.getColorOpposite(piece));
+		assertEquals(Piece.VALUE_PAWN, Piece.getValueFromPiece(piece));
+		assertFalse(Piece.isSliding(piece));
 
-    piece = Piece.createPiece(PieceType.ROOK, Color.BLACK);
+		piece = Piece.createPiece(PieceType.ROOK, Color.BLACK);
 
-    assertEquals(PieceType.ROOK, Piece.getChessman(piece));
-    assertEquals(Color.BLACK, Piece.getColor(piece));
-    assertEquals(Color.WHITE, Piece.getColorOpposite(piece));
-    assertEquals(500, Piece.getValueFromPiece(piece));
-    assertTrue(Piece.isSliding(piece));
+		assertEquals(PieceType.ROOK, Piece.getChessman(piece));
+		assertEquals(Color.BLACK, Piece.getColor(piece));
+		assertEquals(Color.WHITE, Piece.getColorOpposite(piece));
+		assertEquals(500, Piece.getValueFromPiece(piece));
+		assertTrue(Piece.isSliding(piece));
 
-    piece = Piece.createPromotion(PieceType.QUEEN, Color.BLACK);
+		piece = Piece.createPromotion(PieceType.QUEEN, Color.BLACK);
 
-    assertEquals(PieceType.QUEEN, Piece.getChessman(piece));
-    assertEquals(Color.BLACK, Piece.getColor(piece));
-    assertEquals(Color.WHITE, Piece.getColorOpposite(piece));
-    assertEquals(Piece.VALUE_QUEEN, Piece.getValueFromPiece(piece));
-    assertTrue(Piece.isSliding(piece));
+		assertEquals(PieceType.QUEEN, Piece.getChessman(piece));
+		assertEquals(Color.BLACK, Piece.getColor(piece));
+		assertEquals(Color.WHITE, Piece.getColorOpposite(piece));
+		assertEquals(Piece.VALUE_QUEEN, Piece.getValueFromPiece(piece));
+		assertTrue(Piece.isSliding(piece));
 
-    piece = Piece.createPiece(PieceType.KNIGHT, Color.BLACK);
+		piece = Piece.createPiece(PieceType.KNIGHT, Color.BLACK);
 
-    assertEquals(PieceType.KNIGHT, Piece.getChessman(piece));
-    assertEquals(Color.BLACK, Piece.getColor(piece));
-    assertEquals(Color.WHITE, Piece.getColorOpposite(piece));
-    assertEquals(Piece.VALUE_KNIGHT, Piece.getValueFromPiece(piece));
-    assertFalse(Piece.isSliding(piece));
-  }
-
+		assertEquals(PieceType.KNIGHT, Piece.getChessman(piece));
+		assertEquals(Color.BLACK, Piece.getColor(piece));
+		assertEquals(Color.WHITE, Piece.getColorOpposite(piece));
+		assertEquals(Piece.VALUE_KNIGHT, Piece.getValueFromPiece(piece));
+		assertFalse(Piece.isSliding(piece));
+	}
 }
