@@ -22,21 +22,20 @@ import java.security.SecureRandom;
 
 final class Random {
 
-  private static final SecureRandom random = new SecureRandom();
+	private static final SecureRandom random = new SecureRandom();
 
-  private Random() {
-  }
+	private Random() {
+	}
 
-  static long next() {
-    byte[] bytes = new byte[16];
-    random.nextBytes(bytes);
+	static long next() {
+		byte[] bytes = new byte[16];
+		random.nextBytes(bytes);
 
-    long hash = 0;
-    for (int i = 0; i < bytes.length; ++i) {
-      hash ^= ((long) (bytes[i] & 0xFF)) << ((i * 8) % 64);
-    }
+		long hash = 0;
+		for (int i = 0; i < bytes.length; ++i) {
+			hash ^= ((long) (bytes[i] & 0xFF)) << ((i * 8) % 64);
+		}
 
-    return hash;
-  }
-
+		return hash;
+	}
 }

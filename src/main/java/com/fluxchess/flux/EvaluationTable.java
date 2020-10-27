@@ -20,63 +20,62 @@ package com.fluxchess.flux;
 
 final class EvaluationTable {
 
-  // Size of one evaluation entry
-  static final int ENTRYSIZE = 28;
+	// Size of one evaluation entry
+	static final int ENTRYSIZE = 28;
 
-  private final int size;
+	private final int size;
 
-  private final EvaluationTableEntry[] entry;
+	private final EvaluationTableEntry[] entry;
 
-  static final class EvaluationTableEntry {
-    long zobristCode = 0;
-    int evaluation = -Value.INFINITY;
+	static final class EvaluationTableEntry {
 
-    EvaluationTableEntry() {
-    }
+		long zobristCode = 0;
+		int evaluation = -Value.INFINITY;
 
-  }
+		EvaluationTableEntry() {
+		}
+	}
 
-  EvaluationTable(int newSize) {
-    assert newSize >= 1;
+	EvaluationTable(int newSize) {
+		assert newSize >= 1;
 
-    this.size = newSize;
+		this.size = newSize;
 
-    // Initialize entry
-    this.entry = new EvaluationTableEntry[newSize];
-    for (int i = 0; i < this.entry.length; i++) {
-      this.entry[i] = new EvaluationTableEntry();
-    }
-  }
+		// Initialize entry
+		this.entry = new EvaluationTableEntry[newSize];
+		for (int i = 0; i < this.entry.length; i++) {
+			this.entry[i] = new EvaluationTableEntry();
+		}
+	}
 
-  /**
-   * Puts a zobrist code and evaluation value into the table.
-   *
-   * @param newZobristCode the zobrist code.
-   * @param newEvaluation  the evaluation value.
-   */
-  void put(long newZobristCode, int newEvaluation) {
-    int position = (int) (newZobristCode % this.size);
-    EvaluationTableEntry currentEntry = this.entry[position];
+	/**
+	 * Puts a zobrist code and evaluation value into the table.
+	 *
+	 * @param newZobristCode the zobrist code.
+	 * @param newEvaluation  the evaluation value.
+	 */
+	void put(long newZobristCode, int newEvaluation) {
+		int position = (int) (newZobristCode % this.size);
+		EvaluationTableEntry currentEntry = this.entry[position];
 
-    currentEntry.zobristCode = newZobristCode;
-    currentEntry.evaluation = newEvaluation;
-  }
+		currentEntry.zobristCode = newZobristCode;
+		currentEntry.evaluation = newEvaluation;
+	}
 
-  /**
-   * Returns the evaluation table entry given the zobrist code.
-   *
-   * @param newZobristCode the zobrist code.
-   * @return the evaluation table entry or null if there exists no entry.
-   */
-  EvaluationTableEntry get(long newZobristCode) {
-    int position = (int) (newZobristCode % this.size);
-    EvaluationTableEntry currentEntry = this.entry[position];
+	/**
+	 * Returns the evaluation table entry given the zobrist code.
+	 *
+	 * @param newZobristCode the zobrist code.
+	 * @return the evaluation table entry or null if there exists no entry.
+	 */
+	EvaluationTableEntry get(long newZobristCode) {
+		int position = (int) (newZobristCode % this.size);
+		EvaluationTableEntry currentEntry = this.entry[position];
 
-    if (currentEntry.zobristCode == newZobristCode) {
-      return currentEntry;
-    } else {
-      return null;
-    }
-  }
-
+		if (currentEntry.zobristCode == newZobristCode) {
+			return currentEntry;
+		} else {
+			return null;
+		}
+	}
 }

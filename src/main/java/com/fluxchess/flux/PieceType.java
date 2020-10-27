@@ -20,21 +20,20 @@ package com.fluxchess.flux;
 
 final class PieceType {
 
-  static final int MASK = 0x7;
+	static final int MASK = 0x7;
 
-  static final int PAWN = 1;
-  static final int KNIGHT = 2;
-  static final int KING = 3;
-  static final int BISHOP = 5;
-  static final int ROOK = 6;
-  static final int QUEEN = 7;
+	static final int PAWN = 1;
+	static final int KNIGHT = 2;
+	static final int KING = 3;
+	static final int BISHOP = 5;
+	static final int ROOK = 6;
+	static final int QUEEN = 7;
 
-  static final int VALUES_SIZE = 8;
-  static final int[] values = {
-      PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING
-  };
+	static final int VALUES_SIZE = 8;
+	static final int[] values = {
+			PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING
+	};
 
-  private PieceType() {
-  }
-
+	private PieceType() {
+	}
 }

@@ -20,16 +20,15 @@ package com.fluxchess.flux;
 
 final class Rank {
 
-  static final int r1 = 0;
-  static final int r2 = 1;
-  static final int r3 = 2;
-  static final int r4 = 3;
-  static final int r5 = 4;
-  static final int r6 = 5;
-  static final int r7 = 6;
-  static final int r8 = 7;
+	static final int r1 = 0;
+	static final int r2 = 1;
+	static final int r3 = 2;
+	static final int r4 = 3;
+	static final int r5 = 4;
+	static final int r6 = 5;
+	static final int r7 = 6;
+	static final int r8 = 7;
 
-  private Rank() {
-  }
-
+	private Rank() {
+	}
 }

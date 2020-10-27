@@ -20,7 +20,6 @@ package com.fluxchess.flux;
 
 final class Notation {
 
-  private Notation() {
-  }
-
+	private Notation() {
+	}
 }

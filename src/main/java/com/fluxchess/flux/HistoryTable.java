@@ -20,58 +20,57 @@ package com.fluxchess.flux;
 
 final class HistoryTable {
 
-  static final int MAX_HISTORYVALUE = 65536;
+	static final int MAX_HISTORYVALUE = 65536;
 
-  private static int[][] historyTable;
+	private static int[][] historyTable;
 
-  /**
-   * Creates a new HistoryTable.
-   */
-  HistoryTable() {
-    historyTable = new int[Piece.PIECE_VALUE_SIZE][Position.BOARDSIZE];
-  }
+	/**
+	 * Creates a new HistoryTable.
+	 */
+	HistoryTable() {
+		historyTable = new int[Piece.PIECE_VALUE_SIZE][Position.BOARDSIZE];
+	}
 
-  /**
-   * Returns the number of hits for the move.
-   *
-   * @param move the IntMove.
-   * @return the number of hits.
-   */
-  int get(int move) {
-    assert move != Move.NOMOVE;
+	/**
+	 * Returns the number of hits for the move.
+	 *
+	 * @param move the IntMove.
+	 * @return the number of hits.
+	 */
+	int get(int move) {
+		assert move != Move.NOMOVE;
 
-    int piece = Move.getChessmanPiece(move);
-    int end = Move.getEnd(move);
-    assert Move.getChessman(move) != Piece.NOPIECE;
-    assert Move.getChessmanColor(move) != Color.NOCOLOR;
-    assert (end & 0x88) == 0;
+		int piece = Move.getChessmanPiece(move);
+		int end = Move.getEnd(move);
+		assert Move.getChessman(move) != Piece.NOPIECE;
+		assert Move.getChessmanColor(move) != Color.NOCOLOR;
+		assert (end & 0x88) == 0;
 
-    return historyTable[piece][end];
-  }
+		return historyTable[piece][end];
+	}
 
-  /**
-   * Increment the number of hits for this move.
-   *
-   * @param move the IntMove.
-   */
-  void add(int move, int depth) {
-    assert move != Move.NOMOVE;
+	/**
+	 * Increment the number of hits for this move.
+	 *
+	 * @param move the IntMove.
+	 */
+	void add(int move, int depth) {
+		assert move != Move.NOMOVE;
 
-    int piece = Move.getChessmanPiece(move);
-    int end = Move.getEnd(move);
-    assert Move.getChessman(move) != Piece.NOPIECE;
-    assert Move.getChessmanColor(move) != Color.NOCOLOR;
-    assert (end & 0x88) == 0;
+		int piece = Move.getChessmanPiece(move);
+		int end = Move.getEnd(move);
+		assert Move.getChessman(move) != Piece.NOPIECE;
+		assert Move.getChessmanColor(move) != Color.NOCOLOR;
+		assert (end & 0x88) == 0;
 
-    historyTable[piece][end] += depth;
+		historyTable[piece][end] += depth;
 
-    if (historyTable[piece][end] >= MAX_HISTORYVALUE) {
-      for (int pieceValue : Piece.pieceValues) {
-        for (int positionValue : Square.values) {
-          historyTable[pieceValue][positionValue] /= 2;
-        }
-      }
-    }
-  }
-
+		if (historyTable[piece][end] >= MAX_HISTORYVALUE) {
+			for (int pieceValue : Piece.pieceValues) {
+				for (int positionValue : Square.values) {
+					historyTable[pieceValue][positionValue] /= 2;
+				}
+			}
+		}
+	}
 }

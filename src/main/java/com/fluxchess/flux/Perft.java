@@ -24,55 +24,54 @@ import java.util.concurrent.TimeUnit;
 
 final class Perft {
 
-  private static final int MAX_DEPTH = 6;
+	private static final int MAX_DEPTH = 6;
 
-  void run() {
-    Position position = new Position(new GenericBoard(GenericBoard.STANDARDSETUP));
-    int depth = MAX_DEPTH;
+	void run() {
+		Position position = new Position(new GenericBoard(GenericBoard.STANDARDSETUP));
+		int depth = MAX_DEPTH;
 
-    new MoveGenerator(position, new KillerTable(), new HistoryTable());
-    new See(position);
+		new MoveGenerator(position, new KillerTable(), new HistoryTable());
+		new See(position);
 
-    System.out.format("Testing %s at depth %d%n", position.toString(), depth);
+		System.out.format("Testing %s at depth %d%n", position.toString(), depth);
 
-    long startTime = System.currentTimeMillis();
-    long result = miniMax(position, depth, 0);
-    long endTime = System.currentTimeMillis();
+		long startTime = System.currentTimeMillis();
+		long result = miniMax(position, depth, 0);
+		long endTime = System.currentTimeMillis();
 
-    long duration = endTime - startTime;
+		long duration = endTime - startTime;
 
-    System.out.format(
-        "Nodes: %d%nDuration: %02d:%02d:%02d.%03d%n",
-        result,
-        TimeUnit.MILLISECONDS.toHours(duration),
-        TimeUnit.MILLISECONDS.toMinutes(duration) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(duration)),
-        TimeUnit.MILLISECONDS.toSeconds(duration) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(duration)),
-        duration - TimeUnit.SECONDS.toMillis(TimeUnit.MILLISECONDS.toSeconds(duration))
-    );
+		System.out.format(
+				"Nodes: %d%nDuration: %02d:%02d:%02d.%03d%n",
+				result,
+				TimeUnit.MILLISECONDS.toHours(duration),
+				TimeUnit.MILLISECONDS.toMinutes(duration) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(duration)),
+				TimeUnit.MILLISECONDS.toSeconds(duration) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(duration)),
+				duration - TimeUnit.SECONDS.toMillis(TimeUnit.MILLISECONDS.toSeconds(duration))
+		);
 
-    System.out.format("n/ms: %d%n", result / duration);
-  }
+		System.out.format("n/ms: %d%n", result / duration);
+	}
 
-  private static long miniMax(Position board, int depth, int ply) {
-    if (depth == 0) {
-      return 1;
-    }
+	private static long miniMax(Position board, int depth, int ply) {
+		if (depth == 0) {
+			return 1;
+		}
 
-    long totalNodes = 0;
+		long totalNodes = 0;
 
-    Attack attack = board.getAttack(board.activeColor);
-    MoveGenerator.initializeMain(attack, 0, Move.NOMOVE);
+		Attack attack = board.getAttack(board.activeColor);
+		MoveGenerator.initializeMain(attack, 0, Move.NOMOVE);
 
-    int move;
-    while ((move = MoveGenerator.getNextMove()) != Move.NOMOVE) {
-      board.makeMove(move);
-      totalNodes += miniMax(board, depth - 1, ply + 1);
-      board.undoMove(move);
-    }
+		int move;
+		while ((move = MoveGenerator.getNextMove()) != Move.NOMOVE) {
+			board.makeMove(move);
+			totalNodes += miniMax(board, depth - 1, ply + 1);
+			board.undoMove(move);
+		}
 
-    MoveGenerator.destroy();
+		MoveGenerator.destroy();
 
-    return totalNodes;
-  }
-
+		return totalNodes;
+	}
 }

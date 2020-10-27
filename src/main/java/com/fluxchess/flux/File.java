@@ -20,16 +20,15 @@ package com.fluxchess.flux;
 
 final class File {
 
-  static final int a = 0;
-  static final int b = 1;
-  static final int c = 2;
-  static final int d = 3;
-  static final int e = 4;
-  static final int f = 5;
-  static final int g = 6;
-  static final int h = 7;
+	static final int a = 0;
+	static final int b = 1;
+	static final int c = 2;
+	static final int d = 3;
+	static final int e = 4;
+	static final int f = 5;
+	static final int g = 6;
+	static final int h = 7;
 
-  private File() {
-  }
-
+	private File() {
+	}
 }

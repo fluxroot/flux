@@ -20,12 +20,11 @@ package com.fluxchess.flux;
 
 final class Value {
 
-  static final int INFINITY = 200000;
-  static final int DRAW = 0;
-  static final int CHECKMATE = 100000;
-  static final int CHECKMATE_THRESHOLD = CHECKMATE - 1000;
+	static final int INFINITY = 200000;
+	static final int DRAW = 0;
+	static final int CHECKMATE = 100000;
+	static final int CHECKMATE_THRESHOLD = CHECKMATE - 1000;
 
-  private Value() {
-  }
-
+	private Value() {
+	}
 }

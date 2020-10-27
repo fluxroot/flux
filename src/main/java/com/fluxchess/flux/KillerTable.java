@@ -24,63 +24,62 @@ package com.fluxchess.flux;
  */
 final class KillerTable {
 
-  private static final int MAXSIZE = Depth.MAX_PLY + 1;
+	private static final int MAXSIZE = Depth.MAX_PLY + 1;
 
-  private static final int[] primaryKiller = new int[MAXSIZE];
-  private static final int[] secondaryKiller = new int[MAXSIZE];
+	private static final int[] primaryKiller = new int[MAXSIZE];
+	private static final int[] secondaryKiller = new int[MAXSIZE];
 
-  /**
-   * Creates a new KillerTable.
-   */
-  KillerTable() {
-    for (int i = 0; i < MAXSIZE; i++) {
-      primaryKiller[i] = Move.NOMOVE;
-      secondaryKiller[i] = Move.NOMOVE;
-    }
-  }
+	/**
+	 * Creates a new KillerTable.
+	 */
+	KillerTable() {
+		for (int i = 0; i < MAXSIZE; i++) {
+			primaryKiller[i] = Move.NOMOVE;
+			secondaryKiller[i] = Move.NOMOVE;
+		}
+	}
 
-  /**
-   * Increment the killer count if the move is good.
-   *
-   * @param killer the new killer move.
-   * @param height the height.
-   */
-  void add(int killer, int height) {
-    assert killer != Move.NOMOVE;
-    assert height >= 0;
+	/**
+	 * Increment the killer count if the move is good.
+	 *
+	 * @param killer the new killer move.
+	 * @param height the height.
+	 */
+	void add(int killer, int height) {
+		assert killer != Move.NOMOVE;
+		assert height >= 0;
 
-    // Update killers
-    if (primaryKiller[height] != killer) {
-      secondaryKiller[height] = primaryKiller[height];
-      primaryKiller[height] = killer;
-    }
+		// Update killers
+		if (primaryKiller[height] != killer) {
+			secondaryKiller[height] = primaryKiller[height];
+			primaryKiller[height] = killer;
+		}
 
-    assert primaryKiller[height] == killer;
-    assert secondaryKiller[height] != killer;
-  }
+		assert primaryKiller[height] == killer;
+		assert secondaryKiller[height] != killer;
+	}
 
-  /**
-   * Returns the primary killer move.
-   *
-   * @param height the height.
-   * @return the primary killer move.
-   */
-  int getPrimaryKiller(int height) {
-    assert height >= 0;
+	/**
+	 * Returns the primary killer move.
+	 *
+	 * @param height the height.
+	 * @return the primary killer move.
+	 */
+	int getPrimaryKiller(int height) {
+		assert height >= 0;
 
-    return primaryKiller[height];
-  }
+		return primaryKiller[height];
+	}
 
-  /**
-   * Returns the secondary killer move.
-   *
-   * @param height the depth.
-   * @return the secondary killer move.
-   */
-  int getSecondaryKiller(int height) {
-    assert height >= 0;
+	/**
+	 * Returns the secondary killer move.
+	 *
+	 * @param height the depth.
+	 * @return the secondary killer move.
+	 */
+	int getSecondaryKiller(int height) {
+		assert height >= 0;
 
-    return secondaryKiller[height];
-  }
-
+		return secondaryKiller[height];
+	}
 }

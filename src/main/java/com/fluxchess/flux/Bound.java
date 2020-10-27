@@ -22,37 +22,36 @@ import com.fluxchess.jcpi.models.GenericScore;
 
 final class Bound {
 
-  static final int EXACT = 0;
-  static final int UPPER = 1;
-  static final int LOWER = 2;
-  static final int NOBOUND = 3;
+	static final int EXACT = 0;
+	static final int UPPER = 1;
+	static final int LOWER = 2;
+	static final int NOBOUND = 3;
 
-  static final int[] values = {
-      EXACT, UPPER, LOWER
-  };
+	static final int[] values = {
+			EXACT, UPPER, LOWER
+	};
 
-  private static final GenericScore[] toGenericScore = {
-      GenericScore.EXACT, GenericScore.ALPHA, GenericScore.BETA
-  };
+	private static final GenericScore[] toGenericScore = {
+			GenericScore.EXACT, GenericScore.ALPHA, GenericScore.BETA
+	};
 
-  private Bound() {
-  }
+	private Bound() {
+	}
 
-  static boolean isValid(int bound) {
-    switch (bound) {
-      case EXACT:
-      case UPPER:
-      case LOWER:
-        return true;
-      default:
-        return false;
-    }
-  }
+	static boolean isValid(int bound) {
+		switch (bound) {
+			case EXACT:
+			case UPPER:
+			case LOWER:
+				return true;
+			default:
+				return false;
+		}
+	}
 
-  static GenericScore toGenericScore(int bound) {
-    assert isValid(bound);
+	static GenericScore toGenericScore(int bound) {
+		assert isValid(bound);
 
-    return toGenericScore[bound];
-  }
-
+		return toGenericScore[bound];
+	}
 }

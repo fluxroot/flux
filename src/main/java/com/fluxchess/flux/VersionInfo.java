@@ -25,61 +25,60 @@ import java.util.Properties;
 
 final class VersionInfo {
 
-  private static final String versionInfoProperty = "/com/fluxchess/flux/version-info.properties";
-  private static final VersionInfo CURRENT;
+	private static final String versionInfoProperty = "/com/fluxchess/flux/version-info.properties";
+	private static final VersionInfo CURRENT;
 
-  private final String version;
-  private final String buildNumber;
-  private final String revisionNumber;
+	private final String version;
+	private final String buildNumber;
+	private final String revisionNumber;
 
-  static {
-    try (InputStream inputStream = VersionInfo.class.getResourceAsStream(versionInfoProperty)) {
-      if (inputStream != null) {
-        Properties properties = new Properties();
-        properties.load(inputStream);
+	static {
+		try (InputStream inputStream = VersionInfo.class.getResourceAsStream(versionInfoProperty)) {
+			if (inputStream != null) {
+				Properties properties = new Properties();
+				properties.load(inputStream);
 
-        CURRENT = new VersionInfo(
-            properties.getProperty("version", "n/a"),
-            properties.getProperty("buildNumber", "n/a"),
-            properties.getProperty("revisionNumber", "n/a")
-        );
-      } else {
-        throw new FileNotFoundException(String.format("Cannot find the properties file %s", versionInfoProperty));
-      }
-    } catch (IOException e) {
-      throw new RuntimeException(String.format("Cannot load the properties file %s", versionInfoProperty), e);
-    }
-  }
+				CURRENT = new VersionInfo(
+						properties.getProperty("version", "n/a"),
+						properties.getProperty("buildNumber", "n/a"),
+						properties.getProperty("revisionNumber", "n/a")
+				);
+			} else {
+				throw new FileNotFoundException(String.format("Cannot find the properties file %s", versionInfoProperty));
+			}
+		} catch (IOException e) {
+			throw new RuntimeException(String.format("Cannot load the properties file %s", versionInfoProperty), e);
+		}
+	}
 
-  static VersionInfo current() {
-    return CURRENT;
-  }
+	static VersionInfo current() {
+		return CURRENT;
+	}
 
-  private VersionInfo(String version, String buildNumber, String revisionNumber) {
-    if (version == null) throw new IllegalArgumentException();
-    if (buildNumber == null) throw new IllegalArgumentException();
-    if (revisionNumber == null) throw new IllegalArgumentException();
+	private VersionInfo(String version, String buildNumber, String revisionNumber) {
+		if (version == null) throw new IllegalArgumentException();
+		if (buildNumber == null) throw new IllegalArgumentException();
+		if (revisionNumber == null) throw new IllegalArgumentException();
 
-    this.version = version;
-    this.buildNumber = buildNumber;
-    this.revisionNumber = revisionNumber;
-  }
+		this.version = version;
+		this.buildNumber = buildNumber;
+		this.revisionNumber = revisionNumber;
+	}
 
-  @Override
-  public String toString() {
-    return String.format("Flux %s", version);
-  }
+	@Override
+	public String toString() {
+		return String.format("Flux %s", version);
+	}
 
-  String getVersion() {
-    return version;
-  }
+	String getVersion() {
+		return version;
+	}
 
-  String getBuildNumber() {
-    return buildNumber;
-  }
+	String getBuildNumber() {
+		return buildNumber;
+	}
 
-  String getRevisionNumber() {
-    return revisionNumber;
-  }
-
+	String getRevisionNumber() {
+		return revisionNumber;
+	}
 }

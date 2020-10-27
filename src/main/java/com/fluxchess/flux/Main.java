@@ -22,34 +22,33 @@ import java.util.Scanner;
 
 public final class Main {
 
-  public static void main(String[] args) {
-    try {
-      if (args.length > 0) {
-        String arguments = args[0];
-        for (int i = 1; i < args.length; ++i) {
-          arguments += " " + args[i];
-        }
+	public static void main(String[] args) {
+		try {
+			if (args.length > 0) {
+				String arguments = args[0];
+				for (int i = 1; i < args.length; ++i) {
+					arguments += " " + args[i];
+				}
 
-        Scanner tokens = new Scanner(arguments);
+				Scanner tokens = new Scanner(arguments);
 
-        if (!tokens.hasNext()) {
-          throw new IllegalArgumentException();
-        }
-        String token = tokens.next();
+				if (!tokens.hasNext()) {
+					throw new IllegalArgumentException();
+				}
+				String token = tokens.next();
 
-        if (token.equalsIgnoreCase("perft")) {
-          new Perft().run();
-        } else {
-          throw new IllegalArgumentException("Unknown argument: " + token);
-        }
-      } else {
-        new Flux().run();
-      }
-    } catch (Throwable t) {
-      System.out.format("Exiting Flux due to an exception: %s%n", t.getLocalizedMessage());
-      t.printStackTrace();
-      System.exit(1);
-    }
-  }
-
+				if (token.equalsIgnoreCase("perft")) {
+					new Perft().run();
+				} else {
+					throw new IllegalArgumentException("Unknown argument: " + token);
+				}
+			} else {
+				new Flux().run();
+			}
+		} catch (Throwable t) {
+			System.out.format("Exiting Flux due to an exception: %s%n", t.getLocalizedMessage());
+			t.printStackTrace();
+			System.exit(1);
+		}
+	}
 }
