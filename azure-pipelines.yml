@@ -8,3 +8,6 @@ jobs:
     steps:
       - script: ./gradlew build
         displayName: 'Build'
+      - task: PublishTestResults@2
+        displayName: 'Publish Test Results'
+        condition: succeededOrFailed()
