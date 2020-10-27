@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007-2014 Phokham Nonava
+ * Copyright 2007-2020 Phokham Nonava
  *
  * This file is part of Flux Chess.
  *
