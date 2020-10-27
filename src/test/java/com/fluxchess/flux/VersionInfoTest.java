@@ -18,19 +18,18 @@
  */
 package com.fluxchess.flux;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class VersionInfoTest {
 
-  @Test
-  public void testVersionInfo() {
-    VersionInfo versionInfo = VersionInfo.current();
+	@Test
+	public void testVersionInfo() {
+		VersionInfo versionInfo = VersionInfo.current();
 
-    assertEquals("0.1.0-alpha.1", versionInfo.getVersion());
-    assertEquals("dev", versionInfo.getBuildNumber());
-    assertEquals("rev", versionInfo.getRevisionNumber());
-  }
-
+		assertEquals("0.1.0-alpha.1", versionInfo.getVersion());
+		assertEquals("dev", versionInfo.getBuildNumber());
+		assertEquals("rev", versionInfo.getRevisionNumber());
+	}
 }

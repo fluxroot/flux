@@ -20,28 +20,27 @@ package com.fluxchess.flux;
 
 import com.fluxchess.jcpi.models.GenericBoard;
 import com.fluxchess.jcpi.models.IllegalNotationException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class EvaluationTest {
 
-  @Test
-  public void testEvaluate() {
-    Evaluation evaluation = new Evaluation();
-    Position board;
+	@Test
+	public void testEvaluate() {
+		Evaluation evaluation = new Evaluation();
+		Position board;
 
-    try {
-      board = new Position(new GenericBoard("r6r/1bk2ppp/p2qp3/2b1Q3/Pp3P2/1B2P3/1P2N1PP/R1B3K1 w - -"));
-      new See(board);
-      int value1 = evaluation.evaluate(board);
-      board = new Position(new GenericBoard("r4q1r/1bk2ppp/p2bp3/4Q3/Pp3P2/1B2P3/1P2N1PP/R1B3K1 w - -"));
-      new See(board);
-      int value2 = evaluation.evaluate(board);
-      assertEquals(value1 + " > " + value2, true, value1 > value2);
-    } catch (IllegalNotationException e) {
-      e.printStackTrace();
-    }
-  }
-
+		try {
+			board = new Position(new GenericBoard("r6r/1bk2ppp/p2qp3/2b1Q3/Pp3P2/1B2P3/1P2N1PP/R1B3K1 w - -"));
+			new See(board);
+			int value1 = evaluation.evaluate(board);
+			board = new Position(new GenericBoard("r4q1r/1bk2ppp/p2bp3/4Q3/Pp3P2/1B2P3/1P2N1PP/R1B3K1 w - -"));
+			new See(board);
+			int value2 = evaluation.evaluate(board);
+			assertTrue(value1 > value2, value1 + " > " + value2);
+		} catch (IllegalNotationException e) {
+			e.printStackTrace();
+		}
+	}
 }
