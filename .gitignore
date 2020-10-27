@@ -1,18 +1,9 @@
 # Gradle
-.gradle/
-build/
-
-# Eclipse
-.settings/
-bin/
-.classpath
-.project
+/.gradle/
+/*/.gradle/
+/build/
+/*/build/
 
 # IntelliJ IDEA
-.idea/
-out/
-*.iml
-
-# Other
-vendor/
-run/
+/.idea/
+/out/
