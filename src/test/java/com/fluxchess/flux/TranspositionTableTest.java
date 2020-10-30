@@ -20,12 +20,12 @@ package com.fluxchess.flux;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
-public class TranspositionTableTest {
+class TranspositionTableTest {
 
 	@Test
-	public void testTranspositionTable() {
+	void testTranspositionTable() {
 		TranspositionTable table = new TranspositionTable(10);
 		int move1 = Move.createMove(MoveType.NORMAL, Square.a2, Square.a3, Piece.createPiece(PieceType.PAWN, Color.WHITE), Piece.NOPIECE, Piece.NOPIECE);
 
@@ -33,43 +33,43 @@ public class TranspositionTableTest {
 		table.put(1L, 1, 100, Bound.EXACT, move1, false, 0);
 
 		TranspositionTable.TranspositionTableEntry entry = table.get(1L);
-		assertNotNull(entry);
+		assertThat(entry).isNotNull();
 
-		assertEquals(1, entry.depth);
-		assertEquals(100, entry.getValue(0));
-		assertEquals(Bound.EXACT, entry.type);
-		assertEquals(move1, entry.move);
+		assertThat(1).isEqualTo(entry.depth);
+		assertThat(100).isEqualTo(entry.getValue(0));
+		assertThat(Bound.EXACT).isEqualTo(entry.type);
+		assertThat(move1).isEqualTo(entry.move);
 
 		// Overwrite the entry with a new one
 		table.put(1L, 2, 200, Bound.LOWER, move1, false, 0);
 
 		entry = table.get(1L);
-		assertNotNull(entry);
+		assertThat(entry).isNotNull();
 
-		assertEquals(2, entry.depth);
-		assertEquals(200, entry.getValue(0));
-		assertEquals(Bound.LOWER, entry.type);
-		assertEquals(move1, entry.move);
+		assertThat(2).isEqualTo(entry.depth);
+		assertThat(200).isEqualTo(entry.getValue(0));
+		assertThat(Bound.LOWER).isEqualTo(entry.type);
+		assertThat(move1).isEqualTo(entry.move);
 
 		// Put an mate entry into the table
 		table.put(2L, 0, Value.CHECKMATE - 5, Bound.EXACT, move1, false, 3);
 
 		entry = table.get(2L);
-		assertNotNull(entry);
+		assertThat(entry).isNotNull();
 
-		assertEquals(0, entry.depth);
-		assertEquals(Value.CHECKMATE - 4, entry.getValue(2));
-		assertEquals(Bound.EXACT, entry.type);
-		assertEquals(move1, entry.move);
+		assertThat(0).isEqualTo(entry.depth);
+		assertThat(Value.CHECKMATE - 4).isEqualTo(entry.getValue(2));
+		assertThat(Bound.EXACT).isEqualTo(entry.type);
+		assertThat(move1).isEqualTo(entry.move);
 
 		// Increase the age
 		table.increaseAge();
 
-		assertNull(table.get(2L));
+		assertThat(table.get(2L)).isNull();
 	}
 
 	@Test
-	public void testSize() {
+	void testSize() {
 		System.out.println("Testing Transposition Table size:");
 		int[] megabytes = {4, 8, 16, 32, 64, 128, 256};
 		for (int i : megabytes) {

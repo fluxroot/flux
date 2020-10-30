@@ -26,13 +26,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class MoveGeneratorTest {
+class MoveGeneratorTest {
 
 	@Test
-	public void testSpecialPerft() {
+	void testSpecialPerft() {
 		// Setup a new board from fen
 		GenericBoard board;
 		try {
@@ -51,7 +51,7 @@ public class MoveGeneratorTest {
 	}
 
 	@Test
-	public void testPerft() {
+	void testPerft() {
 		for (int i = 1; i < 4; i++) {
 //		for (int i = 1; i < 7; i++) {
 			BufferedReader file;
@@ -74,7 +74,7 @@ public class MoveGeneratorTest {
 						new See(testBoard);
 
 						int result = miniMax(testBoard, new MoveGenerator(testBoard, new KillerTable(), new HistoryTable()), depth, depth);
-						assertEquals(nodesNumber, result, tokens[0].trim());
+						assertThat(nodesNumber).as(tokens[0].trim()).isEqualTo(result);
 					}
 
 					line = file.readLine();
@@ -105,7 +105,7 @@ public class MoveGeneratorTest {
 			board.makeMove(move);
 			boolean isCheckingMoveReal = board.getAttack(board.activeColor).isCheck();
 
-			assertEquals(isCheckingMoveReal, isCheckingMove, oldBoard.toString() + ", " + Move.toCommandMove(move).toString());
+			assertThat(isCheckingMoveReal).as(oldBoard.toString() + ", " + Move.toCommandMove(move).toString()).isEqualTo(isCheckingMove);
 			nodes = miniMax(board, generator, depth - 1, maxDepth);
 			board.undoMove(move);
 			assert captureSquare == board.captureSquare;
@@ -123,7 +123,7 @@ public class MoveGeneratorTest {
 	}
 
 	@Test
-	public void testSpecialQuiescentCheckingMoves() {
+	void testSpecialQuiescentCheckingMoves() {
 		// Setup a new board from fen
 		GenericBoard board;
 		try {
@@ -138,7 +138,7 @@ public class MoveGeneratorTest {
 	}
 
 	@Test
-	public void testQuiescentCheckingMoves() {
+	void testQuiescentCheckingMoves() {
 		for (int i = 1; i < 3; i++) {
 //		for (int i = 1; i < 7; i++) {
 			BufferedReader file;
@@ -210,7 +210,7 @@ public class MoveGeneratorTest {
 		}
 		MoveGenerator.destroy();
 
-		assertEquals(mainMoveList.getLength(), quiescentMoveList.getLength(), printDifference(board, mainMoveList, quiescentMoveList));
+		assertThat(mainMoveList.getLength()).as(printDifference(board, mainMoveList, quiescentMoveList)).isEqualTo(quiescentMoveList.getLength());
 	}
 
 	private String printDifference(Position board, MoveList main, MoveList quiescent) {

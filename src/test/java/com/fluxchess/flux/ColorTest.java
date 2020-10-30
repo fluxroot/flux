@@ -21,13 +21,13 @@ package com.fluxchess.flux;
 import com.fluxchess.jcpi.models.GenericColor;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
-public class ColorTest {
+class ColorTest {
 
 	@Test
-	public void testIntColor() {
-		assertEquals(Color.valueOfColor(GenericColor.WHITE), Color.WHITE);
-		assertEquals(Color.valueOfIntColor(Color.WHITE), GenericColor.WHITE);
+	void testIntColor() {
+		assertThat(Color.valueOfColor(GenericColor.WHITE)).isEqualTo(Color.WHITE);
+		assertThat(Color.valueOfIntColor(Color.WHITE)).isEqualTo(GenericColor.WHITE);
 	}
 }

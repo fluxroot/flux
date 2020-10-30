@@ -21,12 +21,13 @@ package com.fluxchess.flux;
 import com.fluxchess.jcpi.models.*;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.fail;
 
-public class PositionTest {
+class PositionTest {
 
 	@Test
-	public void testClassCreation() {
+	void testClassCreation() {
 		// Setup a new board
 		GenericBoard board = new GenericBoard(GenericBoard.STANDARDSETUP);
 		Position testBoard = new Position(board);
@@ -37,39 +38,39 @@ public class PositionTest {
 				GenericPiece piece = board.getPiece(GenericPosition.valueOf(file, rank));
 				int testChessman = Position.board[Square.valueOfPosition(GenericPosition.valueOf(file, rank))];
 				if (piece == null) {
-					assertEquals(Piece.NOPIECE, testChessman);
+					assertThat(Piece.NOPIECE).isEqualTo(testChessman);
 				} else {
-					assertEquals(Piece.valueOfChessman(piece.chessman), Piece.getChessman(testChessman));
-					assertEquals(Color.valueOfColor(piece.color), Piece.getColor(testChessman));
+					assertThat(Piece.valueOfChessman(piece.chessman)).isEqualTo(Piece.getChessman(testChessman));
+					assertThat(Color.valueOfColor(piece.color)).isEqualTo(Piece.getColor(testChessman));
 				}
 			}
 		}
 
 		// Test active color
-		assertEquals(Color.valueOfColor(board.getActiveColor()), testBoard.activeColor);
+		assertThat(Color.valueOfColor(board.getActiveColor())).isEqualTo(testBoard.activeColor);
 
 		// Test en passant
 		if (board.getEnPassant() == null) {
-			assertEquals(Square.NOPOSITION, testBoard.enPassantSquare);
+			assertThat(Square.NOPOSITION).isEqualTo(testBoard.enPassantSquare);
 		} else {
-			assertEquals(Square.valueOfPosition(board.getEnPassant()), testBoard.enPassantSquare);
+			assertThat(Square.valueOfPosition(board.getEnPassant())).isEqualTo(testBoard.enPassantSquare);
 		}
 
 		// Test half move clock
-		assertEquals(board.getHalfMoveClock(), testBoard.halfMoveClock);
+		assertThat(board.getHalfMoveClock()).isEqualTo(testBoard.halfMoveClock);
 
 		// Test full move number
-		assertEquals(board.getFullMoveNumber(), testBoard.getFullMoveNumber());
+		assertThat(board.getFullMoveNumber()).isEqualTo(testBoard.getFullMoveNumber());
 
 		// Test game phase
-		assertEquals(GamePhase.OPENING, testBoard.getGamePhase());
+		assertThat(GamePhase.OPENING).isEqualTo(testBoard.getGamePhase());
 
 		// Test material value
-		assertEquals(Piece.VALUE_KING + Piece.VALUE_QUEEN + 2 * Piece.VALUE_ROOK + 2 * Piece.VALUE_BISHOP + 2 * Piece.VALUE_KNIGHT + 8 * Piece.VALUE_PAWN, Position.materialValue[Color.WHITE]);
+		assertThat(Piece.VALUE_KING + Piece.VALUE_QUEEN + 2 * Piece.VALUE_ROOK + 2 * Piece.VALUE_BISHOP + 2 * Piece.VALUE_KNIGHT + 8 * Piece.VALUE_PAWN).isEqualTo(Position.materialValue[Color.WHITE]);
 	}
 
 	@Test
-	public void testIsRepetition() {
+	void testIsRepetition() {
 		GenericBoard genericBoard = new GenericBoard(GenericBoard.STANDARDSETUP);
 		Position board = new Position(genericBoard);
 
@@ -93,11 +94,11 @@ public class PositionTest {
 		move = Move.createMove(MoveType.NORMAL, Square.f3, Square.g1, Piece.WHITE_KNIGHT, Piece.NOPIECE, Piece.NOPIECE);
 		board.makeMove(move);
 
-		assertTrue(board.isRepetition());
+		assertThat(board.isRepetition()).isTrue();
 	}
 
 	@Test
-	public void testMakeMoveNormalMove() {
+	void testMakeMoveNormalMove() {
 		GenericBoard board = new GenericBoard(GenericBoard.STANDARDSETUP);
 		Position testBoard = new Position(board);
 
@@ -105,11 +106,11 @@ public class PositionTest {
 		testBoard.makeMove(move);
 		testBoard.undoMove(move);
 
-		assertEquals(board, testBoard.getBoard());
+		assertThat(board).isEqualTo(testBoard.getBoard());
 	}
 
 	@Test
-	public void testMakeMovePawnPromotionMove() {
+	void testMakeMovePawnPromotionMove() {
 		GenericBoard board = null;
 		try {
 			board = new GenericBoard("8/P5k1/8/8/2K5/8/8/8 w - - 0 1");
@@ -123,11 +124,11 @@ public class PositionTest {
 		testBoard.makeMove(move);
 		testBoard.undoMove(move);
 
-		assertEquals(board, testBoard.getBoard());
+		assertThat(board).isEqualTo(testBoard.getBoard());
 	}
 
 	@Test
-	public void testMakeMovePawnDoubleMove() {
+	void testMakeMovePawnDoubleMove() {
 		GenericBoard board = new GenericBoard(GenericBoard.STANDARDSETUP);
 		Position testBoard = new Position(board);
 
@@ -135,11 +136,11 @@ public class PositionTest {
 		testBoard.makeMove(move);
 		testBoard.undoMove(move);
 
-		assertEquals(board, testBoard.getBoard());
+		assertThat(board).isEqualTo(testBoard.getBoard());
 	}
 
 	@Test
-	public void testMakeMoveCastlingMove() {
+	void testMakeMoveCastlingMove() {
 		GenericBoard board = null;
 		try {
 			board = new GenericBoard("r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1");
@@ -152,16 +153,16 @@ public class PositionTest {
 		int move = Move.createMove(MoveType.CASTLING, 4, 2, Piece.NOPIECE, Piece.NOPIECE, Piece.NOPIECE);
 		testBoard.makeMove(move);
 		testBoard.undoMove(move);
-		assertEquals(board, testBoard.getBoard());
+		assertThat(board).isEqualTo(testBoard.getBoard());
 
 		move = Move.createMove(MoveType.CASTLING, 4, 6, Piece.NOPIECE, Piece.NOPIECE, Piece.NOPIECE);
 		testBoard.makeMove(move);
 		testBoard.undoMove(move);
-		assertEquals(board, testBoard.getBoard());
+		assertThat(board).isEqualTo(testBoard.getBoard());
 	}
 
 	@Test
-	public void testMakeMoveEnPassantMove() {
+	void testMakeMoveEnPassantMove() {
 		GenericBoard board = null;
 		try {
 			board = new GenericBoard("5k2/8/8/8/3Pp3/8/8/3K4 b - d3 0 1");
@@ -176,22 +177,22 @@ public class PositionTest {
 		testBoard.makeMove(move);
 		testBoard.undoMove(move);
 
-		assertEquals(board, testBoard.getBoard());
+		assertThat(board).isEqualTo(testBoard.getBoard());
 	}
 
 	@Test
-	public void testMakeMoveNullMove() {
+	void testMakeMoveNullMove() {
 		GenericBoard board = new GenericBoard(GenericBoard.STANDARDSETUP);
 		Position testBoard = new Position(board);
 
 		testBoard.makeMoveNull();
 		testBoard.undoMoveNull();
 
-		assertEquals(board, testBoard.getBoard());
+		assertThat(board).isEqualTo(testBoard.getBoard());
 	}
 
 	@Test
-	public void testZobrist() {
+	void testZobrist() {
 		GenericBoard board = null;
 		try {
 			board = new GenericBoard("r3k2r/2P5/8/5p2/3p4/8/2PB4/R3K2R w KQkq - 0 1");
@@ -238,35 +239,35 @@ public class PositionTest {
 		long zobrist2 = testBoard.zobristCode;
 		long pawnZobrist2 = testBoard.pawnZobristCode;
 
-		assertEquals(zobrist1, zobrist2);
-		assertEquals(pawnZobrist1, pawnZobrist2);
+		assertThat(zobrist1).isEqualTo(zobrist2);
+		assertThat(pawnZobrist1).isEqualTo(pawnZobrist2);
 	}
 
 	@Test
-	public void testActiveColor() {
+	void testActiveColor() {
 		GenericBoard board = new GenericBoard(GenericBoard.STANDARDSETUP);
 		Position testBoard = new Position(board);
 
 		// Move white pawn
 		int move = Move.createMove(MoveType.NORMAL, 16, 32, Piece.NOPIECE, Piece.NOPIECE, Piece.NOPIECE);
 		testBoard.makeMove(move);
-		assertEquals(Color.BLACK, testBoard.activeColor);
+		assertThat(Color.BLACK).isEqualTo(testBoard.activeColor);
 
 		// Move black pawn
 		move = Move.createMove(MoveType.NORMAL, 96, 80, Piece.NOPIECE, Piece.NOPIECE, Piece.NOPIECE);
 		testBoard.makeMove(move);
-		assertEquals(Color.WHITE, testBoard.activeColor);
+		assertThat(Color.WHITE).isEqualTo(testBoard.activeColor);
 	}
 
 	@Test
-	public void testHalfMoveClock() {
+	void testHalfMoveClock() {
 		GenericBoard board = new GenericBoard(GenericBoard.STANDARDSETUP);
 		Position testBoard = new Position(board);
 
 		// Move white pawn
 		int move = Move.createMove(MoveType.NORMAL, 16, 32, Piece.NOPIECE, Piece.NOPIECE, Piece.NOPIECE);
 		testBoard.makeMove(move);
-		assertEquals(0, testBoard.halfMoveClock);
+		assertThat(0).isEqualTo(testBoard.halfMoveClock);
 
 		// Move black pawn
 		move = Move.createMove(MoveType.NORMAL, 96, 80, Piece.NOPIECE, Piece.NOPIECE, Piece.NOPIECE);
@@ -274,22 +275,22 @@ public class PositionTest {
 		// Move white knight
 		move = Move.createMove(MoveType.NORMAL, 1, 34, Piece.NOPIECE, Piece.NOPIECE, Piece.NOPIECE);
 		testBoard.makeMove(move);
-		assertEquals(1, testBoard.halfMoveClock);
+		assertThat(1).isEqualTo(testBoard.halfMoveClock);
 	}
 
 	@Test
-	public void testFullMoveNumber() {
+	void testFullMoveNumber() {
 		GenericBoard board = new GenericBoard(GenericBoard.STANDARDSETUP);
 		Position testBoard = new Position(board);
 
 		// Move white pawn
 		int move = Move.createMove(MoveType.NORMAL, 16, 32, Piece.NOPIECE, Piece.NOPIECE, Piece.NOPIECE);
 		testBoard.makeMove(move);
-		assertEquals(1, testBoard.getFullMoveNumber());
+		assertThat(1).isEqualTo(testBoard.getFullMoveNumber());
 
 		// Move black pawn
 		move = Move.createMove(MoveType.NORMAL, 96, 80, Piece.NOPIECE, Piece.NOPIECE, Piece.NOPIECE);
 		testBoard.makeMove(move);
-		assertEquals(2, testBoard.getFullMoveNumber());
+		assertThat(2).isEqualTo(testBoard.getFullMoveNumber());
 	}
 }

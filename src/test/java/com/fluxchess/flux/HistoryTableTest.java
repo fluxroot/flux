@@ -20,20 +20,20 @@ package com.fluxchess.flux;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
-public class HistoryTableTest {
+class HistoryTableTest {
 
 	@Test
-	public void testHistoryTable() {
+	void testHistoryTable() {
 		HistoryTable table = new HistoryTable();
 
 		int move1 = Move.createMove(MoveType.NORMAL, 16, 32, PieceType.PAWN, Piece.NOPIECE, Piece.NOPIECE);
 		table.add(move1, 1);
-		assertEquals(1, table.get(move1));
+		assertThat(1).isEqualTo(table.get(move1));
 
 		int move2 = Move.createMove(MoveType.NORMAL, 16, 32, PieceType.PAWN, Piece.NOPIECE, Piece.NOPIECE);
 		table.add(move2, 1);
-		assertEquals(2, table.get(move2));
+		assertThat(2).isEqualTo(table.get(move2));
 	}
 }

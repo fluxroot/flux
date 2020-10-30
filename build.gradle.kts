@@ -30,6 +30,7 @@ dependencies {
 
 	testImplementation(Libs.junitJupiterApi)
 	testRuntimeOnly(Libs.junitJupiterEngine)
+	testImplementation(Libs.assertjCore)
 }
 
 tasks.test {

@@ -20,35 +20,35 @@ package com.fluxchess.flux;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
-public class MoveListTest {
+class MoveListTest {
 
 	@Test
-	public void testRemove() {
+	void testRemove() {
 		MoveList moveList = new MoveList();
 
 		moveList.newList();
-		assertEquals(0, moveList.getLength());
+		assertThat(0).isEqualTo(moveList.getLength());
 		moveList.moves[moveList.tail++] = 1;
-		assertEquals(1, moveList.getLength());
+		assertThat(1).isEqualTo(moveList.getLength());
 
 		moveList.newList();
-		assertEquals(0, moveList.getLength());
+		assertThat(0).isEqualTo(moveList.getLength());
 		moveList.moves[moveList.tail++] = 1;
 		moveList.moves[moveList.tail++] = 1;
 		moveList.moves[moveList.tail++] = 1;
-		assertEquals(3, moveList.getLength());
+		assertThat(3).isEqualTo(moveList.getLength());
 
 		moveList.deleteList();
-		assertEquals(1, moveList.getLength());
+		assertThat(1).isEqualTo(moveList.getLength());
 
 		moveList.deleteList();
-		assertEquals(0, moveList.getLength());
+		assertThat(0).isEqualTo(moveList.getLength());
 	}
 
 	@Test
-	public void testSort() {
+	void testSort() {
 		MoveList list = new MoveList();
 
 		list.moves[list.tail] = 10;
@@ -85,8 +85,8 @@ public class MoveListTest {
 		list.sort();
 
 		for (int i = 0; i < 10; i++) {
-			assertEquals(10 - i, list.moves[i]);
-			assertEquals(10 - i, list.values[i]);
+			assertThat(10 - i).isEqualTo(list.moves[i]);
+			assertThat(10 - i).isEqualTo(list.values[i]);
 		}
 
 		list = new MoveList();
@@ -124,8 +124,8 @@ public class MoveListTest {
 		list.sort();
 
 		for (int i = 0; i < 10; i++) {
-			assertEquals(10 - i, list.moves[i]);
-			assertEquals(10 - i, list.values[i]);
+			assertThat(10 - i).isEqualTo(list.moves[i]);
+			assertThat(10 - i).isEqualTo(list.values[i]);
 		}
 	}
 }

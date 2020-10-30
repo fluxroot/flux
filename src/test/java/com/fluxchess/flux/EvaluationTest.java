@@ -22,12 +22,12 @@ import com.fluxchess.jcpi.models.GenericBoard;
 import com.fluxchess.jcpi.models.IllegalNotationException;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
-public class EvaluationTest {
+class EvaluationTest {
 
 	@Test
-	public void testEvaluate() {
+	void testEvaluate() {
 		Evaluation evaluation = new Evaluation();
 		Position board;
 
@@ -38,7 +38,7 @@ public class EvaluationTest {
 			board = new Position(new GenericBoard("r4q1r/1bk2ppp/p2bp3/4Q3/Pp3P2/1B2P3/1P2N1PP/R1B3K1 w - -"));
 			new See(board);
 			int value2 = evaluation.evaluate(board);
-			assertTrue(value1 > value2, value1 + " > " + value2);
+			assertThat(value1).isGreaterThan(value2);
 		} catch (IllegalNotationException e) {
 			e.printStackTrace();
 		}

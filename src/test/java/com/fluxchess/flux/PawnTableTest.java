@@ -20,23 +20,22 @@ package com.fluxchess.flux;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
-public class PawnTableTest {
+class PawnTableTest {
 
 	@Test
-	public void testPawnTable() {
+	void testPawnTable() {
 		PawnTable table = new PawnTable(1024);
 
 		table.put(1, 1, 1);
-		assertTrue(table.exists(1));
-		assertEquals(1, table.getOpening(1));
-		assertEquals(1, table.getEndgame(1));
+		assertThat(table.exists(1)).isTrue();
+		assertThat(1).isEqualTo(table.getOpening(1));
+		assertThat(1).isEqualTo(table.getEndgame(1));
 
 		table.put(2, 2, 2);
-		assertTrue(table.exists(2));
-		assertEquals(2, table.getOpening(2));
-		assertEquals(2, table.getEndgame(2));
+		assertThat(table.exists(2)).isTrue();
+		assertThat(2).isEqualTo(table.getOpening(2));
+		assertThat(2).isEqualTo(table.getEndgame(2));
 	}
 }
